@@ -1,0 +1,39 @@
+body{
+	background-color: gray;
+}
+div.alert{
+	position: fixed;
+	z-index: 55;
+	right: 10px;
+}
+.wrapper_div{
+	margin-top: 20px;
+}
+.form_wrapper{
+	padding: 10px;
+	border-radius: 5px;
+	background-color: white;
+	box-shadow: 10px 10px 10px black
+}
+input.form-control:focus,select.form-control:focus{
+	border-color: transparent;
+	box-shadow: none;
+	border: none;
+	border-bottom: 1px solid black;
+}
+input.form-control{
+	border: none;
+	border-bottom: 1px solid black;
+	border-radius: 0;
+}
+span.op{
+	font-weight: bold;
+	margin-right: 5px;
+}
+span.no{
+	font-weight: bold;
+}
+.ques_two_err,.ques_three_err,.ques_five_err{
+	display: none;
+	font-weight: bold;
+}

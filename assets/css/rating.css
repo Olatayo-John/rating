@@ -1,0 +1,49 @@
+body{
+	background-image: url('../../assets/images/dark-pink-.jpg');
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+div.container{
+	/*border: 2px solid #E0E0E0;*/
+	padding: 20px;
+	margin: 50px auto;
+	height: 550px;
+	background-color: #EEEEEE
+}
+h4.comp{
+	font-weight: bolder;
+	text-align: center;
+	margin: 20px 0;
+}
+div.stars{
+	/*border: 2px solid red;*/
+	text-align: center;
+	margin: 50px 0;
+}
+div.stars i{
+	/*border: 2px solid green;*/
+	font-size: 40px;
+}
+i.far, i.fas{
+	font-size: 55px;
+}
+i.fas{
+	color: #E65100
+}
+div.onestar,div.twostar,div.threestar,div.fourstar,div.fivestar{
+	/*border: 2px solid red;*/
+	text-align: center;
+	display: none;
+}
+div.submit{
+	text-align: center;
+	display: none;
+	margin-top: 50px;
+}
+label{
+	font-weight: bolder;
+}
+span.err{
+	display: none;
+}

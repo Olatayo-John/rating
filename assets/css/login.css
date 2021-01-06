@@ -1,0 +1,88 @@
+body{
+	background-image: url('../../assets/images/fa47e7.jpg');
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+div.empty{
+	height: 100vh;
+	width: 50%;
+	float: left;
+}
+input.form-control{
+	border-radius: 20px
+}
+button.btn{
+	border-radius: 0
+}
+div.login{
+	height: 100vh;
+	width: 50%;
+  float: right;
+  padding: 120px;
+	background: #141E30;
+	background: -webkit-linear-gradient(to right, #243B55, #141E30)
+	background: linear-gradient(to right, #243B55, #141E30);
+
+}
+label{
+	font-weight: bolder;
+	color: white;
+}
+div.btngrp{
+	display: flex;
+	justify-content: space-between;
+}
+a.signupbtn{
+	color: #8BC34A;
+	text-decoration: none;
+}
+a.signupbtn:hover{
+	transform: scale(1.1);
+	transition: transform .2s;
+}
+input.form-control:focus{
+	border-color: black;
+	box-shadow: none;
+}
+.responsive {
+	position: relative;               
+  left: 50%;                  
+  top: 25%;                  
+  transform: translate(-50%,-25%);
+}
+div.empty{
+	background-color: white
+}
+@media only screen and (min-width: 500px) {
+	a.signupbtn:hover{
+	transform: scale(1);
+	transition: transform .2s;
+	}
+}
+@media only screen and (max-width: 850px) {
+	div.login{
+	 	padding: 50px;	 
+	 	padding-top: 100px;
+	 	width: 50%;
+	}
+	div.btngrp{
+		display: flex;
+		flex-direction: column;
+	}
+	a.signupbtn{
+		text-align: right;
+		margin-top: 10px;
+	}
+}
+@media only screen and (max-width: 700px) {
+	div.login{
+	 	padding-left: 5px;
+	 	padding-right: 5px;
+	}
+}
+@media only screen and (min-width: 900px) {
+	div.login{
+	 	width: 50%;
+	}
+}

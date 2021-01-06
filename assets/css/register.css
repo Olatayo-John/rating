@@ -1,0 +1,57 @@
+body{
+	background: #141E30;
+	background: -webkit-linear-gradient(to right, #243B55, #141E30);
+	background: linear-gradient(to right, #243B55, #141E30);
+}
+.user_reg_form{
+	padding: 20px;
+}
+label{
+	font-weight: bolder;
+	color: white;
+}
+input.form-control{
+	/* border-radius: 30px */
+}
+div.btngrp{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-top: 25px;
+}
+button.registerbtn{
+	width: 300px;
+	border-radius: 0;
+	margin: auto;
+}
+a.loginbtn{
+	margin-top: 10px;
+	text-align: center;
+	color: #8BC34A;
+	text-decoration: none;
+}
+a.loginbtn:hover{
+	font-weight: bolder;
+}
+input.form-control:focus{
+	border-color: black;
+	box-shadow: none;
+}
+i.fa-eye,i.fa-eye-slash{
+	display: none;
+	cursor: pointer;
+}
+@media only screen and (max-width: 500px) {
+	div.btngrp{
+		display: flex;
+		flex-direction: column;
+	}
+	a.loginbtn{
+		text-align: center;
+		margin-top: 10px;
+		margin-bottom: 40px;
+	}
+	h6.linkinfo{
+		margin-top: 20px;
+	}
+}

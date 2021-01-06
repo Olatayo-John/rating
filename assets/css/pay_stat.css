@@ -1,0 +1,34 @@
+body{
+	background: #141E30;
+	background: -webkit-linear-gradient(to right, #243B55, #141E30)
+	background: linear-gradient(to right, #243B55, #141E30);
+}
+input.form-control:focus,textarea.form-control:focus{
+	border-color: black;
+	box-shadow: none;
+}
+label{
+	color: white;
+	font-weight: bold;
+}
+div.btnlinkgrp{
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	position: absolute;
+}
+a.btn:hover{
+	transform: scale(1.1);
+	transition: transform .2s;
+	background-color: #0B3954;
+}
+@media only screen and (max-width: 768px) {
+	.col-md-5{
+		margin-top: 130px;
+		margin-bottom: 100px;
+	}
+	.second{
+		margin-top: 15px;
+	}
+
+}

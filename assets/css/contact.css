@@ -1,0 +1,46 @@
+body{
+	background: #141E30;
+	background: -webkit-linear-gradient(to right, #243B55, #141E30)
+	background: linear-gradient(to right, #243B55, #141E30);
+}
+input.form-control:focus,textarea.form-control:focus{
+	border-color: black;
+	box-shadow: none;
+}
+input.form-control{
+	border-radius: 20px
+}
+button.btn{
+	border-radius: 0;
+}
+div.nktechdetails{
+	padding: 50px
+}
+i.fas{
+	margin-right: auto;
+}
+i.fab{
+	font-size: 20px;
+	cursor: pointer;
+	padding: 10px
+}b
+i.fab:hover{
+	background-color: white;
+	border-radius: 50%;
+}
+div.row{
+	color: white;
+	margin-bottom: 5px
+}
+label{
+	color: white;
+	font-weight: bolder;
+}
+@media only screen and (max-width: 500px) {
+	.col-md-4{
+		width: 150px;
+	}
+	div.nktechdetails{
+		margin-top: 40px;
+	}
+}

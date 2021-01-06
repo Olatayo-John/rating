@@ -33,7 +33,7 @@ input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
 /* div.web_div,div.course_div,div.ac_div,div.addweb_div{
 	display: none;
 } */
-div.prof_div,div.course_div,div.ac_div,div.addweb_div{
+div.prof_div,div.course_div,div.ac_div,div.addweb_div,div.search_div{
 	display: none;
 }
 h4.p_i{
@@ -44,12 +44,34 @@ h4.web{
 	border-bottom: 3px solid #00695C;
 	width: 100px;
 }
-.web_input{
+.some_name_div{
+	display: flex;
+	justify-content: space-between;
+}
+.search_icon_div,.search_icon_div_close{
+	margin: auto 0;
+	cursor: pointer;
+}
+.search_icon{
+	font-size: 18px;
+	padding-left: 15px;
+}
+.web_input,.website_search{
 	border: none;
 	background: transparent !important;
 	outline: none;
 	border-bottom: 2px solid black;
 	border-radius: 0;
+}
+.website_search{
+	border: none;
+	background: transparent !important;
+	outline: none;
+	border-bottom: 2px solid #00695C;
+	border-radius: 0;
+}
+.web_link_edit,.web_name_edit,.web_name,.web_link{
+	font-weight: bold;
 }
 button.btn-dark,button.status_web_btn{
 	padding: 5px;

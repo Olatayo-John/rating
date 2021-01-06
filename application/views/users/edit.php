@@ -39,15 +39,19 @@
 </div>
 <div class="con mt-3 mr-3 ml-3 mb-3 pl-4 pr-4 pt-4 web_div">
 	<h4 class="text-dark web mb-3">Websites</h4>
-	<div class="d-flex mb-5">
-		<div class="search_div">
-			<input type="text" name="website_search" class="website_search form-control">
-		</div>
+
+	<div class="mb-5 some_name_div mt-4">
 		<div class="add_web">
-			<button type="button" class="add_web_btn text-light" style="background-color:#00695C;padding:5px">
+			<button type="button" class="add_web_btn text-light" style="background-color:#00695C;padding:6px;border:none">
 				<i class="fas fa-plus-circle"></i>
 				Add Website
 			</button>
+		</div>
+		<div class="search_div">
+			<input type="text" name="website_search" class="website_search form-control" placeholder="Search by website name...">
+		</div>
+		<div class="search_icon_div">
+			<i class="fas fa-search search_icon"></i>
 		</div>
 	</div>
 
@@ -122,7 +126,7 @@
 	<?php endif; ?>
 	<?php if ($websites->num_rows() > 0) : ?>
 		<?php foreach ($websites->result_array() as $web) : ?>
-			<div class="row col-md-11" style="padding-right:0">
+			<div class="row col-md-12" style="padding-right:0">
 				<?php if ($web['active'] == "1") : ?>
 					<div class="col-md-1" style="margin:auto">
 						<i class="fas fa-circle text-success" style="font-size: 20px;"></i>
@@ -136,7 +140,7 @@
 				<div class="form-group col">
 					<input type="text" name="web_name" class="form-control web_input" value="<?php echo $web['web_name'] ?>" id="<?php echo $web['id'] ?>" placeholder="Website name" readonly>
 				</div>
-				<div class="col" style="padding:0">
+				<div class="col-md-4" style="padding:0">
 					<div class="d-flex flex-row" style="justify-content:flex-end">
 						<button type="button" class="btn btn-dark edit_web_btn " id="<?php echo $web['id'] ?>">
 							Edit
@@ -205,6 +209,37 @@
 
 <script>
 	$(document).ready(function() {
+		$('.website_search').keyup(function() {
+			var csrfName = $('.csrf_token').attr('name');
+			var csrfHash = $('.csrf_token').val();
+			var search_data = $(this).val();
+
+			console.log(search_data);
+
+			if (search_data == "" || search_data == null) {
+				//reload the table/suff
+			} else {
+				//connect to controller->DB
+			}
+
+			// $.ajax({
+			// 	url: "<?php echo base_url('user/search_website'); ?>",
+			// 	method: "post",
+			// 	data: {
+			// 		[csrfName]: csrfHash,
+			// 		search_data: search_data,
+			// 	},
+			// 	dataType: "json",
+			// 	success: function(data) {
+			// 		console.log(data);
+			// 		// $('.web_name_edit').val(data.web_name);
+			// 	},
+			// 	error: function(data) {
+			// 		alert("Error searching...");
+			// 		// window.location.reload();
+			// 	}
+			// });
+		});
 
 		$('button.edit_web_btn').click(function() {
 			var csrfName = $('.csrf_token').attr('name');

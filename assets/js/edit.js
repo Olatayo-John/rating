@@ -24,6 +24,17 @@ $(document).ready(function () {
 		$('div.ac_div').show();
 	});
 
+	$(document).on('click', 'div.search_icon_div', function () {
+		$('.search_div').fadeIn();
+		$(this).removeClass("search_icon_div").addClass("search_icon_div_close");
+		$('i.search_icon').removeClass("fa-search").addClass("fa-times text-danger");
+	});
+
+	$(document).on('click', 'div.search_icon_div_close', function () {
+		$('.search_div').fadeOut();
+		$(this).removeClass("search_icon_div_close").addClass("search_icon_div");
+		$('i.search_icon').removeClass("fa-times text-danger").addClass("fa-search");
+	});
 
 	$('.save_pinfo_btn').click(function (e) {
 		// e.preventDefault();

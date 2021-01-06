@@ -39,7 +39,7 @@
 </div>
 <div class="con mt-3 mr-3 ml-3 mb-3 pl-4 pr-4 pt-4 web_div">
 	<h4 class="text-dark web mb-3">Websites</h4>
-	<div class="d-flex justify-content-between mb-5">
+	<div class="d-flex mb-5">
 		<div class="search_div">
 			<input type="text" name="website_search" class="website_search form-control">
 		</div>

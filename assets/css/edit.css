@@ -30,12 +30,12 @@ input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
 	text-decoration: none;
 	color: black;
 }
-div.web_div,div.course_div,div.ac_div,div.addweb_div{
-	display: none;
-}
-/* div.prof_div,div.course_div,div.ac_div,div.addweb_div{
+/* div.web_div,div.course_div,div.ac_div,div.addweb_div{
 	display: none;
 } */
+div.prof_div,div.course_div,div.ac_div,div.addweb_div{
+	display: none;
+}
 h4.p_i{
 	border-bottom: 3px solid #00695C;
 	width: 200px;

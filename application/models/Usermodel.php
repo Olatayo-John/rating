@@ -279,6 +279,17 @@ class Usermodel extends CI_Model
 		return true;
 	}
 
+	public function search_website($search_data)
+	{
+		$this->db->select('*');
+		$this->db->from('websites');
+		if ($search_data != '') {
+			$this->db->like('web_name', $search_data);
+		}
+		$this->db->order_by('id', 'DESC');
+		return $this->db->get();
+	}
+
 	public function user_total_ratings()
 	{
 		$query = $this->db->get_where('user_details', array('form_key' => $this->session->userdata('mr_form_key')));

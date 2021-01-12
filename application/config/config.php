@@ -453,7 +453,7 @@ $config['csrf_token_name'] = 'csrf_rating_name';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
-$config['csrf_exclude_uris'] = array('user/sms_importcsv', 'user/importcsv_email', 'admin/votes_filter_param', 'admin/votes_search_user', 'admin/users_filter_param', 'admin/users_search_user', 'admin/indiv_votes_export_csv', 'admin/search_ind_votes', 'user/sms_send_link', 'admin/pgResponses', 'admin/reload_table', 'admin/votes_reload_table',);
+$config['csrf_exclude_uris'] = array('user/search_website','user/sms_importcsv', 'user/importcsv_email', 'admin/votes_filter_param', 'admin/votes_search_user', 'admin/users_filter_param', 'admin/users_search_user', 'admin/indiv_votes_export_csv', 'admin/search_ind_votes', 'user/sms_send_link', 'admin/pgResponses', 'admin/reload_table', 'admin/votes_reload_table',);
 
 /*
 |--------------------------------------------------------------------------

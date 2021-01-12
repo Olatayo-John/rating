@@ -406,6 +406,21 @@ class User extends CI_Controller
 		}
 	}
 
+	public function search_website()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('loginfirst', 'Please login first');
+			redirect('user/login');
+		}
+		$act_res = $this->Usermodel->search_website($_POST['search_data']);
+		$output = '';
+		if ($act_res->num_rows() == 0) {
+			$output = '';
+		} else {
+		}
+		echo json_encode($output);
+	}
+
 	public function account()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {

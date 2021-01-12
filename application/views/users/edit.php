@@ -217,29 +217,33 @@
 			console.log(search_data);
 
 			if (search_data == "" || search_data == null) {
-				//reload the table/suff
+				reload_table_function();
 			} else {
-				//connect to controller->DB
+				search_function(search_data);
 			}
-
-			// $.ajax({
-			// 	url: "<?php echo base_url('user/search_website'); ?>",
-			// 	method: "post",
-			// 	data: {
-			// 		[csrfName]: csrfHash,
-			// 		search_data: search_data,
-			// 	},
-			// 	dataType: "json",
-			// 	success: function(data) {
-			// 		console.log(data);
-			// 		// $('.web_name_edit').val(data.web_name);
-			// 	},
-			// 	error: function(data) {
-			// 		alert("Error searching...");
-			// 		// window.location.reload();
-			// 	}
-			// });
 		});
+
+		function reload_table_function() {}
+
+		function search_function(search_data) {
+			var csrfName = $('.csrf_token').attr('name');
+			var csrfHash = $('.csrf_token').val();
+			$.ajax({
+				url: "<?php echo base_url('user/search_website'); ?>",
+				method: "post",
+				data: {
+					[csrfName]: csrfHash,
+					search_data: search_data,
+				},
+				dataType: "json",
+				success: function(data) {
+					$('.').html(data);
+				},
+				error: function(data) {
+					alert("Error searching...");
+				}
+			});
+		}
 
 		$('button.edit_web_btn').click(function() {
 			var csrfName = $('.csrf_token').attr('name');

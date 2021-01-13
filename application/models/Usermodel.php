@@ -279,24 +279,29 @@ class Usermodel extends CI_Model
 		return true;
 	}
 
-	public function search_website($search_data)
-	{
-		$this->db->select('*');
-		$this->db->from('websites');
-		if ($search_data != '') {
-			$this->db->like('web_name', $search_data);
-		}
-		$this->db->order_by('id', 'DESC');
-		return $this->db->get();
-	}
+	// public function search_website($search_data)
+	// {
+	// 	$this->db->select('*');
+	// 	$this->db->from('websites');
+	// 	if ($search_data != '') {
+	// 		$this->db->like('web_name', $search_data);
+	// 	}
+	// 	$this->db->order_by('id', 'DESC');
+	// 	return $this->db->get();
+	// }
 
 	public function user_total_ratings()
 	{
-		$query = $this->db->get_where('user_details', array('form_key' => $this->session->userdata('mr_form_key')));
-		return $query->result_array();
+		$query = $this->db->get_where('user_details', array('form_key' => $this->session->userdata('mr_form_key')))->row();
+		if (!$query) {
+			return false;
+			exit;
+		} else {
+			return $query;
+		}
 	}
 
-	public function user_quota()
+	public function user_total_quota()
 	{
 		$query = $this->db->get_where('quota', array('by_form_key' => $this->session->userdata('mr_form_key')))->row();
 		if ($query) {
@@ -314,21 +319,6 @@ class Usermodel extends CI_Model
 		return $query->result();
 	}
 
-	public function get_link($id)
-	{
-		$query = $this->db->get_where('users', array('id' => $id))->row();
-		if (!$query) {
-			return false;
-			exit();
-		}
-		if ($query->sub == "0") {
-			return "inactive_sub";
-			exit();
-		} else {
-			return $query;
-		}
-	}
-
 	public function user_quota_details()
 	{
 		$query = $this->db->get_where('quota', array('by_form_key' => $this->session->userdata('mr_form_key'), 'by_user_id' => $this->session->userdata('mr_id')))->row();
@@ -343,13 +333,17 @@ class Usermodel extends CI_Model
 
 	public function check_user_quota()
 	{
-		$query = $this->db->get_where('quota', array('by_form_key' => $this->session->userdata('mr_form_key'), 'by_user_id' => $this->session->userdata('mr_id')))->row();
+		$form_key = $this->session->userdata('mr_form_key');
+		$id = $this->session->userdata('mr_id');
+
+		$query = $this->db->get_where('quota', array('by_form_key' => $form_key, 'by_user_id' => $id))->row();
 		if ($query->bal == "0" || $query->bal < '0') {
 			$this->db->set('bal', '0');
 			$this->db->where('by_form_key', $form_key);
 			$this->db->update('quota');
 
 			$this->user_sub_update();
+
 			return true;
 			exit;
 		} elseif ($query->bal > "0") {
@@ -380,8 +374,7 @@ class Usermodel extends CI_Model
 	public function save_info()
 	{
 		$data = array(
-			'link_for' => htmlentities($this->input->post('link_for')),
-			'email' => htmlentities($this->input->post('email')),
+			'sent_to_email' => htmlentities($this->input->post('email')),
 			'subj' => htmlentities($this->input->post('subj')),
 			'body' => htmlentities($this->input->post('bdy')),
 			'user_id' => $this->session->userdata('mr_id'),
@@ -396,19 +389,18 @@ class Usermodel extends CI_Model
 
 	public function userdetails_email_update($num)
 	{
-		$this->db->set('email', 'email+' . $num, FALSE);
+		$this->db->set('total_email', 'total_email+' . $num, FALSE);
 		$this->db->where('form_key', $this->session->userdata('mr_form_key'));
 		$this->db->update('user_details');
 		return true;
 	}
 
-	public function multiplemail_save_info($emaildata, $subj, $bdy, $link_for)
+	public function multiplemail_save_info($emaildata, $subj, $bdy)
 	{
 		$data = array(
-			'email' => htmlentities(implode(",", $emaildata)),
+			'sent_to_email' => htmlentities(implode(",", $emaildata)),
 			'subj' => htmlentities($subj),
 			'body' => htmlentities($bdy),
-			'link_for' => htmlentities($link_for),
 			'user_id' => $this->session->userdata('mr_id'),
 		);
 		$this->db->insert('sent_links', $data);
@@ -420,8 +412,7 @@ class Usermodel extends CI_Model
 	public function sms_save_info()
 	{
 		$data = array(
-			'link_for' => htmlentities($this->input->post('link_for')),
-			'mobile' => htmlentities($this->input->post('mobile')),
+			'sent_to_sms' => htmlentities($this->input->post('mobile')),
 			'body' => htmlentities($this->input->post('smsbdy')),
 			'user_id' => $this->session->userdata('mr_id'),
 		);
@@ -435,187 +426,23 @@ class Usermodel extends CI_Model
 
 	public function userdetails_sms_update($num)
 	{
-		$this->db->set('sms', 'sms+' . $num, FALSE);
+		$this->db->set('total_sms', 'total_sms+' . $num, FALSE);
 		$this->db->where('form_key', $this->session->userdata('mr_form_key'));
 		$this->db->update('user_details');
 		return true;
 	}
 
-	public function multiplsms_save_info($mobiledata, $smsbdy, $link_for)
+	public function multiplsms_save_info($mobiledata, $smsbdy)
 	{
 		$data = array(
-			'link_for' => htmlentities($link_for),
-			'mobile' => htmlentities(implode(",", $mobiledata)),
+			'sent_to_sms' => htmlentities(implode(",", $mobiledata)),
 			'body' => htmlentities($smsbdy),
 			'user_id' => $this->session->userdata('mr_id'),
 		);
 		$num = count($mobiledata);
 		$this->db->insert('sent_links', $data);
-		$this->multiple_sms_update($num);
+		$this->userdetails_sms_update($num);
 		return true;
-	}
-
-	public function multiple_sms_update($num)
-	{
-		$this->db->set('sms', 'sms+' . $num, FALSE);
-		$this->db->where('form_key', $this->session->userdata('mr_form_key'));
-		$this->db->update('user_details');
-		return true;
-	}
-
-	public function fb_data()
-	{
-		$query = $this->db->get_where('fb_ratings', array('c_id' => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function fb_data1()
-	{
-		$query = $this->db->get_where('fb_ratings', array("star" => "1", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function fb_data2()
-	{
-		$query = $this->db->get_where('fb_ratings', array("star" => "2", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function fb_data3()
-	{
-		$query = $this->db->get_where('fb_ratings', array("star" => "3", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function fb_data4()
-	{
-		$query = $this->db->get_where('fb_ratings', array("star" => "4", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function fb_data5()
-	{
-		$query = $this->db->get_where('fb_ratings', array("star" => "5", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-
-	public function g_data()
-	{
-		$query = $this->db->get_where('google_ratings', array("c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function g_data1()
-	{
-		$query = $this->db->get_where('google_ratings', array("star" => "1", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function g_data2()
-	{
-		$query = $this->db->get_where('google_ratings', array("star" => "2", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function g_data3()
-	{
-		$query = $this->db->get_where('google_ratings', array("star" => "3", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function g_data4()
-	{
-		$query = $this->db->get_where('google_ratings', array("star" => "4", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function g_data5()
-	{
-		$query = $this->db->get_where('google_ratings', array("star" => "5", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-
-	public function ow_data()
-	{
-		$query = $this->db->get_where('mainweb_rating', array("c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function ow_data1()
-	{
-		$query = $this->db->get_where('mainweb_rating', array("star" => "1", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function ow_data2()
-	{
-		$query = $this->db->get_where('mainweb_rating', array("star" => "2", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function ow_data3()
-	{
-		$query = $this->db->get_where('mainweb_rating', array("star" => "3", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function ow_data4()
-	{
-		$query = $this->db->get_where('mainweb_rating', array("star" => "4", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function ow_data5()
-	{
-		$query = $this->db->get_where('mainweb_rating', array("star" => "5", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-
-	public function tp_data()
-	{
-		$query = $this->db->get_where('trustpilot_ratings', array("c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function tp_data1()
-	{
-		$query = $this->db->get_where('trustpilot_ratings', array("star" => "1", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function tp_data2()
-	{
-		$query = $this->db->get_where('trustpilot_ratings', array("star" => "2", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function tp_data3()
-	{
-		$query = $this->db->get_where('trustpilot_ratings', array("star" => "3", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function tp_data4()
-	{
-		$query = $this->db->get_where('trustpilot_ratings', array("star" => "4", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function tp_data5()
-	{
-		$query = $this->db->get_where('trustpilot_ratings', array("star" => "5", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-
-	public function gd_data()
-	{
-		$query = $this->db->get_where('glassdoor_ratings', array("c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function gd_data1()
-	{
-		$query = $this->db->get_where('glassdoor_ratings', array("star" => "1", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function gd_data2()
-	{
-		$query = $this->db->get_where('glassdoor_ratings', array("star" => "2", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function gd_data3()
-	{
-		$query = $this->db->get_where('glassdoor_ratings', array("star" => "3", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function gd_data4()
-	{
-		$query = $this->db->get_where('glassdoor_ratings', array("star" => "4", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
-	}
-	public function gd_data5()
-	{
-		$query = $this->db->get_where('glassdoor_ratings', array("star" => "5", "c_id" => $this->session->userdata('mr_form_key')));
-		return $query->num_rows();
 	}
 
 	public function get_key($key)
@@ -735,10 +562,5 @@ class Usermodel extends CI_Model
 		$this->db->where('form_key', $form_key);
 		$query = $this->db->get('users')->row();
 		return $query;
-	}
-
-	public function sample()
-	{
-		return true;
 	}
 }

@@ -458,103 +458,66 @@ class User extends CI_Controller
 		echo json_encode($output);
 	} */
 
-	public function account()
+	public function quota_send_mail_expire($usermail_expire)
 	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user');
-		}
-		$data['user'] = $this->Usermodel->user_total_ratings();
-		$data['balance'] = $this->Usermodel->user_quota();
-		//print_r($data['user']);die;
-		//$data['all_sms']= $this->Usermodel->all_user_sms();
-		//$data['all_email']= $this->Usermodel->all_user_email();
-		//$data['sent_links']= $this->Usermodel->all_user_sent_links();
-		$this->load->view('templates/header');
-		$this->load->view('users/account', $data);
-		$this->load->view('templates/footer');
-	}
+		$config['protocol']    = 'smtp';
+		$config['smtp_host']    = 'ssl://smtp.gmail.com';
+		$config['smtp_port']    = '465';
+		$config['smtp_timeout'] = '7';
+		$config['smtp_user']    = 'jvweedtest@gmail.com';
+		$config['smtp_pass']    = 'Jvweedtest9!';
+		$config['charset']    = 'iso-8859-1';
+		$config['mailtype'] = 'text';
+		$config['validation'] = TRUE;
 
-	public function rating()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user');
-		}
-		if ($this->session->userdata('mr_sub') == "0") {
-			$this->session->set_flashdata('inacc_sub', 'You have no active subscription.');
-			redirect('admin/pick_plan');
+		$this->load->library('email', $config);
+		$this->email->set_newline("\r\n");
+
+		$body = "Hello.\n\nThis email is to inform you that your Quota Limit has expired.\nNew ratings woun't be recorded\nRenew your package to continue using our services " . base_url() . "\nIf you have any query, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+
+		$this->email->from('jvweedtest@gmail.com', 'Rating');
+		$this->email->to($usermail_expire);
+		$this->email->subject('Quota Limit');
+		$this->email->message($body);
+
+		if ($this->email->send()) {
+			return true;
 		} else {
-			$this->load->view('templates/header');
-			$this->load->view('users/index');
-			$this->load->view('templates/footer');
+			return $this->email->print_debugger();
 		}
 	}
 
-	public function get_link()
+	public function email_sample_csv()
 	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user');
+		header("Content-Type: text/csv; charset=utf-8");
+		header("Content-Disposition: attachment; filename=email_csv_sample.csv");
+		$output = fopen("php://output", "w");
+		fputcsv($output, array('Email'));
+		$data['email'] = array(
+			'email' => "example@domain-name.com",
+		);
+		foreach ($data as $row) {
+			fputcsv($output, $row);
 		}
-		$res = $this->Usermodel->get_link($_POST['id']);
-		if (!$res) {
-			return FALSE;
-			exit();
-		}
-		if ($res) {
-			$output[] = array();
-			$output['id'] = $res->id;
-			$output['c_name'] = $res->c_name;
-			$output['c_add'] = $res->c_add;
-			$output['c_email'] = $res->c_email;
-			$output['c_web'] = $res->c_web;
-			$output['form_key'] = $res->form_key;
-			$output['fb_link'] = $res->fb_link;
-			$output['google_link'] = $res->google_link;
-			$output['glassdoor_link'] = $res->glassdoor_link;
-			$output['trust_pilot_link'] = $res->trust_pilot_link;
-			$output['token'] = $this->security->get_csrf_hash();
-			echo json_encode($output);
-		}
-		$myfile = fopen("body.txt", "w") or die("Unable to open file!");
-		$txt = "Please find the link below to rate our website\n";
-		fwrite($myfile, $txt);
-		$link = $_POST['btnval'];
-		if ($link == "mainweb") {
-			$txt = base_url() . "user/official/" . $output['form_key'] . "\n\n";
-			fwrite($myfile, $txt);
-		}
-		if ($link == "trust_pilot") {
-			$txt = base_url() . "user/trustpilot/" . $output['form_key'] . "\n\n";
-			fwrite($myfile, $txt);
-		}
-		if ($link == "glassdoor") {
-			$txt = base_url() . "user/glassdoor/" . $output['form_key'] . "\n\n";
-			fwrite($myfile, $txt);
-		}
-		if ($link == "facebook") {
-			$txt = base_url() . "user/facebook/" . $output['form_key'] . "\n\n";
-			fwrite($myfile, $txt);
-		}
-		if ($link == "google") {
-			$txt = base_url() . "user/google/" . $output['form_key'] . "\n\n";
-			fwrite($myfile, $txt);
-		}
-		$txt = $output['c_name'] . "\n";
-		fwrite($myfile, $txt);
-		$txt = $output['c_web'] . "\n";
-		fwrite($myfile, $txt);
-		$txt = $output['c_email'] . "\n";
-		fwrite($myfile, $txt);
-		$txt = $output['c_add'] . "\n";
-		fwrite($myfile, $txt);
-		$txt = "Regards";
-		fwrite($myfile, $txt);
-		fclose($myfile);
+		fclose($output);
 	}
 
-	public function send_link()
+	public function sms_sample_csv()
+	{
+		header("Content-Type: text/csv; charset=utf-8");
+		header("Content-Disposition: attachment; filename=sms_csv_sample.csv");
+		$output = fopen("php://output", "w");
+		fputcsv($output, array('Phonenumber'));
+		$data['Phonenumber'] = array(
+			'Phonenumber' => "0123456789",
+		);
+		foreach ($data as $row) {
+			fputcsv($output, $row);
+		}
+		fclose($output);
+	}
+
+	public function sendlink()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('loginfirst', 'Please login first');
@@ -568,34 +531,79 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('subj', 'Subject', 'required|trim|html_escape');
 		$this->form_validation->set_rules('bdy', 'Body', 'required|trim|html_escape');
 
-		if ($this->form_validation->run() == FALSE) {
-			$this->rating();
+		if ($this->form_validation->run() == false) {
+			$this->load->view('templates/header');
+			$this->load->view('users/sendlink');
+			$this->load->view('templates/footer');
 		} else {
-			$cq_res = $this->Usermodel->check_user_quota();
-			if ($cq_res == true) {
-				$this->send_quota_expire_mail();
-				$this->session->set_flashdata('quota_expired', 'Your Quota has expired. Please renew to continue using our services.');
+			$cq_res = $this->Adminmodel->check_quota_expire();
+			if ($cq_res === "not_Found") {
+				$this->logout();
+				exit;
+			} else if ($cq_res !== false) {
+				$usermail_expire = $cq_res->email;
+				$this->quota_send_mail_expire($usermail_expire);
+				$this->session->set_flashdata('quota_expired', 'Quota has expired');
 				redirect('admin/pick_plan');
 			} else {
-				$email = $this->input->post('email');
-				$subj = $this->input->post('subj');
-				$bdy = $this->input->post('bdy');
+				$email = htmlentities($this->input->post('email'));
+				$subj = htmlentities($this->input->post('subj'));
+				$bdy = htmlentities($this->input->post('bdy'));
 				$mail_res = $this->link_send_mail($email, $subj, $bdy);
 				if ($mail_res !== true) {
 					$this->session->set_flashdata('link_send_err', $mail_res);
-					redirect('user/rating');
+					redirect($_SERVER['HTTP_REFERER']);
+					exit;
 				} else {
 					$res = $this->Usermodel->save_info();
 					if ($res !== true) {
-						$this->session->set_flashdata('link_send_err', 'Error saving to DATABASE.');
-						redirect('user/rating');
+						$this->session->set_flashdata('link_send_err', 'Error saving contacts to DATABASE.');
+						redirect($_SERVER['HTTP_REFERER']);
+						exit;
 					} else {
-						$this->session->set_flashdata('link_send_succ', 'Link sent successfully');
-						redirect('user/rating');
+						$cq_res = $this->Adminmodel->check_quota_expire();
+						if ($cq_res !== false) {
+							$db_email = $cq_res->email;
+							$this->quota_send_mail_expire($db_email);
+							$this->session->set_flashdata('link_send_succ', 'Link sent successfully');
+							redirect($_SERVER['HTTP_REFERER']);
+							exit;
+						} else {
+							$this->session->set_flashdata('link_send_succ', 'Link sent successfully');
+							redirect($_SERVER['HTTP_REFERER']);
+							exit;
+						}
 					}
 				}
 			}
 		}
+	}
+
+	public function getlink()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('loginfirst', 'Please login first');
+			redirect('user');
+		}
+		if ($this->session->userdata('mr_sub') == "0") {
+			return FALSE;
+			exit();
+		}
+		$myfile = fopen("body.txt", "w") or die("Unable to open file!");
+		$txt = "Click the link below, to rate any of my websites\n";
+		fwrite($myfile, $txt);
+		$txt = base_url() . "user/wtr/" . $this->session->userdata("mr_form_key") . "\n\n";
+		fwrite($myfile, $txt);
+		$txt = $this->session->userdata("mr_uname") . "\n";
+		fwrite($myfile, $txt);
+		$txt = $this->session->userdata("mr_email") . "\n";
+		fwrite($myfile, $txt);
+		$txt = "Regards";
+		fwrite($myfile, $txt);
+		fclose($myfile);
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
 	}
 
 	public function link_send_mail($email, $subj, $bdy)
@@ -657,7 +665,6 @@ class User extends CI_Controller
 			$emaildata = $_POST['emaildata'];
 			$subj = $_POST['subj'];
 			$bdy = $_POST['bdy'];
-			$link_for = $_POST['link_for'];
 			$num = count($emaildata);
 
 			$qbl_res = $this->Usermodel->user_quota_details();
@@ -668,7 +675,7 @@ class User extends CI_Controller
 				if ($mail_res !== true) {
 					$this->session->set_flashdata('link_send_err', $mail_res);
 				} else {
-					$res = $this->Usermodel->multiplemail_save_info($_POST['emaildata'], $_POST['subj'], $_POST['bdy'], $_POST['link_for']);
+					$res = $this->Usermodel->multiplemail_save_info($_POST['emaildata'], $_POST['subj'], $_POST['bdy']);
 					if ($res !== true) {
 						$this->session->set_flashdata('link_send_err', 'Error saving to DATABASE.');
 					} else {
@@ -706,456 +713,6 @@ class User extends CI_Controller
 		} else {
 			return $this->email->print_debugger();
 		}
-	}
-
-	public function send_quota_expire_mail()
-	{
-		$config['protocol']    = 'smtp';
-		$config['smtp_host']    = 'ssl://smtp.gmail.com';
-		$config['smtp_port']    = '465';
-		$config['smtp_timeout'] = '7';
-		$config['smtp_user']    = 'jvweedtest@gmail.com';
-		$config['smtp_pass']    = 'Jvweedtest9!';
-		$config['charset']    = 'iso-8859-1';
-		$config['mailtype'] = 'text';
-		$config['validation'] = TRUE;
-
-		$this->load->library('email', $config);
-		$this->email->set_newline("\r\n");
-
-		$body = "Hello.\n\nThis email is to inform you that your Quota has expired.SMS, Emails and Future ratings woun't be recorded\nClick here to log into your account and get a new plan " . base_url('admin/pick_plan') . "\nIf you have any questions, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
-		$mail = $this->session->userdata('mr_email');
-
-		$this->email->from('jvweedtest@gmail.com', 'Quota Limit');
-		$this->email->to($mail);
-		$this->email->subject('Quota Limit');
-		$this->email->message($body);
-
-		if ($this->email->send()) {
-			return true;
-		} else {
-			return $this->email->print_debugger();
-		}
-	}
-
-	public function total_bar_data()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('login_first', 'Please login first');
-			redirect('user');
-			exit();
-		}
-		$data['atr'] = $this->Adminmodel->all_total_ratings();
-		$data['tr5'] = $this->Adminmodel->tr5_total_ratings();
-		$data['tr4'] = $this->Adminmodel->tr4_total_ratings();
-		$data['tr3'] = $this->Adminmodel->tr3_total_ratings();
-		$data['tr2'] = $this->Adminmodel->tr2_total_ratings();
-		$data['tr1'] = $this->Adminmodel->tr1_total_ratings();
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
-	}
-
-	public function bar_data()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('login_first', 'Please login first');
-			redirect('user');
-			exit();
-		}
-		$data['utl'] = $this->Usermodel->user_total_ratings();
-		$data['fb'] = $this->Usermodel->fb_data();
-		$data['fb_1'] = $this->Usermodel->fb_data1();
-		$data['fb_2'] = $this->Usermodel->fb_data2();
-		$data['fb_3'] = $this->Usermodel->fb_data3();
-		$data['fb_4'] = $this->Usermodel->fb_data4();
-		$data['fb_5'] = $this->Usermodel->fb_data5();
-		$data['g'] = $this->Usermodel->g_data();
-		$data['g_1'] = $this->Usermodel->g_data1();
-		$data['g_2'] = $this->Usermodel->g_data2();
-		$data['g_3'] = $this->Usermodel->g_data3();
-		$data['g_4'] = $this->Usermodel->g_data4();
-		$data['g_5'] = $this->Usermodel->g_data5();
-		$data['ow'] = $this->Usermodel->ow_data();
-		$data['ow_1'] = $this->Usermodel->ow_data1();
-		$data['ow_2'] = $this->Usermodel->ow_data2();
-		$data['ow_3'] = $this->Usermodel->ow_data3();
-		$data['ow_4'] = $this->Usermodel->ow_data4();
-		$data['ow_5'] = $this->Usermodel->ow_data5();
-		$data['tp'] = $this->Usermodel->tp_data();
-		$data['tp_1'] = $this->Usermodel->tp_data1();
-		$data['tp_2'] = $this->Usermodel->tp_data2();
-		$data['tp_3'] = $this->Usermodel->tp_data3();
-		$data['tp_4'] = $this->Usermodel->tp_data4();
-		$data['tp_5'] = $this->Usermodel->tp_data5();
-		$data['gd'] = $this->Usermodel->gd_data();
-		$data['gd_1'] = $this->Usermodel->gd_data1();
-		$data['gd_2'] = $this->Usermodel->gd_data2();
-		$data['gd_3'] = $this->Usermodel->gd_data3();
-		$data['gd_4'] = $this->Usermodel->gd_data4();
-		$data['gd_5'] = $this->Usermodel->gd_data5();
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
-	}
-
-	public function get_key($key)
-	{
-		$form_key = $this->Usermodel->get_key($key);
-		if (!$form_key) {
-			return false;
-		} else {
-			return $form_key;
-		}
-	}
-
-	public function official($key)
-	{
-		if (!$key) {
-			redirect($_SERVER['HTTP_REFERER']);
-			exit();
-		} else {
-			$form_key = $this->get_key($key);
-			if ($form_key !== $key) {
-				redirect($_SERVER['HTTP_REFERER']);
-				exit();
-			} elseif ($form_key == $key) {
-				//$data['info']= $this->Usermodel->info($key);
-				$data['form_key'] = $form_key;
-				$this->load->view('pages/official', $data);
-				$this->load->view('templates/footer');
-			}
-		}
-	}
-
-	public function facebook($key)
-	{
-		if (!$key) {
-			redirect($_SERVER['HTTP_REFERER']);
-			exit();
-		} else {
-			$form_key = $this->get_key($key);
-			if ($form_key !== $key) {
-				redirect($_SERVER['HTTP_REFERER']);
-				exit();
-			} elseif ($form_key == $key) {
-				$data['info'] = $this->Usermodel->info($key);
-				$data['form_key'] = $form_key;
-				$this->load->view('pages/facebook', $data);
-				$this->load->view('templates/footer');
-			}
-		}
-	}
-
-	public function google($key)
-	{
-		if (!$key) {
-			redirect($_SERVER['HTTP_REFERER']);
-			exit();
-		} else {
-			$form_key = $this->get_key($key);
-			if ($form_key !== $key) {
-				redirect($_SERVER['HTTP_REFERER']);
-				exit();
-			} elseif ($form_key == $key) {
-				$data['info'] = $this->Usermodel->info($key);
-				$data['form_key'] = $form_key;
-				$this->load->view('pages/google', $data);
-				$this->load->view('templates/footer');
-			}
-		}
-	}
-
-	public function glassdoor($key)
-	{
-		if (!$key) {
-			redirect($_SERVER['HTTP_REFERER']);
-			exit();
-		} else {
-			$form_key = $this->get_key($key);
-			if ($form_key !== $key) {
-				redirect($_SERVER['HTTP_REFERER']);
-				exit();
-			} elseif ($form_key == $key) {
-				$data['info'] = $this->Usermodel->info($key);
-				$data['form_key'] = $form_key;
-				$this->load->view('pages/glassdoor', $data);
-				$this->load->view('templates/footer');
-			}
-		}
-	}
-
-	public function trustpilot($key)
-	{
-		if (!$key) {
-			redirect($_SERVER['HTTP_REFERER']);
-			exit();
-		} else {
-			$form_key = $this->get_key($key);
-			if ($form_key !== $key) {
-				redirect($_SERVER['HTTP_REFERER']);
-				exit();
-			} elseif ($form_key == $key) {
-				$data['info'] = $this->Usermodel->info($key);
-				$data['form_key'] = $form_key;
-				$this->load->view('pages/trustpilot', $data);
-				$this->load->view('templates/footer');
-			}
-		}
-	}
-
-	public function rating_store()
-	{
-		$cq_res = $this->Usermodel->check_quota_expire($_POST['form_key']);
-		if ($cq_res == true) {
-			//$this->send_quota_expire_mail();
-			return false;
-		} else {
-			$res = $this->Usermodel->rating_store($_POST['starv'], $_POST['msg'], $_POST['name'], $_POST['mobile'], $_POST['tbl_name'], $_POST['form_key'], $_POST['for_link']);
-			if ($res) {
-				$output = array(
-					'official' => $res->c_web,
-					'facebook' => $res->fb_link,
-					'google' => $res->google_link,
-					'gd' => $res->glassdoor_link,
-					'tp' => $res->trust_pilot_link,
-				);
-				echo json_encode($output);
-			} else {
-				return true;
-			}
-		}
-	}
-
-	public function quota_send_mail_expire($usermail_expire)
-	{
-		$config['protocol']    = 'smtp';
-		$config['smtp_host']    = 'ssl://smtp.gmail.com';
-		$config['smtp_port']    = '465';
-		$config['smtp_timeout'] = '7';
-		$config['smtp_user']    = 'jvweedtest@gmail.com';
-		$config['smtp_pass']    = 'Jvweedtest9!';
-		$config['charset']    = 'iso-8859-1';
-		$config['mailtype'] = 'text';
-		$config['validation'] = TRUE;
-
-		$this->load->library('email', $config);
-		$this->email->set_newline("\r\n");
-
-		$body = "Hello.\n\nThis email is to inform you that your Quota Limit has expired.\nNew ratings woun't be recorded\nClick here to login to your account to renew for a new plan " . base_url() . "\nIf you have any questions, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
-
-		$this->email->from('jvweedtest@gmail.com', 'Rating');
-		$this->email->to($usermail_expire);
-		$this->email->subject('Quota Limit');
-		$this->email->message($body);
-
-		if ($this->email->send()) {
-			return true;
-		} else {
-			return $this->email->print_debugger();
-		}
-	}
-
-	public function contact()
-	{
-		$this->form_validation->set_rules('name', 'Full Name', 'required|trim|html_escape');
-		$this->form_validation->set_rules('email', 'E-mail', 'trim|valid_email|html_escape');
-		$this->form_validation->set_rules('msg', 'Message', 'required|trim|html_escape');
-
-		if ($this->form_validation->run() === FALSE) {
-			$this->load->view('templates/header');
-			$this->load->view('users/contact');
-			$this->load->view('templates/footer');
-		} else {
-			$name = htmlentities($this->input->post('name'));
-			$user_mail = htmlentities($this->input->post('email'));
-			$bdy = htmlentities($this->input->post('msg'));
-			$mail_res = $this->support_mail($name, $user_mail, $bdy);
-			if ($mail_res !== true) {
-				$this->session->set_flashdata('cntc_us_err', 'Error sending your message');
-				redirect($_SERVER['HTTP_REFERER']);
-			} else {
-				$this->session->set_flashdata('cntc_us_succ', 'Message sent. We will get back to you as soon as possible');
-				redirect($_SERVER['HTTP_REFERER']);
-			}
-		}
-	}
-
-	public function support_mail($name, $user_mail, $bdy)
-	{
-		$config['protocol']    = 'smtp';
-		$config['smtp_host']    = 'ssl://smtp.gmail.com';
-		$config['smtp_port']    = '465';
-		$config['smtp_timeout'] = '7';
-		$config['smtp_user']    = 'jvweedtest@gmail.com';
-		$config['smtp_pass']    = 'Jvweedtest9!';
-		$config['charset']    = 'iso-8859-1';
-		$config['mailtype'] = 'text';
-		$config['validation'] = TRUE;
-
-		$this->load->library('email', $config);
-		$this->email->set_newline("\r\n");
-		if ($user_mail) {
-			$subj = "Support mail from " . $user_mail;
-		} else if (!$user_mail) {
-			$subj = "Support mail";
-		}
-
-		$this->email->from('jvweedtest@gmail.com', 'Rating');
-		$this->email->to('olatayoefficient@gmail.com');
-		$this->email->subject($subj);
-		$this->email->message($bdy);
-
-		if ($this->email->send()) {
-			return true;
-		} else {
-			return $this->email->print_debugger();
-		}
-	}
-
-
-
-
-	public function getlink()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user');
-		}
-		$res = $this->Usermodel->get_link($_POST['id']);
-		if (!$res) {
-			return FALSE;
-			exit();
-		}
-		if ($res) {
-			$output[] = array();
-			$output['id'] = $res->id;
-			$output['c_name'] = $res->c_name;
-			$output['c_add'] = $res->c_add;
-			$output['c_email'] = $res->c_email;
-			$output['c_web'] = $res->c_web;
-			$output['form_key'] = $res->form_key;
-			$output['fb_link'] = $res->fb_link;
-			$output['google_link'] = $res->google_link;
-			$output['glassdoor_link'] = $res->glassdoor_link;
-			$output['trust_pilot_link'] = $res->trust_pilot_link;
-			$output['token'] = $this->security->get_csrf_hash();
-			echo json_encode($output);
-		}
-		$myfile = fopen("body.txt", "w") or die("Unable to open file!");
-		$txt = "Click the link below, to rate any of our websites\n";
-		fwrite($myfile, $txt);
-		$txt = base_url() . "user/wtr/" . $output['form_key'] . "\n\n";
-		fwrite($myfile, $txt);
-		$txt = $output['c_name'] . "\n";
-		fwrite($myfile, $txt);
-		$txt = $output['c_email'] . "\n";
-		fwrite($myfile, $txt);
-		$txt = "Regards";
-		fwrite($myfile, $txt);
-		fclose($myfile);
-	}
-
-	public function sendlink()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user');
-		}
-		if ($this->session->userdata('mr_sub') == "0") {
-			$this->session->set_flashdata('inacc_sub', 'You have no active subscription.');
-			redirect('admin/pick_plan');
-		}
-		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
-		$this->form_validation->set_rules('subj', 'Subject', 'required|trim|html_escape');
-		$this->form_validation->set_rules('bdy', 'Body', 'required|trim|html_escape');
-
-		if ($this->form_validation->run() == false) {
-			$this->load->view('templates/header');
-			$this->load->view('users/sendlink');
-			$this->load->view('templates/footer');
-		} else {
-			$cq_res = $this->Adminmodel->check_quota_expire();
-			if ($cq_res === "not_Found") {
-				$this->logout();
-				exit;
-			} else if ($cq_res !== false) {
-				$usermail_expire = $cq_res->email;
-				$this->quota_send_mail_expire($usermail_expire);
-				$this->session->set_flashdata('quota_expired', 'Quota has expired');
-				redirect('admin/pick_plan');
-			} else {
-				$email = $this->input->post('email');
-				$subj = $this->input->post('subj');
-				$bdy = $this->input->post('bdy');
-				$mail_res = $this->link_send_mail($email, $subj, $bdy);
-				if ($mail_res !== true) {
-					$this->session->set_flashdata('link_send_err', $mail_res);
-					redirect($_SERVER['HTTP_REFERER']);
-					exit;
-				} else {
-					$res = $this->Usermodel->save_info();
-					if ($res !== true) {
-						$this->session->set_flashdata('link_send_err', 'Error saving contacts to DATABASE.');
-						redirect($_SERVER['HTTP_REFERER']);
-						exit;
-					} else {
-						$cq_res = $this->Adminmodel->check_quota_expire();
-						if ($cq_res !== false) {
-							$db_email = $cq_res->email;
-							$this->quota_send_mail_expire($db_email);
-							$this->session->set_flashdata('link_send_succ', 'Link sent successfully');
-							redirect($_SERVER['HTTP_REFERER']);
-							exit;
-						} else {
-							$this->session->set_flashdata('link_send_succ', 'Link sent successfully');
-							redirect($_SERVER['HTTP_REFERER']);
-							exit;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public function email_sample_csv()
-	{
-		header("Content-Type: text/csv; charset=utf-8");
-		header("Content-Disposition: attachment; filename=email_csv_sample.csv");
-		$output = fopen("php://output", "w");
-		fputcsv($output, array('Email'));
-		$data['email'] = array(
-			'email' => "example@domain-name.com",
-		);
-		foreach ($data as $row) {
-			fputcsv($output, $row);
-		}
-		fclose($output);
-	}
-
-	public function sms_sample_csv()
-	{
-		header("Content-Type: text/csv; charset=utf-8");
-		header("Content-Disposition: attachment; filename=sms_csv_sample.csv");
-		$output = fopen("php://output", "w");
-		fputcsv($output, array('Phonenumber'));
-		$data['Phonenumber'] = array(
-			'Phonenumber' => "0123456789",
-		);
-		foreach ($data as $row) {
-			fputcsv($output, $row);
-		}
-		fclose($output);
-	}
-
-	public function sms_importcsv()
-	{
-		$file_data = fopen($_FILES['sms_csv_file']['tmp_name'], 'r');
-		fgetcsv($file_data);
-		while ($row = fgetcsv($file_data)) {
-			$data[] = array(
-				'Phonenumber' => $row[0],
-			);
-		}
-		echo json_encode($data);
 	}
 
 	public function sms_send_link()
@@ -1223,6 +780,18 @@ class User extends CI_Controller
 		}
 	}
 
+	public function sms_importcsv()
+	{
+		$file_data = fopen($_FILES['sms_csv_file']['tmp_name'], 'r');
+		fgetcsv($file_data);
+		while ($row = fgetcsv($file_data)) {
+			$data[] = array(
+				'Phonenumber' => $row[0],
+			);
+		}
+		echo json_encode($data);
+	}
+
 	public function multiple_sms_send_link()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
@@ -1256,7 +825,7 @@ class User extends CI_Controller
 				if ($result === false) {
 					$this->session->set_flashdata('sms_link_send_err', 'Error sending SMS');
 				} else {
-					$res = $this->Usermodel->multiplsms_save_info($_POST['mobiledata'], $_POST['smsbdy'], $_POST['link_for']);
+					$res = $this->Usermodel->multiplsms_save_info($_POST['mobiledata'], $_POST['smsbdy']);
 					if ($res !== true) {
 						$this->session->set_flashdata('link_send_err', 'Error saving contacts to DATABASE.');
 					} else {
@@ -1275,6 +844,63 @@ class User extends CI_Controller
 		}
 	}
 
+	public function send_quota_expire_mail()
+	{
+		$config['protocol']    = 'smtp';
+		$config['smtp_host']    = 'ssl://smtp.gmail.com';
+		$config['smtp_port']    = '465';
+		$config['smtp_timeout'] = '7';
+		$config['smtp_user']    = 'jvweedtest@gmail.com';
+		$config['smtp_pass']    = 'Jvweedtest9!';
+		$config['charset']    = 'iso-8859-1';
+		$config['mailtype'] = 'text';
+		$config['validation'] = TRUE;
+
+		$this->load->library('email', $config);
+		$this->email->set_newline("\r\n");
+
+		$body = "Hello.\n\nThis email is to inform you that your Quota has expired.SMS, Emails and Future ratings woun't be recorded\nRenew your plan to keep using our services" . base_url('admin/pick_plan') . "\nIf you have any queries, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+		$mail = $this->session->userdata('mr_email');
+
+		$this->email->from('jvweedtest@gmail.com', 'Quota Limit');
+		$this->email->to($mail);
+		$this->email->subject('Quota Limit');
+		$this->email->message($body);
+
+		if ($this->email->send()) {
+			return true;
+		} else {
+			return $this->email->print_debugger();
+		}
+	}
+
+	public function account()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('loginfirst', 'Please login first');
+			redirect('user');
+		}
+		$data['user'] = $this->Usermodel->user_total_ratings();
+		$data['balance'] = $this->Usermodel->user_total_quota();
+		$data['user_web'] = $this->Usermodel->get_user_websites();
+		//$data['sent_links']= $this->Usermodel->all_user_sent_links();
+		//print_r($data['user_web']);
+		//die;
+		$this->load->view('templates/header');
+		$this->load->view('users/account', $data);
+		$this->load->view('templates/footer');
+	}
+
+	public function get_key($key)
+	{
+		$form_key = $this->Usermodel->get_key($key);
+		if (!$form_key) {
+			return false;
+		} else {
+			return $form_key;
+		}
+	}
+
 	public function wtr($key)
 	{
 		if (!$key) {
@@ -1289,6 +915,86 @@ class User extends CI_Controller
 				$data['form_key'] = $form_key;
 				$this->load->view('users/rate_option', $data);
 			}
+		}
+	}
+
+	public function rating_store()
+	{
+		$cq_res = $this->Usermodel->check_quota_expire($_POST['form_key']);
+		if ($cq_res == true) {
+			//$this->send_quota_expire_mail();
+			return false;
+		} else {
+			$res = $this->Usermodel->rating_store($_POST['starv'], $_POST['msg'], $_POST['name'], $_POST['mobile'], $_POST['tbl_name'], $_POST['form_key'], $_POST['for_link']);
+			if ($res) {
+				$output = array(
+					'official' => $res->c_web,
+					'facebook' => $res->fb_link,
+					'google' => $res->google_link,
+					'gd' => $res->glassdoor_link,
+					'tp' => $res->trust_pilot_link,
+				);
+				echo json_encode($output);
+			} else {
+				return true;
+			}
+		}
+	}
+
+	public function contact()
+	{
+		$this->form_validation->set_rules('name', 'Full Name', 'required|trim|html_escape');
+		$this->form_validation->set_rules('email', 'E-mail', 'trim|valid_email|html_escape');
+		$this->form_validation->set_rules('msg', 'Message', 'required|trim|html_escape');
+
+		if ($this->form_validation->run() === FALSE) {
+			$this->load->view('templates/header');
+			$this->load->view('users/contact');
+			$this->load->view('templates/footer');
+		} else {
+			$name = htmlentities($this->input->post('name'));
+			$user_mail = htmlentities($this->input->post('email'));
+			$bdy = htmlentities($this->input->post('msg'));
+			$mail_res = $this->support_mail($name, $user_mail, $bdy);
+			if ($mail_res !== true) {
+				$this->session->set_flashdata('cntc_us_err', 'Error sending your message');
+				redirect($_SERVER['HTTP_REFERER']);
+			} else {
+				$this->session->set_flashdata('cntc_us_succ', 'Message sent. We will get back to you as soon as possible');
+				redirect($_SERVER['HTTP_REFERER']);
+			}
+		}
+	}
+
+	public function support_mail($name, $user_mail, $bdy)
+	{
+		$config['protocol']    = 'smtp';
+		$config['smtp_host']    = 'ssl://smtp.gmail.com';
+		$config['smtp_port']    = '465';
+		$config['smtp_timeout'] = '7';
+		$config['smtp_user']    = 'jvweedtest@gmail.com';
+		$config['smtp_pass']    = 'Jvweedtest9!';
+		$config['charset']    = 'iso-8859-1';
+		$config['mailtype'] = 'text';
+		$config['validation'] = TRUE;
+
+		$this->load->library('email', $config);
+		$this->email->set_newline("\r\n");
+		if ($user_mail) {
+			$subj = "Support mail from " . $user_mail;
+		} else if (!$user_mail) {
+			$subj = "Support mail";
+		}
+
+		$this->email->from('jvweedtest@gmail.com', 'Rating');
+		$this->email->to('olatayoefficient@gmail.com');
+		$this->email->subject($subj);
+		$this->email->message($bdy);
+
+		if ($this->email->send()) {
+			return true;
+		} else {
+			return $this->email->print_debugger();
 		}
 	}
 }

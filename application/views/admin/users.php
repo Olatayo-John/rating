@@ -13,7 +13,7 @@
 				<form action="<?php echo base_url('admin/add_user'); ?>" method="post" class="mt-0">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf-token">
 					<div class="modal-body"></div>
-				</div>
+			</div>
 			</form>
 		</div>
 	</div>
@@ -49,7 +49,7 @@
 								<div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
 							</div>
 						</div>
-					</div>	
+					</div>
 					<div class="form-group">
 						<label>Company Name</label>
 						<input type="text" name="c_name" class="form-control c_name" placeholder="Company Name">
@@ -127,54 +127,61 @@
 		</button>
 	</div>
 	<div class="container-fluid table-responsive">
-		<table class="table table-center table-hover table-md table-light">
+		<table class="table table-center table-hover table-md table-light table-bordered">
 			<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
-				<th><div class="inh">	
-					<i class="fas fa-sort" name="uname" type="desc"></i>
-					<span>User</span>
-				</div></th>
-				<th><div class="inh">	
-					<i class="fas fa-sort " name="mobile" type="desc"></i>
-					<span>User Mobile</span>
-				</div></th>
-				<th><div class="inh">				
-					<i class="fas fa-sort" name="c_name" type="desc"></i>
-					<span>Company</span>
-				</div></th>
-				<th><div class="cmp">					
-					<i class="fas fa-sort" name="c_mobile" type="desc"></i>
-					<span>Company Mobile</span>
-				</div></th>
-				<th><div class="cmp">				
-					<i class="fas fa-sort" name="c_email" type="desc"></i>
-					<span>Company Mail</span>
-				</div></th>
-				<th><div class="inh">				
-					<i class="fas fa-sort" name="active" type="desc"></i>
-					<span>Active?</span>
-				</div></th>
-				<th><div class="cmp">				
-					<i class="fas fa-sort" name="sub" type="desc"></i>
-					<span>Subscribed?</span>
-				</div></th>
+				<th>
+					<div class="inh">
+						<i class="fas fa-sort" name="uname" type="desc"></i>
+						<span>User</span>
+					</div>
+				</th>
+				<th>
+					<div class="inh">
+						<i class="fas fa-sort " name="mobile" type="desc"></i>
+						<span>Full Name</span>
+					</div>
+				</th>
+				<th>
+					<div class="cmp">
+						<i class="fas fa-sort" name="c_mobile" type="desc"></i>
+						<span>Mobile</span>
+					</div>
+				</th>
+				<th>
+					<div class="cmp">
+						<i class="fas fa-sort" name="c_email" type="desc"></i>
+						<span>E-Mail</span>
+					</div>
+				</th>
+				<th>
+					<div class="inh">
+						<i class="fas fa-sort" name="active" type="desc"></i>
+						<span>Active?</span>
+					</div>
+				</th>
+				<th>
+					<div class="cmp">
+						<i class="fas fa-sort" name="sub" type="desc"></i>
+						<span>Subscribed?</span>
+					</div>
+				</th>
 				<th class="text-danger text-center font-weight-bolder">
 					Action
 				</th>
 			</tr>
 
-			<?php if($users->num_rows() == '0'): ?>
+			<?php if ($users->num_rows() == '0') : ?>
 				<tr class="text-dark">
 					<td colspan='6' class='font-weight-bolder text-dark text-center'>No data found</td>
 				</tr>
 			<?php endif; ?>
-			<?php if($users->num_rows() > '0'): ?>
-				<?php foreach($users->result_array() as $info): ?>
+			<?php if ($users->num_rows() > '0') : ?>
+				<?php foreach ($users->result_array() as $info) : ?>
 					<tr class="text-dark text-center">
 						<td class="text-uppercase"><?php echo $info['uname'] ?></td>
+						<td class=""><?php echo $info['fname'] . " " . $info['lname']  ?></td>
 						<td class=""><?php echo $info['mobile'] ?></td>
-						<td class="text-uppercase"><?php echo $info['c_name'] ?></td>
-						<td class=""><?php echo $info['c_mobile'] ?></td>
-						<td class=""><?php echo $info['c_email'] ?></td>
+						<td class=""><?php echo $info['email'] ?></td>
 						<td class=""><?php echo $info['active'] ?></td>
 						<td class=""><?php echo $info['sub'] ?></td>
 						<td class="font-weight-bolder">
@@ -190,44 +197,44 @@
 					</tr>
 				<?php endforeach; ?>
 			<?php endif; ?>
-			</table><?php echo $links; ?>
-		</div>
+		</table><?php echo $links; ?>
 	</div>
+</div>
 </div>
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/users.js'); ?>"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(document).on('click','button.reload_btn',function() {
+		$(document).on('click', 'button.reload_btn', function() {
 			reload_table();
 		});
 
-		function reload_table(){
-			var csrfName= $('.csrf-token').attr('name');
-			var csrfHash= $('.csrf-token').val();
+		function reload_table() {
+			var csrfName = $('.csrf-token').attr('name');
+			var csrfHash = $('.csrf-token').val();
 			$.ajax({
 				method: "POST",
 				url: "<?php echo base_url('admin/reload_table') ?>",
 				data: {
-					[csrfName]:csrfHash
+					[csrfName]: csrfHash
 				},
-				success: function(data){
+				success: function(data) {
 					$('.table').html(data);
 				}
 			})
 		}
 
-		function load_data(query){
-			var csrfName= $('.csrf-token').attr('name');
-			var csrfHash= $('.csrf-token').val();
+		function load_data(query) {
+			var csrfName = $('.csrf-token').attr('name');
+			var csrfHash = $('.csrf-token').val();
 			$.ajax({
 				method: "POST",
 				url: "<?php echo base_url('admin/users_search_user') ?>",
 				data: {
-					query:query,
-					[csrfName]:csrfHash
+					query: query,
+					[csrfName]: csrfHash
 				},
-				success: function(data){
+				success: function(data) {
 					$('.table').html(data);
 				}
 			})
@@ -237,30 +244,30 @@
 			var search = $(this).val();
 			if (search != '') {
 				load_data(search);
-			}else{
+			} else {
 				reload_table();
 			}
 		});
 
-		$(document).on('click','i.fa-sort',function() {
-			var param= $(this).attr('name');
-			var type= $(this).attr('type');
-			var csrfName= $('.csrf-token').attr('name');
-			var csrfHash= $('.csrf-token').val();
+		$(document).on('click', 'i.fa-sort', function() {
+			var param = $(this).attr('name');
+			var type = $(this).attr('type');
+			var csrfName = $('.csrf-token').attr('name');
+			var csrfHash = $('.csrf-token').val();
 			$.ajax({
 				url: "<?php echo base_url('admin/users_filter_param') ?>",
 				method: "post",
 				data: {
-					param:param,
-					type:type,
-					[csrfName]:csrfHash,
+					param: param,
+					type: type,
+					[csrfName]: csrfHash,
 				},
 				success: function(data) {
 					$('.table').html(data);
 					if (type == 'desc') {
-						$('.fas').attr('type','asc');
-					}else{
-						$('.fas').attr('type','desc');
+						$('.fas').attr('type', 'asc');
+					} else {
+						$('.fas').attr('type', 'desc');
 					}
 				},
 				error: function(data) {
@@ -269,9 +276,9 @@
 			});
 		});
 
-		$(document).on('click','button.editbtn',function() {
-			var user_id= $(this).attr("id");
-			var csrfName = $('.csrf-token').attr('name'); 
+		$(document).on('click', 'button.editbtn', function() {
+			var user_id = $(this).attr("id");
+			var csrfName = $('.csrf-token').attr('name');
 			var csrfHash = $('.csrf-token').val();
 			$('.updateusermodal').modal('show');
 
@@ -279,18 +286,17 @@
 				url: "<?php echo base_url('admin/get_user') ?>",
 				method: "POST",
 				data: {
-					user_id:user_id,
-					[csrfName]:csrfHash
+					user_id: user_id,
+					[csrfName]: csrfHash
 				},
 				dataType: "json",
-				success: function(data)
-				{
+				success: function(data) {
 					$('.u_user_id').val(data.id);
 					$('.csrf-token').val(data.token);
 					if (data.admin == "0") {
 						$('.u_dept').html("User").val("0");
 						$('.u_dept_two').html("Admin").val("1");
-					}else {
+					} else {
 						$('.u_dept').html("Admin").val("1");
 						$('.u_dept_two').html("User").val("0");
 					}
@@ -316,117 +322,117 @@
 			});
 		});
 
-		$(document).on('click','.updatebtn', function(){
-			var u_user_id= $('.u_user_id').val();
-			var uname= $('.uname').val();
-			var full_name= $('.full_name').val();
-			var email= $('.email').val();
-			var mobile= $('.mobile').val();
-			var c_name= $('.c_name').val();
-			var c_add= $('.c_add').val();
-			var c_email= $('.c_email').val();
-			var c_mobile= $('.c_mobile').val();
-			var c_web= $('.c_web').val();
-			var fb_link= $('.fb_link').val();
-			var google_link= $('.google_link').val();
-			var glassdoor_link= $('.glassdoor_link').val();
-			var trust_pilot_link= $('.trust_pilot_link').val();
-			var u_pwd= $('.u_pwd').val();
-			var csrfName = $('.csrf-token').attr('name'); 
-			var csrfHash = $('.csrf-token').val();			
+		$(document).on('click', '.updatebtn', function() {
+			var u_user_id = $('.u_user_id').val();
+			var uname = $('.uname').val();
+			var full_name = $('.full_name').val();
+			var email = $('.email').val();
+			var mobile = $('.mobile').val();
+			var c_name = $('.c_name').val();
+			var c_add = $('.c_add').val();
+			var c_email = $('.c_email').val();
+			var c_mobile = $('.c_mobile').val();
+			var c_web = $('.c_web').val();
+			var fb_link = $('.fb_link').val();
+			var google_link = $('.google_link').val();
+			var glassdoor_link = $('.glassdoor_link').val();
+			var trust_pilot_link = $('.trust_pilot_link').val();
+			var u_pwd = $('.u_pwd').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var csrfHash = $('.csrf-token').val();
 
 			if (email == "" || email == null) {
-				$('.email').css('border','2px solid red');
+				$('.email').css('border', '2px solid red');
 				document.getElementById("email").scrollIntoView();
 				return false;
-			}else{
-				$('.email').css('border','0 solid red');
+			} else {
+				$('.email').css('border', '0 solid red');
 			}
 			if (mobile == "" || mobile == null) {
-				$('.mobile').css('border','2px solid red');
+				$('.mobile').css('border', '2px solid red');
 				document.getElementById("mobile").scrollIntoView();
 				return false;
-			}if (mobile.length < 10 || mobile.length > 10) {
+			}
+			if (mobile.length < 10 || mobile.length > 10) {
 				document.getElementById("mobile").scrollIntoView();
 				$('.mobileerr').show();
 				return false;
-			}else{
-				$('.mobile').css('border','0 solid red');
+			} else {
+				$('.mobile').css('border', '0 solid red');
 				$('.mobileerr').hide();
 			}
 			if (uname == "" || uname == null) {
-				$('.uname').css('border','2px solid red');
+				$('.uname').css('border', '2px solid red');
 				document.getElementById("uname").scrollIntoView();
 				return false;
-			}else{
-				$('.uname').css('border','0 solid red');
+			} else {
+				$('.uname').css('border', '0 solid red');
 			}
 
 			$.ajax({
-				url: "<?php echo base_url('admin/update_user') ?>",
-				method: "POST",
-				data: {
-					u_user_id:u_user_id,
-					uname:uname,
-					full_name:full_name,
-					email:email,
-					mobile:mobile,
-					c_name:c_name,
-					c_add:c_add,
-					c_email:c_email,
-					c_mobile:c_mobile,
-					c_web:c_web,
-					fb_link:fb_link,
-					google_link:google_link,
-					glassdoor_link:glassdoor_link,
-					trust_pilot_link:trust_pilot_link,
-					u_pwd:u_pwd,
-					[csrfName]:csrfHash
-				},
-				beforeSend: function() {
-					$('.updatebtn').removeClass("btn-success").addClass("btn-danger");
-					$('.updatebtn').html("Updating...");
-					$('.updatebtn').attr("disabled","disabled");
-					$('.updatebtn').css("cursor","not-allowed");
-				},
-				error: function(data)
-				{
-					alert("Error updating. Please refresh page");
-				}
-			})
-			.done(function() {
-				window.location.reload();
-			});
+					url: "<?php echo base_url('admin/update_user') ?>",
+					method: "POST",
+					data: {
+						u_user_id: u_user_id,
+						uname: uname,
+						full_name: full_name,
+						email: email,
+						mobile: mobile,
+						c_name: c_name,
+						c_add: c_add,
+						c_email: c_email,
+						c_mobile: c_mobile,
+						c_web: c_web,
+						fb_link: fb_link,
+						google_link: google_link,
+						glassdoor_link: glassdoor_link,
+						trust_pilot_link: trust_pilot_link,
+						u_pwd: u_pwd,
+						[csrfName]: csrfHash
+					},
+					beforeSend: function() {
+						$('.updatebtn').removeClass("btn-success").addClass("btn-danger");
+						$('.updatebtn').html("Updating...");
+						$('.updatebtn').attr("disabled", "disabled");
+						$('.updatebtn').css("cursor", "not-allowed");
+					},
+					error: function(data) {
+						alert("Error updating. Please refresh page");
+					}
+				})
+				.done(function() {
+					window.location.reload();
+				});
 		});
 
-		$(document).on('click','button.delbtn', function() { 
-			var user_id= $(this).attr('id');
-			var form_key= $(this).attr('form_key');
-			var csrfHash= $('.csrf-token').val();
-			var csrfName= $('.csrf-token').attr('name');
-			var con= confirm("Are you sure you want to delete this user and all of its data?");
+		$(document).on('click', 'button.delbtn', function() {
+			var user_id = $(this).attr('id');
+			var form_key = $(this).attr('form_key');
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var con = confirm("Are you sure you want to delete this user and all of its data?");
 			if (con == false) {
 				return false;
-			}else if(con == true){
-			//console.log(user_id);
-			//console.log(form_key);
-			$.ajax({
-				url: "<?php echo base_url('admin/delete_user'); ?>",
-				method: "post",
-				data: {
-					user_id:user_id,
-					form_key:form_key,
-					[csrfName]:csrfHash
-				},
-				error: function(data) {
-					alert('Failed to delete. Please refresh page');
-				}
-			})
-			.done(function() {
-				window.location.reload();
-			});
-		}       
-	});
+			} else if (con == true) {
+				//console.log(user_id);
+				//console.log(form_key);
+				$.ajax({
+						url: "<?php echo base_url('admin/delete_user'); ?>",
+						method: "post",
+						data: {
+							user_id: user_id,
+							form_key: form_key,
+							[csrfName]: csrfHash
+						},
+						error: function(data) {
+							alert('Failed to delete. Please refresh page');
+						}
+					})
+					.done(function() {
+						window.location.reload();
+					});
+			}
+		});
 
 	});
 </script>

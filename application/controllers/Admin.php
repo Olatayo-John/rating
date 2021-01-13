@@ -73,7 +73,7 @@ class Admin extends CI_Controller
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=users.csv");
 		$output = fopen("php://output", "w");
-		fputcsv($output, array('ID', 'Username', 'Full Name', 'E-mail', 'Mobile', 'Company Name', 'Company Address', 'Company E-mail', 'Company Mobile', 'Company Website', 'Facebook Link', 'Google Link', 'Glassdoor Link', 'Trust Pilot Link', 'Active', 'Subscription'));
+		fputcsv($output, array('ID', 'Username', 'First Name', 'Last Name', 'E-mail', 'Mobile', 'Active', 'Subscription'));
 		$data = $this->Adminmodel->users_export_csv();
 		foreach ($data as $row) {
 			fputcsv($output, $row);

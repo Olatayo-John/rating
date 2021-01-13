@@ -42,7 +42,7 @@
 				<?php endif; ?>
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_admin') == "1") : ?>
 					<li class="nav-item"><a href="<?php echo base_url('admin/votes') ?>" class="nav-link">
-							<i class="fas fa-poll"></i>Feedback</a>
+							<i class="fas fa-poll"></i>Reviews</a>
 					</li>
 					<li class="nav-item"><a href="<?php echo base_url('admin/users') ?>" class="nav-link">
 							<i class="fas fa-user-shield"></i>Users</a>

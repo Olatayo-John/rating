@@ -40,6 +40,7 @@ class User extends CI_Controller
 			}
 			if ($validate) {
 				$id = $validate->id;
+				$admin = $validate->admin;
 				$uname = $validate->uname;
 				$email = $validate->email;
 				$mobile = $validate->mobile;
@@ -49,6 +50,7 @@ class User extends CI_Controller
 
 				$user_sess = array(
 					'mr_id' => $id,
+					'mr_admin' => $admin,
 					'mr_uname' => $uname,
 					'mr_email' => $email,
 					'mr_mobile' => $mobile,
@@ -406,7 +408,7 @@ class User extends CI_Controller
 		}
 	}
 
-	public function search_website()
+	/* public function search_website()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('loginfirst', 'Please login first');
@@ -415,11 +417,46 @@ class User extends CI_Controller
 		$act_res = $this->Usermodel->search_website($_POST['search_data']);
 		$output = '';
 		if ($act_res->num_rows() == 0) {
-			$output = '';
+			$output = '<h5 class="text-center text-uppercase pt-4 pb-3">No website present</h5>';
 		} else {
+			foreach ($act_res->result_array() as $web) {
+				$output = '<div class="row col-md-12" style="padding-right:0">';
+				if ($web['active'] == "1") {
+					$output .= '<div class="col-md-1" style="margin:auto">
+					<i class="fas fa-circle text-success" style="font-size: 20px;"></i>
+				</div>';
+				}
+				if ($web['active'] == "0") {
+					$output .= '<div class="col-md-1" style="margin:auto">
+					<i class="fas fa-circle text-danger" style="font-size: 20px;"></i>
+				</div>';
+				}
+				$output .= '<div class="form-group col">
+				<input type="text" name="web_name" class="form-control web_input" value="' . $web['web_name'] . '" id="' . $web['id'] . '" placeholder="Website name" readonly>
+				</div>';
+				$output .= '<div class="col-md-4" style="padding:0">
+				<div class="d-flex flex-row" style="justify-content:flex-end">
+					<button type="button" class="btn btn-dark edit_web_btn " id="' . $web['id'] . '">
+						Edit
+					</button>
+					<button type="button" class="btn btn-dark delete_web_btn ml-2" id="' . $web['id'] . '">
+						Delete
+					</button>';
+				if ($web['active'] == "1") {
+					$output .= '<button type="button" class="btn btn-danger status_web_btn ml-2" id="' . $web['id'] . '" status="0">
+						Deactivate
+					</button>';
+				}
+				if ($web['active'] == "0") {
+					$output .= '<button type="button" class="btn btn-success status_web_btn ml-2" id="' . $web['id'] . '" status="1">
+						Activate
+					</button>';
+				}
+				$output .= '</div></div></div>';
+			}
 		}
 		echo json_encode($output);
-	}
+	} */
 
 	public function account()
 	{

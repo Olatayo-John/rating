@@ -40,7 +40,7 @@
 <div class="con mt-3 mr-3 ml-3 mb-3 pl-4 pr-4 pt-4 web_div">
 	<h4 class="text-dark web mb-3">Websites</h4>
 
-	<div class="mb-5 some_name_div mt-4">
+	<!-- <div class="mb-5 some_name_div mt-4">
 		<div class="add_web">
 			<button type="button" class="add_web_btn text-light" style="background-color:#00695C;padding:6px;border:none">
 				<i class="fas fa-plus-circle"></i>
@@ -53,7 +53,7 @@
 		<div class="search_icon_div">
 			<i class="fas fa-search search_icon"></i>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="modal add_web_modal">
 		<div class="modal-dialog">
@@ -84,21 +84,22 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
-					<form action="<?php echo base_url("user/update_website") ?>" method='post'>
+					<!-- <form action="<?php echo base_url("user/update_website") ?>" method='post'> -->
+					<form method='post'>
 						<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 						<input type="hidden" class="web_id form-control" name="web_id" value="">
 						<div class="form-group">
 							<label>Website Name</label>
-							<input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Name of the webiste" required>
+							<input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Name of the webiste" required readonly>
 						</div>
 						<div class="form-group">
 							<label class="mb-0">Website Link</label>
-							<div class="text-danger font-weight-bolder mt-0">Link must start with http or https</div>
-							<input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Website link" required>
+							<!-- <div class="text-danger font-weight-bolder mt-0">Link must start with http or https</div> -->
+							<input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Website link" required readonly>
 						</div>
 						<div class="modal_btn_actions d-flex justify-content-between">
 							<button type="button" class="btn btn-secondary close_editweb_modal">Close</button>
-							<button type="submit" class="btn update_web_modal_btn text-light" id="" style="background-color:#00695C;">Update</button>
+							<!-- <button type="submit" class="btn update_web_modal_btn text-light" style="background-color:#00695C;">Update</button> -->
 						</div>
 					</form>
 				</div>
@@ -122,28 +123,40 @@
 	</div>
 
 	<?php if ($websites->num_rows() < 0) : ?>
-		<h4 class="text-center text-uppercase mt-3">No website present</h4>
+		<h5 class="text-center text-uppercase pt-4 pb-3">No website present</h5>
 	<?php endif; ?>
+	<div class="row col-md-12 mt-4">
+		<div class="col-md-1">
+			<span class="font-weight-bolder">Status</span>
+		</div>
+		<div class="text-center col">
+			<span class="font-weight-bolder">Website Name</span>
+		</div>
+		<div class="col-md-4 text-center">
+			<span class="font-weight-bolder">Actions</span>
+		</div>
+	</div>
+	<hr>
 	<?php if ($websites->num_rows() > 0) : ?>
 		<?php foreach ($websites->result_array() as $web) : ?>
 			<div class="row col-md-12" style="padding-right:0">
 				<?php if ($web['active'] == "1") : ?>
 					<div class="col-md-1" style="margin:auto">
-						<i class="fas fa-circle text-success" style="font-size: 20px;"></i>
+						<i class="fas fa-circle text-success" style="font-size: 20px;" id="<?php echo $web['id'] ?>"></i>
 					</div>
 				<?php endif; ?>
 				<?php if ($web['active'] == "0") : ?>
 					<div class="col-md-1" style="margin:auto">
-						<i class="fas fa-circle text-danger" style="font-size: 20px;"></i>
+						<i class="fas fa-circle text-danger" style="font-size: 20px;" id="<?php echo $web['id'] ?>"></i>
 					</div>
 				<?php endif; ?>
 				<div class="form-group col">
 					<input type="text" name="web_name" class="form-control web_input" value="<?php echo $web['web_name'] ?>" id="<?php echo $web['id'] ?>" placeholder="Website name" readonly>
 				</div>
 				<div class="col-md-4" style="padding:0">
-					<div class="d-flex flex-row" style="justify-content:flex-end">
+					<div class="d-flex flex-row" style="justify-content:center">
 						<button type="button" class="btn btn-dark edit_web_btn " id="<?php echo $web['id'] ?>">
-							Edit
+							View
 						</button>
 						<button type="button" class="btn btn-dark delete_web_btn ml-2" id="<?php echo $web['id'] ?>">
 							Delete
@@ -163,6 +176,7 @@
 			</div>
 		<?php endforeach; ?>
 	<?php endif; ?>
+</div>
 </div>
 
 <div class="con mt-3 mr-3 ml-3 mb-3 pl-4 pt-4  ac_div">
@@ -192,7 +206,7 @@
 	</form>
 </div>
 
-<div class="addweb_div" id="addweb_div">
+<!-- <div class="addweb_div" id="addweb_div">
 	<div class="modal-body">
 		<p>Are you sure you want to perform this operation?</p>
 		<p>Your account will be de-activated and you'll be logged out completely</p>
@@ -201,7 +215,7 @@
 			<button class="btn btn-danger yes_btn">Yes</button>
 		</div>
 	</div>
-</div>
+</div> -->
 
 
 
@@ -237,7 +251,7 @@
 				},
 				dataType: "json",
 				success: function(data) {
-					$('.').html(data);
+					$('.website_table_div').html(data);
 				},
 				error: function(data) {
 					alert("Error searching...");
@@ -245,7 +259,7 @@
 			});
 		}
 
-		$('button.edit_web_btn').click(function() {
+		$(document).on('click', 'button.edit_web_btn', function() {
 			var csrfName = $('.csrf_token').attr('name');
 			var csrfHash = $('.csrf_token').val();
 			var id = $(this).attr('id');
@@ -271,8 +285,8 @@
 			});
 		});
 
-		$('button.update_web_modal_btn').click(function(e) {
-			// e.preventDefault();
+		$(document).on('click', 'button.update_web_modal_btn', function(e) {
+			e.preventDefault();
 			var csrfName = $('.csrf_token').attr('name');
 			var csrfHash = $('.csrf_token').val();
 			var id = $('.web_id').val();
@@ -316,7 +330,7 @@
 			});
 		});
 
-		$('button.status_web_btn').click(function() {
+		$(document).on('click', 'button.status_web_btn', function() {
 			var csrfName = $('.csrf_token').attr('name');
 			var csrfHash = $('.csrf_token').val();
 			var id = $(this).attr('id');

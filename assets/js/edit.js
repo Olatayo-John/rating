@@ -4,7 +4,7 @@ $(document).ready(function () {
 		e.preventDefault();
 		$('div.web_div,div.ac_div').hide();
 		$('a.web_a,a.ac_a').css('border-bottom', 'initial');
-		$(this).css('border-bottom', '2px solid #00695C');
+		$(this).css('border-bottom', '2px solid #141E30');
 		$('div.prof_div').show();
 	});
 
@@ -12,7 +12,7 @@ $(document).ready(function () {
 		e.preventDefault();
 		$('div.prof_div,div.ac_div').hide();
 		$('a.prof_a,a.ac_a').css('border-bottom', 'initial');
-		$(this).css('border-bottom', '2px solid #00695C');
+		$(this).css('border-bottom', '2px solid #141E30');
 		$('div.web_div').show();
 	});
 
@@ -20,7 +20,7 @@ $(document).ready(function () {
 		e.preventDefault();
 		$('div.prof_div, div.web_div').hide();
 		$('a.prof_a, a.web_a').css('border-bottom', 'initial');
-		$(this).css('border-bottom', '2px solid #00695C');
+		$(this).css('border-bottom', '2px solid #141E30');
 		$('div.ac_div').show();
 	});
 

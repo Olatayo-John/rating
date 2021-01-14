@@ -1,7 +1,7 @@
 body{
 	background: #141E30;
-	background: -webkit-linear-gradient(to right, #243B55, #141E30);
-	background: linear-gradient(to right, #243B55, #141E30);
+	/* background: -webkit-linear-gradient(to right, #243B55, #141E30);
+	background: linear-gradient(to right, #243B55, #141E30); */
 }
 label{
 	color: black;
@@ -10,7 +10,7 @@ button:focus{
 	outline: none;
 }
 input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
-	border-color: #00695C;
+	border-color: #141E30;
 	box-shadow: none;
 }
 .con{
@@ -22,10 +22,10 @@ input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
 	justify-content: space-evenly;
 }
 .tab_div a.prof_a{
-	border-bottom: 2px solid #00695C;
+	border-bottom: 2px solid #141E30;
 }
 .tab_link{
-	color: black;
+	color: #141E30;
 	font-weight: bold;
 	font-size: 15px;
 }
@@ -36,15 +36,15 @@ input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
 div.web_div,div.course_div,div.ac_div,div.addweb_div{
 	display: none;
 	}
-	/* div.prof_div,div.course_div,div.ac_div,div.addweb_div,div.search_div{
-		display: none;
-	} */
+/* div.prof_div,div.course_div,div.ac_div,div.addweb_div,div.search_div{
+	display: none;
+} */
 	h4.p_i{
-		border-bottom: 3px solid #00695C;
+		border-bottom: 3px solid #141E30;
 		width: 200px;
 	}
 	h4.web{
-		border-bottom: 3px solid #00695C;
+		border-bottom: 3px solid #141E30;
 		width: 100px;
 	}
 	.some_name_div{
@@ -70,7 +70,7 @@ div.web_div,div.course_div,div.ac_div,div.addweb_div{
 		border: none;
 		background: transparent !important;
 		outline: none;
-		border-bottom: 2px solid #00695C;
+		border-bottom: 2px solid #141E30;
 		border-radius: 0;
 	}
 	.web_link_edit,.web_name_edit,.web_name,.web_link{
@@ -83,7 +83,7 @@ div.web_div,div.course_div,div.ac_div,div.addweb_div{
 		outline: none;
 	}
 	h4.account{
-		border-bottom: 3px solid #00695C;
+		border-bottom: 3px solid #141E30;
 		width: 170px;
 	}
 	.mobileerr,.n_pwd_err,.rtn_pwd_err{

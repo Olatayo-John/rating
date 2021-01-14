@@ -18,97 +18,97 @@
 		</div>
 	</div>
 	<div class="modal updateusermodal">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
-				<div class="modal-body" style="padding: 1rem">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label><span class="text-danger font-weight-bolder">* </span>Username</label>
-								<input type="text" name="uname" class="form-control uname" placeholder="Pick a username" id="uname">
-							</div>
+				<div class="modal-body">
+					<div class="row d-flex justify-content-between" style="background:#141E30;">
+						<div class="nameofuser_h">
+							<h6 class="text-light mt-auto mb-auto" style="text-transform:uppercase"></h6>
 						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>Full Name</label>
-								<input type="text" name="full_name" class="form-control full_name" placeholder="Your full name">
-							</div>
+						<div class="close_x_div">
+							<span class="text-light close_x_icon">&times</span>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label><span class="text-danger font-weight-bolder">* </span>E-mail:</label>
-								<input type="email" name="email" class="form-control email" placeholder="User E-mail Address" id="email">
+					<div class="tab_div mt-2">
+						<a href="" class="tab_link prof_a">Profile</a>
+						<a href="" class="tab_link web_a">Websites</a>
+						<a href="" class="tab_link ac_a">Account</a>
+					</div>
+					<input type="hidden" name="user_id" class="user_id">
+					<input type="hidden" name="user_form_key" class="user_form_key">
+					<div class="profile_div">
+						<div class="form-group">
+							<label><span class="text-danger font-weight-bolder">* </span>Username</label>
+							<input type="text" name="uname" class="form-control uname" placeholder="Username">
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>First Name</label>
+									<input type="text" name="fname" class="form-control fname" placeholder="First Name">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Last Name</label>
+									<input type="text" name="lname" class="form-control lname" placeholder="Last Name">
+								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label><span class="text-danger font-weight-bolder">* </span>Mobile:</label>
-								<input type="number" name="mobile" class="form-control mobile" placeholder="User Mobile Number" id="mobile">
-								<div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label><span class="text-danger font-weight-bolder">* </span>E-mail:</label>
+									<input type="email" name="email" class="form-control email" placeholder="User E-mail Address" id="email">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label><span class="text-danger font-weight-bolder">* </span>Mobile:</label>
+									<input type="number" name="mobile" class="form-control mobile" placeholder="User Mobile Number" id="mobile">
+									<div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<label>Company Name</label>
-						<input type="text" name="c_name" class="form-control c_name" placeholder="Company Name">
-					</div>
-					<div class="form-group">
-						<label>Company Address</label>
-						<input type="text" name="c_add" class="form-control c_add" placeholder="Company Address">
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>Company E-mail</label>
-								<input type="email" name="c_email" class="form-control c_email" placeholder="Company E-mail Address">
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>Company Mobile</label>
-								<input type="number" name="c_mobile" class="form-control c_mobile" placeholder="Company Mobile">
-								<div class="text-danger font-weight-bolder c_mobileerr" style="display: none;">Invalid mobile length</div>
-							</div>
+						<div class="updatebtngrp d-flex justify-content-between mb-2">
+							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
+							<button class="btn text-light user_profileupdate bradius" style="background:#141E30">Update</button>
 						</div>
 					</div>
-					<div class="form-group">
-						<label>Company Website</label>
-						<input type="text" name="c_web" class="form-control c_web" placeholder="https://domain-name.com">
+					<div class="website_div">
+						<div class="add_web text-right">
+							<button type="button" class="add_web_btn text-light" style="background-color:#141E30;padding:6px;border:none">
+								<i class="fas fa-plus-circle"></i>
+								Add Website
+							</button>
+						</div>
+						<div class="website_form_div">
+						</div>
+						<div class="updatebtngrp d-flex justify-content-between mb-2 web_btngrp">
+							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
+							<button class="btn text-light user_webpdate bradius" style="background:#141E30">Update</button>
+						</div>
 					</div>
-					<div class="form-group">
-						<label>Google Link</label>
-						<input type="text" name="google_link" class="form-control google_link" placeholder="https://domain-name.com">
-					</div>
-					<div class="form-group">
-						<label>Facebook Link</label>
-						<input type="text" name="fb_link" class="form-control fb_link" placeholder="https://domain-name.com">
-					</div>
-					<div class="form-group">
-						<label>Glassdoor Link</label>
-						<input type="text" name="glassdoor_link" class="form-control glassdoor_link" placeholder="https://domain-name.com">
-					</div>
-					<div class="form-group">
-						<label>Trust Pilot Link</label>
-						<input type="text" name="trust_pilot_link" class="form-control trust_pilot_link" placeholder="https://domain-name.com">
-					</div>
-					<div class="form-group mb-0 row pwddiv">
-						<div class="col-md-8">
-							<label>Password</label>
+					<div class="account_div">
+						<div class="form-group pwddiv">
+							<label>New Password</label>
 							<input type="text" name="u_pwd" class="form-control u_pwd">
+							<div class="text-danger font-weight-bolder pwderr">Password will be changed on this user!</div>
 						</div>
-						<div class="text-danger font-weight-bolder pwderr ml-3">Password will be changed on this user</div>
-						<div class="col-md-6 mt-2">
-							<button class="btn btn-dark genpwdbtn" type="button">Generate new password</button>
+						<div class="form-group mt-2">
+							<button class="btn btn-dark genpwdbtn" type="button">Generate password</button>
+						</div>
+						<div class="form-group mt-2 text-right">
+							<button class="btn btn-danger delact_btn" type="button">Delete account</button>
+							<button class="btn btn-danger deact_btn" type="button">De-activate account</button>
+						</div>
+						<div class="updatebtngrp d-flex justify-content-between mb-2">
+							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
+							<button class="btn text-light user_accupdate bradius" style="background:#141E30">Update</button>
 						</div>
 					</div>
 				</div>
-				<div class="updatebtngrp d-flex justify-content-between mb-2">
-					<button class="btn btn-dark closeupdatebtn bradius ml-2">Close</button>
-					<input type="hidden" name="u_user_id" class="u_user_id">
-					<button class="btn btn-success updatebtn bradius mr-2">Update</button>
-				</div>
+
 			</div>
 		</div>
 	</div>
@@ -119,16 +119,19 @@
 		</div>
 	</div>
 	<div class="mt-3 mr-3 ml-3 mb-3">
-		<a href="<?php echo base_url('admin/users_export_csv'); ?>" class="btn text-light csvbtn" style="background: linear-gradient(to right, #243B55, #141E30);">
+		<a href="<?php echo base_url('admin/users_export_csv'); ?>" class="btn text-light csvbtn" style="background:#141E30;">
 			<i class="fas fa-file-csv mr-2"></i>CSV Download
 		</a>
-		<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background: linear-gradient(to right, #243B55, #141E30);">
+		<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background:#141E30;">
 			<i class="fas fa-sync-alt"></i>
 		</button>
 	</div>
 	<div class="container-fluid table-responsive">
 		<table class="table table-center table-hover table-md table-light table-bordered">
-			<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
+			<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
+				<th>
+					<span>Status</span>
+				</th>
 				<th>
 					<div class="inh">
 						<i class="fas fa-sort" name="uname" type="desc"></i>
@@ -137,26 +140,20 @@
 				</th>
 				<th>
 					<div class="inh">
-						<i class="fas fa-sort " name="mobile" type="desc"></i>
+						<i class="fas fa-sort " name="fname" type="desc"></i>
 						<span>Full Name</span>
 					</div>
 				</th>
 				<th>
 					<div class="cmp">
-						<i class="fas fa-sort" name="c_mobile" type="desc"></i>
+						<i class="fas fa-sort" name="mobile" type="desc"></i>
 						<span>Mobile</span>
 					</div>
 				</th>
 				<th>
 					<div class="cmp">
-						<i class="fas fa-sort" name="c_email" type="desc"></i>
+						<i class="fas fa-sort" name="email" type="desc"></i>
 						<span>E-Mail</span>
-					</div>
-				</th>
-				<th>
-					<div class="inh">
-						<i class="fas fa-sort" name="active" type="desc"></i>
-						<span>Active?</span>
 					</div>
 				</th>
 				<th>
@@ -170,26 +167,38 @@
 				</th>
 			</tr>
 
-			<?php if ($users->num_rows() == '0') : ?>
+			<?php if ($users->num_rows() <= '0') : ?>
 				<tr class="text-dark">
-					<td colspan='6' class='font-weight-bolder text-dark text-center'>No data found</td>
+					<td colspan='7' class='font-weight-bolder text-dark text-center'>No data found</td>
 				</tr>
 			<?php endif; ?>
 			<?php if ($users->num_rows() > '0') : ?>
 				<?php foreach ($users->result_array() as $info) : ?>
 					<tr class="text-dark text-center">
+						<td class="">
+							<?php if ($info['active'] == 0) : ?>
+								<i class="fas fa-circle text-danger"></i>
+							<?php elseif ($info['active'] == 1) : ?>
+								<i class="fas fa-circle text-success"></i>
+							<?php endif; ?>
+						</td>
 						<td class="text-uppercase"><?php echo $info['uname'] ?></td>
 						<td class=""><?php echo $info['fname'] . " " . $info['lname']  ?></td>
 						<td class=""><?php echo $info['mobile'] ?></td>
 						<td class=""><?php echo $info['email'] ?></td>
-						<td class=""><?php echo $info['active'] ?></td>
-						<td class=""><?php echo $info['sub'] ?></td>
+						<td class="">
+							<?php if ($info['sub'] == 0) : ?>
+								No
+							<?php elseif ($info['sub'] == 1) : ?>
+								Yes
+							<?php endif; ?>
+						</td>
 						<td class="font-weight-bolder">
-							<div class="d-flex">
-								<button class="btn btn-light editbtn" id="<?php echo $info['id'] ?>" form_key="<?php echo $info['form_key'] ?>">
-									<i class="fas fa-user-edit text-success "></i>
+							<div class="d-flex" style="justify-content:space-around">
+								<button class="btn text-light editbtn" id="<?php echo $info['id'] ?>" form_key="<?php echo $info['form_key'] ?>" style="background:#141E30">
+									<i class="fas fa-user-alt text-light "></i>
 								</button>
-								<button class="btn btn-light delbtn" id="<?php echo $info['id'] ?>" form_key="<?php echo $info['form_key'] ?>">
+								<button class="btn text-light delbtn" id="<?php echo $info['id'] ?>" form_key="<?php echo $info['form_key'] ?>" style="background:#141E30">
 									<i class="fas fa-trash-alt text-danger "></i>
 								</button>
 							</div>
@@ -197,7 +206,10 @@
 					</tr>
 				<?php endforeach; ?>
 			<?php endif; ?>
-		</table><?php echo $links; ?>
+		</table>
+		<div class="table_pag_div">
+			<?php echo $links; ?>
+		</div>
 	</div>
 </div>
 </div>
@@ -205,6 +217,7 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/users.js'); ?>"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		// $(".updateusermodal").show();
 		$(document).on('click', 'button.reload_btn', function() {
 			reload_table();
 		});
@@ -220,6 +233,7 @@
 				},
 				success: function(data) {
 					$('.table').html(data);
+					$(".table_pag_div").show();
 				}
 			})
 		}
@@ -243,8 +257,10 @@
 		$('#search_user').keyup(function() {
 			var search = $(this).val();
 			if (search != '') {
+				$(".table_pag_div").hide();
 				load_data(search);
 			} else {
+				$(".table_pag_div").show();
 				reload_table();
 			}
 		});
@@ -278,45 +294,50 @@
 
 		$(document).on('click', 'button.editbtn', function() {
 			var user_id = $(this).attr("id");
+			var form_key = $(this).attr("form_key");
 			var csrfName = $('.csrf-token').attr('name');
 			var csrfHash = $('.csrf-token').val();
-			$('.updateusermodal').modal('show');
+			//$('.updateusermodal').modal('show');
 
 			$.ajax({
 				url: "<?php echo base_url('admin/get_user') ?>",
 				method: "POST",
 				data: {
 					user_id: user_id,
+					form_key: form_key,
 					[csrfName]: csrfHash
 				},
 				dataType: "json",
 				success: function(data) {
-					$('.u_user_id').val(data.id);
+					// console.log(data);
+					//console.log(data.infos);
+					//console.log(data.webs);
+
 					$('.csrf-token').val(data.token);
-					if (data.admin == "0") {
-						$('.u_dept').html("User").val("0");
-						$('.u_dept_two').html("Admin").val("1");
+					$('.user_id').val(data.infos[0].id);
+					$('.user_form_key').val(data.infos[0].form_key);
+					$('.uname').val(data.infos[0].uname);
+					$('.fname').val(data.infos[0].fname);
+					$('.lname').val(data.infos[0].lname);
+					$('.mobile').val(data.infos[0].mobile);
+					$('.email').val(data.infos[0].email);
+
+					if (data.infos[0].fname !== null || data.infos[0].lname !== null) {
+						$('div.nameofuser_h h6').html(data.infos[0].fname + " " + data.infos[0].lname);
 					} else {
-						$('.u_dept').html("Admin").val("1");
-						$('.u_dept_two').html("User").val("0");
+						$('div.nameofuser_h h6').html(data.infos[0].uname);
 					}
-					$('.uname').val(data.uname);
-					$('.full_name').val(data.full_name);
-					$('.u_mobile').val(data.u_mobile);
-					$('.email').val(data.email);
-					$('.mobile').val(data.mobile);
-					$('.c_name').val(data.c_name);
-					$('.c_add').val(data.c_add);
-					$('.c_email').val(data.c_email);
-					$('.c_mobile').val(data.c_mobile);
-					$('.c_web').val(data.c_web);
-					$('.fb_link').val(data.fb_link);
-					$('.google_link').val(data.google_link);
-					$('.glassdoor_link').val(data.glassdoor_link);
-					$('.trust_pilot_link').val(data.trust_pilot_link);
-					$('.form_key').val(data.form_key);
-					$('.active').val(data.active);
-					$('.sub').val(data.sub);
+
+					if (data.webs.length == 0) {
+						$("div.website_form_div").append('<p class="text-center text-dark mt-4 font-weight-bolder">USER HAS NO DATA</p>');
+						$("button.user_webpdate").hide();
+					} else {
+						for (let index = 0; index < data.webs.length; index++) {
+							console.log(data.webs[index]);
+							$("div.website_form_div").append('<div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label">' + data.webs[index].web_name + '</label><input type="text" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div>');
+						}
+						$("button.user_webpdate").show();
+					}
 					$('.updateusermodal').modal('show');
 				}
 			});
@@ -426,6 +447,7 @@
 						},
 						error: function(data) {
 							alert('Failed to delete. Please refresh page');
+							window.location.reload();
 						}
 					})
 					.done(function() {

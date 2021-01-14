@@ -33,7 +33,7 @@
 			<div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
 		</div>
 		<div class="form-group text-left">
-			<button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#00695C">Save</button>
+			<button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#141E30">Save</button>
 		</div>
 	</form>
 </div>
@@ -115,7 +115,7 @@
 					<p class="text-center font-weight-bolder">This website and all of its data will be completly deleted!</p>
 					<div class="d-flex justify-content-between">
 						<button type="button" class="btn btn-secondary close_delweb_modal">No</button>
-						<button type="submit" class="btn yes_delweb_modal_btn text-light" id="" style="background-color:#00695C;">Yes</button>
+						<button type="submit" class="btn yes_delweb_modal_btn text-light" id="" style="background-color:#141E30;">Yes</button>
 					</div>
 				</div>
 			</div>
@@ -155,10 +155,10 @@
 				</div>
 				<div class="col-md-4" style="padding:0">
 					<div class="d-flex flex-row" style="justify-content:center">
-						<button type="button" class="btn btn-dark edit_web_btn " id="<?php echo $web['id'] ?>">
+						<button type="button" class="btn text-light edit_web_btn " id="<?php echo $web['id'] ?>" style="background:#141E30">
 							View
 						</button>
-						<button type="button" class="btn btn-dark delete_web_btn ml-2" id="<?php echo $web['id'] ?>">
+						<button type="button" class="btn text-light delete_web_btn ml-2" id="<?php echo $web['id'] ?>" style="background:#141E30">
 							Delete
 						</button>
 						<?php if ($web['active'] == "1") : ?>
@@ -201,7 +201,7 @@
 			<button class="btn btn-danger deact_btn" type="button" user_id="<?php echo $user_info->id ?>">De-activate account?</button>
 		</div>
 		<div class="form-group text-left">
-			<button class="btn text-light saveact_btn" type="submit saveact_btn" style="background-color:#00695C">Save</button>
+			<button class="btn text-light saveact_btn" type="submit saveact_btn" style="background-color:#141E30">Save</button>
 		</div>
 	</form>
 </div>

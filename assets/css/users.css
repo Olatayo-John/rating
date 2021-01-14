@@ -1,19 +1,60 @@
 
 body{
 	background: #141E30;
-	background: -webkit-linear-gradient(to right, #243B55, #141E30)
-	background: linear-gradient(to right, #243B55, #141E30);
+	/* background: -webkit-linear-gradient(to right, #243B55, #141E30)
+	background: linear-gradient(to right, #243B55, #141E30); */
 }
 input.form-control:focus,select.form-control:focus{
 	border-color: black;
 	box-shadow: none;
 }
+button.btn,a.btn{
+	border-radius:0;
+}
 form,div.modal-content{
-	background-color: #BDBDBD;
+	background-color: white;
 }
-input.form-control,select.form-control{
+div.nameofuser_h{
+	padding: 8px 30px;
+}
+div.close_x_div{
+	margin: auto 0;
+	padding-right: 14px;
+}
+span.close_x_icon{
+	cursor: pointer;
+	font-weight: bolder;
+    font-size: 18px;
+}
+.tab_div{
+	display: flex;
+	justify-content: space-evenly;
+}
+.tab_div a.prof_a{
+	border-bottom: 2px solid #141E30;
+}
+.tab_link{
+	color: #141E30;
+	font-weight: bold;
+	font-size: 14px;
+}
+.tab_link:hover{
+	text-decoration: none;
+	color: #141E30;
+}
+.website_div,.account_div{
+	display: none;
+}
+.profile_div,.website_div,.account_div{
+	padding: 0 10px;
+	padding-top: 15px;
+}
+label{
+	font-weight: bold;
+}
+/* input.form-control,select.form-control{
 	border-radius: 20px;
-}
+} */
 input.search_user{
 	border: none;
 	background-color: transparent; 

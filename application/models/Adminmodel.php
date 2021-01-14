@@ -13,7 +13,7 @@ class Adminmodel extends CI_Model
 	public function users_export_csv()
 	{
 		$this->db->order_by('id', 'desc');
-		$this->db->select('ID,uname,full_name,email,mobile,c_name,c_add,c_email,c_mobile,c_web,fb_link,google_link,glassdoor_link,trust_pilot_link,active,sub');
+		$this->db->select('ID,active,uname,fname,lname,email,mobile,sub');
 		$query = $this->db->get('users');
 		return $query->result_array();
 	}
@@ -24,17 +24,10 @@ class Adminmodel extends CI_Model
 		$this->db->from('users');
 		if ($query != '') {
 			$this->db->like('uname', $query);
-			$this->db->like('full_name', $query);
+			$this->db->or_like('fname', $query);
+			$this->db->or_like('lname', $query);
 			$this->db->or_like('email', $query);
-			$this->db->or_like('c_name', $query);
-			$this->db->or_like('c_add', $query);
-			$this->db->or_like('c_email', $query);
-			$this->db->or_like('c_mobile', $query);
-			$this->db->or_like('c_web', $query);
-			$this->db->or_like('fb_link', $query);
-			$this->db->or_like('glassdoor_link', $query);
-			$this->db->or_like('google_link', $query);
-			$this->db->or_like('trust_pilot_link', $query);
+			$this->db->or_like('mobile', $query);
 		}
 		$this->db->order_by('id', 'DESC');
 		return $this->db->get();
@@ -54,6 +47,8 @@ class Adminmodel extends CI_Model
 		$this->delete_user_details($user_id, $form_key);
 		$this->delete_user_quota($user_id, $form_key);
 		$this->delete_user_ratings($form_key);
+		$this->delete_user_sentlinks($user_id);
+		$this->delete_user_websites($user_id, $form_key);
 		return true;
 	}
 
@@ -73,15 +68,36 @@ class Adminmodel extends CI_Model
 
 	public function delete_user_ratings($form_key)
 	{
-		$this->db->where('c_id', $form_key);
-		$this->db->delete(array('all_ratings', 'fb_ratings', 'google_ratings', 'mainweb_rating', 'trustpilot_ratings', 'glassdoor_ratings'));
+		$this->db->where('form_key', $form_key);
+		$this->db->delete('all_ratings');
 		return true;
 	}
 
-	public function get_user($id)
+	public function delete_user_sentlinks($user_id)
 	{
-		$this->db->where('id', $id);
+		$this->db->where('user_id', $user_id);
+		$this->db->delete('sent_links');
+		return true;
+	}
+
+	public function delete_user_websites($user_id, $form_key)
+	{
+		$this->db->where(array('user_id' => $user_id, 'form_key' => $form_key));
+		$this->db->delete('websites');
+		return true;
+	}
+
+	public function get_user($id, $form_key)
+	{
+		$this->db->where(array('id' => $id, 'form_key' => $form_key));
 		$query = $this->db->get('users');
+		return $query->result();
+	}
+
+	public function get_user_websites($id, $form_key)
+	{
+		$this->db->where(array('user_id' => $id, 'form_key' => $form_key));
+		$query = $this->db->get('websites');
 		return $query->result();
 	}
 

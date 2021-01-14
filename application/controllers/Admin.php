@@ -73,7 +73,7 @@ class Admin extends CI_Controller
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=users.csv");
 		$output = fopen("php://output", "w");
-		fputcsv($output, array('ID', 'Username', 'First Name', 'Last Name', 'E-mail', 'Mobile', 'Active', 'Subscription'));
+		fputcsv($output, array('ID', 'Status', 'Username', 'First Name', 'Last Name', 'E-mail', 'Mobile', 'Subscription'));
 		$data = $this->Adminmodel->users_export_csv();
 		foreach ($data as $row) {
 			fputcsv($output, $row);
@@ -88,7 +88,7 @@ class Admin extends CI_Controller
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->session->set_flashdata('acces_denied', 'Access Denied!');
 			redirect('user/login');
 		}
 		$config['per_page'] = 10;
@@ -96,64 +96,80 @@ class Admin extends CI_Controller
 		$output = "";
 
 		$data = $this->Adminmodel->get_user_details($config["per_page"], $offset);
-		$output .= '<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
-		<th><div class="inh">	
-		<i class="fas fa-sort" name="uname" type="desc"></i>
-		<span>User</span>
-		</div></th>
-		<th><div class="inh">	
-		<i class="fas fa-sort " name="mobile" type="desc"></i>
-		<span>User Mobile</span>
-		</div></th>
-		<th><div class="inh">				
-		<i class="fas fa-sort" name="c_name" type="desc"></i>
-		<span>Company</span>
-		</div></th>
-		<th><div class="cmp">					
-		<i class="fas fa-sort" name="c_mobile" type="desc"></i>
-		<span>Company Mobile</span>
-		</div></th>
-		<th><div class="cmp">				
-		<i class="fas fa-sort" name="c_email" type="desc"></i>
-		<span>Company Mail</span>
-		</div></th>
-		<th><div class="inh">				
-		<i class="fas fa-sort" name="active" type="desc"></i>
-		<span>Active?</span>
-		</div></th>
-		<th><div class="cmp">				
-		<i class="fas fa-sort" name="sub" type="desc"></i>
-		<span>Subscribed?</span>
-		</div></th>
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
+		<th>
+			<span>Status</span>
+		</th>
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort" name="uname" type="desc"></i>
+				<span>User</span>
+			</div>
+		</th>
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort " name="fname" type="desc"></i>
+				<span>Full Name</span>
+			</div>
+		</th>
+		<th>
+			<div class="cmp">
+				<i class="fas fa-sort" name="mobile" type="desc"></i>
+				<span>Mobile</span>
+			</div>
+		</th>
+		<th>
+			<div class="cmp">
+				<i class="fas fa-sort" name="email" type="desc"></i>
+				<span>E-Mail</span>
+			</div>
+		</th>
+		<th>
+			<div class="cmp">
+				<i class="fas fa-sort" name="sub" type="desc"></i>
+				<span>Subscribed?</span>
+			</div>
+		</th>
 		<th class="text-danger text-center font-weight-bolder">
-		Action
+			Action
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
 			$output .= '<tr class="text-dark">
-			<td colspan="8" class="font-weight-bolder text-light text-center">NO DATA FOUND</td>
+			<td colspan="7" class="font-weight-bolder text-light text-center">NO DATA FOUND</td>
 			</tr>';
 		} else {
 			foreach ($data->result_array() as $info) {
 				$output .= '<tr class="text-dark text-center">
+				<td>';
+				if ($info['active'] == 0) {
+					$output .= '<i class="fas fa-circle text-danger"></i>';
+				} elseif ($info['active'] == 1) {
+					$output .= '<i class="fas fa-circle text-success"></i>';
+				}
+				$output .= '</td>
 				<td class="text-uppercase">' . $info['uname'] . '</td>
+				<td class="">' . $info['fname'] . " " . $info['lname'] . '</td>
 				<td class="">' . $info['mobile'] . '</td>
-				<td class="text-uppercase">' . $info['c_name'] . '</td>
-				<td class="">' . $info['c_mobile'] . '</td>
-				<td class="">' . $info['c_email'] . '</td>
-				<td class="">' . $info['active'] . '</td>
-				<td class="">' . $info['sub'] . '</td>
+				<td class="">' . $info['email'] . '</td>
+				<td class="">';
+				if ($info['sub'] == 0) {
+					$output .= 'No';
+				} elseif ($info['sub'] == 1) {
+					$output .= 'Yes';
+				}
+				$output .= '</td>
 				<td class="font-weight-bolder">
-				<div class="d-flex">
-				<button class="btn btn-light mr-2 text-success editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '">
-				<i class="fas fa-user-edit text-success"></i
-				</button>
-				<button class="btn btn-light text-danger delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '">
-				<i class="fas fa-trash-alt text-danger"></i>
-				</button>
-				</div>
+					<div class="d-flex" style="justify-content:space-around">
+						<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+							<i class="fas fa-user-alt text-light "></i>
+						</button>
+						<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+							<i class="fas fa-trash-alt text-danger "></i>
+						</button>
+					</div>
 				</td>
-				</tr>';
+			</tr>';
 			}
 		}
 		echo $output;
@@ -175,30 +191,27 @@ class Admin extends CI_Controller
 			$query = $this->input->post('query');
 		}
 		$data = $this->Adminmodel->users_search_user($query);
-		$output .= '<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
-		<th><div class="inh">	
-		<span>User</span>
-		</div></th>
-		<th><div class="inh">	
-		<span>User Mobile</span>
-		</div></th>
-		<th><div class="inh">				
-		<span>Company</span>
-		</div></th>
-		<th><div class="cmp">					
-		<span>Company Mobile</span>
-		</div></th>
-		<th><div class="cmp">				
-		<span>Company Mail</span>
-		</div></th>
-		<th><div class="inh">				
-		<span>Active?</span>
-		</div></th>
-		<th><div class="cmp">				
-		<span>Subscribed?</span>
-		</div></th>
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
+		<th>
+			<span>Status</span>
+		</th>
+		<th>
+			User
+		</th>
+		<th>
+			Full Name
+		</th>
+		<th>
+			Mobile
+		</th>
+		<th>
+			E-Mail
+		</th>
+		<th>
+			Subscribed?
+		</th>
 		<th class="text-danger text-center font-weight-bolder">
-		Action
+			Action
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
@@ -208,24 +221,35 @@ class Admin extends CI_Controller
 		} else {
 			foreach ($data->result_array() as $info) {
 				$output .= '<tr class="text-dark text-center">
+				<td>';
+				if ($info['active'] == 0) {
+					$output .= '<i class="fas fa-circle text-danger"></i>';
+				} elseif ($info['active'] == 1) {
+					$output .= '<i class="fas fa-circle text-success"></i>';
+				}
+				$output .= '</td>
 				<td class="text-uppercase">' . $info['uname'] . '</td>
+				<td class="">' . $info['fname'] . " " . $info['lname'] . '</td>
 				<td class="">' . $info['mobile'] . '</td>
-				<td class="text-uppercase">' . $info['c_name'] . '</td>
-				<td class="">' . $info['c_mobile'] . '</td>
-				<td class="">' . $info['c_email'] . '</td>
-				<td class="">' . $info['active'] . '</td>
-				<td class="">' . $info['sub'] . '</td>
+				<td class="">' . $info['email'] . '</td>
+				<td class="">';
+				if ($info['sub'] == 0) {
+					$output .= 'No';
+				} elseif ($info['sub'] == 1) {
+					$output .= 'Yes';
+				}
+				$output .= '</td>
 				<td class="font-weight-bolder">
-				<div class="d-flex">
-				<button class="btn btn-light mr-2 text-success editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '">
-				<i class="fas fa-user-edit text-success"></i
-				</button>
-				<button class="btn btn-light text-danger delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '">
-				<i class="fas fa-trash-alt text-danger"></i>
-				</button>
-				</div>
+					<div class="d-flex" style="justify-content:space-around">
+						<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+							<i class="fas fa-user-alt text-light "></i>
+						</button>
+						<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+							<i class="fas fa-trash-alt text-danger "></i>
+						</button>
+					</div>
 				</td>
-				</tr>';
+			</tr>';
 			}
 		}
 		echo $output;
@@ -243,37 +267,42 @@ class Admin extends CI_Controller
 		}
 		$data = $this->Adminmodel->users_filter_param($_POST['param'], $_POST['type']);
 		$output = "";
-		$output .= '<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
-		<th><div class="inh">	
-		<i class="fas fa-sort" name="uname" type="desc"></i>
-		<span>User</span>
-		</div></th>
-		<th><div class="inh">	
-		<i class="fas fa-sort " name="mobile" type="desc"></i>
-		<span>User Mobile</span>
-		</div></th>
-		<th><div class="inh">				
-		<i class="fas fa-sort" name="c_name" type="desc"></i>
-		<span>Company</span>
-		</div></th>
-		<th><div class="cmp">					
-		<i class="fas fa-sort" name="c_mobile" type="desc"></i>
-		<span>Company Mobile</span>
-		</div></th>
-		<th><div class="cmp">				
-		<i class="fas fa-sort" name="c_email" type="desc"></i>
-		<span>Company Mail</span>
-		</div></th>
-		<th><div class="inh">				
-		<i class="fas fa-sort" name="active" type="desc"></i>
-		<span>Active?</span>
-		</div></th>
-		<th><div class="cmp">				
-		<i class="fas fa-sort" name="sub" type="desc"></i>
-		<span>Subscribed?</span>
-		</div></th>
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
+		<th>
+			<span>Status</span>
+		</th>
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort" name="uname" type="desc"></i>
+				<span>User</span>
+			</div>
+		</th>
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort " name="fname" type="desc"></i>
+				<span>Full Name</span>
+			</div>
+		</th>
+		<th>
+			<div class="cmp">
+				<i class="fas fa-sort" name="mobile" type="desc"></i>
+				<span>Mobile</span>
+			</div>
+		</th>
+		<th>
+			<div class="cmp">
+				<i class="fas fa-sort" name="email" type="desc"></i>
+				<span>E-Mail</span>
+			</div>
+		</th>
+		<th>
+			<div class="cmp">
+				<i class="fas fa-sort" name="sub" type="desc"></i>
+				<span>Subscribed?</span>
+			</div>
+		</th>
 		<th class="text-danger text-center font-weight-bolder">
-		Action
+			Action
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
@@ -283,24 +312,35 @@ class Admin extends CI_Controller
 		} else {
 			foreach ($data->result_array() as $info) {
 				$output .= '<tr class="text-dark text-center">
+				<td>';
+				if ($info['active'] == 0) {
+					$output .= '<i class="fas fa-circle text-danger"></i>';
+				} elseif ($info['active'] == 1) {
+					$output .= '<i class="fas fa-circle text-success"></i>';
+				}
+				$output .= '</td>
 				<td class="text-uppercase">' . $info['uname'] . '</td>
+				<td class="">' . $info['fname'] . " " . $info['lname'] . '</td>
 				<td class="">' . $info['mobile'] . '</td>
-				<td class="text-uppercase">' . $info['c_name'] . '</td>
-				<td class="">' . $info['c_mobile'] . '</td>
-				<td class="">' . $info['c_email'] . '</td>
-				<td class="">' . $info['active'] . '</td>
-				<td class="">' . $info['sub'] . '</td>
+				<td class="">' . $info['email'] . '</td>
+				<td class="">';
+				if ($info['sub'] == 0) {
+					$output .= 'No';
+				} elseif ($info['sub'] == 1) {
+					$output .= 'Yes';
+				}
+				$output .= '</td>
 				<td class="font-weight-bolder">
-				<div class="d-flex">
-				<button class="btn btn-light mr-2 text-success editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '">
-				<i class="fas fa-user-edit text-success"></i
-				</button>
-				<button class="btn btn-light text-danger delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '">
-				<i class="fas fa-trash-alt text-danger"></i>
-				</button>
-				</div>
+					<div class="d-flex" style="justify-content:space-around">
+						<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+							<i class="fas fa-user-alt text-light "></i>
+						</button>
+						<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+							<i class="fas fa-trash-alt text-danger "></i>
+						</button>
+					</div>
 				</td>
-				</tr>';
+			</tr>';
 			}
 		}
 		echo $output;
@@ -317,7 +357,7 @@ class Admin extends CI_Controller
 			redirect('user/login');
 		} else {
 			$res = $this->Adminmodel->delete_user($_POST['user_id'], $_POST['form_key']);
-			$this->session->set_flashdata('user_deleted', 'User deleted');
+			$this->session->set_flashdata('user_deleted', 'User deleted!');
 		}
 	}
 
@@ -332,29 +372,31 @@ class Admin extends CI_Controller
 			redirect($_SERVER['HTTP_REFERER']);
 		} else {
 			$output = array();
-			$data = $this->Adminmodel->get_user($_POST['user_id']);
-			foreach ($data as $row) {
-				$output['id'] = $row->id;
-				$output['admin'] = $row->admin;
-				$output['uname'] = $row->uname;
-				$output['full_name'] = $row->full_name;
-				$output['email'] = $row->email;
-				$output['mobile'] = $row->mobile;
-				$output['c_name'] = $row->c_name;
-				$output['c_add'] = $row->c_add;
-				$output['c_email'] = $row->c_email;
-				$output['c_mobile'] = $row->c_mobile;
-				$output['c_web'] = $row->c_web;
-				$output['fb_link'] = $row->fb_link;
-				$output['google_link'] = $row->google_link;
-				$output['glassdoor_link'] = $row->glassdoor_link;
-				$output['trust_pilot_link'] = $row->trust_pilot_link;
-				$output['form_key'] =  $row->form_key;
-				$output['active'] = $row->active;
-				$output['sub'] = $row->sub;
-				$output['token'] = $this->security->get_csrf_hash();
-			}
-			echo json_encode($output);
+			$data['infos'] = $this->Adminmodel->get_user($_POST['user_id'], $_POST['form_key']);
+			$data['webs'] = $this->Adminmodel->get_user_websites($_POST['user_id'], $_POST['form_key']);
+			$data['token'] = $this->security->get_csrf_hash();
+			// foreach ($data as $row) {
+			// 	$output['id'] = $row->id;
+			// 	$output['admin'] = $row->admin;
+			// 	$output['uname'] = $row->uname;
+			// 	$output['full_name'] = $row->full_name;
+			// 	$output['email'] = $row->email;
+			// 	$output['mobile'] = $row->mobile;
+			// 	$output['c_name'] = $row->c_name;
+			// 	$output['c_add'] = $row->c_add;
+			// 	$output['c_email'] = $row->c_email;
+			// 	$output['c_mobile'] = $row->c_mobile;
+			// 	$output['c_web'] = $row->c_web;
+			// 	$output['fb_link'] = $row->fb_link;
+			// 	$output['google_link'] = $row->google_link;
+			// 	$output['glassdoor_link'] = $row->glassdoor_link;
+			// 	$output['trust_pilot_link'] = $row->trust_pilot_link;
+			// 	$output['form_key'] =  $row->form_key;
+			// 	$output['active'] = $row->active;
+			// 	$output['sub'] = $row->sub;
+			// 	$output['token'] = $this->security->get_csrf_hash();
+			// }
+			echo json_encode($data);
 		}
 	}
 
@@ -375,7 +417,7 @@ class Admin extends CI_Controller
 	}
 
 	//commented for now
-	public function add_user()
+	/* public function add_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('loginfirst', 'Please login first');
@@ -433,7 +475,7 @@ class Admin extends CI_Controller
 				}
 			}
 		}
-	}
+	} */
 
 	public function send_email_code($fname, $randpwd, $email, $link, $login_link)
 	{

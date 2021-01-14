@@ -81,17 +81,17 @@
 
 <h4 class="text-center font-weight-bolder mt-4 mr-3 ml-3 mb-0 pb-5 pt-3">WEB RATINGS</h4>
 <div class="tr_div row pb-5 mb-5 mr-3 ml-3">
-	<div class="col-md-2 tr_col text-secondary" style="border-left: none;border-right: 2px solid #00695C;">
+	<div class="col-md-2 tr_col text-secondary" style="border-left: none;border-right: 2px solid #141E30;">
 		<div class="value"><?php echo $user->total_ratings ?></div>
 		<hr>
-		<h4 class="text-center text-dark mb-4">Total Ratings</h4>
+		<h4 class="text-center stared mb-4">Total Ratings</h4>
 	</div>
 	<?php if ($user_web->num_rows() <= 5) : ?>
 		<?php foreach ($user_web->result_array() as $info) : ?>
-			<div class="col-md-2 tr_col text-secondary user_web_div" style="border-left: none;border-right: 2px solid #00695C;">
+			<div class="col-md-2 tr_col text-secondary user_web_div" style="border-left: none;border-right: 2px solid #141E30;">
 				<div class="value"><?php echo $info['total_ratings'] ?></div>
 				<hr>
-				<h4 class="text-center text-dark user_web mb-4"><?php echo $info['web_name'] ?></h4>
+				<h4 class="text-center stared user_web mb-4"><?php echo $info['web_name'] ?></h4>
 			</div>
 		<?php endforeach; ?>
 	<?php endif; ?>

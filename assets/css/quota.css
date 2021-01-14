@@ -1,7 +1,7 @@
 body{
 	background: #141E30;
-	background: -webkit-linear-gradient(to right, #243B55, #141E30);
-	background: linear-gradient(to right, #243B55, #141E30);
+	/* background: -webkit-linear-gradient(to right, #243B55, #141E30);
+	background: linear-gradient(to right, #243B55, #141E30); */
 }
 div.total_link{
 	border: 1px solid black;
@@ -18,11 +18,11 @@ div.quota_div,div.ls_div,div.tr_div,h4{
 	padding: 0;
 }
 h4{
-	color: #243B55;
+	color: #141E30;
 }
 .tr_col,.tl_col,.quota_col{
 	border: none;
-	border-left: 2px solid #00695C;
+	border-left: 2px solid #141E30;
 	/*border-right: 1px solid black;*/
 }
 div.user_web_div:nth-last-child(1){

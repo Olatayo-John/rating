@@ -31,7 +31,7 @@ class Admin extends CI_Controller
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('user');
 		}
 		$config['base_url'] = base_url() . "admin/users/";
 		$config['total_rows'] = $this->db->count_all('users');
@@ -64,11 +64,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user/login');
+			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			return false;
 		}
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=users.csv");
@@ -85,11 +85,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user/login');
+			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied!');
-			redirect('user/login');
+			return false;
 		}
 		$config['per_page'] = 10;
 		$offset = 0;
@@ -179,11 +179,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user/login');
+			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			return false;
 		}
 		$output = '';
 		$query = '';
@@ -259,11 +259,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user/login');
+			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			return false;
 		}
 		$data = $this->Adminmodel->users_filter_param($_POST['param'], $_POST['type']);
 		$output = "";
@@ -350,11 +350,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user/login');
+			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			return false;
 		} else {
 			$res = $this->Adminmodel->delete_user($_POST['user_id'], $_POST['form_key']);
 			$this->session->set_flashdata('user_deleted', 'User deleted!');
@@ -364,55 +364,85 @@ class Admin extends CI_Controller
 	public function get_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect($_SERVER['HTTP_REFERER']);
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect($_SERVER['HTTP_REFERER']);
+			return false;
 		} else {
 			$output = array();
 			$data['infos'] = $this->Adminmodel->get_user($_POST['user_id'], $_POST['form_key']);
 			$data['webs'] = $this->Adminmodel->get_user_websites($_POST['user_id'], $_POST['form_key']);
 			$data['token'] = $this->security->get_csrf_hash();
-			// foreach ($data as $row) {
-			// 	$output['id'] = $row->id;
-			// 	$output['admin'] = $row->admin;
-			// 	$output['uname'] = $row->uname;
-			// 	$output['full_name'] = $row->full_name;
-			// 	$output['email'] = $row->email;
-			// 	$output['mobile'] = $row->mobile;
-			// 	$output['c_name'] = $row->c_name;
-			// 	$output['c_add'] = $row->c_add;
-			// 	$output['c_email'] = $row->c_email;
-			// 	$output['c_mobile'] = $row->c_mobile;
-			// 	$output['c_web'] = $row->c_web;
-			// 	$output['fb_link'] = $row->fb_link;
-			// 	$output['google_link'] = $row->google_link;
-			// 	$output['glassdoor_link'] = $row->glassdoor_link;
-			// 	$output['trust_pilot_link'] = $row->trust_pilot_link;
-			// 	$output['form_key'] =  $row->form_key;
-			// 	$output['active'] = $row->active;
-			// 	$output['sub'] = $row->sub;
-			// 	$output['token'] = $this->security->get_csrf_hash();
-			// }
 			echo json_encode($data);
 		}
 	}
 
-	public function update_user()
+	function deactivateuser()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user/login');
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			return false;
+		}
+		$res = $this->Adminmodel->deactivateuser($_POST['user_id'], $_POST['user_form_key']);
+		if ($res !== true) {
+			$this->session->set_flashdata('acces_denied', 'Error de-activating this user account!');
 		} else {
-			$data = $this->Adminmodel->update_user($_POST['u_user_id']);
-			//echo json_encode($data);
-			$this->session->set_flashdata('user_updated', 'User details updated');
+			$data['token'] = $this->security->get_csrf_hash();
+			echo json_encode($data);
+		}
+	}
+
+	function activateuser()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		$res = $this->Adminmodel->activateuser($_POST['user_id'], $_POST['user_form_key']);
+		if ($res !== true) {
+			$this->session->set_flashdata('user_deleted', 'Error Activating this user account!');
+		} else {
+			$data['token'] = $this->security->get_csrf_hash();
+			echo json_encode($data);
+		}
+	}
+
+	function user_accupdate()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		$res = $this->Adminmodel->user_accupdate($_POST['user_id'], $_POST['user_form_key'], $_POST['new_pwd']);
+		if ($res !== true) {
+			$this->session->set_flashdata('invalid', 'Error changing user password!');
+		} else {
+			$uname = $_POST['uname'];
+			$randpwd = $_POST['new_pwd'];
+			$email = $_POST['email'];
+			$login_link = base_url();
+
+			$res = $this->send_email_code($uname, $randpwd, $email, $login_link);
+			// $res = true;
+			if ($res !== true) {
+				$this->session->set_flashdata('invalid', $res);
+			} else {
+				$this->session->set_flashdata('valid', 'User credentials updated and sent!');
+			}
 		}
 	}
 
@@ -477,7 +507,7 @@ class Admin extends CI_Controller
 		}
 	} */
 
-	public function send_email_code($fname, $randpwd, $email, $link, $login_link)
+	public function send_email_code($uname, $randpwd, $email, $login_link)
 	{
 		$config['protocol']    = 'smtp';
 		$config['smtp_host']    = 'ssl://smtp.gmail.com';
@@ -492,20 +522,18 @@ class Admin extends CI_Controller
 		$this->load->library('email', $config);
 		$this->email->set_newline("\r\n");
 
-		$data = array(
-			'fname' => $fname,
-			'randpwd' => $randpwd,
-			'link' => $link,
-			'login_link' => $login_link,
-		);
-		$body = "Hello " . $fname . "\n\nBelow are your login credentails:\nUsername: " . $fname . "\nPassword: " . $randpwd . "\nLink: " . $link . "\nShare the above link to get reviews.\nYou can login here " . $login_link . "\n\nIf you have any questions, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+		$body = "Hello " . $uname . "\n\nBelow are your login credentails:\nUsername: " . $uname . "\nPassword: " . $randpwd . "\n\nYou can login here " . $login_link . "\n\nIf you have any questions, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
 
 		$this->email->from('jvweedtest@gmail.com', 'Rating');
 		$this->email->to($email);
 		$this->email->subject("Login Credentials");
 		$this->email->message($body);
 
-		$this->email->send();
+		if ($this->email->send()) {
+			return true;
+		} else {
+			return $this->email->print_debugger();
+		}
 	}
 
 	public function votes($offset = 0)

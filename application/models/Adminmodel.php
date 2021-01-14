@@ -101,6 +101,30 @@ class Adminmodel extends CI_Model
 		return $query->result();
 	}
 
+	public function deactivateuser($user_id, $user_form_key)
+	{
+		$this->db->where(array('id' => $user_id, 'form_key' => $user_form_key));
+		$query = $this->db->set('active', "0");
+		$query = $this->db->update("users");
+		return true;
+	}
+
+	public function activateuser($user_id, $user_form_key)
+	{
+		$this->db->where(array('id' => $user_id, 'form_key' => $user_form_key));
+		$query = $this->db->set('active', "1");
+		$query = $this->db->update("users");
+		return true;
+	}
+
+	public function user_accupdate($user_id, $user_form_key, $new_pwd)
+	{
+		$this->db->set('password', password_hash($new_pwd, PASSWORD_DEFAULT), false);
+		$this->db->where(array('id' => $user_id, 'form_key' => $user_form_key));
+		$this->db->update("users");
+		return true;
+	}
+
 	public function update_user($id)
 	{
 		if ($this->input->post('u_pwd')) {

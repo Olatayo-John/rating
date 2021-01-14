@@ -85,9 +85,9 @@ $(document).ready(function () {
 		$('div.account_div').show();
 	});
 
-	$('.u_pwd').click(function () {
-		$('.pwderr').show();
-	});
+	// $('.u_pwd').click(function () {
+	// 	$('.pwderr').show();
+	// });
 
 	$(document).on('click', '.genpwdbtn', function () {
 		var randpwd = Math.floor((Math.random() * 10000000) + 1);

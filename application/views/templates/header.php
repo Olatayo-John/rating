@@ -284,6 +284,20 @@
 				<strong><?php echo $this->session->flashdata('cntc_us_err') ?></strong>
 			</div>
 		<?php endif; ?>
+		<?php if ($this->session->flashdata('valid')) : ?>
+			<div class="alert alert-success">
+				<button class="close" data-dismiss="alert">&times;</button>
+				<i class="fas fa-exclamation-circle"></i>
+				<strong><?php echo $this->session->flashdata('valid') ?></strong>
+			</div>
+		<?php endif; ?>
+		<?php if ($this->session->flashdata('invalid')) : ?>
+			<div class="alert alert-danger">
+				<button class="close" data-dismiss="alert">&times;</button>
+				<i class="fas fa-exclamation-circle text-danger"></i>
+				<strong><?php echo $this->session->flashdata('invalid') ?></strong>
+			</div>
+		<?php endif; ?>
 		<?php if ($this->session->flashdata('log_out')) : ?>
 			<div class="alert alert-danger">
 				<button class="close" data-dismiss="alert">&times;</button>

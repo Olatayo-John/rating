@@ -92,15 +92,17 @@
 					<div class="account_div">
 						<div class="form-group pwddiv">
 							<label>New Password</label>
-							<input type="text" name="u_pwd" class="form-control u_pwd">
+							<input type="text" name="u_pwd" class="form-control u_pwd new_pwd">
 							<div class="text-danger font-weight-bolder pwderr">Password will be changed on this user!</div>
+							<div class="text-danger font-weight-bolder new_pwderr" style="display:none">Password must be over 6 characters!</div>
 						</div>
 						<div class="form-group mt-2">
 							<button class="btn btn-dark genpwdbtn" type="button">Generate password</button>
 						</div>
 						<div class="form-group mt-2 text-right">
 							<button class="btn btn-danger delact_btn" type="button">Delete account</button>
-							<button class="btn btn-danger deact_btn" type="button">De-activate account</button>
+							<button class="btn btn-danger deacti_act_btn" type="button">De-activate account</button>
+							<button class="btn btn-success acti_act_btn" type="button">Activate account</button>
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
@@ -177,9 +179,9 @@
 					<tr class="text-dark text-center">
 						<td class="">
 							<?php if ($info['active'] == 0) : ?>
-								<i class="fas fa-circle text-danger"></i>
+								<i class="fas fa-circle text-danger <?php echo $info['form_key'] ?>"></i>
 							<?php elseif ($info['active'] == 1) : ?>
-								<i class="fas fa-circle text-success"></i>
+								<i class="fas fa-circle text-success <?php echo $info['form_key'] ?>"></i>
 							<?php endif; ?>
 						</td>
 						<td class="text-uppercase"><?php echo $info['uname'] ?></td>
@@ -287,7 +289,7 @@
 					}
 				},
 				error: function(data) {
-					alert('Error filtering');
+					window.location.reload();
 				}
 			});
 		});
@@ -297,7 +299,6 @@
 			var form_key = $(this).attr("form_key");
 			var csrfName = $('.csrf-token').attr('name');
 			var csrfHash = $('.csrf-token').val();
-			//$('.updateusermodal').modal('show');
 
 			$.ajax({
 				url: "<?php echo base_url('admin/get_user') ?>",
@@ -333,14 +334,120 @@
 						$("button.user_webpdate").hide();
 					} else {
 						for (let index = 0; index < data.webs.length; index++) {
-							console.log(data.webs[index]);
+							// console.log(data.webs[index]);
 							$("div.website_form_div").append('<div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label">' + data.webs[index].web_name + '</label><input type="text" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div>');
 						}
 						$("button.user_webpdate").show();
 					}
+
+					if (data.infos[0].active == "0") {
+						$('button.deacti_act_btn').hide();
+						$('button.acti_act_btn').show();
+					} else if (data.infos[0].active == "1") {
+						$('button.deacti_act_btn').show();
+						$('button.acti_act_btn').hide();
+					}
+
 					$('.updateusermodal').modal('show');
+				},
+				error: function(data) {
+					window.location.reload();
 				}
 			});
+		});
+
+		$(document).on('click', 'button.delbtn', function() {
+			var user_id = $(this).attr('id');
+			var form_key = $(this).attr('form_key');
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var con = confirm("Are you sure you want to delete this user and all of its data?");
+			if (con == false) {
+				return false;
+			} else if (con == true) {
+				//console.log(user_id);
+				//console.log(form_key);
+				$.ajax({
+						url: "<?php echo base_url('admin/delete_user'); ?>",
+						method: "post",
+						data: {
+							user_id: user_id,
+							form_key: form_key,
+							[csrfName]: csrfHash
+						},
+						error: function(data) {
+							alert('Failed to delete. Please refresh page');
+							window.location.reload();
+						}
+					})
+					.done(function() {
+						window.location.reload();
+					});
+			}
+		});
+
+		$(document).on('click', 'button.deacti_act_btn', function() {
+			var con = confirm("Are you sure you want to de-activate this user account?");
+			if (con = false) {
+				return false;
+			} else {
+				var user_id = $('.user_id').val();
+				var user_form_key = $('.user_form_key').val();
+				var csrfName = $('.csrf-token').attr('name');
+				var csrfHash = $('.csrf-token').val();
+
+				$.ajax({
+					url: "<?php echo base_url('admin/deactivateuser'); ?>",
+					method: "POST",
+					data: {
+						[csrfName]: csrfHash,
+						user_id: user_id,
+						user_form_key: user_form_key
+					},
+					dataType: "json",
+					success: function(data) {
+						$('.deacti_act_btn').hide();
+						$('.acti_act_btn').show();
+						$('i.' + user_form_key).removeClass("text-success").addClass("text-danger");
+						$('.csrf-token').val(data.token);
+					},
+					error: function(data) {
+						window.location.reload();
+					}
+				});
+			}
+		});
+
+		$(document).on('click', 'button.acti_act_btn', function() {
+			var con = confirm("Are you sure you want to activate this user account?");
+			if (con = false) {
+				return false;
+			} else {
+				var user_id = $('.user_id').val();
+				var user_form_key = $('.user_form_key').val();
+				var csrfName = $('.csrf-token').attr('name');
+				var csrfHash = $('.csrf-token').val();
+
+				$.ajax({
+					url: "<?php echo base_url('admin/activateuser'); ?>",
+					method: "POST",
+					data: {
+						[csrfName]: csrfHash,
+						user_id: user_id,
+						user_form_key: user_form_key
+					},
+					dataType: "json",
+					success: function(data) {
+						$('.deacti_act_btn').show();
+						$('.acti_act_btn').hide();
+						$('i.' + user_form_key).removeClass("text-danger").addClass("text-success");
+						$('.csrf-token').val(data.token);
+					},
+					error: function(data) {
+						window.location.reload();
+					}
+				});
+			}
 		});
 
 		$(document).on('click', '.updatebtn', function() {
@@ -426,9 +533,9 @@
 				});
 		});
 
-		$(document).on('click', 'button.delbtn', function() {
-			var user_id = $(this).attr('id');
-			var form_key = $(this).attr('form_key');
+		$(document).on('click', 'button.delact_btn', function() {
+			var user_id = $('.user_id').val();
+			var form_key = $('.user_form_key').val();
 			var csrfHash = $('.csrf-token').val();
 			var csrfName = $('.csrf-token').attr('name');
 			var con = confirm("Are you sure you want to delete this user and all of its data?");
@@ -454,6 +561,71 @@
 						window.location.reload();
 					});
 			}
+		});
+
+		$('.new_pwd').keyup(function() {
+			var new_pwd = $(this).val();
+
+			if (new_pwd == "" || new_pwd == null) {
+				$('.new_pwd').css('border', '2px solid red');
+				return false;
+			}
+			if (new_pwd.length < 7) {
+				$('.new_pwd').css('border', '2px solid red');
+				$('.new_pwderr').show();
+				return false;
+			} else {
+				$('.new_pwd').css('border', '1px solid #141E30');
+				$('.new_pwderr').removeClass('text-danger').addClass('text-success');
+			}
+		})
+
+		$(document).on('click', '.user_accupdate', function() {
+			var user_id = $('.user_id').val();
+			var form_key = $('.user_form_key').val();
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var uname = $('.uname').val();
+			var email = $('.email').val();
+			var new_pwd = $('.new_pwd').val();
+
+			if (new_pwd == "" || new_pwd == null) {
+				$('.new_pwd').css('border', '2px solid red');
+				return false;
+			}
+			if (new_pwd.length < 7) {
+				$('.new_pwd').css('border', '2px solid red');
+				$('.new_pwderr').show();
+				return false;
+			} else {
+				$('.new_pwd').css('border', '1px solid #141E30');
+				$('.new_pwderr').removeClass('text-danger').addClass('text-success');
+			}
+
+			$.ajax({
+					url: "<?php echo base_url('admin/user_accupdate') ?>",
+					method: "POST",
+					data: {
+						user_id: user_id,
+						form_key: form_key,
+						new_pwd: new_pwd,
+						uname: uname,
+						email: email,
+						[csrfName]: csrfHash
+					},
+					beforeSend: function() {
+						$('.user_accupdate').html("Updating...");
+						$('.user_accupdate').attr("disabled", "disabled");
+						$('.user_accupdate').css("cursor", "not-allowed");
+					},
+					error: function(data) {
+						alert("Error updating password!");
+						window.location.reload();
+					}
+				})
+				.done(function() {
+					window.location.reload();
+				});
 		});
 
 	});

@@ -357,7 +357,17 @@ class Admin extends CI_Controller
 			return false;
 		} else {
 			$res = $this->Adminmodel->delete_user($_POST['user_id'], $_POST['form_key']);
-			$this->session->set_flashdata('user_deleted', 'User deleted!');
+			// $res = false;
+			if ($res !== true) {
+				$data['res'] = "failed";
+				$data['res_msg'] = "Unable to delete user!";
+			} else {
+				$data['res'] = "success";
+				$data['res_msg'] = "User deleted!";
+			}
+
+			$data['token'] = $this->security->get_csrf_hash();
+			echo json_encode($data);
 		}
 	}
 
@@ -403,6 +413,54 @@ class Admin extends CI_Controller
 		echo json_encode($data);
 	}
 
+	function user_webupdate()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		$res = $this->Adminmodel->user_webupdate($_POST['id'], $_POST['user_id'], $_POST['form_key'], $_POST['web_name_edit'], $_POST['web_link_edit']);
+		// $res = false;
+		if ($res !== true) {
+			$data['res'] = "failed";
+			$data['res_msg'] = "Error updating website!";
+		} else {
+			$data['res'] = "success";
+			$data['res_msg'] = "Website updated!";
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	function delete_user_web()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		$res = $this->Adminmodel->delete_user_web($_POST['web_id'], $_POST['user_id'], $_POST['form_key']);
+		// $res = false;
+		if ($res !== true) {
+			$data['res'] = "failed";
+			$data['res_msg'] = "Error deleting website data!";
+		} else {
+			$data['res'] = "success";
+			$data['res_msg'] = "Website data deleted!";
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
 	function deactivateuser()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
@@ -414,6 +472,7 @@ class Admin extends CI_Controller
 			return false;
 		}
 		$res = $this->Adminmodel->deactivateuser($_POST['user_id'], $_POST['user_form_key']);
+		// $res = false;
 		if ($res !== true) {
 			$data['res'] = "failed";
 			$data['res_msg'] = "Failed to de-activate user account!!";
@@ -437,9 +496,10 @@ class Admin extends CI_Controller
 			return false;
 		}
 		$res = $this->Adminmodel->activateuser($_POST['user_id'], $_POST['user_form_key']);
+		// $res = false;
 		if ($res !== true) {
 			$data['res'] = "failed";
-			$data['res_msg'] = "Failed to activating user account!!";
+			$data['res_msg'] = "Failed to activate user account!!";
 		} else {
 			$data['res'] = "success";
 			$data['res_msg'] = "User account activated!";
@@ -459,8 +519,10 @@ class Admin extends CI_Controller
 			return false;
 		}
 		$res = $this->Adminmodel->user_accupdate($_POST['user_id'], $_POST['form_key'], $_POST['new_pwd']);
+		// $res = false;
 		if ($res !== true) {
-			$this->session->set_flashdata('invalid', 'Error changing user password!');
+			$data['res'] = "failed";
+			$data['res_msg'] = 'Error changing user password!';
 		} else {
 			$uname = $_POST['uname'];
 			$randpwd = $_POST['new_pwd'];
@@ -470,11 +532,16 @@ class Admin extends CI_Controller
 			$res = $this->send_email_code($uname, $randpwd, $email, $login_link);
 			// $res = true;
 			if ($res !== true) {
-				$this->session->set_flashdata('invalid', $res);
+				$data['res'] = "failed";
+				$data['res_msg'] = $res;
 			} else {
-				$this->session->set_flashdata('valid', 'User credentials updated and sent!');
+				$data['res'] = "success";
+				$data['res_msg'] = "User credentials updated and sent!";
 			}
 		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
 	}
 
 	//commented for now
@@ -599,6 +666,10 @@ class Admin extends CI_Controller
 		$data['links'] = $this->pagination->create_links();
 
 		$data['details'] = $this->Adminmodel->get_user_votes($config["per_page"], $offset);
+		print_r($data['details']);
+		die;
+
+
 		$this->load->view('templates/header');
 		$this->load->view('admin/votes', $data);
 		$this->load->view('templates/footer');
@@ -612,12 +683,12 @@ class Admin extends CI_Controller
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('user');
 		}
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=users.csv");
 		$output = fopen("php://output", "w");
-		fputcsv($output, array('ID', 'Name', 'Total Ratings', 'SMS', 'Email', 'Official Website', 'Facebook', 'Google', 'Glassdoor', 'Trust Pilot', '5 Star', '4 Star', '3 Star', '2 Star', '1 Star'));
+		fputcsv($output, array('ID', 'User', 'Total Ratings', 'SMS Sent', 'Email Sent', '5 Star', '4 Star', '3 Star', '2 Star', '1 Star'));
 		$data = $this->Adminmodel->votes_export_csv();
 		foreach ($data as $row) {
 			fputcsv($output, $row);

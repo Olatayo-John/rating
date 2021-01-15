@@ -46,27 +46,27 @@
 	<div class="rt_div row mb-5 pt-3" style="margin: 0">
 		<div class="col-md-2 rt_col text-secondary" style="border-left: none;">
 			<div class="value tl text-secondary"></div>
-			<h4 class="text-center stared">Feedbacks</h4>
+			<h4 class="text-center stared">Reviews</h4>
 		</div>
 		<div class="col-md-2 rt_col">
 			<div class="value tl5"></div>
-			<h4 class="text-center stared">5 stared</h4>
+			<h4 class="text-center stared">Official</h4>
 		</div>
 		<div class="col-md-2 rt_col">
 			<div class="value tl4"></div>
-			<h4 class="text-center stared">4 stared</h4>
+			<h4 class="text-center stared">Google</h4>
 		</div>
 		<div class="col-md-2 rt_col">
 			<div class="value tl3"></div>
-			<h4 class="text-center stared">3 stared</h4>
+			<h4 class="text-center stared">Facebook</h4>
 		</div>
 		<div class="col-md-2 rt_col">
 			<div class="value tl2"></div>
-			<h4 class="text-center stared">2 stared</h4>
+			<h4 class="text-center stared">Glassdoor</h4>
 		</div>
 		<div class="col-md-2 rt_col" style="border-bottom: none;">
 			<div class="value tl1"></div>
-			<h4 class="text-center stared text-danger">1 stared</h4>
+			<h4 class="text-center stared">Trust Pilot</h4>
 		</div>
 	</div>
 
@@ -92,13 +92,13 @@
 				<th>
 					<div class="inh">
 						<i class="fas fa-sort" name="name" type="desc"></i>
-						<span>Name</span>
+						<span>User</span>
 					</div>
 				</th>
 				<th>
 					<div class="tr">
 						<i class="fas fa-sort" name="total_links" type="desc"></i>
-						<span>Feedbacks</span>
+						<span>Reviews</span>
 					</div class="icon">
 				</th>
 				<th>
@@ -116,7 +116,7 @@
 				<th>
 					<div class="tr">
 						<i class="fas fa-sort" name="ow_r" type="desc"></i>
-						<span>Official Web</span>
+						<span>Official</span>
 					</div>
 				</th>
 				<th>
@@ -156,15 +156,15 @@
 			<?php if ($details->num_rows() > '0') : ?>
 				<?php foreach ($details->result_array() as $info) : ?>
 					<tr class="text-dark text-center">
-						<td class=""><?php echo $info['name'] ?></td>
-						<td class="tv"><?php echo $info['total_links'] ?></td>
-						<td class="tv"><?php echo $info['sms'] ?></td>
-						<td class="tv"><?php echo $info['email'] ?></td>
-						<td class="tv"><?php echo $info['ow_r'] ?></td>
-						<td class="tv"><?php echo $info['fb_r'] ?></td>
-						<td class="tv"><?php echo $info['g_r'] ?></td>
-						<td class="tv"><?php echo $info['gb_r'] ?></td>
-						<td class="tv"><?php echo $info['tp_r'] ?></td>
+						<td class=""><?php echo $info['uname'] ?></td>
+						<td class="tv"><?php echo $info['total_ratings'] ?></td>
+						<td class="tv"><?php echo $info['total_sms'] ?></td>
+						<td class="tv"><?php echo $info['total_email'] ?></td>
+						<td class="tv"><?php echo $info['total_one'] ?></td>
+						<td class="tv"><?php echo $info['total_two'] ?></td>
+						<td class="tv"><?php echo $info['total_three'] ?></td>
+						<td class="tv"><?php echo $info['total_four'] ?></td>
+						<td class="tv"><?php echo $info['total_five'] ?></td>
 						<td class="font-weight-bolder">
 							<button class="btn text-light vv_btn" form_key="<?php echo $info['form_key'] ?>" style="width: 100px;background: linear-gradient(to right, #243B55, #141E30);"><i class="fas fa-poll text-light mr-2"></i>Votes</button>
 						</td>
@@ -252,26 +252,26 @@
 
 		var csrfName = $('.csrf_token').attr('name');
 		var csrfHash = $('.csrf_token').val();
-		$.ajax({
-			url: "<?php echo base_url('user/total_bar_data'); ?>",
-			method: "post",
-			dataType: "json",
-			data: {
-				[csrfName]: csrfHash,
-			},
-			success: function(data) {
-				$('.tl').html(data.atr);
-				$('.tl5').html(data.tr5);
-				$('.tl4').html(data.tr4);
-				$('.tl3').html(data.tr3);
-				$('.tl2').html(data.tr2);
-				$('.tl1').html(data.tr1);
-				$('.csrf_token').val(data.token);
-			},
-			error: function(data) {
-				alert('Error showing');
-			}
-		});
+		// $.ajax({
+		// 	url: "<?php echo base_url('user/total_bar_data'); ?>",
+		// 	method: "post",
+		// 	dataType: "json",
+		// 	data: {
+		// 		[csrfName]: csrfHash,
+		// 	},
+		// 	success: function(data) {
+		// 		$('.tl').html(data.atr);
+		// 		$('.tl5').html(data.tr5);
+		// 		$('.tl4').html(data.tr4);
+		// 		$('.tl3').html(data.tr3);
+		// 		$('.tl2').html(data.tr2);
+		// 		$('.tl1').html(data.tr1);
+		// 		$('.csrf_token').val(data.token);
+		// 	},
+		// 	error: function(data) {
+		// 		alert('Error showing');
+		// 	}
+		// });
 
 		$(document).on('click', 'i.fa-sort', function() {
 			var param = $(this).attr('name');

@@ -107,12 +107,55 @@ class Adminmodel extends CI_Model
 			'uname' => htmlentities($uname),
 			'fname' => htmlentities($fname),
 			'lname' => htmlentities($lname),
-			'email' => htmlentities($email),
-			'mobile' => htmlentities($mobile),
+			'email' => strtolower(htmlentities($email)),
+			'mobile' => strtolower(htmlentities($mobile)),
 		);
 
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$this->db->update("users", $data);
+
+		$uname = htmlentities($uname);
+		$this->userdetaild_name_update($uname, $user_id, $form_key);
+
+		return true;
+	}
+
+	public function userdetaild_name_update($uname, $user_id, $form_key)
+	{
+		$this->db->set('uname', $uname);
+		$this->db->where(array('user_id' => $user_id, 'form_key' => $form_key));
+		$this->db->update("user_details");
+		return true;
+	}
+
+	public function user_webupdate($id, $user_id, $form_key, $web_name_edit, $web_link_edit)
+	{
+		$data = array(
+			'web_name' => strtolower(htmlentities($web_name_edit)),
+			'web_link' => strtolower(htmlentities($web_link_edit)),
+		);
+
+		$this->db->where(array('id' => $id, 'user_id' => $user_id, 'form_key' => $form_key));
+		$this->db->update("websites", $data);
+		return true;
+	}
+
+	public function delete_user_web($web_id, $user_id, $form_key)
+	{
+		$this->db->where(array('id' => $web_id, 'user_id' => $user_id, 'form_key' => $form_key));
+		$this->db->delete("websites");
+
+		$this->delete_userratings($form_key);
+
+		//function to also deduct total_ratngs from user_details
+		//$this->update_userdetails_rating($user_id,$form_key);
+		return true;
+	}
+
+	public function delete_userratings($form_key)
+	{
+		$this->db->where('form_key', $form_key);
+		$this->db->delete("all_ratings");
 		return true;
 	}
 
@@ -140,109 +183,23 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function update_user($id)
-	{
-		if ($this->input->post('u_pwd')) {
-			$uname = htmlentities($this->input->post('uname'));
-			$c_name = htmlentities($this->input->post('c_name'));
-			$email = htmlentities($this->input->post('email'));
-			$randpwd = $this->input->post('u_pwd');
-
-			$this->update_user_password($uname, $c_name, $email, $randpwd);
-			$data = array(
-				'uname' => htmlentities($this->input->post('uname')),
-				'full_name' => htmlentities($this->input->post('full_name')),
-				'email' => htmlentities($this->input->post('email')),
-				'mobile' => htmlentities($this->input->post('mobile')),
-				'c_name' => htmlentities($this->input->post('c_name')),
-				'c_add' => htmlentities($this->input->post('c_add')),
-				'c_email' => htmlentities($this->input->post('c_email')),
-				'c_mobile' => htmlentities($this->input->post('c_mobile')),
-				'c_web' => htmlentities($this->input->post('c_web')),
-				'fb_link' => htmlentities($this->input->post('fb_link')),
-				'google_link' => htmlentities($this->input->post('google_link')),
-				'glassdoor_link' => htmlentities($this->input->post('glassdoor_link')),
-				'trust_pilot_link' => htmlentities($this->input->post('trust_pilot_link')),
-				'password' => password_hash($this->input->post('u_pwd'), PASSWORD_DEFAULT)
-			);
-			$this->db->where('id', $id);
-			$this->db->update('users', $data);
-			$uname = htmlentities($this->input->post('uname'));
-			$this->update_user_details($id, $uname);
-			return TRUE;
-			exit;
-		} else {
-			$data = array(
-				'uname' => htmlentities($this->input->post('uname')),
-				'full_name' => htmlentities($this->input->post('full_name')),
-				'email' => htmlentities($this->input->post('email')),
-				'mobile' => htmlentities($this->input->post('mobile')),
-				'c_name' => htmlentities($this->input->post('c_name')),
-				'c_add' => htmlentities($this->input->post('c_add')),
-				'c_email' => htmlentities($this->input->post('c_email')),
-				'c_mobile' => htmlentities($this->input->post('c_mobile')),
-				'c_web' => htmlentities($this->input->post('c_web')),
-				'fb_link' => htmlentities($this->input->post('fb_link')),
-				'google_link' => htmlentities($this->input->post('google_link')),
-				'glassdoor_link' => htmlentities($this->input->post('glassdoor_link')),
-				'trust_pilot_link' => htmlentities($this->input->post('trust_pilot_link')),
-			);
-			$this->db->where('id', $id);
-			$this->db->update('users', $data);
-			$uname = htmlentities($this->input->post('uname'));
-			$this->update_user_details($id, $uname);
-			return TRUE;
-			//return $this->db->last_query();
-			exit;
-		}
-	}
-
-	public function update_user_password($uname, $c_name, $email, $randpwd)
-	{
-		$config['protocol']    = 'smtp';
-		$config['smtp_host']    = 'ssl://smtp.gmail.com';
-		$config['smtp_port']    = '465';
-		$config['smtp_timeout'] = '7';
-		$config['smtp_user']    = 'jvweedtest@gmail.com';
-		$config['smtp_pass']    = 'Jvweedtest9!';
-		$config['charset']    = 'iso-8859-1';
-		$config['mailtype'] = 'text';
-		$config['validation'] = TRUE;
-
-		$this->load->library('email', $config);
-		$this->email->set_newline("\r\n");
-
-		$body = "Hello " . $uname . " of " . $c_name . "\n\nBelow are your new login credentails:\nUsername: " . $uname . "\nPassword: " . $randpwd . "\nYou can login here " . base_url() . "\n\nIf you have any questions, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
-
-		$this->email->from('jvweedtest@gmail.com', 'Rating');
-		$this->email->to($email);
-		$this->email->subject("New Login credentails");
-		$this->email->message($body);
-
-		$this->email->send();
-	}
-
-	public function update_user_details($id, $uname)
-	{
-		$data = array(
-			'name' => $uname
-		);
-		$this->db->where('user_id', $id);
-		$this->db->update('user_details', $data);
-		return true;
-	}
-
 	public function get_user_votes($limit = false, $offset = false)
 	{
+		// $this->db->limit($limit, $offset);
+		// $query = $this->db->get('user_details');
+
 		$this->db->limit($limit, $offset);
-		$query = $this->db->get('user_details');
+		$this->db->select('*');
+		$this->db->from('user_details');
+		$this->db->join('websites', 'user_details.form_key=websites.form_key', 'inner');
+		$query = $this->db->get();
 		return $query;
 	}
 
 	public function votes_export_csv()
 	{
 		$this->db->order_by('id', 'desc');
-		$this->db->select('id,name,total_links,sms,email,ow_r,fb_r,g_r,gb_r,tp_r,5_star,4_star,3_star,2_star,1_star');
+		$this->db->select('id,uname,total_ratings,total_sms,total_email,total_one,total_two,total_three,total_four,total_five');
 		$query = $this->db->get('user_details');
 		return $query->result_array();
 	}

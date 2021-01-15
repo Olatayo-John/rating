@@ -17,6 +17,35 @@
 			</form>
 		</div>
 	</div>
+
+	<div class="modal edit_web_modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<input type="hidden" name="modal_webid" class="modal_webid" value="">
+					<div class="form-group mt-3">
+						<label>Website Name</label>
+						<input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Name of the webiste" required>
+					</div>
+					<div class="form-group">
+						<label class="mb-0">Website Link</label>
+						<div class="weberr text-left" id="weberr" style="display:all">
+							<span class="text-danger font-weight-bolder weberr_span">* Web links must start with http or https</span>
+						</div>
+						<input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Website link" required>
+					</div>
+					<div class="updatebtngrp d-flex justify-content-between mb-2 web_btngrp">
+						<button class="btn btn-secondary close_edit_web_modal bradius">Close</button>
+						<div class="spinner-border web_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
+							<span class="sr-only">Loading...</span>
+						</div>
+						<button class="btn text-light user_webpdate bradius" style="background:#141E30">Update</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="modal updateusermodal">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
@@ -79,20 +108,24 @@
 						</div>
 					</div>
 					<div class="website_div">
-						<div class="add_web text-right">
-							<button type="button" class="add_web_btn text-light" style="background-color:#141E30;padding:6px;border:none">
-								<i class="fas fa-plus-circle"></i>
-								Add Website
-							</button>
+						<div class="d-flex justify-content-between mb-3">
+							<div class="action_div">
+								<button type="button" class="action_web_btn text-light" style="background-color:#141E30;padding:6px;border:none">
+									Actions
+								</button>
+							</div>
+							<div class="add_web">
+								<button type="button" class="add_web_btn text-light" style="background-color:#141E30;padding:6px;border:none">
+									<i class="fas fa-plus-circle"></i>
+									Add Website
+								</button>
+							</div>
 						</div>
+
 						<div class="website_form_div">
 						</div>
-						<div class="updatebtngrp d-flex justify-content-between mb-2 web_btngrp">
+						<div class="updatebtngrp text-right mb-2 web_btngrp">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
-							<div class="spinner-border web_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
-								<span class="sr-only">Loading...</span>
-							</div>
-							<button class="btn text-light user_webpdate bradius" style="background:#141E30">Update</button>
 						</div>
 					</div>
 					<div class="account_div">
@@ -115,7 +148,7 @@
 							<div class="spinner-border acct_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
 								<span class="sr-only">Loading...</span>
 							</div>
-							<button class="btn text-light user_accupdate bradius" style="background:#141E30">Update</button>
+							<button class="btn text-light user_accupdate bradius" style="background:#141E30;display:none">Update</button>
 						</div>
 					</div>
 				</div>
@@ -340,11 +373,12 @@
 
 					if (data.webs.length == 0) {
 						$("div.website_form_div").append('<p class="text-center text-dark mt-4 font-weight-bolder">USER HAS NO DATA</p>');
-						$("button.user_webpdate").hide();
+						$("div.action_div").hide();
 					} else {
+						$("div.action_div").show();
 						for (let index = 0; index < data.webs.length; index++) {
 							// console.log(data.webs[index]);
-							$("div.website_form_div").append('<div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label">' + data.webs[index].web_name + '</label><input type="text" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div>');
+							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
 						}
 						$("button.user_webpdate").show();
 					}
@@ -357,6 +391,7 @@
 						$('button.acti_act_btn').hide();
 					}
 
+					$(".weberr").show()
 					$('.updateusermodal').modal('show');
 				},
 				error: function(data) {
@@ -384,14 +419,161 @@
 							form_key: form_key,
 							[csrfName]: csrfHash
 						},
+						dataType: "json",
+						success: function(data) {
+							if (data.res == "failed") {
+								$(".prof_update_spinner").fadeOut();
+								$('.ajax_res_err').html(data.res_msg);
+								$('.ajax_err_div').fadeIn();
+							} else if (data.res == "success") {
+								$(".prof_update_spinner").fadeOut();
+								$('.ajax_res_succ').html(data.res_msg);
+								$('.ajax_succ_div').fadeIn();
+							}
+							$('.csrf-token').val(data.token);
+						},
 						error: function(data) {
 							alert('Failed to delete. Please refresh page');
 							window.location.reload();
 						}
 					})
 					.done(function() {
-						window.location.reload();
+						reload_table();
 					});
+			}
+		});
+
+		$(document).on("click", ".action_web_btn", function() {
+			$(".action_web_div").toggle();
+		});
+
+		$(document).on("click", ".edit_web_btn", function() {
+			var web_id = $(this).attr("web_id");
+			var web_name = $(this).attr("web_name");
+			var web_link = $(this).attr("web_link");
+
+			$(".modal_webid").val(web_id);
+			$('.web_name_edit').val(web_name);
+			$('.web_link_edit').val(web_link);
+
+			$('.updateusermodal').modal('hide');
+			$(".edit_web_modal").modal("show");
+		});
+
+		$(document).on('click', '.user_webpdate', function(e) {
+			e.preventDefault();
+			var id = $('.modal_webid').val();
+			var user_id = $('.user_id').val();
+			var form_key = $('.user_form_key').val();
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var web_name_edit = $('.web_name_edit').val();
+			var web_link_edit = $('.web_link_edit').val();
+
+
+			if (web_name_edit == "" || web_name_edit == null) {
+				$(".web_name_edit").css('border', '2px solid red');
+				$(".web_update_spinner").hide();
+				return false;
+			} else {
+				$(".web_name_edit").css('border', '1px solid #141E30');
+			}
+			if (web_link_edit == "" || web_link_edit == null || !web_link_edit.startsWith("http") || !web_link_edit.startsWith("https") || !web_link_edit.includes("://") || !web_link_edit.includes(".") || web_link_edit.endsWith(".")) {
+				$(".web_link_edit").css('border', '2px solid red');
+				$(".weberr_span").html("Invalid WEB URL");
+				$(".web_update_spinner").hide();
+				return false;
+			} else {
+				$(".weberr").hide();
+				$(".weberr_span").html("* Web links must start with http or https");
+				$(".web_link_edit").css('border', '1px solid #141E30');
+			}
+
+			$.ajax({
+				url: "<?php echo base_url('admin/user_webupdate') ?>",
+				method: "POST",
+				data: {
+					[csrfName]: csrfHash,
+					id: id,
+					user_id: user_id,
+					form_key: form_key,
+					web_name_edit: web_name_edit,
+					web_link_edit: web_link_edit
+				},
+				dataType: "json",
+				beforeSend: function() {
+					$(".web_update_spinner").fadeIn();
+					$('.user_webpdate').html("Updating...");
+					$('.user_webpdate').attr("disabled", "disabled");
+					$('.user_webpdate').css("cursor", "not-allowed");
+				},
+				success: function(data) {
+					$('.user_webpdate').html("Update");
+					$('.user_webpdate').removeAttr("disabled");
+					$('.user_webpdate').css("cursor", "pointer");
+					$('.user_webpdate').css("background", "#141E30");
+					$('.csrf-token').val(data.token);
+
+					if (data.res == "failed") {
+						$(".web_update_spinner,.ajax_succ_div").fadeOut();
+						$('.ajax_res_err').html(data.res_msg);
+						$('.ajax_err_div').fadeIn();
+					} else if (data.res == "success") {
+						$(".web_update_spinner,.ajax_err_div").fadeOut();
+						$('.ajax_res_succ').html(data.res_msg);
+						$('.ajax_succ_div').fadeIn();
+					}
+
+					reload_table();
+				},
+				error: function(data) {
+					alert("Error updating user profile!");
+					window.location.reload();
+				}
+			})
+		});
+
+		$(document).on("click", ".close_edit_web_modal", function() {
+			$(".edit_web_modal").modal("hide");
+			$(".updateusermodal").modal("show");
+		});
+
+		$(document).on("click", ".del_web_btn", function() {
+			var web_id = $(this).attr('web_id');
+			var user_id = $(this).attr('user_id');
+			var form_key = $(this).attr('form_key');
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var con = confirm("Are you sure you want to delete this user website and all of its ratings?");
+			if (con == false) {
+				return false;
+			} else if (con == true) {
+				$.ajax({
+					url: "<?php echo base_url('admin/delete_user_web'); ?>",
+					method: "post",
+					data: {
+						web_id: web_id,
+						user_id: user_id,
+						form_key: form_key,
+						[csrfName]: csrfHash
+					},
+					dataType: "json",
+					success: function(data) {
+						if (data.res == "failed") {
+							$('.ajax_res_err').html(data.res_msg);
+							$('.ajax_err_div').fadeIn();
+						} else if (data.res == "success") {
+							$("div.website_form_div div." + web_id).remove();
+							$('.ajax_res_succ').html(data.res_msg);
+							$('.ajax_succ_div').fadeIn();
+						}
+						$('.csrf-token').val(data.token);
+					},
+					error: function(data) {
+						alert('Failed to delete. Please refresh page');
+						window.location.reload();
+					}
+				})
 			}
 		});
 
@@ -464,11 +646,11 @@
 					$('.csrf-token').val(data.token);
 
 					if (data.res == "failed") {
-						$(".prof_update_spinner").fadeOut();
+						$(".prof_update_spinner,.ajax_succ_div").fadeOut();
 						$('.ajax_res_err').html(data.res_msg);
 						$('.ajax_err_div').fadeIn();
 					} else if (data.res == "success") {
-						$(".prof_update_spinner").fadeOut();
+						$(".prof_update_spinner,.ajax_err_div").fadeOut();
 						$('.ajax_res_succ').html(data.res_msg);
 						$('.ajax_succ_div').fadeIn();
 					}
@@ -487,9 +669,9 @@
 
 		$(document).on('click', 'button.deacti_act_btn', function() {
 			var con = confirm("Are you sure you want to de-activate this user account?");
-			if (con = false) {
+			if (con == false) {
 				return false;
-			} else {
+			} else if (con == true) {
 				var user_id = $('.user_id').val();
 				var user_form_key = $('.user_form_key').val();
 				var csrfName = $('.csrf-token').attr('name');
@@ -509,9 +691,11 @@
 						$('.acti_act_btn').show();
 						// $('i.' + user_form_key).removeClass("text-success").addClass("text-danger");
 						if (data.res == "failed") {
+							$(".ajax_succ_div").fadeOut();
 							$('.ajax_res_err').html(data.res_msg);
 							$('.ajax_err_div').fadeIn();
 						} else if (data.res == "success") {
+							$(".ajax_err_div").fadeOut();
 							$('.ajax_res_succ').html(data.res_msg);
 							$('.ajax_succ_div').fadeIn();
 						}
@@ -529,9 +713,9 @@
 
 		$(document).on('click', 'button.acti_act_btn', function() {
 			var con = confirm("Are you sure you want to activate this user account?");
-			if (con = false) {
+			if (con == false) {
 				return false;
-			} else {
+			} else if (con == true) {
 				var user_id = $('.user_id').val();
 				var user_form_key = $('.user_form_key').val();
 				var csrfName = $('.csrf-token').attr('name');
@@ -602,16 +786,20 @@
 
 			if (new_pwd == "" || new_pwd == null) {
 				$('.new_pwd').css('border', '2px solid red');
+				$(".user_accupdate").hide();
 				return false;
 			}
 			if (new_pwd.length < 7) {
 				$('.new_pwd').css('border', '2px solid red');
 				$('.new_pwderr').show();
+				$(".user_accupdate").hide();
 				return false;
 			} else {
 				$('.new_pwd').css('border', '1px solid #141E30');
 				$('.new_pwderr').removeClass('text-danger').addClass('text-success');
 			}
+
+			$(".user_accupdate").show();
 		})
 
 		$(document).on('click', '.user_accupdate', function() {
@@ -625,11 +813,13 @@
 
 			if (new_pwd == "" || new_pwd == null) {
 				$('.new_pwd').css('border', '2px solid red');
+				$(".acct_update_spinner").hide();
 				return false;
 			}
 			if (new_pwd.length < 7) {
 				$('.new_pwd').css('border', '2px solid red');
 				$('.new_pwderr').show();
+				$(".acct_update_spinner").hide();
 				return false;
 			} else {
 				$('.new_pwd').css('border', '1px solid #141E30');
@@ -637,30 +827,50 @@
 			}
 
 			$.ajax({
-					url: "<?php echo base_url('admin/user_accupdate') ?>",
-					method: "POST",
-					data: {
-						user_id: user_id,
-						form_key: form_key,
-						new_pwd: new_pwd,
-						uname: uname,
-						email: email,
-						[csrfName]: csrfHash
-					},
-					beforeSend: function() {
-						$('.user_accupdate').html("Updating...");
-						$('.user_accupdate').attr("disabled", "disabled");
-						$('.user_accupdate').css("cursor", "not-allowed");
-					},
-					error: function(data) {
-						alert("Error updating password!");
-						window.location.reload();
-					}
-				})
-				.done(function() {
-					window.location.reload();
-				});
-		});
+				url: "<?php echo base_url('admin/user_accupdate') ?>",
+				method: "POST",
+				data: {
+					user_id: user_id,
+					form_key: form_key,
+					new_pwd: new_pwd,
+					uname: uname,
+					email: email,
+					[csrfName]: csrfHash
+				},
+				dataType: "json",
+				beforeSend: function() {
+					$(".acct_update_spinner").fadeIn();
+					$('.user_accupdate').html("Updating...");
+					$('.user_accupdate').attr("disabled", "disabled");
+					$('.user_accupdate').css("cursor", "not-allowed");
+				},
+				success: function(data) {
+					$('.user_accupdate').html("Update");
+					$('.user_accupdate').removeAttr("disabled");
+					$('.user_accupdate').css("cursor", "pointer");
+					$('.user_accupdate').css("background", "#141E30");
 
+					$('.csrf-token').val(data.token);
+
+					if (data.res == "failed") {
+						$(".acct_update_spinner,.ajax_succ_div").fadeOut();
+						$('.ajax_res_err').html(data.res_msg);
+						$('.ajax_err_div').fadeIn();
+					} else if (data.res == "success") {
+						$(".acct_update_spinner").fadeOut();
+						$('.ajax_res_succ').html(data.res_msg);
+						$('.ajax_succ_div,.ajax_err_div').fadeIn();
+					}
+				},
+				error: function(data) {
+					alert("Error updating user profile!");
+					// window.location.reload();
+				}
+				// .done(function() {
+				// 	window.location.reload();
+				// });
+			});
+
+		});
 	});
 </script>

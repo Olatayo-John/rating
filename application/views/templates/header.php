@@ -75,14 +75,14 @@
 	</nav>
 
 	<div class="container">
-		<div class="alert-danger ajax_alert_div ajax_err_div" style="padding:5px;display:none;z-index: 9999;">
+		<div class="alert-danger ajax_alert_div ajax_err_div" style="padding:8px;display:none;z-index: 9999;">
 			<button class="ajax_err_div_close close" data-dismiss="ajax_err_div">&times;</button>
 			<i class="fas fa-exclamation-circle text-danger"></i>
 			<strong class="ajax_res_err text-dark"></strong>
 		</div>
-		<div class="alert-success ajax_alert_div ajax_succ_div" style="padding:5px;display:none;z-index: 9999;">
+		<div class="alert-success ajax_alert_div ajax_succ_div" style="padding:8px;display:none;z-index: 9999;">
 			<button class="ajax_succ_div_close close">&times;</button>
-			<i class="fas fa-exclamation-circle text-success"></i>
+			<i class="fas fa-check-circle text-success"></i>
 			<strong class="ajax_res_succ text-dark"></strong>
 		</div>
 		<?php if ($this->session->flashdata('valid')) : ?>

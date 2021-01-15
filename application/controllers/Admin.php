@@ -416,7 +416,7 @@ class Admin extends CI_Controller
 		$res = $this->Adminmodel->deactivateuser($_POST['user_id'], $_POST['user_form_key']);
 		if ($res !== true) {
 			$data['res'] = "failed";
-			$data['res_msg'] = "Error de-activating this user account!!";
+			$data['res_msg'] = "Failed to de-activate user account!!";
 		} else {
 			$data['res'] = "success";
 			$data['res_msg'] = "User account de-activated!";
@@ -438,11 +438,14 @@ class Admin extends CI_Controller
 		}
 		$res = $this->Adminmodel->activateuser($_POST['user_id'], $_POST['user_form_key']);
 		if ($res !== true) {
-			$this->session->set_flashdata('user_deleted', 'Error Activating this user account!');
+			$data['res'] = "failed";
+			$data['res_msg'] = "Failed to activating user account!!";
 		} else {
-			$data['token'] = $this->security->get_csrf_hash();
-			echo json_encode($data);
+			$data['res'] = "success";
+			$data['res_msg'] = "User account activated!";
 		}
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
 	}
 
 	function user_accupdate()

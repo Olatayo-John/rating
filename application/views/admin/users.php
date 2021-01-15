@@ -549,7 +549,15 @@
 					success: function(data) {
 						$('.deacti_act_btn').show();
 						$('.acti_act_btn').hide();
-						$('i.' + user_form_key).removeClass("text-danger").addClass("text-success");
+						// $('i.' + user_form_key).removeClass("text-danger").addClass("text-success");
+						if (data.res == "failed") {
+							$('.ajax_res_err').html(data.res_msg);
+							$('.ajax_err_div').fadeIn();
+						} else if (data.res == "success") {
+							$('.ajax_res_succ').html(data.res_msg);
+							$('.ajax_succ_div').fadeIn();
+						}
+						reload_table();
 						$('.csrf-token').val(data.token);
 					},
 					error: function(data) {

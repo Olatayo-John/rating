@@ -52,6 +52,12 @@ span.close_x_icon{
 label{
 	font-weight: bold;
 }
+div.check_div{
+	position: absolute;
+    right: 150px;
+	margin-top: 5px;
+	display: none;
+}
 /* input.form-control,select.form-control{
 	border-radius: 20px;
 } */

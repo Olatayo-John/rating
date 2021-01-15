@@ -26,14 +26,14 @@ div.spinner-border{
 nav{
 	background-color: white;
 }
-div.alert button.close{
+div.alert button.close, .ajax_alert_div button.close{
 	margin-left: 20px;
 	outline: none;
 }
 div.alert button.close:hover{
 	font-weight: bolder;
 }
-div.alert{
+div.alert,.ajax_alert_div{
 	position: fixed;
 	border-radius: 0;
 	position: fixed;

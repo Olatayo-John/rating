@@ -65,14 +65,17 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label><span class="text-danger font-weight-bolder">* </span>Mobile:</label>
-									<input type="number" name="mobile" class="form-control mobile" placeholder="User Mobile Number" id="mobile">
+									<input type="number" name="mobile" class="form-control mobile" placeholder="User Mobile Number" id="mobile" maxlength="10">
 									<div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
 								</div>
 							</div>
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
-							<button class="btn text-light user_profileupdate bradius" style="background:#141E30">Update</button>
+							<div class="spinner-border prof_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
+								<span class="sr-only">Loading...</span>
+							</div>
+							<button class="btn text-light user_profileupdate bradius" type="submit" style="background:#141E30">Update</button>
 						</div>
 					</div>
 					<div class="website_div">
@@ -86,6 +89,9 @@
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2 web_btngrp">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
+							<div class="spinner-border web_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
+								<span class="sr-only">Loading...</span>
+							</div>
 							<button class="btn text-light user_webpdate bradius" style="background:#141E30">Update</button>
 						</div>
 					</div>
@@ -106,6 +112,9 @@
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
+							<div class="spinner-border acct_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
+								<span class="sr-only">Loading...</span>
+							</div>
 							<button class="btn text-light user_accupdate bradius" style="background:#141E30">Update</button>
 						</div>
 					</div>
@@ -386,6 +395,96 @@
 			}
 		});
 
+		$(document).on('click', '.user_profileupdate', function(e) {
+			e.preventDefault();
+			var user_id = $('.user_id').val();
+			var form_key = $('.user_form_key').val();
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var uname = $('.uname').val();
+			var fname = $('.fname').val();
+			var lname = $('.lname').val();
+			var email = $('.email').val();
+			var mobile = $('.mobile').val();
+
+			if (uname == "" || uname == null) {
+				$('.uname').css('border', '2px solid red');
+				$(".prof_update_spinner").hide();
+				return false;
+			} else {
+				$('.uname').css('border', '1px solid #141E30');
+			}
+			if (email == "" || email == null) {
+				$('.email').css('border', '2px solid red');
+				$(".prof_update_spinner").hide();
+				return false;
+			} else {
+				$('.email').css('border', '1px solid #141E30');
+			}
+			if (mobile == "" || mobile == null) {
+				$('.uname').css('border', '2px solid red');
+				$(".prof_update_spinner").hide();
+				return false;
+			}
+			if (mobile.length !== 10) {
+				$('.mobile').css('border', '2px solid red');
+				$(".mobileerr").show();
+				$(".prof_update_spinner").hide();
+				return false;
+			} else {
+				$('.mobile').css('border', '1px solid #141E30');
+				$(".mobileerr").hide();
+			}
+
+			$.ajax({
+				url: "<?php echo base_url('admin/user_profupdate') ?>",
+				method: "POST",
+				data: {
+					[csrfName]: csrfHash,
+					user_id: user_id,
+					form_key: form_key,
+					uname: uname,
+					fname: fname,
+					lname: lname,
+					email: email,
+					mobile: mobile,
+				},
+				dataType: "json",
+				beforeSend: function() {
+					$(".prof_update_spinner").fadeIn();
+					$('.user_profileupdate').html("Updating...");
+					$('.user_profileupdate').attr("disabled", "disabled");
+					$('.user_profileupdate').css("cursor", "not-allowed");
+				},
+				success: function(data) {
+					$('.user_profileupdate').html("Update");
+					$('.user_profileupdate').removeAttr("disabled");
+					$('.user_profileupdate').css("cursor", "pointer");
+					$('.user_profileupdate').css("background", "#141E30");
+					$('.csrf-token').val(data.token);
+
+					if (data.res == "failed") {
+						$(".prof_update_spinner").fadeOut();
+						$('.ajax_res_err').html(data.res_msg);
+						$('.ajax_err_div').fadeIn();
+					} else if (data.res == "success") {
+						$(".prof_update_spinner").fadeOut();
+						$('.ajax_res_succ').html(data.res_msg);
+						$('.ajax_succ_div').fadeIn();
+					}
+
+					reload_table();
+				},
+				error: function(data) {
+					alert("Error updating user profile!");
+					window.location.reload();
+				}
+			})
+			// .done(function() {
+			// 	window.location.reload();
+			// });
+		});
+
 		$(document).on('click', 'button.deacti_act_btn', function() {
 			var con = confirm("Are you sure you want to de-activate this user account?");
 			if (con = false) {
@@ -408,7 +507,17 @@
 					success: function(data) {
 						$('.deacti_act_btn').hide();
 						$('.acti_act_btn').show();
-						$('i.' + user_form_key).removeClass("text-success").addClass("text-danger");
+						// $('i.' + user_form_key).removeClass("text-success").addClass("text-danger");
+						if (data.res == "failed") {
+							$('.ajax_res_err').html(data.res_msg);
+							$('.ajax_err_div').fadeIn();
+						} else if (data.res == "success") {
+							$('.ajax_res_succ').html(data.res_msg);
+							$('.ajax_succ_div').fadeIn();
+						}
+
+						reload_table();
+
 						$('.csrf-token').val(data.token);
 					},
 					error: function(data) {
@@ -448,89 +557,6 @@
 					}
 				});
 			}
-		});
-
-		$(document).on('click', '.updatebtn', function() {
-			var u_user_id = $('.u_user_id').val();
-			var uname = $('.uname').val();
-			var full_name = $('.full_name').val();
-			var email = $('.email').val();
-			var mobile = $('.mobile').val();
-			var c_name = $('.c_name').val();
-			var c_add = $('.c_add').val();
-			var c_email = $('.c_email').val();
-			var c_mobile = $('.c_mobile').val();
-			var c_web = $('.c_web').val();
-			var fb_link = $('.fb_link').val();
-			var google_link = $('.google_link').val();
-			var glassdoor_link = $('.glassdoor_link').val();
-			var trust_pilot_link = $('.trust_pilot_link').val();
-			var u_pwd = $('.u_pwd').val();
-			var csrfName = $('.csrf-token').attr('name');
-			var csrfHash = $('.csrf-token').val();
-
-			if (email == "" || email == null) {
-				$('.email').css('border', '2px solid red');
-				document.getElementById("email").scrollIntoView();
-				return false;
-			} else {
-				$('.email').css('border', '0 solid red');
-			}
-			if (mobile == "" || mobile == null) {
-				$('.mobile').css('border', '2px solid red');
-				document.getElementById("mobile").scrollIntoView();
-				return false;
-			}
-			if (mobile.length < 10 || mobile.length > 10) {
-				document.getElementById("mobile").scrollIntoView();
-				$('.mobileerr').show();
-				return false;
-			} else {
-				$('.mobile').css('border', '0 solid red');
-				$('.mobileerr').hide();
-			}
-			if (uname == "" || uname == null) {
-				$('.uname').css('border', '2px solid red');
-				document.getElementById("uname").scrollIntoView();
-				return false;
-			} else {
-				$('.uname').css('border', '0 solid red');
-			}
-
-			$.ajax({
-					url: "<?php echo base_url('admin/update_user') ?>",
-					method: "POST",
-					data: {
-						u_user_id: u_user_id,
-						uname: uname,
-						full_name: full_name,
-						email: email,
-						mobile: mobile,
-						c_name: c_name,
-						c_add: c_add,
-						c_email: c_email,
-						c_mobile: c_mobile,
-						c_web: c_web,
-						fb_link: fb_link,
-						google_link: google_link,
-						glassdoor_link: glassdoor_link,
-						trust_pilot_link: trust_pilot_link,
-						u_pwd: u_pwd,
-						[csrfName]: csrfHash
-					},
-					beforeSend: function() {
-						$('.updatebtn').removeClass("btn-success").addClass("btn-danger");
-						$('.updatebtn').html("Updating...");
-						$('.updatebtn').attr("disabled", "disabled");
-						$('.updatebtn').css("cursor", "not-allowed");
-					},
-					error: function(data) {
-						alert("Error updating. Please refresh page");
-					}
-				})
-				.done(function() {
-					window.location.reload();
-				});
 		});
 
 		$(document).on('click', 'button.delact_btn', function() {

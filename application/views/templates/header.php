@@ -75,6 +75,30 @@
 	</nav>
 
 	<div class="container">
+		<div class="alert-danger ajax_alert_div ajax_err_div" style="padding:5px;display:none;z-index: 9999;">
+			<button class="ajax_err_div_close close" data-dismiss="ajax_err_div">&times;</button>
+			<i class="fas fa-exclamation-circle text-danger"></i>
+			<strong class="ajax_res_err text-dark"></strong>
+		</div>
+		<div class="alert-success ajax_alert_div ajax_succ_div" style="padding:5px;display:none;z-index: 9999;">
+			<button class="ajax_succ_div_close close">&times;</button>
+			<i class="fas fa-exclamation-circle text-success"></i>
+			<strong class="ajax_res_succ text-dark"></strong>
+		</div>
+		<?php if ($this->session->flashdata('valid')) : ?>
+			<div class="alert alert-success">
+				<button class="close" data-dismiss="alert">&times;</button>
+				<i class="fas fa-exclamation-circle"></i>
+				<strong><?php echo $this->session->flashdata('valid') ?></strong>
+			</div>
+		<?php endif; ?>
+		<?php if ($this->session->flashdata('invalid')) : ?>
+			<div class="alert alert-danger">
+				<button class="close" data-dismiss="alert">&times;</button>
+				<i class="fas fa-exclamation-circle text-danger"></i>
+				<strong><?php echo $this->session->flashdata('invalid') ?></strong>
+			</div>
+		<?php endif; ?>
 		<?php if ($this->session->flashdata('acces_denied')) : ?>
 			<div class="alert alert-danger">
 				<button class="close" data-dismiss="alert">&times;</button>
@@ -282,20 +306,6 @@
 				<button class="close" data-dismiss="alert">&times;</button>
 				<i class="fas fa-exclamation-circle text-danger"></i>
 				<strong><?php echo $this->session->flashdata('cntc_us_err') ?></strong>
-			</div>
-		<?php endif; ?>
-		<?php if ($this->session->flashdata('valid')) : ?>
-			<div class="alert alert-success">
-				<button class="close" data-dismiss="alert">&times;</button>
-				<i class="fas fa-exclamation-circle"></i>
-				<strong><?php echo $this->session->flashdata('valid') ?></strong>
-			</div>
-		<?php endif; ?>
-		<?php if ($this->session->flashdata('invalid')) : ?>
-			<div class="alert alert-danger">
-				<button class="close" data-dismiss="alert">&times;</button>
-				<i class="fas fa-exclamation-circle text-danger"></i>
-				<strong><?php echo $this->session->flashdata('invalid') ?></strong>
 			</div>
 		<?php endif; ?>
 		<?php if ($this->session->flashdata('log_out')) : ?>

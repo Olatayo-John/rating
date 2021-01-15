@@ -379,6 +379,30 @@ class Admin extends CI_Controller
 		}
 	}
 
+	function user_profupdate()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		}
+		$res = $this->Adminmodel->user_profupdate($_POST['user_id'], $_POST['form_key'], $_POST['uname'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile']);
+		// $res = false;
+		if ($res !== true) {
+			$data['res'] = "failed";
+			$data['res_msg'] = "Error updating user details!";
+		} else {
+			$data['res'] = "success";
+			$data['res_msg'] = "User profile updated!";
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
 	function deactivateuser()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
@@ -391,11 +415,15 @@ class Admin extends CI_Controller
 		}
 		$res = $this->Adminmodel->deactivateuser($_POST['user_id'], $_POST['user_form_key']);
 		if ($res !== true) {
-			$this->session->set_flashdata('acces_denied', 'Error de-activating this user account!');
+			$data['res'] = "failed";
+			$data['res_msg'] = "Error de-activating this user account!!";
 		} else {
-			$data['token'] = $this->security->get_csrf_hash();
-			echo json_encode($data);
+			$data['res'] = "success";
+			$data['res_msg'] = "User account de-activated!";
 		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
 	}
 
 	function activateuser()
@@ -427,7 +455,7 @@ class Admin extends CI_Controller
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
 			return false;
 		}
-		$res = $this->Adminmodel->user_accupdate($_POST['user_id'], $_POST['user_form_key'], $_POST['new_pwd']);
+		$res = $this->Adminmodel->user_accupdate($_POST['user_id'], $_POST['form_key'], $_POST['new_pwd']);
 		if ($res !== true) {
 			$this->session->set_flashdata('invalid', 'Error changing user password!');
 		} else {

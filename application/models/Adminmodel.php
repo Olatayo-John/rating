@@ -101,6 +101,21 @@ class Adminmodel extends CI_Model
 		return $query->result();
 	}
 
+	public function user_profupdate($user_id, $form_key, $uname, $fname, $lname, $email, $mobile)
+	{
+		$data = array(
+			'uname' => htmlentities($uname),
+			'fname' => htmlentities($fname),
+			'lname' => htmlentities($lname),
+			'email' => htmlentities($email),
+			'mobile' => htmlentities($mobile),
+		);
+
+		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
+		$this->db->update("users", $data);
+		return true;
+	}
+
 	public function deactivateuser($user_id, $user_form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $user_form_key));
@@ -117,10 +132,10 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function user_accupdate($user_id, $user_form_key, $new_pwd)
+	public function user_accupdate($user_id, $form_key, $new_pwd)
 	{
-		$this->db->set('password', password_hash($new_pwd, PASSWORD_DEFAULT), false);
-		$this->db->where(array('id' => $user_id, 'form_key' => $user_form_key));
+		$this->db->set('password', password_hash($new_pwd, PASSWORD_DEFAULT));
+		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$this->db->update("users");
 		return true;
 	}

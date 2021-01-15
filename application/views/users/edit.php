@@ -325,8 +325,7 @@
 					window.location.reload();
 				},
 				error: function(data) {
-					// window.location.reload();
-					console.log("error");
+					window.location.reload();
 				}
 			});
 		});

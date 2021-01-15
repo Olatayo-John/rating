@@ -57,9 +57,17 @@ $(document).ready(function () {
 	$(document).on('click', '.closeupdatebtn,.close_x_icon', function () {
 		$('.updateusermodal').modal("hide");
 		$('.website_form_div').html("");
+		$(".prof_update_spinner").hide();
 		// $('.modal-backdrop').hide();
 	});
 
+	$(document).on('click', '.ajax_err_div', function () {
+		$('.ajax_err_div').fadeOut();
+	});
+
+	$(document).on('click', '.ajax_succ_div', function () {
+		$('.ajax_succ_div').fadeOut();
+	});
 
 	$(document).on('click', 'a.prof_a', function (e) {
 		e.preventDefault();

@@ -53,10 +53,6 @@ button.bradius{
 div.pwderr{
 	display: none;
 }
-.vv_btn:hover{
-	transform: scale(1.1);
-	transition: transform .2s;
-}
 i.fa-sort:hover{
 	transform: scale(1.3);
 	transition: transform .2s;
@@ -65,17 +61,15 @@ td{
 	text-transform: uppercase;
 	color: black;
 }
-div.inh{
-	width: 60px;
-	text-align: center;
+.vv_btn{
+	border-radius: 0;
 }
-div.tr{
-	width: 120px;
-	text-align: center;
+.vv_btn:hover{
+	transform: scale(1.1);
+	transition: transform .2s;
 }
-div.st{
-	width: 60px;
-	text-align: center;
+div.user_web_div:nth-last-child(1){
+	border-right: none !important;
 }
 @media only screen and (max-width: 500px) {
 	h4.userheader{

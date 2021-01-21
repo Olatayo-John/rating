@@ -185,21 +185,58 @@ class Adminmodel extends CI_Model
 
 	public function get_user_votes($limit = false, $offset = false)
 	{
-		// $this->db->limit($limit, $offset);
-		// $query = $this->db->get('user_details');
-
 		$this->db->limit($limit, $offset);
-		$this->db->select('*');
-		$this->db->from('user_details');
-		$this->db->join('websites', 'user_details.form_key=websites.form_key', 'inner');
-		$query = $this->db->get();
+
+		$query = $this->db->get('user_details');
+
+		// $this->db->select('user_details.*,websites.id as web_id ,websites.web_name as web_name,websites.web_link as web_link');
+		// $this->db->from('user_details');
+		// $this->db->join('websites', 'user_details.form_key=websites.form_key', 'inner');
+		// $query = $this->db->get();
+
+		return $query;
+	}
+
+	public function get_total_ratings()
+	{
+		$query = $this->db->get('all_ratings');
+		return $query;
+	}
+	public function get_total_official()
+	{
+		$this->db->where('web_name', 'official');
+		$query = $this->db->get('all_ratings');
+		return $query;
+	}
+	public function get_total_google()
+	{
+		$this->db->where('web_name', 'google');
+		$query = $this->db->get('all_ratings');
+		return $query;
+	}
+	public function get_total_facebook()
+	{
+		$this->db->where('web_name', 'facebook');
+		$query = $this->db->get('all_ratings');
+		return $query;
+	}
+	public function get_total_tp()
+	{
+		$this->db->where('web_name', 'trust pilot');
+		$query = $this->db->get('all_ratings');
+		return $query;
+	}
+	public function get_total_gd()
+	{
+		$this->db->where('web_name', 'glassdoor');
+		$query = $this->db->get('all_ratings');
 		return $query;
 	}
 
 	public function votes_export_csv()
 	{
 		$this->db->order_by('id', 'desc');
-		$this->db->select('id,uname,total_ratings,total_sms,total_email,total_one,total_two,total_three,total_four,total_five');
+		$this->db->select('id,uname,total_ratings,total_sms,total_email');
 		$query = $this->db->get('user_details');
 		return $query->result_array();
 	}
@@ -216,7 +253,7 @@ class Adminmodel extends CI_Model
 		$this->db->select('*');
 		$this->db->from('user_details');
 		if ($query != '') {
-			$this->db->like('name', $query);
+			$this->db->like('uname', $query);
 		}
 		$this->db->order_by('id', 'DESC');
 		return $this->db->get();
@@ -224,17 +261,40 @@ class Adminmodel extends CI_Model
 
 	public function get_ratings($key)
 	{
-		$this->db->order_by('id', 'desc');
-		$this->db->where('c_id', $key);
+		$this->db->order_by('web_name', 'desc');
+		$this->db->where('form_key', $key);
 		$query = $this->db->get('all_ratings');
 		return $query->result_array();
+	}
+
+	public function getuserwebsites($key)
+	{
+		$query = $this->db->get_where('websites', array('form_key' => $key));
+		if (!$query) {
+			return false;
+		} else {
+			return $query->result_array();
+		}
+	}
+
+	public function user_web_total($key)
+	{
+		$this->db->select('total_ratings');
+		$this->db->from('user_details');
+		$this->db->where('form_key', $key);
+		$query = $this->db->get();
+		if (!$query) {
+			return false;
+		} else {
+			return $query->result();
+		}
 	}
 
 	public function indiv_votes_export_csv($key)
 	{
 		$this->db->order_by('id', 'desc');
-		$this->db->select('id,name,review_msg,star,mobile,user_ip,rated_at');
-		$query = $this->db->get_where('all_ratings', array('c_id' => $key));
+		$this->db->select('id,name,mobile,star,web_name,user_ip,rated_at');
+		$query = $this->db->get_where('all_ratings', array('form_key' => $key));
 		return $query->result_array();
 	}
 
@@ -242,12 +302,18 @@ class Adminmodel extends CI_Model
 	{
 		$this->db->select('*');
 		$this->db->from('all_ratings');
-		$this->db->where('c_id', $key);
+		$this->db->where('form_key', $key);
 		if ($query != '') {
 			$this->db->like('name', $query);
+			$this->db->or_like('web_name', $query);
+			$this->db->or_like('mobile', $query);
+			$this->db->or_like('star', $query);
+			$this->db->or_like('user_ip', $query);
+			$this->db->order_by('id', 'DESC');
+			return $this->db->get();
+		} else {
+			return "false";
 		}
-		$this->db->order_by('id', 'DESC');
-		return $this->db->get();
 	}
 
 	public function save_payment($userData)

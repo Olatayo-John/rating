@@ -646,7 +646,7 @@ class Admin extends CI_Controller
 		}
 		$config['base_url'] = base_url() . "admin/votes/";
 		$config['total_rows'] = $this->db->count_all('user_details');
-		$config['per_page'] = 10;
+		$config['per_page'] = 2;
 		$config["uri_segment"] = 3;
 		$config['attributes'] = array('class' => 'page-link');
 		$config['full_tag_open'] = '<ul class="pagination">';
@@ -666,10 +666,15 @@ class Admin extends CI_Controller
 		$data['links'] = $this->pagination->create_links();
 
 		$data['details'] = $this->Adminmodel->get_user_votes($config["per_page"], $offset);
-		print_r($data['details']);
-		die;
+		$data['get_total_ratings'] = $this->Adminmodel->get_total_ratings();
+		$data['get_total_official'] = $this->Adminmodel->get_total_official();
+		$data['get_total_google'] = $this->Adminmodel->get_total_google();
+		$data['get_total_facebook'] = $this->Adminmodel->get_total_facebook();
+		$data['get_total_gd'] = $this->Adminmodel->get_total_gd();
+		$data['get_total_tp'] = $this->Adminmodel->get_total_tp();
 
-
+		// print_r($data['details']->result_array());
+		// die;
 		$this->load->view('templates/header');
 		$this->load->view('admin/votes', $data);
 		$this->load->view('templates/footer');
@@ -688,7 +693,7 @@ class Admin extends CI_Controller
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=users.csv");
 		$output = fopen("php://output", "w");
-		fputcsv($output, array('ID', 'User', 'Total Ratings', 'SMS Sent', 'Email Sent', '5 Star', '4 Star', '3 Star', '2 Star', '1 Star'));
+		fputcsv($output, array('ID', 'User', 'Total Reviews', 'SMS Sent', 'Email Sent'));
 		$data = $this->Adminmodel->votes_export_csv();
 		foreach ($data as $row) {
 			fputcsv($output, $row);
@@ -711,66 +716,56 @@ class Admin extends CI_Controller
 		$output = "";
 
 		$data = $this->Adminmodel->get_user_votes($config["per_page"], $offset);
-		$output .= '<table class="table table-center table-hover table-md table-light" id="result">
-		<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
-		<th><div class="inh">
-		<i class="fas fa-sort" name="name" type="desc"></i>
-		<span>Name</span>
-		</div></th>
-		<th><div class="tr">
-		<i class="fas fa-sort" name="total_links" type="desc"></i>
-		<span>Feedbacks</span>
-		</div class="icon"></th>
-		<th><div class="inh">
-		<i class="fas fa-sort" name="sms" type="desc"></i>
-		<span>SMS</span>
-		</div class="icon"></th>
-		<th><div class="inh">
-		<i class="fas fa-sort" name="email" type="desc"></i>
-		<span>Email</span>
-		</div class="icon"></th>
-		<th><div class="tr">				
-		<i class="fas fa-sort" name="ow_r" type="desc"></i>
-		<span>Official Web</span>
-		</div></th>
-		<th><div class="tr">				
-		<i class="fas fa-sort" name="fb_r" type="desc"></i>
-		<span>Facebook</span>
-		</div></th>
-		<th><div class="tr">				
-		<i class="fas fa-sort" name="g_r" type="desc"></i>
-		<span>Google</span>
-		</div></th>
-		<th><div class="tr">			
-		<i class="fas fa-sort" name="gb_r" type="desc"></i>
-		<span>Glassdoor</span>
-		</div></th>
-		<th><div class="tr">				
-		<i class="fas fa-sort" name="tp_r" type="desc"></i>
-		<span>Trust Pilot</span>
-		</div></th>
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort" name="uname" type="desc"></i>
+				<span>User</span>
+			</div>
+		</th>
+		<th>
+			<div class="tr">
+				<i class="fas fa-sort" name="total_ratings" type="desc"></i>
+				<span>Reviews</span>
+			</div class="icon">
+		</th>
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort" name="total_sms" type="desc"></i>
+				<span>SMS</span>
+			</div class="icon">
+		</th>
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort" name="total_email" type="desc"></i>
+				<span>Email</span>
+			</div class="icon">
+		</th>
+		<th>
+			<div class="tr">
+				<i class="fas fa-sort" name="form_key" type="desc"></i>
+				<span>User Link</span>
+			</div>
+		</th>
 		<th class="text-danger text-center font-weight-bolder">
-		View Feedbacks
+			Reviews
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
 			$output .= '<tr class="text-dark">
-			<td colspan="8" class="font-weight-bolder text-dark text-center">NO DATA FOUND</td>
+			<td colspan="6" class="font-weight-bolder text-dark text-center">NO DATA FOUND</td>
 			</tr>';
 		} else {
 			foreach ($data->result_array() as $info) {
 				$output .= '<tr class="text-dark text-center">
-				<td class="">' . $info["name"] . '</td>
-				<td class="">' . $info["total_links"] . '</td>
-				<td class="">' . $info["sms"] . '</td>
-				<td class="">' . $info["email"] . '</td>
-				<td class="">' . $info["ow_r"] . '</td>
-				<td class="">' . $info["fb_r"] . '</td>
-				<td class="">' . $info["g_r"] . '</td>
-				<td class="">' . $info["gb_r"] . '</td>
-				<td class="">' . $info["tp_r"] . '</td>
-				<td class="">
-				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="width: 100px;background: linear-gradient(to right, #243B55, #141E30);"><i class="fas fa-poll text-light mr-2"></i>Votes</button>
+				<td class="">' . $info["uname"] . '</td>
+				<td class="tv">' . $info["total_ratings"] . '</td>
+				<td class="tv">' . $info["total_sms"] . '</td>
+				<td class="tv">' . $info["total_email"] . '</td>
+				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
+				<td class="font-weight-bolder">
+				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<i class="fas fa-poll text-light"></i></button>
 				</td>
 				</tr>';
 			}
@@ -790,66 +785,56 @@ class Admin extends CI_Controller
 		}
 		$data = $this->Adminmodel->votes_filter_param($_POST['param'], $_POST['type']);
 		$output = "";
-		$output .= '<table class="table table-center table-hover table-md table-light" id="result">
-		<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
-		<th><div class="inh">
-		<i class="fas fa-sort" name="name" type="desc"></i>
-		<span>Name</span>
-		</div></th>
-		<th><div class="tr">
-		<i class="fas fa-sort" name="total_links" type="desc"></i>
-		<span>Feedbacks</span>
-		</div class="icon"></th>
-		<th><div class="inh">
-		<i class="fas fa-sort" name="sms" type="desc"></i>
-		<span>SMS</span>
-		</div class="icon"></th>
-		<th><div class="inh">
-		<i class="fas fa-sort" name="email" type="desc"></i>
-		<span>Email</span>
-		</div class="icon"></th>
-		<th><div class="tr">				
-		<i class="fas fa-sort" name="ow_r" type="desc"></i>
-		<span>Official Web</span>
-		</div></th>
-		<th><div class="tr">				
-		<i class="fas fa-sort" name="fb_r" type="desc"></i>
-		<span>Facebook</span>
-		</div></th>
-		<th><div class="tr">				
-		<i class="fas fa-sort" name="g_r" type="desc"></i>
-		<span>Google</span>
-		</div></th>
-		<th><div class="tr">			
-		<i class="fas fa-sort" name="gb_r" type="desc"></i>
-		<span>Glassdoor</span>
-		</div></th>
-		<th><div class="tr">				
-		<i class="fas fa-sort" name="tp_r" type="desc"></i>
-		<span>Trust Pilot</span>
-		</div></th>
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort" name="uname" type="desc"></i>
+				<span>User</span>
+			</div>
+		</th>
+		<th>
+			<div class="tr">
+				<i class="fas fa-sort" name="total_ratings" type="desc"></i>
+				<span>Reviews</span>
+			</div class="icon">
+		</th>
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort" name="total_sms" type="desc"></i>
+				<span>SMS</span>
+			</div class="icon">
+		</th>
+		<th>
+			<div class="inh">
+				<i class="fas fa-sort" name="total_email" type="desc"></i>
+				<span>Email</span>
+			</div class="icon">
+		</th>
+		<th>
+			<div class="tr">
+				<i class="fas fa-sort" name="form_key" type="desc"></i>
+				<span>User Link</span>
+			</div>
+		</th>
 		<th class="text-danger text-center font-weight-bolder">
-		View Feedbacks
+			Reviews
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
 			$output .= '<tr class="text-light">
-			<td colspan="10" class="font-weight-bolder text-dark text-center">No data found</td>
+			<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
 			</tr>';
 		} else {
 			foreach ($data->result_array() as $info) {
 				$output .= '<tr class="text-dark text-center">
-				<td class="">' . $info["name"] . '</td>
-				<td class="">' . $info["total_links"] . '</td>
-				<td class="">' . $info["sms"] . '</td>
-				<td class="">' . $info["email"] . '</td>
-				<td class="">' . $info["ow_r"] . '</td>
-				<td class="">' . $info["fb_r"] . '</td>
-				<td class="">' . $info["g_r"] . '</td>
-				<td class="">' . $info["gb_r"] . '</td>
-				<td class="">' . $info["tp_r"] . '</td>
-				<td class="">
-				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="width: 100px;background: linear-gradient(to right, #243B55, #141E30);"><i class="fas fa-poll text-light mr-2"></i>Votes</button>
+				<td class="">' . $info["uname"] . '</td>
+				<td class="tv">' . $info["total_ratings"] . '</td>
+				<td class="tv">' . $info["total_sms"] . '</td>
+				<td class="tv">' . $info["total_email"] . '</td>
+				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
+				<td class="font-weight-bolder">
+				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<i class="fas fa-poll text-light"></i></button>
 				</td>
 				</tr>';
 			}
@@ -873,57 +858,51 @@ class Admin extends CI_Controller
 			$query = $this->input->post('query');
 		}
 		$data = $this->Adminmodel->votes_search_user($query);
-		$output .= '<table class="table table-center table-hover table-md table-light" id="result">
-		<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
-		<th><div class="inh">
-		<span>Name</span>
-		</div></th>
-		<th><div class="tr">
-		<span>Feedbacks</span>
-		</div class="icon"></th>
-		<th><div class="inh">
-		<span>SMS</span>
-		</div class="icon"></th>
-		<th><div class="inh">
-		<span>Email</span>
-		</div class="icon"></th>
-		<th><div class="tr">				
-		<span>Official Web</span>
-		</div></th>
-		<th><div class="tr">				
-		<span>Facebook</span>
-		</div></th>
-		<th><div class="tr">				
-		<span>Google</span>
-		</div></th>
-		<th><div class="tr">			
-		<span>Glassdoor</span>
-		</div></th>
-		<th><div class="tr">				
-		<span>Trust Pilot</span>
-		</div></th>
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+		<th>
+			<div class="inh">
+				<span>User</span>
+			</div>
+		</th>
+		<th>
+			<div class="tr">
+				<span>Reviews</span>
+			</div class="icon">
+		</th>
+		<th>
+			<div class="inh">
+				<span>SMS</span>
+			</div class="icon">
+		</th>
+		<th>
+			<div class="inh">
+				<span>Email</span>
+			</div class="icon">
+		</th>
+		<th>
+			<div class="tr">
+				<span>User Link</span>
+			</div>
+		</th>
 		<th class="text-danger text-center font-weight-bolder">
-		View Feedbacks
+			Reviews
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
 			$output .= '<tr class="text-light">
-			<td colspan="10" class="font-weight-bolder text-dark text-center">No data found</td>
+			<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
 			</tr>';
 		} else {
 			foreach ($data->result_array() as $info) {
 				$output .= '<tr class="text-dark text-center">
-				<td class="">' . $info["name"] . '</td>
-				<td class="">' . $info["total_links"] . '</td>
-				<td class="">' . $info["sms"] . '</td>
-				<td class="">' . $info["email"] . '</td>
-				<td class="">' . $info["ow_r"] . '</td>
-				<td class="">' . $info["fb_r"] . '</td>
-				<td class="">' . $info["g_r"] . '</td>
-				<td class="">' . $info["gb_r"] . '</td>
-				<td class="">' . $info["tp_r"] . '</td>
-				<td class="">
-				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="width: 100px;background: linear-gradient(to right, #243B55, #141E30);"><i class="fas fa-poll text-light mr-2"></i>Votes</button>
+				<td class="">' . $info["uname"] . '</td>
+				<td class="tv">' . $info["total_ratings"] . '</td>
+				<td class="tv">' . $info["total_sms"] . '</td>
+				<td class="tv">' . $info["total_email"] . '</td>
+				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
+				<td class="font-weight-bolder">
+				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<i class="fas fa-poll text-light"></i></button>
 				</td>
 				</tr>';
 			}
@@ -942,6 +921,8 @@ class Admin extends CI_Controller
 			redirect('user/login');
 		} else {
 			$data['users'] = $this->Adminmodel->get_ratings($_POST['key']);
+			$data['user_webs'] = $this->Adminmodel->getuserwebsites($_POST['key']);
+			$data['user_web_total'] = $this->Adminmodel->user_web_total($_POST['key']);
 			$data['token'] = $this->security->get_csrf_hash();
 			echo json_encode($data);
 		}
@@ -960,7 +941,7 @@ class Admin extends CI_Controller
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=user_votes.csv");
 		$output = fopen("php://output", "w");
-		fputcsv($output, array('ID', 'Name', 'Message', 'Star', 'Mobile', 'IP', 'Date'));
+		fputcsv($output, array('ID', 'Name', 'Mobile', 'Star', 'Website', 'IP', 'Date'));
 		$data = $this->Adminmodel->indiv_votes_export_csv($key);
 		foreach ($data as $row) {
 			fputcsv($output, $row);
@@ -984,27 +965,32 @@ class Admin extends CI_Controller
 			$query = $this->input->post('query');
 		}
 		$data = $this->Adminmodel->search_ind_votes($query, $_POST['key']);
-		$output .= '<table class="table table-bordered table-center table-hover tableuserreview"  id="tableuserreview">
-		<tr class="font-weight-bolder thead-dark">
-		<th><span class="icon">							
-		Name
-		</span></th>
-		<th><span>
-		Message
-		</span class="icon"></th>
-		<th><span>					
-		Star Rated
-		</span></th>
-		<th><span>
-		Mobile
-		</span class="icon"></th>
-		<th><span>				
-		User IP
-		</span></th>
-		<th class="text-danger"><span>					
-		Date
-		</span></th>
-		</tr>';
+		$output .= '<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
+		<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+			<th><span class="icon">
+					Name
+				</span></th>
+			<th><span>
+					Mobile
+				</span class="icon"></th>
+			<th><span>
+					Star
+				</span></th>
+			<th><span>
+					Website
+				</span class="icon"></th>
+			<th><span>
+					IP
+				</span></th>
+			<th class="text-danger"><span>
+					Date
+				</span></th>
+			</tr>';
+		if ($data == "false") {
+			$output .= '<tr class="text-dark truserreview">
+				<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
+				</tr>';
+		}
 		if ($data->num_rows() == 0) {
 			$output .= '<tr class="text-dark truserreview">
 			<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
@@ -1012,12 +998,12 @@ class Admin extends CI_Controller
 		} else {
 			foreach ($data->result_array() as $info) {
 				$output .= '<tr class="text-dark text-center truserreview">
-				<td class="font-weight-bolder">' . $info["name"] . '</td>
-				<td class="font-weight-bolder">' . $info["review_msg"] . '</td>
-				<td class="font-weight-bolder">' . $info["star"] . '</td>
-				<td class="font-weight-bolder">' . $info["mobile"] . '</td>
-				<td class="font-weight-bolder">' . $info["user_ip"] . '</td>
-				<td class="font-weight-bolder text-danger">' . $info["rated_at"] . '</td>
+				<td class=" text-lowercase">' . $info["name"] . '</td>
+				<td class="">' . $info["mobile"] . '</td>
+				<td class="">' . $info["star"] . '</td>
+				<td class="">' . $info["web_name"] . '</td>
+				<td class="">' . $info["user_ip"] . '</td>
+				<td class="ftext-danger">' . $info["rated_at"] . '</td>
 				</tr>';
 			}
 		}

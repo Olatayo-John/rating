@@ -4,27 +4,33 @@
 	<div class="modal updateusermodal">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
-				<div class="mb-2 d-flex flex-row modal-header">
-					<a href="" class="btn text-light indiv_votes_export_csv col-md-3" style="background: linear-gradient(to right, #243B55, #141E30)">
-						<i class="fas fa-file-csv mr-2"></i>Export as CSV
-					</a>
-					<input type="hidden" name="input_form_key" class="input_form_key">
-					<input type="text" name="search_ind_votes" id="search_ind_votes" class="form-control ml-5 search_ind_votes" placeholder="Search by Name" style="border-radius: 0;border-bottom: 1px solid #141E30" autofocus>
+				<div class="modal-header d-flex flex-column pb-0 pl-0 pr-0">
+					<div class="userweb_div_cal row col-md-12 mb-4">
+
+					</div>
+					<div class="mb-2 d-flex flex-row col-md-12">
+						<a href="" class="btn text-light indiv_votes_export_csv col-md-3" style="background:#141E30">
+							<i class="fas fa-file-csv mr-2"></i>Export as CSV
+						</a>
+						<input type="hidden" name="input_form_key" class="input_form_key">
+						<input type="text" name="search_ind_votes" id="search_ind_votes" class="form-control ml-5 search_ind_votes" placeholder="Search by Name" style="border-radius: 0;border-bottom: 1px solid #141E30" autofocus>
+					</div>
+
 				</div>
-				<div class="modal-body" style="height:400px;overflow:scroll;">
+				<div class="modal-body pt-0" style="height:400px;overflow:scroll;">
 					<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
-						<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
+						<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
 							<th><span class="icon">
 									Name
 								</span></th>
 							<th><span>
-									Message
+									Mobile
 								</span class="icon"></th>
 							<th><span>
 									Star
 								</span></th>
 							<th><span>
-									Mobile
+									Website
 								</span class="icon"></th>
 							<th><span>
 									IP
@@ -45,27 +51,27 @@
 
 	<div class="rt_div row mb-5 pt-3" style="margin: 0">
 		<div class="col-md-2 rt_col text-secondary" style="border-left: none;">
-			<div class="value tl text-secondary"></div>
+			<div class="value tv text-secondary"><?php echo $get_total_ratings->num_rows() ?></div>
 			<h4 class="text-center stared">Reviews</h4>
 		</div>
 		<div class="col-md-2 rt_col">
-			<div class="value tl5"></div>
+			<div class="value tv"><?php echo $get_total_official->num_rows() ?></div>
 			<h4 class="text-center stared">Official</h4>
 		</div>
 		<div class="col-md-2 rt_col">
-			<div class="value tl4"></div>
+			<div class="value tv"><?php echo $get_total_google->num_rows() ?></div>
 			<h4 class="text-center stared">Google</h4>
 		</div>
 		<div class="col-md-2 rt_col">
-			<div class="value tl3"></div>
+			<div class="value tv"><?php echo $get_total_facebook->num_rows() ?></div>
 			<h4 class="text-center stared">Facebook</h4>
 		</div>
 		<div class="col-md-2 rt_col">
-			<div class="value tl2"></div>
+			<div class="value tv"><?php echo $get_total_gd->num_rows() ?></div>
 			<h4 class="text-center stared">Glassdoor</h4>
 		</div>
 		<div class="col-md-2 rt_col" style="border-bottom: none;">
-			<div class="value tl1"></div>
+			<div class="value tv"><?php echo $get_total_tp->num_rows() ?></div>
 			<h4 class="text-center stared">Trust Pilot</h4>
 		</div>
 	</div>
@@ -73,84 +79,60 @@
 	<div class="mb-3 mr-3 ml-3 pt-3 col-md-6 ml-auto">
 		<div class="d-flex flex-row" style="border-bottom: 1px solid #141E30">
 			<span class="" style="border-radius: 0;display:inline-flex; "><i class="fas fa-search"></i></span>
-			<input type="text" name="search_user" id="search_user" class="form-control search_user" placeholder="Search by Name" style="border-radius: 0" autofocus>
+			<input type="text" name="search_user" id="search_user" class="form-control search_user" placeholder="Search by user..." style="border-radius: 0" autofocus>
 		</div>
 	</div>
 
 	<div class="mt-3 mr-3 ml-3 mb-3">
-		<a href="<?php echo base_url('admin/votes_export_csv'); ?>" class="btn text-light csvbtn" style="background: linear-gradient(to right, #243B55, #141E30);">
+		<a href="<?php echo base_url('admin/votes_export_csv'); ?>" class="btn text-light csvbtn" style="background:#141E30;">
 			<i class="fas fa-file-csv mr-2"></i>CSV Download
 		</a>
-		<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background: linear-gradient(to right, #243B55, #141E30);">
+		<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background:#141E30;">
 			<i class="fas fa-sync-alt"></i>
 		</button>
 	</div>
 
 	<div class="container-fluid table-responsive mb-4">
-		<table class="table table-center table-hover table-md table-light" id="result">
-			<tr class="font-weight-bolder text-light" style="background: linear-gradient(to right, #243B55, #141E30);">
+		<table class="table table-center table-hover table-md table-light table-bordered" id="result">
+			<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
 				<th>
 					<div class="inh">
-						<i class="fas fa-sort" name="name" type="desc"></i>
+						<i class="fas fa-sort" name="uname" type="desc"></i>
 						<span>User</span>
 					</div>
 				</th>
 				<th>
 					<div class="tr">
-						<i class="fas fa-sort" name="total_links" type="desc"></i>
+						<i class="fas fa-sort" name="total_ratings" type="desc"></i>
 						<span>Reviews</span>
 					</div class="icon">
 				</th>
 				<th>
 					<div class="inh">
-						<i class="fas fa-sort" name="sms" type="desc"></i>
+						<i class="fas fa-sort" name="total_sms" type="desc"></i>
 						<span>SMS</span>
 					</div class="icon">
 				</th>
 				<th>
 					<div class="inh">
-						<i class="fas fa-sort" name="email" type="desc"></i>
+						<i class="fas fa-sort" name="total_email" type="desc"></i>
 						<span>Email</span>
 					</div class="icon">
 				</th>
 				<th>
 					<div class="tr">
-						<i class="fas fa-sort" name="ow_r" type="desc"></i>
-						<span>Official</span>
-					</div>
-				</th>
-				<th>
-					<div class="tr">
-						<i class="fas fa-sort" name="fb_r" type="desc"></i>
-						<span>Facebook</span>
-					</div>
-				</th>
-				<th>
-					<div class="tr">
-						<i class="fas fa-sort" name="g_r" type="desc"></i>
-						<span>Google</span>
-					</div>
-				</th>
-				<th>
-					<div class="tr">
-						<i class="fas fa-sort" name="gb_r" type="desc"></i>
-						<span>Glassdoor</span>
-					</div>
-				</th>
-				<th>
-					<div class="tr">
-						<i class="fas fa-sort" name="tp_r" type="desc"></i>
-						<span>Trust Pilot</span>
+						<i class="fas fa-sort" name="form_key" type="desc"></i>
+						<span>User Link</span>
 					</div>
 				</th>
 				<th class="text-danger text-center font-weight-bolder">
-					View Feedbacks
+					Reviews
 				</th>
 			</tr>
 
 			<?php if ($details->num_rows() == '0') : ?>
 				<tr class="text-dark">
-					<td colspan='8' class='font-weight-bolder text-dark text-center'>No data found</td>
+					<td colspan='6' class='font-weight-bolder text-dark text-center'>No data found</td>
 				</tr>
 			<?php endif; ?>
 			<?php if ($details->num_rows() > '0') : ?>
@@ -160,18 +142,19 @@
 						<td class="tv"><?php echo $info['total_ratings'] ?></td>
 						<td class="tv"><?php echo $info['total_sms'] ?></td>
 						<td class="tv"><?php echo $info['total_email'] ?></td>
-						<td class="tv"><?php echo $info['total_one'] ?></td>
-						<td class="tv"><?php echo $info['total_two'] ?></td>
-						<td class="tv"><?php echo $info['total_three'] ?></td>
-						<td class="tv"><?php echo $info['total_four'] ?></td>
-						<td class="tv"><?php echo $info['total_five'] ?></td>
+						<td class="text-lowercase"><?php echo base_url() . 'wtr/' . $info['form_key'] ?></td>
 						<td class="font-weight-bolder">
-							<button class="btn text-light vv_btn" form_key="<?php echo $info['form_key'] ?>" style="width: 100px;background: linear-gradient(to right, #243B55, #141E30);"><i class="fas fa-poll text-light mr-2"></i>Votes</button>
+							<button class="btn text-light vv_btn" id="<?php echo $info['id'] ?>" form_key="<?php echo $info['form_key'] ?>" style="background:#141E30">
+								<i class="fas fa-poll text-light"></i>
+							</button>
 						</td>
 					</tr>
 				<?php endforeach; ?>
 			<?php endif; ?>
-		</table><?php echo $links; ?>
+		</table>
+		<div class="table_pag_div">
+			<?php echo $links; ?>
+		</div>
 	</div>
 </div>
 </div>
@@ -186,8 +169,10 @@
 		$('#search_user').keyup(function() {
 			var search = $(this).val();
 			if (search != '') {
+				$(".table_pag_div").hide();
 				load_data(search);
 			} else {
+				$(".table_pag_div").show();
 				reload_table();
 			}
 		});
@@ -203,6 +188,7 @@
 				},
 				success: function(data) {
 					$('table#result').html(data);
+					$(".table_pag_div").show();
 				}
 			})
 		}
@@ -222,56 +208,6 @@
 				}
 			})
 		}
-
-		function search_ind_votes_load_data(query) {
-			var csrfName = $('.csrf_token').attr('name');
-			var csrfHash = $('.csrf_token').val();
-			var key = $('.input_form_key').val();
-			$.ajax({
-				method: "POST",
-				url: "<?php echo base_url('admin/search_ind_votes') ?>",
-				data: {
-					query: query,
-					key: key,
-					[csrfName]: csrfHash
-				},
-				success: function(data) {
-					$('table#tableuserreview').html(data);
-				}
-			})
-		}
-
-		$('#search_ind_votes').keyup(function() {
-			var indvotes_search = $(this).val();
-			if (indvotes_search != '') {
-				search_ind_votes_load_data(indvotes_search);
-			} else {
-				search_ind_votes_load_data();
-			}
-		});
-
-		var csrfName = $('.csrf_token').attr('name');
-		var csrfHash = $('.csrf_token').val();
-		// $.ajax({
-		// 	url: "<?php echo base_url('user/total_bar_data'); ?>",
-		// 	method: "post",
-		// 	dataType: "json",
-		// 	data: {
-		// 		[csrfName]: csrfHash,
-		// 	},
-		// 	success: function(data) {
-		// 		$('.tl').html(data.atr);
-		// 		$('.tl5').html(data.tr5);
-		// 		$('.tl4').html(data.tr4);
-		// 		$('.tl3').html(data.tr3);
-		// 		$('.tl2').html(data.tr2);
-		// 		$('.tl1').html(data.tr1);
-		// 		$('.csrf_token').val(data.token);
-		// 	},
-		// 	error: function(data) {
-		// 		alert('Error showing');
-		// 	}
-		// });
 
 		$(document).on('click', 'i.fa-sort', function() {
 			var param = $(this).attr('name');
@@ -323,21 +259,61 @@
 						tr.append('<td colspan="6" class="font-weight-bolder text-dark text-center">User has no data</td>');
 						table.append(tr);
 						$('.updateusermodal').modal('show');
-					}
-					var table = $('table.tableuserreview');
-					for (var i = 0; i < data['users'].length; i++) {
-						var tr = $('<tr class="truserreview"></tr>');
-						tr.append('<td class="font-weight-bolder text-dark text-lowercase">' + data['users'][i].name + '</td>');
-						tr.append('<td class="font-weight-bolder text-lowercase">' + data['users'][i].review_msg + '</td>');
-						tr.append('<td class="font-weight-bolder">' + data['users'][i].star + '</td>');
-						tr.append('<td class="font-weight-bolder">' + data['users'][i].mobile + '</td>');
-						tr.append('<td class="font-weight-bolder">' + data['users'][i].user_ip + '</td>');
-						tr.append('<td class="text-danger font-weight-bolder">' + data['users'][i].rated_at + '</td>');
-						table.append(tr);
+					} else {
+						var table = $('table.tableuserreview');
+						for (var i = 0; i < data['users'].length; i++) {
+							var tr = $('<tr class="truserreview text-center"></tr>');
+							tr.append('<td class="text-dark text-lowercase">' + data['users'][i].name + '</td>');
+							tr.append('<td class="text-lowercase">' + data['users'][i].mobile + '</td>');
+							tr.append('<td class="">' + data['users'][i].star + '</td>');
+							tr.append('<td class="">' + data['users'][i].web_name + '</td>');
+							tr.append('<td class="">' + data['users'][i].user_ip + '</td>');
+							tr.append('<td class="text-danger">' + data['users'][i].rated_at + '</td>');
+							table.append(tr);
+						}
+
+						if (data['user_webs'].length > 0) {
+							$('div.userweb_div_cal').append('<div class="col text-secondary user_web_div" style="border-left: none;border-right: 1px solid #141E30;"><div class="value">' + data['user_web_total'][0].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4">Total</h6></div>');
+							for (var i = 0; i < data['user_webs'].length; i++) {
+								$('div.userweb_div_cal').append('<div class="col text-secondary user_web_div" style="border-left: none;border-right: 1px solid #141E30;"><div class="value">' + data['user_webs'][i].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4">' + data['user_webs'][i].web_name + '</h6></div>');
+							}
+						}
+
 						$('.updateusermodal').modal('show');
 					}
+
+				},
+				error: function(data) {
+					window.location.reload();
 				}
 			});
+		});
+
+		function search_ind_votes_load_data(query) {
+			var csrfName = $('.csrf_token').attr('name');
+			var csrfHash = $('.csrf_token').val();
+			var key = $('.input_form_key').val();
+			$.ajax({
+				method: "POST",
+				url: "<?php echo base_url('admin/search_ind_votes') ?>",
+				data: {
+					query: query,
+					key: key,
+					[csrfName]: csrfHash
+				},
+				success: function(data) {
+					$('table#tableuserreview').html(data);
+				}
+			})
+		}
+
+		$('#search_ind_votes').keyup(function() {
+			var indvotes_search = $(this).val();
+			if (indvotes_search != '') {
+				search_ind_votes_load_data(indvotes_search);
+			} else {
+				search_ind_votes_load_data();
+			}
 		});
 
 		$('.tv').each(function() {

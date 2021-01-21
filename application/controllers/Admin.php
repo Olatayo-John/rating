@@ -646,7 +646,7 @@ class Admin extends CI_Controller
 		}
 		$config['base_url'] = base_url() . "admin/votes/";
 		$config['total_rows'] = $this->db->count_all('user_details');
-		$config['per_page'] = 2;
+		$config['per_page'] = 10;
 		$config["uri_segment"] = 3;
 		$config['attributes'] = array('class' => 'page-link');
 		$config['full_tag_open'] = '<ul class="pagination">';
@@ -965,6 +965,7 @@ class Admin extends CI_Controller
 			$query = $this->input->post('query');
 		}
 		$data = $this->Adminmodel->search_ind_votes($query, $_POST['key']);
+		// echo json_encode($data);
 		$output .= '<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
 		<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
 			<th><span class="icon">
@@ -986,12 +987,7 @@ class Admin extends CI_Controller
 					Date
 				</span></th>
 			</tr>';
-		if ($data == "false") {
-			$output .= '<tr class="text-dark truserreview">
-				<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
-				</tr>';
-		}
-		if ($data->num_rows() == 0) {
+		if ($data == false) {
 			$output .= '<tr class="text-dark truserreview">
 			<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
 			</tr>';
@@ -1118,30 +1114,6 @@ class Admin extends CI_Controller
 		} else {
 			$this->logout();
 		}
-	}
-
-	public function account_old()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
-		}
-		$data['ratings'] = $this->Adminmodel->all_total_ratings();
-		$data['tr5'] = $this->Adminmodel->tr5_total_ratings();
-		$data['tr4'] = $this->Adminmodel->tr4_total_ratings();
-		$data['tr3'] = $this->Adminmodel->tr3_total_ratings();
-		$data['tr2'] = $this->Adminmodel->tr2_total_ratings();
-		$data['tr1'] = $this->Adminmodel->tr1_total_ratings();
-		$data['email'] = $this->Adminmodel->all_email();
-		$data['sms'] = $this->Adminmodel->all_sms();
-		//print_r($data);die;
-		$this->load->view('templates/header');
-		$this->load->view('admin/quota', $data);
-		$this->load->view('templates/footer');
 	}
 
 	public function logout()

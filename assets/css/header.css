@@ -75,7 +75,7 @@ div ul{
 }
 div ul li{
 	list-style-type: none;
-	font-weight: bolder;
+	/* font-weight: bolder; */
 }
 div ul li a.nav-link{
 	display: block;
@@ -89,10 +89,10 @@ li a i.fas,li a i.fab{
 	font-size: 17px;
 }
 div ul li a.nav-link:hover{
-	/* background-color: #8BC34A; */
-	background-color: #00695C;
+	background-color: white;
+	color: #141E30;
 	width: 100%;
-	font-weight: bold;
+	/* font-weight: bold; */
 }
 a.closex{
 	color: white;

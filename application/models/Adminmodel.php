@@ -300,19 +300,18 @@ class Adminmodel extends CI_Model
 
 	public function search_ind_votes($query, $key)
 	{
-		$this->db->select('*');
-		$this->db->from('all_ratings');
-		$this->db->where('form_key', $key);
-		if ($query != '') {
+		if ($query !== '') {
+			//  = $this->db->get_where('all_ratings',);
 			$this->db->like('name', $query);
 			$this->db->or_like('web_name', $query);
-			$this->db->or_like('mobile', $query);
-			$this->db->or_like('star', $query);
 			$this->db->or_like('user_ip', $query);
-			$this->db->order_by('id', 'DESC');
-			return $this->db->get();
-		} else {
-			return "false";
+			$query_search = $this->db->get_where('all_ratings', array('form_key' => $key));
+			if ($query_search->num_rows() > 0) {
+				return $query_search;
+			} else {
+				return false;
+			}
+			//return $this->db->last_query();
 		}
 	}
 

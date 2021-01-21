@@ -91,7 +91,7 @@
 			<div class="col-md-2 tr_col text-secondary user_web_div" style="border-left: none;border-right: 2px solid #141E30;">
 				<div class="value"><?php echo $info['total_ratings'] ?></div>
 				<hr>
-				<h4 class="text-center stared user_web mb-4"><?php echo $info['web_name'] ?></h4>
+				<h4 class="text-center stared user_web mb-4"><?php echo ucfirst($info['web_name']) ?></h4>
 			</div>
 		<?php endforeach; ?>
 	<?php endif; ?>
@@ -101,15 +101,6 @@
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/quota.js'); ?>"></script>
 <script type="text/javascript">
-	// function copyfunc(element) {
-	//  var link = $("<input>");
-	//  $("body").append(link);
-	//  link.val($(element).val()).select();
-	//  document.execCommand("copy");
-	//  link.remove();
-	//  $('.linkcopyalert').show();
-	// }
-
 	$(document).ready(function() {
 		var csrfName = $('.csrf_token').attr('name');
 		var csrfHash = $('.csrf_token').val();

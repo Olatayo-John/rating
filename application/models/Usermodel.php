@@ -451,6 +451,16 @@ class Usermodel extends CI_Model
 		return $query->form_key;
 	}
 
+	public function check_cred($w, $k)
+	{
+		$query = $this->db->get_where('websites', array("form_key" => $k, "web_name" => $w))->row();
+		if ($query) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public function info($key)
 	{
 		$query = $this->db->get_where('users', array("form_key" => $key))->row();

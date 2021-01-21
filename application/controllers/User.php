@@ -909,11 +909,34 @@ class User extends CI_Controller
 		} else {
 			$form_key = $this->get_key($key);
 			if ($form_key !== $key) {
-				redirect(base_url());
-				exit();
-			} elseif ($form_key == $key) {
+				$this->session->set_flashdata("invalid", "Invalid Link!");
+				$this->index();
+			} else if ($form_key === $key) {
 				$data['form_key'] = $form_key;
+				$data['web_data'] = $this->Adminmodel->getuserwebsites($form_key);
+
+				$this->load->view('templates/header');
 				$this->load->view('users/rate_option', $data);
+				$this->load->view('templates/footer');
+			}
+		}
+	}
+
+	public function check_cred()
+	{
+		$w = $_GET['w'];
+		$k = $_GET['k'];
+
+		if (empty($w) || empty($k)) {
+			redirect($_SERVER['HTTP_REFERER']);
+			exit();
+		} else {
+			$res = $this->Usermodel->check_cred($w, $k);
+			if ($res == false) {
+				$this->session->set_flashdata("invalid", "Invalid Link!");
+				$this->index();
+			} else if ($res == true) {
+				redirect('rate?w=' . $w . '&k=' . $k);
 			}
 		}
 	}

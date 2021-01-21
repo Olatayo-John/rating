@@ -762,7 +762,7 @@ class Admin extends CI_Controller
 				<td class="tv">' . $info["total_ratings"] . '</td>
 				<td class="tv">' . $info["total_sms"] . '</td>
 				<td class="tv">' . $info["total_email"] . '</td>
-				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
+				<td class="text-lowercase">' . base_url() . 'user/wtr/' . $info['form_key'] . '</td>
 				<td class="font-weight-bolder">
 				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
 				<i class="fas fa-poll text-light"></i></button>
@@ -831,7 +831,7 @@ class Admin extends CI_Controller
 				<td class="tv">' . $info["total_ratings"] . '</td>
 				<td class="tv">' . $info["total_sms"] . '</td>
 				<td class="tv">' . $info["total_email"] . '</td>
-				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
+				<td class="text-lowercase">' . base_url() . 'user/wtr/' . $info['form_key'] . '</td>
 				<td class="font-weight-bolder">
 				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
 				<i class="fas fa-poll text-light"></i></button>
@@ -899,7 +899,7 @@ class Admin extends CI_Controller
 				<td class="tv">' . $info["total_ratings"] . '</td>
 				<td class="tv">' . $info["total_sms"] . '</td>
 				<td class="tv">' . $info["total_email"] . '</td>
-				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
+				<td class="text-lowercase">' . base_url() . 'user/wtr/' . $info['form_key'] . '</td>
 				<td class="font-weight-bolder">
 				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
 				<i class="fas fa-poll text-light"></i></button>

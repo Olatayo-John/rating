@@ -598,4 +598,11 @@ class Usermodel extends CI_Model
 		$query = $this->db->get('websites')->row();
 		return $query;
 	}
+
+	public function get_user_email($form_key)
+	{
+		$this->db->where('form_key', $form_key);
+		$query = $this->db->get('users')->row();
+		return $query;
+	}
 }

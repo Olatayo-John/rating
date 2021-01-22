@@ -1,11 +1,11 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/rating.css'); ?>">
 
-<div class="r_container container">
+<div class="r_container container mt-5 mb-5">
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token">
 	<input type="hidden" class="form_key" name="form_key" value="<?php echo $_GET['k'] ?>">
 	<input type="hidden" class="for_link" name="for_link" value="<?php echo $_GET['w'] ?>">
 
-	<h4 class="comp text-uppercase"><?php echo $_GET['w'] ?></h4>
+	<h4 class="comp text-uppercase" style="margin-top: 60px;"><?php echo $_GET['w'] ?></h4>
 	<div class="stars">
 		<i class="far fa-star star1" name="star1" con="false"></i>
 		<i class="far fa-star star2" name="star2" con="false"></i>

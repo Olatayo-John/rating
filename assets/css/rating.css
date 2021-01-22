@@ -14,7 +14,7 @@ input.form-control:focus,textarea.form-control:focus{
 }
 div.r_container{
 	padding: 20px;
-	margin: 50px auto;
+	/* margin: 50px auto; */
 	height: 550px;
 	background-color: #fff
 }

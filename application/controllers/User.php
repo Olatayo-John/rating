@@ -945,12 +945,12 @@ class User extends CI_Controller
 
 	public function rating_store()
 	{
-		// $cq_res = $this->Usermodel->check_quota_expire($_POST['form_key']);
-		$cq_res = false;
+		$cq_res = $this->Usermodel->check_quota_expire($_POST['form_key']);
+		// $cq_res = false;
 		if ($cq_res == true) {
 			//$this->send_quota_expire_mail();
 			$data['res'] = "failed";
-			$data['res_msg'] = "User quota expired. <a href='" . base_url() . "' class='text-info'>Notify User!</a>";
+			$data['res_msg'] = "User quota expired. <a href='" . base_url("user/notifyuser_email/") . "' class='text-info'>Notify User!</a>";
 		} else {
 			$res = $this->Usermodel->rating_store($_POST['starv'], $_POST['name'], $_POST['mobile'], $_POST['form_key'], $_POST['for_link']);
 			if ($res) {
@@ -965,6 +965,49 @@ class User extends CI_Controller
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
+	}
+
+	public function notifyuser_email($form_key)
+	{
+		$data = $this->Usermodel->get_user_email($form_key);
+		// print_r($data);
+		$uemail = $data->email;
+		$uname = $data->uname;
+
+		$res = $this->notifyuser_sendemail($uemail, $uname);
+		return true;
+		//$res= ;
+	}
+
+	public function notifyuser_sendemail($uemail, $uname)
+	{
+		$config['protocol']    = 'smtp';
+		$config['smtp_host']    = 'ssl://smtp.gmail.com';
+		$config['smtp_port']    = '465';
+		$config['smtp_timeout'] = '7';
+		$config['smtp_user']    = 'jvweedtest@gmail.com';
+		$config['smtp_pass']    = 'Jvweedtest9!';
+		$config['charset']    = 'iso-8859-1';
+		$config['mailtype'] = 'text';
+		$config['validation'] = TRUE;
+
+		$this->load->library('email', $config);
+		$this->email->set_newline("\r\n");
+
+		$body = "Hello " . $uname . ".\n\nThis email is to inform you that your Quota has expired.Future ratings woun't be recorded. SMS and Email servives are unavailable\nRenew your plan to keep using our services" . base_url('admin/pick_plan') . "\nIf you have any queries, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+		$mail = $this->session->userdata('mr_email');
+
+		$this->email->from('jvweedtest@gmail.com', 'Quota Limit');
+		$this->email->to($uemail);
+		$this->email->subject('Quota Limit');
+		$this->email->message($body);
+
+		if ($this->email->send()) {
+			return true;
+		} else {
+			// return $this->email->print_debugger();
+			return "Unable to send mail";
+		}
 	}
 
 	public function contact()

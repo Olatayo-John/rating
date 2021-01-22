@@ -25,7 +25,7 @@
 
 <body>
 	<div class="spinnerdiv">
-		<div class="spinner-border text-danger"></div>
+		<div class="spinner-border" style="color:cornflowerblue"></div>
 	</div>
 	<nav class="navbar navbar-expand-lg navbar-light">
 

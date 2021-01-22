@@ -4,7 +4,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header d-flex justify-content-center mb-0">
-					<h5 class="text-dark font-weight-bolder">Enter user details correctly</h5>
+					<h5 class="text-dark font-weight-bolder">Enter web details correctly</h5>
 				</div>
 				<div class="mb-0 alert-danger chkboxerr container mb-1" style="display: none;">
 					<i class="fas fa-exclamation-circle"></i>
@@ -12,7 +12,26 @@
 				</div>
 				<form action="<?php echo base_url('admin/add_user'); ?>" method="post" class="mt-0">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf-token">
-					<div class="modal-body"></div>
+					<div class="modal-body">
+						<div class="form-group mt-3">
+							<label>Website Name</label>
+							<input type="text" name="web_name_add" class="web_name_add form-control" placeholder="Name of the webiste" required>
+						</div>
+						<div class="form-group">
+							<label class="mb-0">Website Link</label>
+							<div class="addweberr text-left" id="weberr" style="display:all">
+								<span class="text-danger font-weight-bolder addweberr_span">* Web links must start with http or https</span>
+							</div>
+							<input type="url" name="web_link_add" class="web_link_add form-control" placeholder="Website link" required>
+						</div>
+						<div class="updatebtngrp d-flex justify-content-between mb-2 web_btngrp">
+							<button class="btn btn-secondary close_add_web_btn bradius">Close</button>
+							<div class="spinner-border web_add_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
+								<span class="sr-only">Loading...</span>
+							</div>
+							<button class="btn text-light web_addbtn bradius" style="background:#141E30">Add</button>
+						</div>
+					</div>
 			</div>
 			</form>
 		</div>
@@ -454,6 +473,94 @@
 			}
 		});
 
+		$(document).on("click", ".add_web_btn", function() {
+			$('.updateusermodal').modal('hide');
+			$(".addusermodal").modal("show");
+		});
+
+		$(document).on('click', '.web_addbtn', function(e) {
+			e.preventDefault();
+			var id = $('.modal_webid').val();
+			var user_id = $('.user_id').val();
+			var form_key = $('.user_form_key').val();
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var web_name_add = $('.web_name_add').val();
+			var web_link_add = $('.web_link_add').val();
+
+
+			if (web_name_add == "" || web_name_add == null) {
+				$(".web_name_add").css('border', '2px solid red');
+				$(".web_add_spinner").hide();
+				return false;
+			} else {
+				$(".web_name_add").css('border', '1px solid #141E30');
+			}
+			if (web_link_add == "" || web_link_add == null || !web_link_add.startsWith("http") || !web_link_add.startsWith("https") || !web_link_add.includes("://") || !web_link_add.includes(".") || web_link_add.endsWith(".")) {
+				$(".web_link_add").css('border', '2px solid red');
+				$(".addweberr_span").html("Invalid WEB URL");
+				$(".web_add_spinner").hide();
+				return false;
+			} else {
+				$(".addweberr").hide();
+				$(".addweberr_span").html("* Web links must start with http or https");
+				$(".web_link_add").css('border', '1px solid #141E30');
+			}
+
+			console.log(web_name_add);
+			console.log(web_link_add);
+
+			// $.ajax({
+			// 	url: "<?php echo base_url('admin/user_webupdate') ?>",
+			// 	method: "POST",
+			// 	data: {
+			// 		[csrfName]: csrfHash,
+			// 		id: id,
+			// 		user_id: user_id,
+			// 		form_key: form_key,
+			// 		web_name_edit: web_name_edit,
+			// 		web_link_edit: web_link_edit
+			// 	},
+			// 	dataType: "json",
+			// 	beforeSend: function() {
+			// 		$(".web_update_spinner").fadeIn();
+			// 		$('.user_webpdate').html("Updating...");
+			// 		$('.user_webpdate').attr("disabled", "disabled");
+			// 		$('.user_webpdate').css("cursor", "not-allowed");
+			// 	},
+			// 	success: function(data) {
+			// 		$('.user_webpdate').html("Update");
+			// 		$('.user_webpdate').removeAttr("disabled");
+			// 		$('.user_webpdate').css("cursor", "pointer");
+			// 		$('.user_webpdate').css("background", "#141E30");
+			// 		$('.csrf-token').val(data.token);
+
+			// 		if (data.res == "failed") {
+			// 			$(".web_update_spinner,.ajax_succ_div").fadeOut();
+			// 			$('.ajax_res_err').html(data.res_msg);
+			// 			$('.ajax_err_div').fadeIn();
+			// 		} else if (data.res == "success") {
+			// 			$(".web_update_spinner,.ajax_err_div").fadeOut();
+			// 			$('.ajax_res_succ').html(data.res_msg);
+			// 			$('.ajax_succ_div').fadeIn();
+			// 			$('label[web_id=' + id + ']').html(web_name_edit);
+			// 			$('input[web_id=' + id + ']').val(web_link_edit);
+			// 		}
+
+			// 		reload_table();
+			// 	},
+			// 	error: function(data) {
+			// 		alert("Error updating user profile!");
+			// 		window.location.reload();
+			// 	}
+			// })
+		});
+
+		$(document).on("click", ".close_add_web_btn", function() {
+			$('.updateusermodal').modal('show');
+			$(".addusermodal").modal("hide");
+		});
+
 		$(document).on("click", ".action_web_btn", function() {
 			$(".action_web_div").toggle();
 		});
@@ -533,6 +640,8 @@
 						$(".web_update_spinner,.ajax_err_div").fadeOut();
 						$('.ajax_res_succ').html(data.res_msg);
 						$('.ajax_succ_div').fadeIn();
+						$('label[web_id=' + id + ']').html(web_name_edit);
+						$('input[web_id=' + id + ']').val(web_link_edit);
 					}
 
 					reload_table();
@@ -545,12 +654,6 @@
 		});
 
 		$(document).on("click", ".close_edit_web_modal", function() {
-			var web_name_edit = $('.web_name_edit').val();
-			var web_link_edit = $('.web_link_edit').val();
-			var modal_webid = $(".modal_webid").val();
-
-			$('label[web_id=' + modal_webid + ']').html(web_name_edit);
-			$('input[web_id=' + modal_webid + ']').val(web_link_edit);
 			$(".edit_web_modal").modal("hide");
 			$(".updateusermodal").modal("show");
 			$(".action_web_div").hide();

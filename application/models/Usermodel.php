@@ -455,7 +455,15 @@ class Usermodel extends CI_Model
 	{
 		$query = $this->db->get_where('websites', array("form_key" => $k, "web_name" => $w))->row();
 		if ($query) {
-			return true;
+			if ($query->active === "0") {
+				return false;
+				exit;
+				// die("inactivate");
+			} else if ($query->active === "1") {
+				return true;
+				exit;
+				// die("activate");
+			}
 		} else {
 			return false;
 		}
@@ -487,70 +495,87 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function rating_store($starv, $msg, $name, $mobile, $tbl_name, $form_key, $for_link)
+	public function rating_store($starv, $name, $mobile, $form_key, $for_link)
 	{
 		$data = array(
 			'user_ip' => $_SERVER['REMOTE_ADDR'],
 			'star' => htmlentities($starv),
-			'review_msg' => htmlentities($msg),
+			'web_name' => htmlentities($for_link),
 			'name' => htmlentities($name),
 			'mobile' => htmlentities($mobile),
-			'c_id' => $form_key,
+			'form_key' => htmlentities($form_key),
 		);
-		$this->db->insert($tbl_name, $data);
-		$this->db->insert('all_ratings', $data);
-		$this->for_link_update($form_key, $for_link);
+		$this->db->insert("all_ratings", $data);
+
+		$this->userweb_update($form_key, $for_link, $starv);
 		$this->user_details_save_rating($starv, $form_key);
 		$this->rating_quota_update($form_key);
-		$data = $this->get_user_website($form_key);
+		$data = $this->get_user_weblink($form_key);
 		return $data;
 	}
 
-	public function for_link_update($form_key, $for_link)
+	public function userweb_update($form_key, $for_link, $starv)
 	{
-		$this->db->set($for_link, $for_link . '+1', FALSE);
-		$this->db->where('form_key', $form_key);
-		$this->db->update('user_details');
+		if ($starv == "5") {
+			$db_star = "five_star";
+		}
+		if ($starv == "4") {
+			$db_star = "four_star";
+		}
+		if ($starv == "3") {
+			$db_star = "three_star";
+		}
+		if ($starv == "2") {
+			$db_star = "two_star";
+		}
+		if ($starv == "1") {
+			$db_star = "one_star";
+		}
+
+		$this->db->set($db_star, $db_star . '+1', FALSE);
+		$this->db->set("total_ratings", 'total_ratings+1', FALSE);
+		$this->db->where(array('web_name' => $for_link, 'form_key' => $form_key));
+		$this->db->update('websites');
 		return true;
 	}
 
 	public function user_details_save_rating($starv, $form_key)
 	{
 		if ($starv == "5") {
-			$this->db->set('5_star', '5_star+1', FALSE);
-			$this->db->set('total_links', 'total_links+1', FALSE);
+			$this->db->set('total_five', 'total_five+1', FALSE);
+			$this->db->set('total_ratings', 'total_ratings+1', FALSE);
 			$this->db->where('form_key', $form_key);
 			$this->db->update('user_details');
 			return true;
 			exit;
 		}
 		if ($starv == "4") {
-			$this->db->set('4_star', '4_star+1', FALSE);
-			$this->db->set('total_links', 'total_links+1', FALSE);
+			$this->db->set('total_four', 'total_four+1', FALSE);
+			$this->db->set('total_ratings', 'total_ratings+1', FALSE);
 			$this->db->where('form_key', $form_key);
 			$this->db->update('user_details');
 			return true;
 			exit;
 		}
 		if ($starv == "3") {
-			$this->db->set('3_star', '3_star+1', FALSE);
-			$this->db->set('total_links', 'total_links+1', FALSE);
+			$this->db->set('total_three', 'total_three+1', FALSE);
+			$this->db->set('total_ratings', 'total_ratings+1', FALSE);
 			$this->db->where('form_key', $form_key);
 			$this->db->update('user_details');
 			return true;
 			exit;
 		}
 		if ($starv == "2") {
-			$this->db->set('2_star', '2_star+1', FALSE);
-			$this->db->set('total_links', 'total_links+1', FALSE);
+			$this->db->set('total_two', 'total_two+1', FALSE);
+			$this->db->set('total_ratings', 'total_ratings+1', FALSE);
 			$this->db->where('form_key', $form_key);
 			$this->db->update('user_details');
 			return true;
 			exit;
 		}
 		if ($starv == "1") {
-			$this->db->set('1_star', '1_star+1', FALSE);
-			$this->db->set('total_links', 'total_links+1', FALSE);
+			$this->db->set('total_one', 'total_one+1', FALSE);
+			$this->db->set('total_ratings', 'total_ratings+1', FALSE);
 			$this->db->where('form_key', $form_key);
 			$this->db->update('user_details');
 			return true;
@@ -567,10 +592,10 @@ class Usermodel extends CI_Model
 		return true;
 	}
 
-	public function get_user_website($form_key)
+	public function get_user_weblink($form_key)
 	{
 		$this->db->where('form_key', $form_key);
-		$query = $this->db->get('users')->row();
+		$query = $this->db->get('websites')->row();
 		return $query;
 	}
 }

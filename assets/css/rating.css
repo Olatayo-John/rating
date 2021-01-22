@@ -1,15 +1,22 @@
 body{
-	background-image: url('../../assets/images/dark-pink-.jpg');
+	/* background-image: url('../../assets/images/dark-pink-.jpg');
 	background-attachment: fixed;
 	background-repeat: no-repeat;
-	background-size: cover;
+	background-size: cover; */
+	background: #141E30 !important;
 }
-div.container{
-	/*border: 2px solid #E0E0E0;*/
+button.btn{
+	border-radius: 0;
+}
+input.form-control:focus,textarea.form-control:focus{
+	border-color: #141E30;
+	box-shadow: none;
+}
+div.r_container{
 	padding: 20px;
 	margin: 50px auto;
 	height: 550px;
-	background-color: #EEEEEE
+	background-color: #fff
 }
 h4.comp{
 	font-weight: bolder;
@@ -25,10 +32,10 @@ div.stars i{
 	/*border: 2px solid green;*/
 	font-size: 40px;
 }
-i.far, i.fas{
+div.i_div i.far, div.i_div i.fas{
 	font-size: 55px;
 }
-i.fas{
+div.stars i.fas{
 	color: #E65100
 }
 div.onestar,div.twostar,div.threestar,div.fourstar,div.fivestar{

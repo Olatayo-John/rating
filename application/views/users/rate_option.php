@@ -8,22 +8,42 @@
 <link rel="icon" href="<?php echo base_url('assets/images/logo_dark.png') ?>"> -->
 
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/rate_option.css'); ?>">
-<div class="mt-3 mr-3 ml-3 wrapper_div">
+<div class="mt-3 pb-3 mr-3 ml-3 wrapper_div">
 	<form action="" method="post" class="form_wrapper">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token">
 		<input type="hidden" class="form_key" name="form_key" value="<?php echo $form_key ?>">
-		<div class="pt-3">
-			<h6 class="text-center" style="font-weight:bolder">Pick a website to give your rating</h6>
-		</div>
 
-		<hr>
-		<?php foreach ($web_data as $row) : ?>
-			<div class="form-group">
-				<a href="<?php echo base_url('user/check_cred?w=' . $row['web_name'] . '&k=' . $form_key); ?>" class="btn wbratebtn btn-outline-dark" target="_blank" web="<?php echo $row['web_name'] ?>" key="<?php echo $row['form_key'] ?>">
-					<?php echo ucfirst($row['web_name']) ?>
-				</a>
+		<?php if ($active->active === "1") : ?>
+			<?php if ($web_data->num_rows() == 0) : ?>
+				<div class="pt-3">
+					<h6 class="text-center text-danger text-uppercase" style="font-weight:bolder">User has no website(s)!!</h6>
+				</div>
+				<hr>
+			<?php endif; ?>
+			<?php if ($web_data->num_rows() > 0) : ?>
+				<div class="pt-3">
+					<h6 class="text-center" style="font-weight:bolder">Pick a website to give your rating(s)</h6>
+				</div>
+				<hr>
+				<div class="all_web_div pl-5">
+					<?php foreach ($web_data->result_array() as $row) : ?>
+						<?php if ($row['active'] === "1") : ?>
+							<div class="form-group">
+								<a href="<?php echo base_url('user/check_cred?w=' . $row['web_name'] . '&k=' . $form_key); ?>" class="btn wbratebtn text-light" target="_blank" web="<?php echo $row['web_name'] ?>" key="<?php echo $row['form_key'] ?>" style="background:#141E30">
+									<?php echo ucfirst($row['web_name']) ?>
+								</a>
+							</div>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+
+		<?php elseif ($active->active === "0") : ?>
+			<div class="pt-3">
+				<h6 class="text-center text-danger text-uppercase" style="font-weight:bolder">User account is not active!!</h6>
 			</div>
-		<?php endforeach; ?>
+			<hr>
+		<?php endif; ?>
 	</form>
 </div>
 

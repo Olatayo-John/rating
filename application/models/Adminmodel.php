@@ -269,11 +269,24 @@ class Adminmodel extends CI_Model
 
 	public function getuserwebsites($key)
 	{
+		$this->db->order_by("web_name", "ASC");
 		$query = $this->db->get_where('websites', array('form_key' => $key));
 		if (!$query) {
 			return false;
 		} else {
-			return $query->result_array();
+			return $query;
+		}
+	}
+
+	public function is_user_active($key)
+	{
+		$query = $this->db->get_where('users', array('form_key' => $key))->row();
+		if (!$query) {
+			return false;
+		} else {
+			// print_r($query);
+			// die;
+			return $query;
 		}
 	}
 

@@ -914,6 +914,7 @@ class User extends CI_Controller
 			} else if ($form_key === $key) {
 				$data['form_key'] = $form_key;
 				$data['web_data'] = $this->Adminmodel->getuserwebsites($form_key);
+				$data['active'] = $this->Adminmodel->is_user_active($form_key);
 
 				$this->load->view('templates/header');
 				$this->load->view('users/rate_option', $data);
@@ -928,14 +929,15 @@ class User extends CI_Controller
 		$k = $_GET['k'];
 
 		if (empty($w) || empty($k)) {
-			redirect($_SERVER['HTTP_REFERER']);
+			// redirect($_SERVER['HTTP_REFERER']);
+			redirect("user/wtr/" . $k);
 			exit();
 		} else {
 			$res = $this->Usermodel->check_cred($w, $k);
 			if ($res == false) {
 				$this->session->set_flashdata("invalid", "Invalid Link!");
-				$this->index();
-			} else if ($res == true) {
+				redirect("user/wtr/" . $k);
+			} elseif ($res == true) {
 				redirect('rate?w=' . $w . '&k=' . $k);
 			}
 		}
@@ -943,25 +945,26 @@ class User extends CI_Controller
 
 	public function rating_store()
 	{
-		$cq_res = $this->Usermodel->check_quota_expire($_POST['form_key']);
+		// $cq_res = $this->Usermodel->check_quota_expire($_POST['form_key']);
+		$cq_res = false;
 		if ($cq_res == true) {
 			//$this->send_quota_expire_mail();
-			return false;
+			$data['res'] = "failed";
+			$data['res_msg'] = "User quota expired. <a href='" . base_url() . "' class='text-info'>Notify User!</a>";
 		} else {
-			$res = $this->Usermodel->rating_store($_POST['starv'], $_POST['msg'], $_POST['name'], $_POST['mobile'], $_POST['tbl_name'], $_POST['form_key'], $_POST['for_link']);
+			$res = $this->Usermodel->rating_store($_POST['starv'], $_POST['name'], $_POST['mobile'], $_POST['form_key'], $_POST['for_link']);
 			if ($res) {
-				$output = array(
-					'official' => $res->c_web,
-					'facebook' => $res->fb_link,
-					'google' => $res->google_link,
-					'gd' => $res->glassdoor_link,
-					'tp' => $res->trust_pilot_link,
-				);
-				echo json_encode($output);
+				$data['web_link'] = $res->web_link;
+				$data['res'] = "succ";
+				$data['res_msg'] = "Thanks for your feedback!";
 			} else {
-				return true;
+				$data['res'] = "failed";
+				$data['res_msg'] = "Failed to store rating.";
 			}
 		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
 	}
 
 	public function contact()

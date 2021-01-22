@@ -13,7 +13,7 @@ $(document).ready(function () {
 		$(".prof_update_spinner").hide();
 		$(".new_pwd").val("");
 		$(".user_accupdate").hide();
-		$(".weberr").hide()
+		$(".weberr").hide();
 	});
 
 	$(document).on('click', '.ajax_err_div', function () {

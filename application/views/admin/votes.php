@@ -242,6 +242,10 @@
 		});
 
 		$(document).on('click', 'button.vv_btn', function() {
+			$("tr.truserreview").remove();
+			$("div.userweb_div_cal").html("");
+			$("#search_ind_votes").val("");
+
 			var key = $(this).attr("form_key");
 			var btn_uname = $(this).attr("uname");
 			var csrfName = $('.csrf_token').attr('name');

@@ -913,7 +913,7 @@ class User extends CI_Controller
 				$this->index();
 			} else if ($form_key === $key) {
 				$data['form_key'] = $form_key;
-				$data['web_data'] = $this->Adminmodel->getuserwebsites($form_key);
+				$data['web_data'] = $this->Adminmodel->getuserwebsites_wtr($form_key);
 				$data['active'] = $this->Adminmodel->is_user_active($form_key);
 
 				$this->load->view('templates/header');

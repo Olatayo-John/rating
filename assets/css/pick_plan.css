@@ -1,7 +1,8 @@
 body{
 	background: #141E30;
-	background: -webkit-linear-gradient(to right, #243B55, #141E30)
-	background: linear-gradient(to right, #243B55, #141E30);
+}
+button.renewplanbtn{
+	display: none;
 }
 div.error{
 	padding: 5px;

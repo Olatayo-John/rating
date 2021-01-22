@@ -274,6 +274,17 @@ class Adminmodel extends CI_Model
 		if (!$query) {
 			return false;
 		} else {
+			return $query->result_array();
+		}
+	}
+
+	public function getuserwebsites_wtr($key)
+	{
+		$this->db->order_by("web_name", "ASC");
+		$query = $this->db->get_where('websites', array('form_key' => $key));
+		if (!$query) {
+			return false;
+		} else {
 			return $query;
 		}
 	}

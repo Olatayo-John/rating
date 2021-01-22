@@ -2,6 +2,9 @@
 	font-family: Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 14px;
 }
+button.btn{
+	border-radius: 0;
+}
 div.spinnerdiv{
 	top: 0;
 	left: 0;

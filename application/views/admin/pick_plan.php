@@ -2,27 +2,34 @@
 
 <form method="post" name="renew_plan_form" class="renew_plan_form" action="<?php echo base_url('admin/save_plan'); ?>" target>
 	<input type="hidden" name="plan_amount" class="plan_amount">
-	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token">	
+	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token">
 </form>
 
 <input type="hidden" value="<?php echo $this->session->userdata('rr_form_key'); ?>" class="form_key">
 
-<?php if($this->session->userdata("mr_sub") == "0") : ?>
-<div class="container mb-5">
-	<div class="bg-danger error" style="border-radius: 3px">
-		<i class="fas fa-exclamation-circle"></i>
-		<strong>You have no active subscription. Pick a plan to continue using our services.</strong>
+<?php if ($this->session->userdata("mr_sub") == "0") : ?>
+	<div class="container mb-5">
+		<div class="bg-danger error" style="border-radius: 3px">
+			<i class="fas fa-exclamation-circle"></i>
+			<strong>You have no active subscription. Pick a plan to continue using our services.</strong>
+		</div>
 	</div>
-</div>
 <?php endif; ?>
 
-<?php if($this->session->userdata("mr_sub") == "1") : ?>
-<div class="container mb-5">
-	<div class="bg-success error" style="border-radius: 3px">
-		<i class="fas fa-check-circle"></i>
-		<strong>You have an active subscription.</strong>
+<?php if ($this->session->userdata("mr_sub") == "1") : ?>
+	<div class="container mb-5">
+		<div class="bg-success error" style="border-radius: 3px">
+			<div class="d-flex justify-content-between">
+				<div>
+					<i class="fas fa-check-circle"></i>
+					<strong>You have an active subscription.</strong>
+				</div>
+				<div>
+					<a href="<?php echo base_url("user/account"); ?>" class="font-weight-bolder mr-2" style="color:#141E30">Check your quota here</a>
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
 <?php endif; ?>
 
 <div class="container-fluid row">
@@ -52,15 +59,15 @@
 				</div>
 			</div>
 			<div class="card-footer">
-				<?php if($this->session->userdata('mr_sub') == '0'): ?>
-				<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="500" type="submit">Choose Plan</button>
+				<?php if ($this->session->userdata('mr_sub') == '0') : ?>
+					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="500" type="submit">Choose Plan</button>
 				<?php endif; ?>
-				<?php if($this->session->userdata('mr_sub') == '1'): ?>
-				<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="500" type="submit">Renew Plan</button>
+				<?php if ($this->session->userdata('mr_sub') == '1') : ?>
+					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="500" type="submit">Renew Plan</button>
 				<?php endif; ?>
 			</div>
 		</div>
-	</div> 
+	</div>
 
 	<div class="col-md-3 plan-two">
 		<div class="card bg-light">
@@ -88,15 +95,15 @@
 				</div>
 			</div>
 			<div class="card-footer">
-				<?php if($this->session->userdata('mr_sub') == '0'): ?>
-				<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1000" type="submit">Choose Plan</button>
+				<?php if ($this->session->userdata('mr_sub') == '0') : ?>
+					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1000" type="submit">Choose Plan</button>
 				<?php endif; ?>
-				<?php if($this->session->userdata('mr_sub') == '1'): ?>
-				<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1000" type="submit">Renew Plan</button>
+				<?php if ($this->session->userdata('mr_sub') == '1') : ?>
+					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1000" type="submit">Renew Plan</button>
 				<?php endif; ?>
 			</div>
 		</div>
-	</div> 
+	</div>
 
 	<div class="col-md-3 plan-three">
 		<div class="card ">
@@ -124,15 +131,15 @@
 				</div>
 			</div>
 			<div class="card-footer">
-				<?php if($this->session->userdata('mr_sub') == '0'): ?>
-				<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1500" type="submit">Choose Plan</button>
+				<?php if ($this->session->userdata('mr_sub') == '0') : ?>
+					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1500" type="submit">Choose Plan</button>
 				<?php endif; ?>
-				<?php if($this->session->userdata('mr_sub') == '1'): ?>
-				<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1500" type="submit">Renew Plan</button>
+				<?php if ($this->session->userdata('mr_sub') == '1') : ?>
+					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1500" type="submit">Renew Plan</button>
 				<?php endif; ?>
 			</div>
 		</div>
-	</div> 
+	</div>
 
 	<div class="col-md-3 plan-four">
 		<div class="card">
@@ -160,27 +167,38 @@
 				</div>
 			</div>
 			<div class="card-footer">
-				<?php if($this->session->userdata('mr_sub') == '0'): ?>
-				<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="2000" type="submit">Choose Plan</button>
+				<?php if ($this->session->userdata('mr_sub') == '0') : ?>
+					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="2000" type="submit">Choose Plan</button>
 				<?php endif; ?>
-				<?php if($this->session->userdata('mr_sub') == '1'): ?>
-				<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="2000" type="submit">Renew Plan</button>
+				<?php if ($this->session->userdata('mr_sub') == '1') : ?>
+					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="2000" type="submit">Renew Plan</button>
 				<?php endif; ?>
 			</div>
 		</div>
-	</div> 
+	</div>
+</div>
+
+<div class="ml-3 mr-3 bg-light pb-3 mb-5" style="padding: 10px 30px">
+	<p class="text-center font-weight-bolder">Kindly find the details below for payment</p>
+	<p class="mb-0"><strong>Bank</strong> ICICI Bank </p>
+	<p class="mb-0"> <strong>A/c Name: </strong> NKTechnologies ITSOL Private Limited</p>
+	<p class="mb-0"> <strong>A/c No.: </strong> 721805000099</p>
+	<p class="mb-0"><strong>IFSC: </strong> ICIC0007218</p>
+	<p class="mb-0"><strong>Branch: </strong> SEC-62 Noida</p>
+	<p class="mb-0"><strong>Addresses: </strong> Office No.308,3rd Floor,A-40, I-Thum Tower, Noida Sector-62, 201301
+		NKTechnologies ITSOL Private Limited</p>
 </div>
 
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/pick_plan.js'); ?>"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-	$('.renewplanbtn').click(function() {
-		//e.preventDefault();
-		var amount= $(this).attr("amount");
-		$('.plan_amount').attr('value',amount);
-		$('form.renew_plan_form').submit();
-	});
+	$(document).ready(function() {
+		$('.renewplanbtn').click(function() {
+			//e.preventDefault();
+			var amount = $(this).attr("amount");
+			$('.plan_amount').attr('value', amount);
+			$('form.renew_plan_form').submit();
+		});
 
-});
+	});
 </script>

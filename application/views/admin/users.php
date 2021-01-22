@@ -156,20 +156,25 @@
 			</div>
 		</div>
 	</div>
-	<div class="mb-3 mr-3 ml-3 pt-3 col-md-6 ml-auto">
-		<div class="d-flex flex-row" style="border-bottom: 1px solid #141E30">
-			<span class="" style="border-radius: 0;display:inline-flex; "><i class="fas fa-search"></i></span>
-			<input type="text" name="search_user" id="search_user" class="form-control search_user" placeholder="Search by any field" style="border-radius: 0" autofocus>
+
+	<div class="d-flex pt-5 mb-3 pt-0 pb-0 pl-0 pr-0 col-md-12">
+		<div class="col">
+			<a href="<?php echo base_url('admin/users_export_csv'); ?>" class="btn text-light csvbtn" style="background:#141E30;">
+				<i class="fas fa-file-csv mr-2"></i>CSV Download
+			</a>
+			<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background:#141E30;">
+				<i class="fas fa-sync-alt"></i>
+			</button>
 		</div>
+		<div class="col">
+			<div class="d-flex flex-row" style="border-bottom: 1px solid #141E30">
+				<span class="" style="border-radius: 0;display:inline-flex; "><i class="fas fa-search"></i></span>
+				<input type="text" name="search_user" id="search_user" class="form-control search_user" placeholder="Search by any field" style="border-radius: 0" autofocus>
+			</div>
+		</div>
+
 	</div>
-	<div class="mt-3 mr-3 ml-3 mb-3">
-		<a href="<?php echo base_url('admin/users_export_csv'); ?>" class="btn text-light csvbtn" style="background:#141E30;">
-			<i class="fas fa-file-csv mr-2"></i>CSV Download
-		</a>
-		<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background:#141E30;">
-			<i class="fas fa-sync-alt"></i>
-		</button>
-	</div>
+
 	<div class="container-fluid table-responsive">
 		<table class="table table-center table-hover table-md table-light table-bordered">
 			<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
@@ -337,6 +342,12 @@
 		});
 
 		$(document).on('click', 'button.editbtn', function() {
+			$('.website_form_div').html("");
+			$(".prof_update_spinner").hide();
+			$(".new_pwd").val("");
+			$(".user_accupdate").hide();
+			$(".weberr").hide();
+
 			var user_id = $(this).attr("id");
 			var form_key = $(this).attr("form_key");
 			var csrfName = $('.csrf-token').attr('name');
@@ -378,7 +389,7 @@
 						$("div.action_div").show();
 						for (let index = 0; index < data.webs.length; index++) {
 							// console.log(data.webs[index]);
-							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
+							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
 						}
 						$("button.user_webpdate").show();
 					}
@@ -534,8 +545,15 @@
 		});
 
 		$(document).on("click", ".close_edit_web_modal", function() {
+			var web_name_edit = $('.web_name_edit').val();
+			var web_link_edit = $('.web_link_edit').val();
+			var modal_webid = $(".modal_webid").val();
+
+			$('label[web_id=' + modal_webid + ']').html(web_name_edit);
+			$('input[web_id=' + modal_webid + ']').val(web_link_edit);
 			$(".edit_web_modal").modal("hide");
 			$(".updateusermodal").modal("show");
+			$(".action_web_div").hide();
 		});
 
 		$(document).on("click", ".del_web_btn", function() {

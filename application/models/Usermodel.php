@@ -483,14 +483,19 @@ class Usermodel extends CI_Model
 	public function check_quota_expire($form_key)
 	{
 		$query = $this->db->get_where('quota', array('by_form_key' => $form_key))->row();
-		if ($query->bal == "0" || $query->bal < "0") {
-			$this->db->set('bal', '0');
-			$this->db->where('by_form_key', $form_key);
-			$this->db->update('quota');
+		if ($query) {
+			if ($query->bal == "0" || $query->bal < "0") {
+				$this->db->set('bal', '0');
+				$this->db->where('by_form_key', $form_key);
+				$this->db->update('quota');
+				return true;
+				exit;
+			} elseif ($query->bal > "0") {
+				return false;
+				exit;
+			}
+		} else {
 			return true;
-			exit;
-		} elseif ($query->bal > "0") {
-			return false;
 			exit;
 		}
 	}

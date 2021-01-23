@@ -437,6 +437,26 @@ class Admin extends CI_Controller
 		echo json_encode($data);
 	}
 
+	public function add_website()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('loginfirst', 'Please login first');
+			redirect('user/login');
+		}
+		$res = $this->Adminmodel->add_website($_POST['user_id'], $_POST['form_key'], $_POST['active'], $_POST['web_name_add'], $_POST['web_link_add']);
+		// $res = true;
+		if ($res !== true) {
+			$data['res'] = "failed";
+			$data['res_msg'] = "Failed to add website!";
+		} else {
+			$data['res'] = "success";
+			$data['res_msg'] = "Website added!";
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
 	function delete_user_web()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {

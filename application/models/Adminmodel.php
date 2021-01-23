@@ -140,6 +140,25 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
+	public function add_website($user_id, $form_key, $active, $web_name_add, $web_link_add)
+	{
+		$data = array(
+			'user_id' => $user_id,
+			'form_key' => $form_key,
+			'web_name' => htmlentities($web_name_add),
+			'web_link' => htmlentities($web_link_add),
+			'active' => $active,
+			'total_ratings' => "0",
+			'five_star' => "0",
+			'four_star' => "0",
+			'three_star' => "0",
+			'two_star' => "0",
+			'one_star' => "0",
+		);
+		$this->db->insert('websites', $data);
+		return TRUE;
+	}
+
 	public function delete_user_web($web_id, $user_id, $form_key)
 	{
 		$this->db->where(array('id' => $web_id, 'user_id' => $user_id, 'form_key' => $form_key));

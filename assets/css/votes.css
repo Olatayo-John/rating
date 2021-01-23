@@ -34,6 +34,15 @@ input.search_user,.search_ind_votes{
 .form-control:focus {
 	background-color: transparent; 
 }
+.close_x_div{
+	margin: auto 0;
+    padding-right: 14px;
+}
+.close_x_icon{
+	cursor: pointer;
+    font-weight: bolder;
+    font-size: 18px;
+}
 div.modal-body{
 	background-color: #F5F5F5;
 }

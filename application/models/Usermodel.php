@@ -176,26 +176,6 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function add_website()
-	{
-		$data = array(
-			'user_id' => $this->session->userdata('mr_id'),
-			'form_key' => $this->session->userdata('mr_form_key'),
-			'web_name' => htmlentities($this->input->post('web_name')),
-			'web_link' => htmlentities($this->input->post('web_link')),
-			// 'active' => htmlentities($this->input->post('active')),
-			'active' => "1",
-			'total_ratings' => "0",
-			'five_star' => "0",
-			'four_star' => "0",
-			'three_star' => "0",
-			'two_star' => "0",
-			'one_star' => "0",
-		);
-		$this->db->insert('websites', $data);
-		return TRUE;
-	}
-
 	public function delete_website($id)
 	{
 		$user_id = $this->session->userdata("mr_id");

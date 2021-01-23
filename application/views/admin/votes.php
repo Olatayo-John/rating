@@ -5,10 +5,16 @@
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
 				<div class="modal-header d-flex flex-column pt-0 pb-0 pl-0 pr-0">
-					<div class="username_div col-md-12 mb-3" style="background:#141E30">
-						<h6 class="text-light text-left text-uppercase" style="margin: auto;padding: 7px 0;"></h6>
+					<div class="" style="background:#141E30;display: flex;width: 100%;justify-content: space-between;">
+						<div class="username_div ml-3" style="background:#141E30">
+							<h6 class="text-light text-uppercase" style="margin: auto;padding: 7px 0;"></h6>
+						</div>
+						<div class="close_x_div">
+							<span class="text-light close_x_icon closeupdatebtn">&times</span>
+						</div>
 					</div>
-					<div class="userweb_div_cal row col-md-12 mb-4" style="margin: auto;padding:0;">
+
+					<div class="userweb_div_cal row col-md-12 mb-4 mt-3" style="margin: auto;padding:0;">
 
 					</div>
 					<div class="mb-2 d-flex flex-row col-md-12">
@@ -20,7 +26,7 @@
 					</div>
 
 				</div>
-				<div class="modal-body pt-0" style="height:400px;overflow:scroll;">
+				<div class="modal-body pt-0" style="overflow-x:scroll;overflow-y: hidden;">
 					<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
 						<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
 							<th><span class="icon">

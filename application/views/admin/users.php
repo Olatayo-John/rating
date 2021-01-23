@@ -3,12 +3,8 @@
 	<div class="modal addusermodal">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header d-flex justify-content-center mb-0">
+				<div class="modal-header d-flex justify-content-center mb-0 pb-0">
 					<h5 class="text-dark font-weight-bolder">Enter web details correctly</h5>
-				</div>
-				<div class="mb-0 alert-danger chkboxerr container mb-1" style="display: none;">
-					<i class="fas fa-exclamation-circle"></i>
-					<strong>Pick at least a method to send login credentials to user</strong>
 				</div>
 				<form action="<?php echo base_url('admin/add_user'); ?>" method="post" class="mt-0">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf-token">
@@ -25,11 +21,11 @@
 							<input type="url" name="web_link_add" class="web_link_add form-control" placeholder="Website link" required>
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2 web_btngrp">
-							<button class="btn btn-secondary close_add_web_btn bradius">Close</button>
-							<div class="spinner-border web_add_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
+							<button class="btn btn-secondary close_add_web_btn bradius" type="button">Close</button>
+							<div class="spinner-border web_add_spinner" style="position:absolute;right:70px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
 								<span class="sr-only">Loading...</span>
 							</div>
-							<button class="btn text-light web_addbtn bradius" style="background:#141E30">Add</button>
+							<button class="btn text-light web_addbtn bradius" userid="" userformkey="" useractive="" type="submit" style="background:#141E30">Add</button>
 						</div>
 					</div>
 			</div>
@@ -395,6 +391,10 @@
 					$('.mobile').val(data.infos[0].mobile);
 					$('.email').val(data.infos[0].email);
 
+					$('.web_addbtn').attr("userid", data.infos[0].id);
+					$('.web_addbtn').attr("userformkey", data.infos[0].form_key);
+					$('.web_addbtn').attr("useractive", data.infos[0].active);
+
 					if (data.infos[0].fname !== null || data.infos[0].lname !== null) {
 						$('div.nameofuser_h h6').html(data.infos[0].fname + " " + data.infos[0].lname);
 					} else {
@@ -474,15 +474,29 @@
 		});
 
 		$(document).on("click", ".add_web_btn", function() {
-			$('.updateusermodal').modal('hide');
-			$(".addusermodal").modal("show");
+			// var webcount = $(".web_form_input").length();
+			var webcount = 6;
+			console.log(webcount);
+
+			if (webcount < 5) {
+				$('.updateusermodal').modal('hide');
+				$(".addusermodal").modal("show");
+			} else if (webcount >= 5) {
+				var con = confirm("User already has 5 websites. Are you sure you want to add more?")
+				if (con === false) {
+					return false;
+				} else if (con === true) {
+					$('.updateusermodal').modal('hide');
+					$(".addusermodal").modal("show");
+				}
+			}
 		});
 
 		$(document).on('click', '.web_addbtn', function(e) {
 			e.preventDefault();
-			var id = $('.modal_webid').val();
-			var user_id = $('.user_id').val();
-			var form_key = $('.user_form_key').val();
+			var user_id = $(this).attr("userid");
+			var form_key = $(this).attr("userformkey");
+			var active = $(this).attr("useractive");
 			var csrfHash = $('.csrf-token').val();
 			var csrfName = $('.csrf-token').attr('name');
 			var web_name_add = $('.web_name_add').val();
@@ -498,6 +512,7 @@
 			}
 			if (web_link_add == "" || web_link_add == null || !web_link_add.startsWith("http") || !web_link_add.startsWith("https") || !web_link_add.includes("://") || !web_link_add.includes(".") || web_link_add.endsWith(".")) {
 				$(".web_link_add").css('border', '2px solid red');
+				$(".addweberr").show();
 				$(".addweberr_span").html("Invalid WEB URL");
 				$(".web_add_spinner").hide();
 				return false;
@@ -507,58 +522,53 @@
 				$(".web_link_add").css('border', '1px solid #141E30');
 			}
 
-			console.log(web_name_add);
-			console.log(web_link_add);
+			$.ajax({
+				url: "<?php echo base_url('admin/add_website') ?>",
+				method: "POST",
+				data: {
+					[csrfName]: csrfHash,
+					user_id: user_id,
+					form_key: form_key,
+					active: active,
+					web_name_add: web_name_add,
+					web_link_add: web_link_add
+				},
+				dataType: "json",
+				beforeSend: function() {
+					$(".web_add_spinner").fadeIn();
+					$('.web_addbtn').hide();
+				},
+				success: function(data) {
+					$('.csrf-token').val(data.token);
+					$('.web_addbtn').show();
 
-			// $.ajax({
-			// 	url: "<?php echo base_url('admin/user_webupdate') ?>",
-			// 	method: "POST",
-			// 	data: {
-			// 		[csrfName]: csrfHash,
-			// 		id: id,
-			// 		user_id: user_id,
-			// 		form_key: form_key,
-			// 		web_name_edit: web_name_edit,
-			// 		web_link_edit: web_link_edit
-			// 	},
-			// 	dataType: "json",
-			// 	beforeSend: function() {
-			// 		$(".web_update_spinner").fadeIn();
-			// 		$('.user_webpdate').html("Updating...");
-			// 		$('.user_webpdate').attr("disabled", "disabled");
-			// 		$('.user_webpdate').css("cursor", "not-allowed");
-			// 	},
-			// 	success: function(data) {
-			// 		$('.user_webpdate').html("Update");
-			// 		$('.user_webpdate').removeAttr("disabled");
-			// 		$('.user_webpdate').css("cursor", "pointer");
-			// 		$('.user_webpdate').css("background", "#141E30");
-			// 		$('.csrf-token').val(data.token);
+					if (data.res == "failed") {
+						$(".web_add_spinner,.ajax_succ_div").fadeOut();
+						$('.ajax_res_err').html(data.res_msg);
+						$('.ajax_err_div').fadeIn();
+					} else if (data.res == "success") {
+						$(".web_add_spinner,.ajax_err_div").fadeOut();
+						$('.ajax_res_succ').html(data.res_msg);
+						$('.ajax_succ_div').fadeIn();
 
-			// 		if (data.res == "failed") {
-			// 			$(".web_update_spinner,.ajax_succ_div").fadeOut();
-			// 			$('.ajax_res_err').html(data.res_msg);
-			// 			$('.ajax_err_div').fadeIn();
-			// 		} else if (data.res == "success") {
-			// 			$(".web_update_spinner,.ajax_err_div").fadeOut();
-			// 			$('.ajax_res_succ').html(data.res_msg);
-			// 			$('.ajax_succ_div').fadeIn();
-			// 			$('label[web_id=' + id + ']').html(web_name_edit);
-			// 			$('input[web_id=' + id + ']').val(web_link_edit);
-			// 		}
+						// $('label[web_id=' + id + ']').html(web_name_edit);
+						// $('input[web_id=' + id + ']').val(web_link_edit);
+					}
 
-			// 		reload_table();
-			// 	},
-			// 	error: function(data) {
-			// 		alert("Error updating user profile!");
-			// 		window.location.reload();
-			// 	}
-			// })
+					reload_table();
+				},
+				error: function(data) {
+					// alert("Error updating user profile!");
+					window.location.reload();
+				}
+			})
 		});
 
 		$(document).on("click", ".close_add_web_btn", function() {
 			$('.updateusermodal').modal('show');
 			$(".addusermodal").modal("hide");
+			$('.web_name_add').html("");
+			$('.web_link_add').html("");
 		});
 
 		$(document).on("click", ".action_web_btn", function() {

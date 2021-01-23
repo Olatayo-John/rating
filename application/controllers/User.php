@@ -278,30 +278,6 @@ class User extends CI_Controller
 		}
 	}
 
-	public function add_website()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user/login');
-		}
-		$this->form_validation->set_rules('web_name', 'Website Name', 'required|trim|html_escape');
-		$this->form_validation->set_rules('web_link', 'Website Link', 'required|trim|html_escape|valid_url');
-
-		if ($this->form_validation->run() === FALSE) {
-			$this->session->set_flashdata('update_failed', 'Invalid URL provided');
-			redirect('user/profile');
-		} else {
-			$res = $this->Usermodel->add_website();
-			if ($res !== TRUE) {
-				$this->session->set_flashdata('update_failed', 'Failed to add website');
-				redirect('user/profile');
-			} else {
-				$this->session->set_flashdata('update_succ', 'Website added!');
-				redirect('user/profile');
-			}
-		}
-	}
-
 	public function edit_website()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
@@ -316,30 +292,6 @@ class User extends CI_Controller
 			$data['web_link'] = $act_res->web_link;
 			$data['token'] = $this->security->get_csrf_hash();
 			echo json_encode($data);
-		}
-	}
-
-	public function update_website()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user/login');
-		}
-		$this->form_validation->set_rules('web_name_edit', 'Website Name', 'required|trim|html_escape');
-		$this->form_validation->set_rules('web_link_edit', 'Website Link', 'required|trim|html_escape|valid_url');
-
-		if ($this->form_validation->run() === FALSE) {
-			$this->session->set_flashdata('update_failed', 'Invalid URL provided');
-			redirect('user/profile');
-		} else {
-			$res = $this->Usermodel->update_website();
-			if ($res !== TRUE) {
-				$this->session->set_flashdata('update_failed', 'Failed to update');
-				redirect('user/profile');
-			} else {
-				$this->session->set_flashdata('update_succ', 'Updated!');
-				redirect('user/profile');
-			}
 		}
 	}
 

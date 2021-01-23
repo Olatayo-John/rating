@@ -474,9 +474,9 @@
 		});
 
 		$(document).on("click", ".add_web_btn", function() {
-			// var webcount = $(".web_form_input").length();
-			var webcount = 6;
-			console.log(webcount);
+			var webcount = $(".web_form_input").length;
+			// var webcount = 6;
+			// console.log(webcount);
 
 			if (webcount < 5) {
 				$('.updateusermodal').modal('hide');

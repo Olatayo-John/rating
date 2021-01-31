@@ -975,7 +975,7 @@ class User extends CI_Controller
 		} else {
 			$recaptchaResponse = trim($this->input->post('g-recaptcha-response'));
 			$userIp = $this->input->ip_address();
-			$secret = "6LdT_UIaAAAAAOM8F3GM2Koi4sTapfRwNMfYYAjS";
+			$secret = "xxxxxxxxxx";
 
 			$url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $secret . "&response=" . $recaptchaResponse . "&remoteip=" . $userIp;
 

@@ -692,6 +692,7 @@ class Admin extends CI_Controller
 		$data['get_total_facebook'] = $this->Adminmodel->get_total_facebook();
 		$data['get_total_gd'] = $this->Adminmodel->get_total_gd();
 		$data['get_total_tp'] = $this->Adminmodel->get_total_tp();
+		$data['get_total_other'] = $this->Adminmodel->get_total_other();
 
 		// print_r($data['details']->result_array());
 		// die;

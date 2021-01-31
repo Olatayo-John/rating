@@ -258,6 +258,13 @@ class Adminmodel extends CI_Model
 		$query = $this->db->get('all_ratings');
 		return $query;
 	}
+	public function get_total_other()
+	{
+		$webs = array("official", "google", "facebook", "trust pilot", "glassdoor");
+		$this->db->where_not_in('web_name', $webs);
+		$query = $this->db->get('all_ratings');
+		return $query;
+	}
 
 	public function votes_export_csv()
 	{

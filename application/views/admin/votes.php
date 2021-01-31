@@ -59,29 +59,33 @@
 	</div>
 
 	<div class="rt_div row mb-5 pt-3" style="margin: 0">
-		<div class="col-md-2 rt_col text-secondary" style="border-left: none;">
+		<div class="col rt_col text-secondary" style="border-left: none;">
 			<div class="value tv text-secondary"><?php echo $get_total_ratings->num_rows() ?></div>
 			<h4 class="text-center stared">Reviews</h4>
 		</div>
-		<div class="col-md-2 rt_col">
+		<div class="col rt_col">
 			<div class="value tv"><?php echo $get_total_official->num_rows() ?></div>
 			<h4 class="text-center stared">Official</h4>
 		</div>
-		<div class="col-md-2 rt_col">
+		<div class="col rt_col">
 			<div class="value tv"><?php echo $get_total_google->num_rows() ?></div>
 			<h4 class="text-center stared">Google</h4>
 		</div>
-		<div class="col-md-2 rt_col">
+		<div class="col rt_col">
 			<div class="value tv"><?php echo $get_total_facebook->num_rows() ?></div>
 			<h4 class="text-center stared">Facebook</h4>
 		</div>
-		<div class="col-md-2 rt_col">
+		<div class="col rt_col">
 			<div class="value tv"><?php echo $get_total_gd->num_rows() ?></div>
 			<h4 class="text-center stared">Glassdoor</h4>
 		</div>
-		<div class="col-md-2 rt_col" style="border-bottom: none;">
+		<div class="col rt_col" style="border-bottom: none;">
 			<div class="value tv"><?php echo $get_total_tp->num_rows() ?></div>
 			<h4 class="text-center stared">Trust Pilot</h4>
+		</div>
+		<div class="col rt_col" style="border-bottom: none;">
+			<div class="value tv"><?php echo $get_total_other->num_rows() ?></div>
+			<h4 class="text-center stared">Others</h4>
 		</div>
 	</div>
 

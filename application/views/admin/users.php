@@ -795,9 +795,6 @@
 					window.location.reload();
 				}
 			})
-			// .done(function() {
-			// 	window.location.reload();
-			// });
 		});
 
 		$(document).on('click', 'button.deacti_act_btn', function() {

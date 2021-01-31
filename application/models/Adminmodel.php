@@ -159,22 +159,29 @@ class Adminmodel extends CI_Model
 		return TRUE;
 	}
 
-	public function delete_user_web($web_id, $user_id, $form_key)
+	public function delete_user_web($web_id, $user_id, $form_key, $web_name)
 	{
-		$this->db->where(array('id' => $web_id, 'user_id' => $user_id, 'form_key' => $form_key));
+		$this->db->where(array('id' => $web_id, 'user_id' => $user_id, 'form_key' => $form_key, 'web_name' => $web_name));
 		$this->db->delete("websites");
 
-		$this->delete_userratings($form_key);
+		$aff_rows = $this->delete_userratings($form_key, $web_name);
 
-		//function to also deduct total_ratngs from user_details
-		//$this->update_userdetails_rating($user_id,$form_key);
+		$this->update_userdetails_rating($user_id, $form_key, $aff_rows);
 		return true;
 	}
 
-	public function delete_userratings($form_key)
+	public function delete_userratings($form_key, $web_name)
 	{
-		$this->db->where('form_key', $form_key);
+		$this->db->where(array('form_key' => $form_key, 'web_name' => $web_name));
 		$this->db->delete("all_ratings");
+		return $this->db->affected_rows();
+	}
+
+	public function update_userdetails_rating($user_id, $form_key, $aff_rows)
+	{
+		$this->db->set('total_ratings', 'total_ratings-' . $aff_rows);
+		$this->db->where('form_key', $form_key);
+		$this->db->update("user_details");
 		return true;
 	}
 
@@ -287,6 +294,17 @@ class Adminmodel extends CI_Model
 	}
 
 	public function getuserwebsites($key)
+	{
+		$this->db->order_by("web_name", "ASC");
+		$query = $this->db->get_where('websites', array('form_key' => $key));
+		if (!$query) {
+			return false;
+		} else {
+			return $query->result_array();
+		}
+	}
+
+	public function getuserotherwebsites($key)
 	{
 		$this->db->order_by("web_name", "ASC");
 		$query = $this->db->get_where('websites', array('form_key' => $key));

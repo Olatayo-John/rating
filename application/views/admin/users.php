@@ -408,7 +408,7 @@
 						$("div.action_div").show();
 						for (let index = 0; index < data.webs.length; index++) {
 							// console.log(data.webs[index]);
-							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
+							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
 						}
 						$("button.user_webpdate").show();
 					}
@@ -671,6 +671,7 @@
 
 		$(document).on("click", ".del_web_btn", function() {
 			var web_id = $(this).attr('web_id');
+			var web_name = $(this).attr('web_name');
 			var user_id = $(this).attr('user_id');
 			var form_key = $(this).attr('form_key');
 			var csrfHash = $('.csrf-token').val();
@@ -684,6 +685,7 @@
 					method: "post",
 					data: {
 						web_id: web_id,
+						web_name: web_name,
 						user_id: user_id,
 						form_key: form_key,
 						[csrfName]: csrfHash

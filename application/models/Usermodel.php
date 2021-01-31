@@ -590,4 +590,15 @@ class Usermodel extends CI_Model
 		$query = $this->db->get('users')->row();
 		return $query;
 	}
+
+	public function contact()
+	{
+		$data = array(
+			'name' => htmlentities($this->input->post('name')),
+			'user_mail' => htmlentities($this->input->post('email')),
+			'bdy' => htmlentities($this->input->post('msg')),
+		);
+		$this->db->insert('contact', $data);
+		return true;
+	}
 }

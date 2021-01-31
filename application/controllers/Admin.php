@@ -467,7 +467,7 @@ class Admin extends CI_Controller
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
 			return false;
 		}
-		$res = $this->Adminmodel->delete_user_web($_POST['web_id'], $_POST['user_id'], $_POST['form_key']);
+		$res = $this->Adminmodel->delete_user_web($_POST['web_id'], $_POST['user_id'], $_POST['form_key'], $_POST['web_name']);
 		// $res = false;
 		if ($res !== true) {
 			$data['res'] = "failed";
@@ -942,6 +942,7 @@ class Admin extends CI_Controller
 		} else {
 			$data['users'] = $this->Adminmodel->get_ratings($_POST['key']);
 			$data['user_webs'] = $this->Adminmodel->getuserwebsites($_POST['key']);
+			// $data['user_other_web'] = $this->Adminmodel->getuserotherwebsites($_POST['key']);
 			$data['user_web_total'] = $this->Adminmodel->user_web_total($_POST['key']);
 			$data['token'] = $this->security->get_csrf_hash();
 			echo json_encode($data);

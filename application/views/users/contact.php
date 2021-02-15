@@ -14,7 +14,7 @@
 				<div class="form-group">
 					<textarea name="msg" class="form-control msg" rows="6" placeholder="Drop your message" required></textarea>
 				</div>
-				<div class="g-recaptcha form-group" data-sitekey="6LdT_UIaAAAAANYXRPUzs1SwrYxLE0alc5uiqdN2"></div>
+				<div class="g-recaptcha form-group" data-sitekey="xxxxxxxxxx"></div>
 				<div class="subbtngrp text-center">
 					<button class="btn text-light btn-block" style="background:#141E30">Submit</button>
 				</div>

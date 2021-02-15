@@ -6,12 +6,20 @@ body{
 .user_reg_form{
 	padding: 20px;
 }
-label{
-	font-weight: bolder;
-	color: white;
+h4{
+	color: #141E30;
+	/* font-weight: bold; */
 }
-input.form-control{
-	/* border-radius: 30px */
+label,.fa-eye,.fa-eye-slash,.fa-question-circle,.fas-question-circle{
+	color: #141E30;
+}
+hr{
+	border:1px solid #141E30;
+	width: 150px;
+}
+.fa-question-circle,.fas-question-circle{
+	color: #141E30;
+	cursor: pointer;
 }
 div.btngrp{
 	display: flex;

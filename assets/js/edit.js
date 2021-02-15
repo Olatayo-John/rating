@@ -75,39 +75,6 @@ $(document).ready(function () {
 		$('.add_web_modal').fadeOut();
 	});
 
-	$('button.add_web_modal_btn').click(function (e) {
-		// e.preventDefault();
-		var web_name = $('.web_name').val();
-		var web_link = $('.web_link').val();
-
-		console.log(web_name);
-		console.log(web_link);
-
-		if (web_name == "" || web_name == null) {
-			$('.web_name').css('border', '2px solid red');
-			return false;
-		} else {
-			$('.web_name').css('border', '1px solid #00695C');
-		}
-		if (web_link == "" || web_link == null) {
-			$('.web_link').css('border', '2px solid red');
-			return false;
-		} else {
-			$('.web_link').css('border', '1px solid #00695C');
-		}
-	});
-
-	$(document).on('click', 'button.delete_web_btn', function () {
-		$('.delete_web_modal').fadeIn();
-		var btn_id = $(this).attr('id');
-		// console.log(btn_id);
-		$('.yes_delweb_modal_btn').attr('id', btn_id);
-	});
-
-	$(document).on('click', 'button.close_delweb_modal', function () {
-		$('.delete_web_modal').fadeOut();
-	});
-
 	$(document).on('click', 'button.close_editweb_modal', function () {
 		$('.edit_web_modal').fadeOut();
 		$('button.update_web_modal_btn').html("Update");

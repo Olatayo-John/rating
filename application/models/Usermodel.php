@@ -60,12 +60,16 @@ class Usermodel extends CI_Model
 			'email' => htmlentities($this->input->post('email')),
 			'mobile' => htmlentities($this->input->post('mobile')),
 			'active' => "0",
+			'website_form' => "0",
 			'sub' => "0",
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
 		);
 		$this->db->insert('users', $data);
+		$lastid = $this->db->insert_id();
+		$this->insert_user_details($lastid, $form_key);
+		$this->insert_quota($lastid, $form_key);
 		return TRUE;
 	}
 
@@ -74,7 +78,7 @@ class Usermodel extends CI_Model
 		$data = array(
 			'user_id' => $lastid,
 			'form_key' => $form_key,
-			'web_name' => htmlentities($this->input->post('uname')),
+			'uname' => htmlentities($this->input->post('uname')),
 			'total_ratings' => '0',
 			'total_sms' => '0',
 			'total_email' => '0',
@@ -96,7 +100,6 @@ class Usermodel extends CI_Model
 			'used' => '0',
 			'bal' => '0',
 			'by_form_key' => $form_key,
-			'sub' => '0',
 		);
 		$this->db->insert('quota', $data);
 		return true;
@@ -126,8 +129,87 @@ class Usermodel extends CI_Model
 			$this->db->set('active', '1');
 			$this->db->where('form_key', $key);
 			$this->db->update('users');
-			return TRUE;
+			$new_info = $this->db->get_where('users', array('form_key' => $key))->row();
+			return $new_info;
+			// return TRUE;
+			// exit();
+		}
+	}
+
+	public function addwebsites($webname_arr, $weblink_arr)
+	{
+		$web_count = count($webname_arr);
+		if ($web_count > "10") {
+			$web_count == 9;
+		}
+		for ($i = 0; $i < $web_count; $i++) {
+			$data = array(
+				'user_id' => $this->session->userdata('mr_id'),
+				'form_key' => $this->session->userdata('mr_form_key'),
+				'web_name' => htmlentities($webname_arr[$i]),
+				'web_link' => htmlentities($weblink_arr[$i]),
+				'active' => $this->session->userdata('mr_active'),
+				'total_ratings' => "0",
+				'five_star' => "0",
+				'four_star' => "0",
+				'three_star' => "0",
+				'two_star' => "0",
+				'one_star' => "0",
+			);
+			$this->db->insert('websites', $data);
+		}
+		$this->update_webform();
+		return TRUE;
+	}
+
+	public function update_webform()
+	{
+		$user_id = $this->session->userdata("mr_id");
+		$form_key = $this->session->userdata("mr_form_key");
+
+		$this->db->set('website_form', '1');
+		$this->db->where(array('form_key' => $form_key, 'id' => $user_id));
+		$this->db->update("users");
+
+		$this->session->set_userdata("mr_form_key", "1");
+		return true;
+		exit;
+	}
+
+	public function check_user_websites()
+	{
+		$query = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
+		if (!$query) {
+			return false;
 			exit();
+		} else {
+			return $query->num_rows();
+			exit;
+		}
+	}
+
+	public function user_new_website()
+	{
+		$res_web = $this->check_user_websites();
+		if ($res_web > "10") {
+			return "Maximum quota reached. Contact Admin for more quota";
+			exit;
+		} else {
+			$data = array(
+				'user_id' => $this->session->userdata('mr_id'),
+				'form_key' => $this->session->userdata('mr_form_key'),
+				'web_name' => htmlentities($this->input->post('web_name_new')),
+				'web_link' => htmlentities($this->input->post('web_link_new')),
+				'active' => $this->session->userdata('mr_active'),
+				'total_ratings' => "0",
+				'five_star' => "0",
+				'four_star' => "0",
+				'three_star' => "0",
+				'two_star' => "0",
+				'one_star' => "0",
+			);
+			$this->db->insert('websites', $data);
+			return TRUE;
 		}
 	}
 
@@ -296,7 +378,21 @@ class Usermodel extends CI_Model
 	public function all_user_sent_links()
 	{
 		$query = $this->db->get('sent_links');
-		return $query->result();
+		return $query;
+	}
+
+	public function all_user_sent_links_sms()
+	{
+		$this->db->where('sent_to_email', null);
+		$query = $this->db->get('sent_links');
+		return $query;
+	}
+
+	public function all_user_sent_links_email()
+	{
+		$this->db->where('sent_to_sms', null);
+		$query = $this->db->get('sent_links');
+		return $query;
 	}
 
 	public function user_quota_details()
@@ -600,5 +696,19 @@ class Usermodel extends CI_Model
 		);
 		$this->db->insert('contact', $data);
 		return true;
+	}
+
+	public function get_feedbacks()
+	{
+		$query = $this->db->get('contact');
+		return $query;
+	}
+
+	public function export_feedbacks()
+	{
+		$this->db->order_by('id', 'desc');
+		$this->db->select('id,name,user_mail,bdy');
+		$query = $this->db->get('contact');
+		return $query->result_array();
 	}
 }

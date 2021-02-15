@@ -10,7 +10,8 @@ div.empty{
 	float: left;
 }
 input.form-control{
-	border-radius: 20px
+	/* border-radius: 20px; */
+	border-radius: 0;
 }
 button.btn{
 	border-radius: 0
@@ -18,11 +19,9 @@ button.btn{
 div.login{
 	height: 100vh;
 	width: 50%;
-  float: right;
-  padding: 120px;
+	float: right;
+	padding: 120px;
 	background: #141E30;
-	background: -webkit-linear-gradient(to right, #243B55, #141E30)
-	background: linear-gradient(to right, #243B55, #141E30);
 
 }
 label{

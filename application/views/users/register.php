@@ -1,7 +1,8 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/register.css'); ?>">
-<div class="container-fluid" id="content">
+<div class="mr-3 ml-3 mt-3 bg-light" id="content">
 	<form action="<?php echo base_url('user/register'); ?>" method="post" class="user_reg_form">
-		<h4 class="text-center text-light mt-3 mb-5">USER REGISTRATION</h4>
+		<h4 class="text-center mt-3 mb-0">REGISTRATION FORM</h4>
+		<hr class="mb-5 mt-2">
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="row">
 			<div class="col-md-6">
@@ -31,21 +32,21 @@
 					<span class="unameerr text-danger" style="display:none">Username already exist</span>
 				</div>
 				<div class="form-group">
-					<label><span class="text-danger font-weight-bolder">* </span>Password</label>
-					<input type="password" name="pwd" class="form-control pwd" placeholder="Password must be over 6 characters long" id="pwd">
+					<label><span class="text-danger font-weight-bolder">* </span>Password</label><i class="fas fa-question-circle ml-2" title="Password must be over 6 characters long"></i>
+					<input type="password" name="pwd" class="form-control pwd" placeholder="Password must be over 6 characters long" id="pwd" minlength="6">
 					<span class="font-weight-bolder text-danger pwderr" style="display: none;">Password is too short</span>
 				</div>
 				<div class="form-group">
-					<button class="btn btn-outline-warning genpwdbtn" type="button" name="genpwdbtn">Generate Password</button>
-					<i class="far fa-eye text-light ml-1"></i>
-					<i class="fas fa-eye-slash text-light ml-1"></i>
+					<button class="btn btn-outline-info genpwdbtn" type="button" name="genpwdbtn">Generate Password</button>
+					<i class="far fa-eye ml-2"></i>
+					<i class="fas fa-eye-slash ml-2"></i>
 				</div>
 			</div>
 		</div>
 
 		<div class="btngrp container">
-			<button class="btn btn-success registerbtn" type="submit">Register</button>
-			<a href="<?php echo base_url('user/login'); ?>" class="loginbtn">
+			<button class="btn text-light registerbtn" type="submit" style="background:#141E30">Register</button>
+			<a href="<?php echo base_url('user/login'); ?>" class="loginbtn text-info" style="colosr:#141E30">
 				Already a user? <i class="far fa-arrow-alt-circle-right"></i></a>
 		</div>
 	</form>
@@ -54,6 +55,8 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/register.js'); ?>"></script>
 <script>
 	$(document).ready(function() {
+		$('[data-toggle="tooltip"]').tooltip();
+
 		$(".uname").keyup(function() {
 			var uname_val = $(".uname").val();
 			var csrfName = $(".csrf_token").attr("name");
@@ -72,9 +75,11 @@
 					$(".csrf_token").val(data.token);
 					if (data.user_data > 0) {
 						$('.unameerr').show();
+						$(".uname").css('border', '1px solid red');
 						$(".registerbtn").attr("type", "button");
 					} else {
 						$('.unameerr').hide();
+						$(".uname").css('border', '1px solid #ced4da');
 						$(".registerbtn").attr("type", "submit");
 					}
 				},

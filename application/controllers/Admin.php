@@ -11,7 +11,7 @@ class Admin extends CI_Controller
 	public function index()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -25,8 +25,10 @@ class Admin extends CI_Controller
 
 	public function users($offset = 0)
 	{
+		$data['title'] = "users";
+
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -55,7 +57,7 @@ class Admin extends CI_Controller
 		$data['links'] = $this->pagination->create_links();
 
 		$data['users'] = $this->Adminmodel->get_user_details($config["per_page"], $offset);
-		$this->load->view('templates/header');
+		$this->load->view('templates/header', $data);
 		$this->load->view('admin/users', $data);
 		$this->load->view('templates/footer');
 	}
@@ -63,7 +65,7 @@ class Admin extends CI_Controller
 	public function users_export_csv()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -84,7 +86,7 @@ class Admin extends CI_Controller
 	public function reload_table()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -98,40 +100,40 @@ class Admin extends CI_Controller
 		$data = $this->Adminmodel->get_user_details($config["per_page"], $offset);
 		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
 		<th>
-			<span>Status</span>
+		<span>Status</span>
 		</th>
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort" name="uname" type="desc"></i>
-				<span>User</span>
-			</div>
+		<div class="inh">
+		<i class="fas fa-sort" name="uname" type="desc"></i>
+		<span>User</span>
+		</div>
 		</th>
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort " name="fname" type="desc"></i>
-				<span>Full Name</span>
-			</div>
+		<div class="inh">
+		<i class="fas fa-sort " name="fname" type="desc"></i>
+		<span>Full Name</span>
+		</div>
 		</th>
 		<th>
-			<div class="cmp">
-				<i class="fas fa-sort" name="mobile" type="desc"></i>
-				<span>Mobile</span>
-			</div>
+		<div class="cmp">
+		<i class="fas fa-sort" name="mobile" type="desc"></i>
+		<span>Mobile</span>
+		</div>
 		</th>
 		<th>
-			<div class="cmp">
-				<i class="fas fa-sort" name="email" type="desc"></i>
-				<span>E-Mail</span>
-			</div>
+		<div class="cmp">
+		<i class="fas fa-sort" name="email" type="desc"></i>
+		<span>E-Mail</span>
+		</div>
 		</th>
 		<th>
-			<div class="cmp">
-				<i class="fas fa-sort" name="sub" type="desc"></i>
-				<span>Subscribed?</span>
-			</div>
+		<div class="cmp">
+		<i class="fas fa-sort" name="sub" type="desc"></i>
+		<span>Subscribed?</span>
+		</div>
 		</th>
 		<th class="text-danger text-center font-weight-bolder">
-			Action
+		Action
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
@@ -160,16 +162,16 @@ class Admin extends CI_Controller
 				}
 				$output .= '</td>
 				<td class="font-weight-bolder">
-					<div class="d-flex" style="justify-content:space-around">
-						<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
-							<i class="fas fa-user-alt text-light "></i>
-						</button>
-						<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
-							<i class="fas fa-trash-alt text-danger "></i>
-						</button>
-					</div>
+				<div class="d-flex" style="justify-content:space-around">
+				<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<i class="fas fa-user-alt text-light "></i>
+				</button>
+				<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<i class="fas fa-trash-alt text-danger "></i>
+				</button>
+				</div>
 				</td>
-			</tr>';
+				</tr>';
 			}
 		}
 		echo $output;
@@ -178,7 +180,7 @@ class Admin extends CI_Controller
 	public function users_search_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -193,25 +195,25 @@ class Admin extends CI_Controller
 		$data = $this->Adminmodel->users_search_user($query);
 		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
 		<th>
-			<span>Status</span>
+		<span>Status</span>
 		</th>
 		<th>
-			User
+		User
 		</th>
 		<th>
-			Full Name
+		Full Name
 		</th>
 		<th>
-			Mobile
+		Mobile
 		</th>
 		<th>
-			E-Mail
+		E-Mail
 		</th>
 		<th>
-			Subscribed?
+		Subscribed?
 		</th>
 		<th class="text-danger text-center font-weight-bolder">
-			Action
+		Action
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
@@ -240,16 +242,16 @@ class Admin extends CI_Controller
 				}
 				$output .= '</td>
 				<td class="font-weight-bolder">
-					<div class="d-flex" style="justify-content:space-around">
-						<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
-							<i class="fas fa-user-alt text-light "></i>
-						</button>
-						<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
-							<i class="fas fa-trash-alt text-danger "></i>
-						</button>
-					</div>
+				<div class="d-flex" style="justify-content:space-around">
+				<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<i class="fas fa-user-alt text-light "></i>
+				</button>
+				<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<i class="fas fa-trash-alt text-danger "></i>
+				</button>
+				</div>
 				</td>
-			</tr>';
+				</tr>';
 			}
 		}
 		echo $output;
@@ -258,7 +260,7 @@ class Admin extends CI_Controller
 	public function users_filter_param()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -269,40 +271,40 @@ class Admin extends CI_Controller
 		$output = "";
 		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
 		<th>
-			<span>Status</span>
+		<span>Status</span>
 		</th>
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort" name="uname" type="desc"></i>
-				<span>User</span>
-			</div>
+		<div class="inh">
+		<i class="fas fa-sort" name="uname" type="desc"></i>
+		<span>User</span>
+		</div>
 		</th>
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort " name="fname" type="desc"></i>
-				<span>Full Name</span>
-			</div>
+		<div class="inh">
+		<i class="fas fa-sort " name="fname" type="desc"></i>
+		<span>Full Name</span>
+		</div>
 		</th>
 		<th>
-			<div class="cmp">
-				<i class="fas fa-sort" name="mobile" type="desc"></i>
-				<span>Mobile</span>
-			</div>
+		<div class="cmp">
+		<i class="fas fa-sort" name="mobile" type="desc"></i>
+		<span>Mobile</span>
+		</div>
 		</th>
 		<th>
-			<div class="cmp">
-				<i class="fas fa-sort" name="email" type="desc"></i>
-				<span>E-Mail</span>
-			</div>
+		<div class="cmp">
+		<i class="fas fa-sort" name="email" type="desc"></i>
+		<span>E-Mail</span>
+		</div>
 		</th>
 		<th>
-			<div class="cmp">
-				<i class="fas fa-sort" name="sub" type="desc"></i>
-				<span>Subscribed?</span>
-			</div>
+		<div class="cmp">
+		<i class="fas fa-sort" name="sub" type="desc"></i>
+		<span>Subscribed?</span>
+		</div>
 		</th>
 		<th class="text-danger text-center font-weight-bolder">
-			Action
+		Action
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
@@ -331,16 +333,16 @@ class Admin extends CI_Controller
 				}
 				$output .= '</td>
 				<td class="font-weight-bolder">
-					<div class="d-flex" style="justify-content:space-around">
-						<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
-							<i class="fas fa-user-alt text-light "></i>
-						</button>
-						<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
-							<i class="fas fa-trash-alt text-danger "></i>
-						</button>
-					</div>
+				<div class="d-flex" style="justify-content:space-around">
+				<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<i class="fas fa-user-alt text-light "></i>
+				</button>
+				<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<i class="fas fa-trash-alt text-danger "></i>
+				</button>
+				</div>
 				</td>
-			</tr>';
+				</tr>';
 			}
 		}
 		echo $output;
@@ -349,7 +351,7 @@ class Admin extends CI_Controller
 	public function delete_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -440,7 +442,7 @@ class Admin extends CI_Controller
 	public function add_website()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		$res = $this->Adminmodel->add_website($_POST['user_id'], $_POST['form_key'], $_POST['active'], $_POST['web_name_add'], $_POST['web_link_add']);
@@ -568,7 +570,7 @@ class Admin extends CI_Controller
 	/* public function add_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -594,7 +596,7 @@ class Admin extends CI_Controller
 			//$res= $this->Usermodel->register($form_key,$pwd);
 			$res = true;
 			if ($res !== TRUE) {
-				$this->session->set_flashdata('reg_failed', 'Registration Failed');
+				$this->session->set_flashdata('invalid', 'Registration Failed');
 				redirect('user/register');
 				exit();
 			} else {
@@ -605,7 +607,7 @@ class Admin extends CI_Controller
 					$mobile = $this->input->post('mobile');
 					$login_link = base_url();
 					$res = $this->send_email_code($fname, $randpwd, $email, $link, $login_link);
-					$this->session->set_flashdata('adduser_emailndmobile_code', 'User added. Login credentials sent to user e-mail and mobile');
+					$this->session->set_flashdata('valid', 'User added. Login credentials sent to user e-mail and mobile');
 					redirect($_SERVER['HTTP_REFERER']);;
 				} elseif (isset($_POST['mail_chkbox'])) {
 					$fname = $this->input->post('full_name');
@@ -614,11 +616,11 @@ class Admin extends CI_Controller
 					$mobile = $this->input->post('mobile');
 					$login_link = base_url();
 					$res = $this->send_email_code($fname, $randpwd, $email, $link, $login_link);
-					$this->session->set_flashdata('adduser_email_code', 'User added. Login credentials sent to user e-mail');
+					$this->session->set_flashdata('valid', 'User added. Login credentials sent to user e-mail');
 					redirect($_SERVER['HTTP_REFERER']);
 				} elseif (isset($_POST['mobile_chkbox'])) {
 					require __DIR__ . '/twilosms.php';
-					$this->session->set_flashdata('adduser_mobile_code', 'User added. Login credentials sent to user mobile');
+					$this->session->set_flashdata('valid', 'User added. Login credentials sent to user mobile');
 					redirect($_SERVER['HTTP_REFERER']);
 				}
 			}
@@ -656,8 +658,10 @@ class Admin extends CI_Controller
 
 	public function votes($offset = 0)
 	{
+		$data['title'] = "reviews";
+
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -696,7 +700,7 @@ class Admin extends CI_Controller
 
 		// print_r($data['details']->result_array());
 		// die;
-		$this->load->view('templates/header');
+		$this->load->view('templates/header', $data);
 		$this->load->view('admin/votes', $data);
 		$this->load->view('templates/footer');
 	}
@@ -704,7 +708,7 @@ class Admin extends CI_Controller
 	public function votes_export_csv()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -725,7 +729,7 @@ class Admin extends CI_Controller
 	public function votes_reload_table()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -739,37 +743,37 @@ class Admin extends CI_Controller
 		$data = $this->Adminmodel->get_user_votes($config["per_page"], $offset);
 		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort" name="uname" type="desc"></i>
-				<span>User</span>
-			</div>
+		<div class="inh">
+		<i class="fas fa-sort" name="uname" type="desc"></i>
+		<span>User</span>
+		</div>
 		</th>
 		<th>
-			<div class="tr">
-				<i class="fas fa-sort" name="total_ratings" type="desc"></i>
-				<span>Reviews</span>
-			</div class="icon">
+		<div class="tr">
+		<i class="fas fa-sort" name="total_ratings" type="desc"></i>
+		<span>Reviews</span>
+		</div class="icon">
 		</th>
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort" name="total_sms" type="desc"></i>
-				<span>SMS</span>
-			</div class="icon">
+		<div class="inh">
+		<i class="fas fa-sort" name="total_sms" type="desc"></i>
+		<span>SMS</span>
+		</div class="icon">
 		</th>
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort" name="total_email" type="desc"></i>
-				<span>Email</span>
-			</div class="icon">
+		<div class="inh">
+		<i class="fas fa-sort" name="total_email" type="desc"></i>
+		<span>Email</span>
+		</div class="icon">
 		</th>
 		<th>
-			<div class="tr">
-				<i class="fas fa-sort" name="form_key" type="desc"></i>
-				<span>User Link</span>
-			</div>
+		<div class="tr">
+		<i class="fas fa-sort" name="form_key" type="desc"></i>
+		<span>User Link</span>
+		</div>
 		</th>
 		<th class="text-danger text-center font-weight-bolder">
-			Reviews
+		Reviews
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
@@ -797,7 +801,7 @@ class Admin extends CI_Controller
 	public function votes_filter_param()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -808,37 +812,37 @@ class Admin extends CI_Controller
 		$output = "";
 		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort" name="uname" type="desc"></i>
-				<span>User</span>
-			</div>
+		<div class="inh">
+		<i class="fas fa-sort" name="uname" type="desc"></i>
+		<span>User</span>
+		</div>
 		</th>
 		<th>
-			<div class="tr">
-				<i class="fas fa-sort" name="total_ratings" type="desc"></i>
-				<span>Reviews</span>
-			</div class="icon">
+		<div class="tr">
+		<i class="fas fa-sort" name="total_ratings" type="desc"></i>
+		<span>Reviews</span>
+		</div class="icon">
 		</th>
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort" name="total_sms" type="desc"></i>
-				<span>SMS</span>
-			</div class="icon">
+		<div class="inh">
+		<i class="fas fa-sort" name="total_sms" type="desc"></i>
+		<span>SMS</span>
+		</div class="icon">
 		</th>
 		<th>
-			<div class="inh">
-				<i class="fas fa-sort" name="total_email" type="desc"></i>
-				<span>Email</span>
-			</div class="icon">
+		<div class="inh">
+		<i class="fas fa-sort" name="total_email" type="desc"></i>
+		<span>Email</span>
+		</div class="icon">
 		</th>
 		<th>
-			<div class="tr">
-				<i class="fas fa-sort" name="form_key" type="desc"></i>
-				<span>User Link</span>
-			</div>
+		<div class="tr">
+		<i class="fas fa-sort" name="form_key" type="desc"></i>
+		<span>User Link</span>
+		</div>
 		</th>
 		<th class="text-danger text-center font-weight-bolder">
-			Reviews
+		Reviews
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
@@ -866,7 +870,7 @@ class Admin extends CI_Controller
 	public function votes_search_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -881,32 +885,32 @@ class Admin extends CI_Controller
 		$data = $this->Adminmodel->votes_search_user($query);
 		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
 		<th>
-			<div class="inh">
-				<span>User</span>
-			</div>
+		<div class="inh">
+		<span>User</span>
+		</div>
 		</th>
 		<th>
-			<div class="tr">
-				<span>Reviews</span>
-			</div class="icon">
+		<div class="tr">
+		<span>Reviews</span>
+		</div class="icon">
 		</th>
 		<th>
-			<div class="inh">
-				<span>SMS</span>
-			</div class="icon">
+		<div class="inh">
+		<span>SMS</span>
+		</div class="icon">
 		</th>
 		<th>
-			<div class="inh">
-				<span>Email</span>
-			</div class="icon">
+		<div class="inh">
+		<span>Email</span>
+		</div class="icon">
 		</th>
 		<th>
-			<div class="tr">
-				<span>User Link</span>
-			</div>
+		<div class="tr">
+		<span>User Link</span>
+		</div>
 		</th>
 		<th class="text-danger text-center font-weight-bolder">
-			Reviews
+		Reviews
 		</th>
 		</tr>';
 		if ($data->num_rows() == 0) {
@@ -934,7 +938,7 @@ class Admin extends CI_Controller
 	public function votes_get_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -953,7 +957,7 @@ class Admin extends CI_Controller
 	public function indiv_votes_export_csv($key)
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -974,7 +978,7 @@ class Admin extends CI_Controller
 	public function search_ind_votes()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
@@ -990,25 +994,25 @@ class Admin extends CI_Controller
 		// echo json_encode($data);
 		$output .= '<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
 		<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
-			<th><span class="icon">
-					Name
-				</span></th>
-			<th><span>
-					Mobile
-				</span class="icon"></th>
-			<th><span>
-					Star
-				</span></th>
-			<th><span>
-					Website
-				</span class="icon"></th>
-			<th><span>
-					IP
-				</span></th>
-			<th class="text-danger"><span>
-					Date
-				</span></th>
-			</tr>';
+		<th><span class="icon">
+		Name
+		</span></th>
+		<th><span>
+		Mobile
+		</span class="icon"></th>
+		<th><span>
+		Star
+		</span></th>
+		<th><span>
+		Website
+		</span class="icon"></th>
+		<th><span>
+		IP
+		</span></th>
+		<th class="text-danger"><span>
+		Date
+		</span></th>
+		</tr>';
 		if ($data == false) {
 			$output .= '<tr class="text-dark truserreview">
 			<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
@@ -1031,7 +1035,7 @@ class Admin extends CI_Controller
 	public function pick_plan()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
 		$this->load->view('templates/header');
@@ -1110,25 +1114,25 @@ class Admin extends CI_Controller
 					$res = $this->Adminmodel->save_payment($userData);
 					//$res= true;
 					if ($res == true) {
-						$this->session->set_flashdata('reg_succ', 'Payment Done.');
+						$this->session->set_flashdata('valid', 'Payment Done.');
 						//$this->payment_status($userData);
 						$this->load->view('templates/header');
 						$this->load->view('admin/pay_status', ['userData' => $userData]);
 						$this->load->view('templates/footer');
 					} else {
-						$this->session->set_flashdata('payment_save_err', 'Error saving contacts to DATABASE.');
+						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
 						$this->load->view('templates/header');
 						$this->load->view('admin/pay_status', ['userData' => $userData]);
 						$this->load->view('templates/footer');
 					}
 				} else {
-					$this->session->set_flashdata('sub_failed', 'Payment Failed.');
+					$this->session->set_flashdata('invalid', 'Payment Failed.');
 					$this->load->view('templates/header');
 					$this->load->view('admin/pay_status', ['userData' => $userData]);
 					$this->load->view('templates/footer');
 				}
 			} else {
-				$this->session->set_flashdata('sub_failed', 'Payment Failed.');
+				$this->session->set_flashdata('invalid', 'Payment Failed.');
 				$this->load->view('templates/header');
 				$this->load->view('admin/pay_status', ['userData' => $userData]);
 				$this->load->view('templates/footer');
@@ -1150,7 +1154,7 @@ class Admin extends CI_Controller
 		$this->session->unset_userdata('mr_logged_in');
 		// $this->session->sess_destroy();
 
-		$this->session->set_flashdata('log_out', 'Logged out');
+		$this->session->set_flashdata('invalid', 'Logged out');
 		redirect('user');
 	}
 }

@@ -1,9 +1,22 @@
 *{
-	font-family: Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;
+	/* font-family: Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif; */
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 	font-size: 14px;
+}
+.btn:focus{
+	box-shadow: none;
+	outline: 1px dotted;
+}
+button:focus{
+	outline:1px dotted !important;
 }
 button.btn{
 	border-radius: 0;
+	outline: none;
+}
+input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
+	border-color: #141E30;
+	box-shadow: none;
 }
 div.spinnerdiv{
 	top: 0;

@@ -6,13 +6,31 @@ class User extends CI_Controller
 	public function index()
 	{
 		if ($this->session->userdata('mr_logged_in')) {
-			redirect('user/profile');
-		}
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->load->view('templates/header');
+			if ($this->session->userdata('mr_admin') == "1") {
+				redirect('admin');
+			} else {
+				if ($this->session->userdata('mr_website_form') == "1") {
+					if ($this->session->userdata('mr_sub') == "1") {
+						redirect('profile');
+					} else {
+						redirect('plan');
+					}
+				} else if ($this->session->userdata('mr_website_form') == "0") {
+					redirect('websites');
+				}
+			}
+		} else {
+			$data['title'] = "login";
+			$this->load->view('templates/header', $data);
 			$this->load->view('users/login');
 			$this->load->view('templates/footer');
 		}
+	}
+
+	public function fof_error()
+	{
+		$data['title'] = '404 | Page not Found!';
+		$this->load->view('errors/fof_error', $data);
 	}
 
 	public function login()
@@ -28,13 +46,13 @@ class User extends CI_Controller
 		} else {
 			$validate = $this->Usermodel->login();
 			if ($validate == FALSE) {
-				$this->session->set_flashdata('invalid_login', 'Username/Password is wrong');
+				$this->session->set_flashdata('invalid', 'Username/Password is wrong');
 				redirect('user');
 			}
 			if ($validate == "inactive") {
 				$res_login = $this->Usermodel->login_get_key();
 				if ($res_login) {
-					$this->session->set_flashdata('inacc_acc', 'Your account is not verified');
+					$this->session->set_flashdata('invalid', 'Your account is not verified');
 					redirect('user/emailverify/' . $res_login);
 				}
 			}
@@ -46,6 +64,7 @@ class User extends CI_Controller
 				$mobile = $validate->mobile;
 				$active = $validate->active;
 				$sub = $validate->sub;
+				$website_form = $validate->website_form;
 				$form_key = $validate->form_key;
 
 				$user_sess = array(
@@ -56,17 +75,22 @@ class User extends CI_Controller
 					'mr_mobile' => $mobile,
 					'mr_active' => $active,
 					'mr_sub' => $sub,
+					'mr_website_form' => $website_form,
 					'mr_form_key' => $form_key,
 					'mr_logged_in' => TRUE,
 				);
 				$this->session->set_userdata($user_sess);
-				if ($this->session->userdata('mr_sub') == "0") {
-					$this->session->set_flashdata('inacc_sub', 'You have no active subscription.');
-					redirect('admin/pick_plan');
-					exit();
-				} elseif ($this->session->userdata('mr_sub') == "1") {
-					// redirect('user/account');
-					redirect('user/profile');
+				if ($this->session->userdata('mr_website_form') == "1") {
+					if ($this->session->userdata('mr_sub') == "0") {
+						$this->session->set_flashdata('invalid', 'You have no active subscription.');
+						redirect('plan');
+						exit();
+					} elseif ($this->session->userdata('mr_sub') == "1") {
+						// redirect('user/account');
+						redirect('user/profile');
+					}
+				} else {
+					redirect('websites');
 				}
 			}
 		}
@@ -75,17 +99,19 @@ class User extends CI_Controller
 	public function logout()
 	{
 		$this->session->unset_userdata('mr_id');
-		$this->session->unset_userdata('mr_mobile');
+		$this->session->unset_userdata('mr_admin');
 		$this->session->unset_userdata('mr_uname');
 		$this->session->unset_userdata('mr_email');
+		$this->session->unset_userdata('mr_mobile');
 		$this->session->unset_userdata('mr_active');
 		$this->session->unset_userdata('mr_sub');
+		$this->session->unset_userdata('mr_website_form');
 		$this->session->unset_userdata('mr_form_key');
 		$this->session->unset_userdata('mr_logged_in');
 		// $this->session->sess_destroy();
 
-		$this->session->set_flashdata('log_out', 'Logged out');
-		redirect('user');
+		$this->session->set_flashdata('valid', 'Logged out');
+		redirect('/');
 	}
 
 	public function check_duplicate_username()
@@ -97,9 +123,11 @@ class User extends CI_Controller
 
 	public function register()
 	{
+		$data['title'] = "register";
+
 		if ($this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('logout_first', 'Log out first.');
-			redirect('user/rating');
+			$this->session->set_flashdata('invalid', 'Log out first.');
+			redirect('rating');
 		}
 		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
 		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
@@ -109,7 +137,7 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('pwd', 'Password', 'required|trim|html_escape');
 
 		if ($this->form_validation->run() === FALSE) {
-			$this->load->view('templates/header');
+			$this->load->view('templates/header', $data);
 			$this->load->view('users/register');
 			$this->load->view('templates/footer');
 		} else {
@@ -118,22 +146,22 @@ class User extends CI_Controller
 
 			$email = htmlentities($this->input->post('email'));
 			$uname = htmlentities($this->input->post('uname'));
-			$link = base_url() . "user/emailverify/" . $form_key;
+			$link = base_url() . "emailverify/" . $form_key;
 
 			$mail_res = $this->send_email_code($email, $uname, $act_key, $link);
 			if ($mail_res !== TRUE) {
-				$this->session->set_flashdata('email_code', $mail_res);
-				redirect('user/register');
+				$this->session->set_flashdata('invalid', $mail_res);
+				redirect('register');
 				exit();
 			} else {
 				$db_res = $this->Usermodel->register($act_key, $form_key);
 				if ($db_res !== TRUE) {
-					$this->session->set_flashdata('db_register_err', 'Error saving your details. Please try again');
-					redirect('user/register');
+					$this->session->set_flashdata('invalid', 'Error saving your details. Please try again');
+					redirect('register');
 					exit();
 				} else {
-					$this->session->set_flashdata('email_code', 'Verification code sent to you mail.');
-					redirect('user/emailverify/' . $form_key);
+					$this->session->set_flashdata('valid', 'Verification code sent to you mail.');
+					redirect('emailverify/' . $form_key);
 					exit();
 				}
 			}
@@ -173,13 +201,13 @@ class User extends CI_Controller
 	{
 		$check_res = $this->Usermodel->check_verification($key);
 		if ($check_res == false) {
-			$this->session->set_flashdata('email_verify_err', 'Wrong credentials');
-			redirect('user/login');
+			$this->session->set_flashdata('invalid', 'Wrong credentials');
+			redirect('login');
 		} else {
 			$active = $check_res->active;
 			if ($active == '1') {
-				$this->session->set_flashdata('email_verified', 'Your account is already verified.');
-				redirect('user/login');
+				$this->session->set_flashdata('valid', 'Your account is already verified.');
+				redirect('login');
 			}
 			$this->form_validation->set_rules('sentcode', 'Verification Code', 'required|trim|html_escape');
 			if ($this->form_validation->run() == false) {
@@ -190,11 +218,39 @@ class User extends CI_Controller
 			} else {
 				$res = $this->Usermodel->emailverify($key);
 				if ($res == false) {
-					$this->session->set_flashdata('email_verify_err', 'Invalid code');
-					redirect('user/emailverify/' . $key);
-				} elseif ($res == TRUE) {
-					$this->session->set_flashdata('login_now', 'Your account is active. You can now log in');
-					redirect('user/login');
+					$this->session->set_flashdata('invalid', 'Invalid code');
+					redirect('emailverify/' . $key);
+				} else {
+					if ($res->active !== "1") {
+						$this->session->set_flashdata('invalid', 'Error activating. Please try again');
+						redirect('emailverify/' . $key);
+					} else if ($res->active == "1") {
+						$id = $res->id;
+						$admin = $res->admin;
+						$uname = $res->uname;
+						$email = $res->email;
+						$mobile = $res->mobile;
+						$active = $res->active;
+						$sub = $res->sub;
+						$website_form = $res->website_form;
+						$form_key = $res->form_key;
+
+						$user_sess = array(
+							'mr_id' => $id,
+							'mr_admin' => $admin,
+							'mr_uname' => $uname,
+							'mr_email' => $email,
+							'mr_mobile' => $mobile,
+							'mr_active' => $active,
+							'mr_sub' => $sub,
+							'mr_website_form' => $website_form,
+							'mr_form_key' => $form_key,
+							'mr_logged_in' => TRUE,
+						);
+						$this->session->set_userdata($user_sess);
+						$this->session->set_flashdata('valid', 'Your account is active');
+						redirect('websites');
+					}
 				}
 			}
 		}
@@ -204,49 +260,91 @@ class User extends CI_Controller
 	{
 		$check_res = $this->Usermodel->check_verification($key);
 		if ($check_res == false) {
-			$this->session->set_flashdata('email_verify_err', 'Wrong credentials');
+			$this->session->set_flashdata('invalid', 'Wrong credentials');
 			redirect($_SERVER['HTTP_REFERRER']);
 		} else {
 			$active = $check_res->active;
 			if ($active == '1') {
-				$this->session->set_flashdata('email_verified', 'Your account is already verified and active.');
-				redirect('user/login');
+				$this->session->set_flashdata('valid', 'Your account is already verified and active.');
+				redirect('login');
 			} else {
 				$res = $this->Usermodel->check_verification($key);
 
 				$email = $res->email;
 				$uname = $res->uname;
-				$link = base_url() . "user/emailverify/" . $res->form_key;
+				$link = base_url() . "emailverify/" . $res->form_key;
 				$act_key =  mt_rand(0, 1000000);
 
 				$res_update = $this->send_email_code($email, $uname, $act_key, $link);
 				if ($res_update !== TRUE) {
-					$this->session->set_flashdata('email_verify_resend_err', $res_update);
+					$this->session->set_flashdata('invalid', $res_update);
 					redirect($link);
 				} else {
 					$this->Usermodel->code_verify_update($act_key, $key);
-					$this->session->set_flashdata('email_verify_resend', 'Verification code sent to you mail.');
+					$this->session->set_flashdata('valid', 'Verification code sent to you mail.');
 					redirect($_SERVER['HTTP_REFERER']);
 				}
 			}
 		}
 	}
 
-	public function profile()
+	public function websites()
+	{
+		$data['title'] = "websites";
+
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('login');
+		}
+		if ($this->session->userdata('mr_website_form') == "1") {
+			redirect('/');
+		}
+		$this->load->view('templates/header', $data);
+		$this->load->view('users/websites');
+		$this->load->view('templates/footer');
+	}
+
+	public function addwebsites()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
-			redirect('user/login');
+			$data['status'] = false;
+			$data['msg'] = base_url("login");
+		}
+		if ($this->session->userdata('mr_website_form') == "1") {
+			$data['status'] = false;
+			$data['msg'] = base_url("/");
+		} else {
+			$res = $this->Usermodel->addwebsites($_POST['webname_arr'], $_POST['weblink_arr']);
+			// $res = false;
+			if ($res !== true) {
+				$data['status'] = "error";
+				$data['msg'] = "Error adding your websites!";
+			} else {
+				$data['status'] = true;
+				$data['msg'] = base_url("/");
+			}
+		}
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	public function profile()
+	{
+		$data['title'] = "profile";
+
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('login');
 		}
 		$data['user_info'] = $this->Usermodel->get_info();
 		$data['websites'] = $this->Usermodel->get_user_websites();
 		if (!$data) {
-			$this->session->set_flashdata('loginfirst', 'Your account doesnt exist');
+			$this->session->set_flashdata('invalid', 'This account doesnt exist');
 			$this->logout();
 		} elseif ($data) {
 			// print_r($data);
 			// die;
-			$this->load->view('templates/header');
+			$this->load->view('templates/header', $data);
 			$this->load->view('users/edit', $data);
 			$this->load->view('templates/footer');
 		}
@@ -255,7 +353,7 @@ class User extends CI_Controller
 	public function personal_edit()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape');
@@ -269,10 +367,10 @@ class User extends CI_Controller
 		} else {
 			$res = $this->Usermodel->personal_edit();
 			if ($res !== TRUE) {
-				$this->session->set_flashdata('update_failed', 'Update Failed');
+				$this->session->set_flashdata('invalid', 'Update Failed');
 				redirect('user/profile');
 			} else {
-				$this->session->set_flashdata('update_succ', 'Updated');
+				$this->session->set_flashdata('valid', 'Updated');
 				redirect('user/profile');
 			}
 		}
@@ -281,7 +379,7 @@ class User extends CI_Controller
 	public function edit_website()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		$act_res = $this->Usermodel->edit_website($_POST['id']);
@@ -295,38 +393,66 @@ class User extends CI_Controller
 		}
 	}
 
+	public function check_user_websites()
+	{
+		$this->Usermodel->check_user_websites();
+	}
+
+	public function user_new_website()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('user/login');
+		}
+		$this->form_validation->set_rules('web_name_new', 'Name', 'required|trim|html_escape');
+		$this->form_validation->set_rules('web_link_new', 'Link', 'required|trim|html_escape');
+
+		if ($this->form_validation->run() === FALSE) {
+			redirect('profile');
+		} else {
+			$res = $this->Usermodel->user_new_website();
+			if ($res !== true) {
+				$this->session->set_flashdata('invalid', $res);
+				redirect("profile");
+			} else {
+				$this->session->set_flashdata('valid', 'Website addedd successfully!');
+				redirect("profile");
+			}
+		}
+	}
+
 	public function delete_website()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		$act_res = $this->Usermodel->delete_website($_POST['id']);
 		if ($act_res == false) {
-			$this->session->set_flashdata('update_failed', 'Error deleting this data! Please try again');
+			$this->session->set_flashdata('invalid', 'Error deleting this data! Please try again');
 		} else {
-			$this->session->set_flashdata('update_succ', 'Data deleted successfully!');
+			$this->session->set_flashdata('valid', 'Data deleted successfully!');
 		}
 	}
 
 	public function website_status()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		$act_res = $this->Usermodel->website_status($_POST['id'], $_POST['status']);
 		if ($act_res == false) {
-			$this->session->set_flashdata('update_failed', 'Error changing website status');
+			$this->session->set_flashdata('invalid', 'Error changing website status');
 		} else {
-			$this->session->set_flashdata('update_succ', 'Status Updated!');
+			$this->session->set_flashdata('valid', 'Status Updated!');
 		}
 	}
 
 	public function account_edit()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 
@@ -339,10 +465,10 @@ class User extends CI_Controller
 		} else {
 			$pwd_res = $this->Usermodel->check_pwd();
 			if ($pwd_res == false) {
-				$this->session->set_flashdata('update_failed', 'Incorrect password provided');
+				$this->session->set_flashdata('invalid', 'Incorrect password provided');
 				redirect($_SERVER['HTTP_REFERER']);
 			} else {
-				$this->session->set_flashdata('update_succ', 'Password changed');
+				$this->session->set_flashdata('valid', 'Password changed');
 				redirect($_SERVER['HTTP_REFERER']);
 			}
 		}
@@ -351,19 +477,19 @@ class User extends CI_Controller
 	public function deact_account()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		$act_res = $this->Usermodel->deact_account();
 		if ($act_res == false) {
-			$this->session->set_flashdata('update_failed', 'Error performing this operation');
+			$this->session->set_flashdata('invalid', 'Error performing this operation');
 		}
 	}
 
 	/* public function search_website()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user/login');
 		}
 		$act_res = $this->Usermodel->search_website($_POST['search_data']);
@@ -471,20 +597,22 @@ class User extends CI_Controller
 
 	public function sendlink()
 	{
+		$data['title'] = "share";
+
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
 		if ($this->session->userdata('mr_sub') == "0") {
-			$this->session->set_flashdata('inacc_sub', 'You have no active subscription.');
-			redirect('admin/pick_plan');
+			$this->session->set_flashdata('invalid', 'You have no active subscription.');
+			redirect('plan');
 		}
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
 		$this->form_validation->set_rules('subj', 'Subject', 'required|trim|html_escape');
 		$this->form_validation->set_rules('bdy', 'Body', 'required|trim|html_escape');
 
 		if ($this->form_validation->run() == false) {
-			$this->load->view('templates/header');
+			$this->load->view('templates/header', $data);
 			$this->load->view('users/sendlink');
 			$this->load->view('templates/footer');
 		} else {
@@ -495,21 +623,21 @@ class User extends CI_Controller
 			} else if ($cq_res !== false) {
 				$usermail_expire = $cq_res->email;
 				$this->quota_send_mail_expire($usermail_expire);
-				$this->session->set_flashdata('quota_expired', 'Quota has expired');
-				redirect('admin/pick_plan');
+				$this->session->set_flashdata('invalid', 'Quota has expired');
+				redirect('plan');
 			} else {
 				$email = htmlentities($this->input->post('email'));
 				$subj = htmlentities($this->input->post('subj'));
 				$bdy = htmlentities($this->input->post('bdy'));
 				$mail_res = $this->link_send_mail($email, $subj, $bdy);
 				if ($mail_res !== true) {
-					$this->session->set_flashdata('link_send_err', $mail_res);
+					$this->session->set_flashdata('invalid', $mail_res);
 					redirect($_SERVER['HTTP_REFERER']);
 					exit;
 				} else {
 					$res = $this->Usermodel->save_info();
 					if ($res !== true) {
-						$this->session->set_flashdata('link_send_err', 'Error saving contacts to DATABASE.');
+						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
 						redirect($_SERVER['HTTP_REFERER']);
 						exit;
 					} else {
@@ -517,11 +645,11 @@ class User extends CI_Controller
 						if ($cq_res !== false) {
 							$db_email = $cq_res->email;
 							$this->quota_send_mail_expire($db_email);
-							$this->session->set_flashdata('link_send_succ', 'Link sent successfully');
+							$this->session->set_flashdata('valid', 'Link sent successfully');
 							redirect($_SERVER['HTTP_REFERER']);
 							exit;
 						} else {
-							$this->session->set_flashdata('link_send_succ', 'Link sent successfully');
+							$this->session->set_flashdata('valid', 'Link sent successfully');
 							redirect($_SERVER['HTTP_REFERER']);
 							exit;
 						}
@@ -534,7 +662,7 @@ class User extends CI_Controller
 	public function getlink()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
 		if ($this->session->userdata('mr_sub') == "0") {
@@ -601,18 +729,18 @@ class User extends CI_Controller
 	public function send_multiple_email()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
 		if ($this->session->userdata('mr_sub') == "0") {
-			$this->session->set_flashdata('inacc_sub', 'You have no active subscription.');
-			redirect('admin/pick_plan');
+			$this->session->set_flashdata('invalid', 'You have no active subscription.');
+			redirect('plan');
 		}
 		$cq_res = $this->Usermodel->check_user_quota();
 		if ($cq_res == true) {
 			$this->send_quota_expire_mail();
-			$this->session->set_flashdata('quota_expired', 'Your Quota has expired. Please renew to continue using our services.');
-			redirect('admin/pick_plan');
+			$this->session->set_flashdata('invalid', 'Your Quota has expired. Please renew to continue using our services.');
+			redirect('plan');
 		} else {
 			$emaildata = $_POST['emaildata'];
 			$subj = $_POST['subj'];
@@ -621,19 +749,19 @@ class User extends CI_Controller
 
 			$qbl_res = $this->Usermodel->user_quota_details();
 			if ($qbl_res->bal < $num) {
-				$this->session->set_flashdata('small_bal_length', 'Number of emails to be sent exceeds your remaining quota point of ' . $qbl_res->bal . ' .');
+				$this->session->set_flashdata('invalid', 'Number of emails to be sent exceeds your remaining quota point of ' . $qbl_res->bal . ' .');
 			} else {
 				$mail_res = $this->send_multiple_link_email($emaildata, $subj, $bdy);
 				if ($mail_res !== true) {
-					$this->session->set_flashdata('link_send_err', $mail_res);
+					$this->session->set_flashdata('invalid', $mail_res);
 				} else {
 					$res = $this->Usermodel->multiplemail_save_info($_POST['emaildata'], $_POST['subj'], $_POST['bdy']);
 					if ($res !== true) {
-						$this->session->set_flashdata('link_send_err', 'Error saving to DATABASE.');
+						$this->session->set_flashdata('invalid', 'Error saving to DATABASE.');
 					} else {
 						$length = count($emaildata);
 						$cq_res = $this->Usermodel->user_quota_update($length);
-						$this->session->set_flashdata('link_send_succ', 'Link sent successfully');
+						$this->session->set_flashdata('valid', 'Link sent successfully');
 					}
 				}
 			}
@@ -670,12 +798,12 @@ class User extends CI_Controller
 	public function sms_send_link()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
 		if ($this->session->userdata('mr_sub') == "0") {
-			$this->session->set_flashdata('inacc_sub', 'You have no active subscription.');
-			redirect('admin/pick_plan');
+			$this->session->set_flashdata('invalid', 'You have no active subscription.');
+			redirect('plan');
 		}
 		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
 		$this->form_validation->set_rules('smsbdy', 'Body', 'required|trim|html_escape');
@@ -690,8 +818,8 @@ class User extends CI_Controller
 				$db_email = $cq_res->email;
 				$usermail_expire = $cq_res->email;
 				$this->quota_send_mail_expire($usermail_expire);
-				$this->session->set_flashdata('quota_expired', 'Quota has expired');
-				redirect('admin/pick_plan');
+				$this->session->set_flashdata('invalid', 'Quota has expired');
+				redirect('plan');
 			} else {
 				$mobile = $this->input->post('mobile');
 				$bdy = $this->input->post('smsbdy');
@@ -703,13 +831,13 @@ class User extends CI_Controller
 				$result = curl_exec($req);
 
 				if ($result == false) {
-					$this->session->set_flashdata('sms_link_send_err', 'Error sending SMS');
+					$this->session->set_flashdata('invalid', 'Error sending SMS');
 					redirect($_SERVER["HTTP_REFERER"]);
 					exit;
 				} else {
 					$res = $this->Usermodel->sms_save_info();
 					if ($res !== true) {
-						$this->session->set_flashdata('link_send_err', 'Error saving contacts to DATABASE.');
+						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
 						redirect($_SERVER["HTTP_REFERER"]);
 						exit;
 					} else {
@@ -717,11 +845,11 @@ class User extends CI_Controller
 						if ($cq_res !== false) {
 							$db_email = $cq_res->email;
 							$this->quota_send_mail_expire($db_email);
-							$this->session->set_flashdata('sms_link_send_succ', 'SMS sent successfully');
+							$this->session->set_flashdata('valid', 'SMS sent successfully');
 							redirect($_SERVER["HTTP_REFERER"]);
 							exit;
 						} else {
-							$this->session->set_flashdata('sms_link_send_succ', 'SMS sent successfully');
+							$this->session->set_flashdata('valid', 'SMS sent successfully');
 							redirect($_SERVER["HTTP_REFERER"]);
 							exit;
 						}
@@ -747,26 +875,26 @@ class User extends CI_Controller
 	public function multiple_sms_send_link()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('loginfirst', 'Please login first');
+			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
 		if ($this->session->userdata('mr_sub') == "0") {
-			$this->session->set_flashdata('inacc_sub', 'You have no active subscription.');
-			redirect('admin/pick_plan');
+			$this->session->set_flashdata('invalid', 'You have no active subscription.');
+			redirect('plan');
 		}
 		$cq_res = $this->Adminmodel->check_quota_expire();
 		if ($cq_res !== false) {
 			$db_email = $cq_res->email;
 			$this->send_quota_expire_mail();
-			$this->session->set_flashdata('quota_expired', 'Your Quota has expired. Please renew to continue using our services.');
-			redirect('admin/pick_plan');
+			$this->session->set_flashdata('invalid', 'Your Quota has expired. Please renew to continue using our services.');
+			redirect('plan');
 		} else {
 			$mobiledata = $_POST['mobiledata'];
 			$smsbdy = $_POST['smsbdy'];
 			$num = count($mobiledata);
 			$qbl_res = $this->Usermodel->user_quota_details();
 			if ($qbl_res->bal < $num) {
-				$this->session->set_flashdata('small_bal_length', 'Number of sms to be sent exceeds your remaining quota point of ' . $qbl_res->bal . ' .');
+				$this->session->set_flashdata('invalid', 'Number of sms to be sent exceeds your remaining quota point of ' . $qbl_res->bal . ' .');
 			} else {
 				$url = "http://onextelbulksms.in/shn/api/pushsms.php?usr=621665&key=010BrbJ20v1c2eCc8LGih6RlTIGqKN&sndr=KARUNJ&ph=" . implode(",", $mobiledata) . "&text=";
 				$req = curl_init();
@@ -775,19 +903,19 @@ class User extends CI_Controller
 				$result = curl_exec($req);
 
 				if ($result === false) {
-					$this->session->set_flashdata('sms_link_send_err', 'Error sending SMS');
+					$this->session->set_flashdata('invalid', 'Error sending SMS');
 				} else {
 					$res = $this->Usermodel->multiplsms_save_info($_POST['mobiledata'], $_POST['smsbdy']);
 					if ($res !== true) {
-						$this->session->set_flashdata('link_send_err', 'Error saving contacts to DATABASE.');
+						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
 					} else {
 						$cq_res = $this->Adminmodel->check_quota_expire();
 						if ($cq_res !== false) {
 							$usermail_expire = $cq_res->email;
 							$this->quota_send_mail_expire($usermail_expire);
-							$this->session->set_flashdata('sms_link_send_succ', 'SMS sent successfully');
+							$this->session->set_flashdata('valid', 'SMS sent successfully');
 						} else {
-							$this->session->set_flashdata('sms_link_send_succ', 'SMS sent successfully');
+							$this->session->set_flashdata('valid', 'SMS sent successfully');
 						}
 					}
 				}
@@ -811,7 +939,7 @@ class User extends CI_Controller
 		$this->load->library('email', $config);
 		$this->email->set_newline("\r\n");
 
-		$body = "Hello.\n\nThis email is to inform you that your Quota has expired.SMS, Emails and Future ratings woun't be recorded\nRenew your plan to keep using our services" . base_url('admin/pick_plan') . "\nIf you have any queries, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+		$body = "Hello.\n\nThis email is to inform you that your Quota has expired.SMS, Emails and Future ratings woun't be recorded\nRenew your plan to keep using our services" . base_url('plan') . "\nIf you have any queries, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
 		$mail = $this->session->userdata('mr_email');
 
 		$this->email->from('jvweedtest@gmail.com', 'Quota Limit');
@@ -828,6 +956,8 @@ class User extends CI_Controller
 
 	public function account()
 	{
+		$data['title'] = "account";
+
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('loginfirst', 'Please login first');
 			redirect('user');
@@ -835,10 +965,21 @@ class User extends CI_Controller
 		$data['user'] = $this->Usermodel->user_total_ratings();
 		$data['balance'] = $this->Usermodel->user_total_quota();
 		$data['user_web'] = $this->Usermodel->get_user_websites();
-		//$data['sent_links']= $this->Usermodel->all_user_sent_links();
-		//print_r($data['user_web']);
-		//die;
-		$this->load->view('templates/header');
+
+		$data['sent_links'] = $this->Usermodel->all_user_sent_links();
+		$data['sent_links_sms'] = $this->Usermodel->all_user_sent_links_sms();
+		$data['sent_links_email'] = $this->Usermodel->all_user_sent_links_email();
+
+		$data['get_total_ratings'] = $this->Adminmodel->get_total_ratings();
+		$data['get_total_official'] = $this->Adminmodel->get_total_official();
+		$data['get_total_google'] = $this->Adminmodel->get_total_google();
+		$data['get_total_facebook'] = $this->Adminmodel->get_total_facebook();
+		$data['get_total_gd'] = $this->Adminmodel->get_total_gd();
+		$data['get_total_tp'] = $this->Adminmodel->get_total_tp();
+		$data['get_total_other'] = $this->Adminmodel->get_total_other();
+		// print_r($data['sent_links_email']);
+		// die;
+		$this->load->view('templates/header', $data);
 		$this->load->view('users/account', $data);
 		$this->load->view('templates/footer');
 	}
@@ -946,7 +1087,7 @@ class User extends CI_Controller
 		$this->load->library('email', $config);
 		$this->email->set_newline("\r\n");
 
-		$body = "Hello " . $uname . ".\n\nThis email is to inform you that your Quota has expired.Future ratings woun't be recorded. SMS and Email servives are unavailable\nRenew your plan to keep using our services" . base_url('admin/pick_plan') . "\nIf you have any queries, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+		$body = "Hello " . $uname . ".\n\nThis email is to inform you that your Quota has expired.Future ratings woun't be recorded. SMS and Email servives are unavailable\nRenew your plan to keep using our services" . base_url('plan') . "\nIf you have any queries, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
 		$mail = $this->session->userdata('mr_email');
 
 		$this->email->from('jvweedtest@gmail.com', 'Quota Limit');
@@ -964,12 +1105,14 @@ class User extends CI_Controller
 
 	public function contact()
 	{
+		$data['title'] = "contact us";
+
 		$this->form_validation->set_rules('name', 'Full Name', 'required|trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
 		$this->form_validation->set_rules('msg', 'Message', 'required|trim|html_escape');
 
 		if ($this->form_validation->run() === FALSE) {
-			$this->load->view('templates/header');
+			$this->load->view('templates/header', $data);
 			$this->load->view('users/contact');
 			$this->load->view('templates/footer');
 		} else {
@@ -994,15 +1137,15 @@ class User extends CI_Controller
 				// $mail_res = $this->support_mail($name, $user_mail, $bdy);
 				$mail_res = true;
 				if ($mail_res !== true) {
-					$this->session->set_flashdata('cntc_us_err', 'Error sending your message');
+					$this->session->set_flashdata('invalid', 'Error sending your message');
 					redirect($_SERVER['HTTP_REFERER']);
 				} else {
 					$res = $this->Usermodel->contact();
-					$this->session->set_flashdata('cntc_us_succ', 'Message sent. We will get back to you as soon as possible');
+					$this->session->set_flashdata('valid', 'Message sent. We will get back to you as soon as possible');
 					redirect($_SERVER['HTTP_REFERER']);
 				}
 			} else {
-				$this->session->set_flashdata('cntc_us_err', 'Google Recaptcha Unsuccessfull');
+				$this->session->set_flashdata('invalid', 'Google Recaptcha Unsuccessfull');
 				redirect($_SERVER['HTTP_REFERER']);
 			}
 		}
@@ -1038,5 +1181,44 @@ class User extends CI_Controller
 		} else {
 			return $this->email->print_debugger();
 		}
+	}
+
+	public function feedbacks()
+	{
+		$data['title'] = "feedbacks";
+
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('user/login');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('user');
+		}
+		$data['feedbacks'] = $this->Usermodel->get_feedbacks();
+		$this->load->view('templates/header', $data);
+		$this->load->view('users/feedbacks', $data);
+		$this->load->view('templates/footer');
+	}
+
+	public function export_feedbacks()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('user/login');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('user');
+		}
+		header("Content-Type: text/csv; charset=utf-8");
+		header("Content-Disposition: attachment; filename=feedbacks.csv");
+		$output = fopen("php://output", "w");
+		fputcsv($output, array('ID', 'Name', 'E-mail', 'Message'));
+		$data = $this->Usermodel->export_feedbacks();
+		foreach ($data as $row) {
+			fputcsv($output, $row);
+		}
+		fclose($output);
 	}
 }

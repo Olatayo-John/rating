@@ -1,12 +1,13 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/edit.css'); ?>">
 <div class="tab_div ml-3 mr-3 mt-3 con">
-	<a href="" class="tab_link prof_a">Profile</a>
-	<a href="" class="tab_link web_a">Websites</a>
-	<a href="" class="tab_link ac_a">Account</a>
+	<a href="" class="tab_link prof_a"><i class="fas fa-user-alt mr-2"></i>Profile</a>
+	<a href="" class="tab_link web_a"><i class="fas fa-tachometer-alt mr-2"></i>Websites</a>
+	<a href="" class="tab_link ac_a"><i class="fas fa-user-cog mr-2"></i>Account</a>
 </div>
 
 <div class="con mt-4 mr-3 ml-3 mb-3 pl-4 pt-4 prof_div">
-	<h4 class="text-dark mb-4 p_i mb-3">Personal Information</h4>
+	<h4 class="text-dark">Personal Information</h4>
+	<hr class="p_i">
 	<form action="<?php echo base_url('user/personal_edit'); ?>" method="post">
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="form-group">
@@ -38,45 +39,20 @@
 	</form>
 </div>
 <div class="con mt-3 mr-3 ml-3 mb-3 pl-4 pr-4 pt-4 web_div">
-	<h4 class="text-dark web mb-3">Websites</h4>
-
-	<!-- <div class="mb-5 some_name_div mt-4">
-		<div class="add_web">
-			<button type="button" class="add_web_btn text-light" style="background-color:#00695C;padding:6px;border:none">
-				<i class="fas fa-plus-circle"></i>
-				Add Website
-			</button>
+	<div class="d-flex" style="justify-content:space-between">
+		<div>
+			<h4 class="text-dark">Websites</h4>
+			<hr class="web">
 		</div>
-		<div class="search_div">
-			<input type="text" name="website_search" class="website_search form-control" placeholder="Search by website name...">
+		<div style="color:#141E30;font-weight:600;">
+			<span class="web_num_total"><?php echo $websites->num_rows(); ?></span> Website(s) out of 10 <i class="fas fa-question-circle help_i" title="For more website quota, contact us at nktech.in@gmail.com"></i>
 		</div>
-		<div class="search_icon_div">
-			<i class="fas fa-search search_icon"></i>
-		</div>
-	</div> -->
-
-	<div class="modal add_web_modal">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body">
-					<form method="post" action="<?php echo base_url("user/add_website") ?>" class="add_web_modal_form">
-						<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
-						<div class="form-group">
-							<label>Website Name</label>
-							<input type="text" name="web_name" class="web_name form-control" placeholder="Name of the webiste" required>
-						</div>
-						<div class="form-group">
-							<label class="mb-0">Website Link</label>
-							<div class="text-danger font-weight-bolder mt-0">Link must start with http or https</div>
-							<input type="url" name="web_link" class="web_link form-control" placeholder="Website link" required>
-						</div>
-						<div class="modal_btn_actions d-flex justify-content-between">
-							<button type="button" class="btn btn-secondary close_web_modal">Close</button>
-							<button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#00695C;">Add</button>
-						</div>
-					</form>
-				</div>
-			</div>
+		<div>
+			<?php if ($websites->num_rows() < 10) : ?>
+				<button type="button" class="text-light btn addwebmodal_btn" style="background:#141E30">
+					<i class="fas fa-plus-circle mr-2"></i>New Website
+				</button>
+			<?php endif ?>
 		</div>
 	</div>
 
@@ -84,22 +60,19 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
-					<!-- <form action="<?php echo base_url("user/update_website") ?>" method='post'> -->
 					<form method='post'>
 						<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 						<input type="hidden" class="web_id form-control" name="web_id" value="">
 						<div class="form-group">
-							<label>Website Name</label>
+							<label class="font-weight-bolder">Website Name</label>
 							<input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Name of the webiste" required readonly>
 						</div>
 						<div class="form-group">
-							<label class="mb-0">Website Link</label>
-							<!-- <div class="text-danger font-weight-bolder mt-0">Link must start with http or https</div> -->
+							<label class="mb-0 font-weight-bolder">Website Link</label>
 							<input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Website link" required readonly>
 						</div>
 						<div class="modal_btn_actions d-flex justify-content-between">
 							<button type="button" class="btn btn-secondary close_editweb_modal">Close</button>
-							<!-- <button type="submit" class="btn update_web_modal_btn text-light" style="background-color:#00695C;">Update</button> -->
 						</div>
 					</form>
 				</div>
@@ -107,59 +80,73 @@
 		</div>
 	</div>
 
-	<div class="modal delete_web_modal">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body">
-					<p class="text-center font-weight-bolder text-danger">Are you sure you want to perform this operation?</p>
-					<p class="text-center font-weight-bolder">This website and all of its data will be completly deleted!</p>
-					<div class="d-flex justify-content-between">
-						<button type="button" class="btn btn-secondary close_delweb_modal">No</button>
-						<button type="submit" class="btn yes_delweb_modal_btn text-light" id="" style="background-color:#141E30;">Yes</button>
+	<?php if ($websites->num_rows() < 10) : ?>
+		<div class="modal add_web_modal">
+			<div class="modal-dialog modal-dialog-top">
+				<div class="modal-content">
+					<div class="modal-header text-danger justify-content-center font-weight-bolder">
+						You can't edit, rename or change any of this information after
+					</div>
+					<div class="modal-body">
+						<form method="post" action="<?php echo base_url("user/user_new_website") ?>" class="add_web_modal_form">
+							<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+							<div class="form-group">
+								<label class="mb-0 font-weight-bolder">Website Name</label>
+								<input type="text" name="web_name_new" class="web_name_new form-control" placeholder="Name of the webisite" required>
+							</div>
+							<div class="form-group">
+								<label class="mb-0 font-weight-bolder">Website Link</label>
+								<div class="text-danger font-weight-bolder mt-0 web_link_err"></div>
+								<input type="url" name="web_link_new" class="web_link_new form-control" placeholder="e.g https://domainname.com" required>
+							</div>
+							<div class="modal_btn_actions d-flex justify-content-between">
+								<button type="button" class="btn btn-secondary closewebmodal_btn">Close</button>
+								<button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#141E30;">
+									<i class="far fa-save mr-2"></i>Add</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	<?php endif ?>
 
-	<?php if ($websites->num_rows() < 0) : ?>
-		<h5 class="text-center text-uppercase pt-4 pb-3">No website present</h5>
+	<?php if ($websites->num_rows() === 0) : ?>
+		<h5 class="text-center text-uppercase pt-4 pb-3">No website(s) present</h5>
 	<?php endif; ?>
-	<div class="row col-md-12 mt-4">
-		<div class="col-md-1">
-			<span class="font-weight-bolder">Status</span>
-		</div>
-		<div class="text-center col">
-			<span class="font-weight-bolder">Website Name</span>
-		</div>
-		<div class="col-md-4 text-center">
-			<span class="font-weight-bolder">Actions</span>
-		</div>
-	</div>
-	<hr>
+
 	<?php if ($websites->num_rows() > 0) : ?>
+		<div class="row col-md-12 mt-4">
+			<div class="col-md-1">
+				<span class="font-weight-bolder">Status</span>
+			</div>
+			<div class="text-center col">
+				<span class="font-weight-bolder">Website Name</span>
+			</div>
+			<div class="col-md-4 text-center">
+				<span class="font-weight-bolder">Actions</span>
+			</div>
+		</div>
+		<hr>
 		<?php foreach ($websites->result_array() as $web) : ?>
 			<div class="row col-md-12" style="padding-right:0">
 				<?php if ($web['active'] == "1") : ?>
 					<div class="col-md-1" style="margin:auto">
-						<i class="fas fa-circle text-success" style="font-size: 20px;" id="<?php echo $web['id'] ?>"></i>
+						<i class="fas fa-circle text-success" id="<?php echo $web['id'] ?>"></i>
 					</div>
 				<?php endif; ?>
 				<?php if ($web['active'] == "0") : ?>
 					<div class="col-md-1" style="margin:auto">
-						<i class="fas fa-circle text-danger" style="font-size: 20px;" id="<?php echo $web['id'] ?>"></i>
+						<i class="fas fa-circle text-danger" id="<?php echo $web['id'] ?>"></i>
 					</div>
 				<?php endif; ?>
 				<div class="form-group col">
-					<input type="text" name="web_name" class="form-control web_input" value="<?php echo $web['web_name'] ?>" id="<?php echo $web['id'] ?>" placeholder="Website name" readonly>
+					<input type="text" name="web_name" class="form-control web_input" value="<?php echo ucfirst($web['web_name']) ?>" id="<?php echo $web['id'] ?>" placeholder="Website name" readonly>
 				</div>
 				<div class="col-md-4" style="padding:0">
 					<div class="d-flex flex-row" style="justify-content:center">
 						<button type="button" class="btn text-light edit_web_btn " id="<?php echo $web['id'] ?>" style="background:#141E30">
 							View
-						</button>
-						<button type="button" class="btn text-light delete_web_btn ml-2" id="<?php echo $web['id'] ?>" style="background:#141E30">
-							Delete
 						</button>
 						<?php if ($web['active'] == "1") : ?>
 							<button type="button" class="btn btn-danger status_web_btn ml-2" id="<?php echo $web['id'] ?>" status="0">
@@ -167,7 +154,7 @@
 							</button>
 						<?php endif; ?>
 						<?php if ($web['active'] == "0") : ?>
-							<button type="button" class="btn btn-success status_web_btn ml-2" id="<?php echo $web['id'] ?>" status="1">
+							<button type="button" class="btn text-light status_web_btn ml-2" id="<?php echo $web['id'] ?>" status="1" style="background:#141E30">
 								Activate
 							</button>
 						<?php endif; ?>
@@ -180,20 +167,21 @@
 </div>
 
 <div class="con mt-3 mr-3 ml-3 mb-3 pl-4 pt-4  ac_div">
-	<h4 class="text-dark account mb-3">Account Settings</h4>
+	<h4 class="text-dark">Account Settings</h4>
+	<hr class="account">
 	<form action="<?php echo base_url('user/account_edit'); ?>" method="post">
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="form-group">
-			<label><i class="fas fa-key mr-2"></i>Current Password<span class="text-danger">* </span></label>
+			<label><i class="fas fa-key mr-2"></i>Current Password<span class="text-danger"> *</span></label>
 			<input type="text" name="c_pwd" class="form-control c_pwd" placeholder="Your current password">
 		</div>
 		<div class="form-group">
-			<label><i class="fas fa-lock mr-2"></i>New Password</label>
+			<label><i class="fas fa-lock mr-2"></i>New Password<span class="text-danger"> *</span></label>
 			<input type="number" name="n_pwd" class="form-control n_pwd" placeholder="Password must be at least 6 characters long">
 			<span class="text-danger font-weight-bolder n_pwd_err">Password is too short</span>
 		</div>
 		<div class="form-group">
-			<label><i class="fas fa-lock mr-2"></i>Re-type Password</label>
+			<label><i class="fas fa-lock mr-2"></i>Re-type Password<span class="text-danger"> *</span></label>
 			<input type="text" name="rtn_pwd" class="form-control rtn_pwd">
 			<span class="text-danger font-weight-bolder rtn_pwd_err">Passwords do not match</span>
 		</div>
@@ -206,58 +194,11 @@
 	</form>
 </div>
 
-<!-- <div class="addweb_div" id="addweb_div">
-	<div class="modal-body">
-		<p>Are you sure you want to perform this operation?</p>
-		<p>Your account will be de-activated and you'll be logged out completely</p>
-		<div class="d-flex justify-content-between">
-			<button class="btn btn-dark deact_close_btn">No</button>
-			<button class="btn btn-danger yes_btn">Yes</button>
-		</div>
-	</div>
-</div> -->
-
-
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/edit.js'); ?>"></script>
-
 <script>
 	$(document).ready(function() {
-		$('.website_search').keyup(function() {
-			var csrfName = $('.csrf_token').attr('name');
-			var csrfHash = $('.csrf_token').val();
-			var search_data = $(this).val();
-
-			console.log(search_data);
-
-			if (search_data == "" || search_data == null) {
-				reload_table_function();
-			} else {
-				search_function(search_data);
-			}
-		});
-
-		function reload_table_function() {}
-
-		function search_function(search_data) {
-			var csrfName = $('.csrf_token').attr('name');
-			var csrfHash = $('.csrf_token').val();
-			$.ajax({
-				url: "<?php echo base_url('user/search_website'); ?>",
-				method: "post",
-				data: {
-					[csrfName]: csrfHash,
-					search_data: search_data,
-				},
-				dataType: "json",
-				success: function(data) {
-					$('.website_table_div').html(data);
-				},
-				error: function(data) {
-					alert("Error searching...");
-				}
-			});
-		}
+		$("[data-toggle]").tooltip()
 
 		$(document).on('click', 'button.edit_web_btn', function() {
 			var csrfName = $('.csrf_token').attr('name');
@@ -278,51 +219,6 @@
 					$('.csrf_token').val(data.token);
 					$('.edit_web_modal').fadeIn();
 					$('.web_id').val(id);
-				},
-				error: function(data) {
-					window.location.reload();
-				}
-			});
-		});
-
-		$(document).on('click', 'button.update_web_modal_btn', function(e) {
-			e.preventDefault();
-			var csrfName = $('.csrf_token').attr('name');
-			var csrfHash = $('.csrf_token').val();
-			var id = $('.web_id').val();
-			var web_name_edit = $('.web_name_edit').val();
-			var web_link_edit = $('.web_link_edit').val();
-
-			if (web_name_edit == "" || web_name_edit == null) {
-				$('.web_name_edit').css('border', '2px solid red');
-				return false;
-			} else {
-				$('.web_name_edit').css('border', '1px solid #ced4da');
-			}
-			if (web_link_edit == "" || web_link_edit == null) {
-				$('.web_link_edit').css('border', '2px solid red');
-				return false;
-			} else {
-				$('.web_link_edit').css('border', '1px solid #ced4da');
-			}
-		});
-
-		$(document).on('click', 'button.yes_delweb_modal_btn', function() {
-			var csrfName = $('.csrf_token').attr('name');
-			var csrfHash = $('.csrf_token').val();
-			var id = $(this).attr('id');
-
-			console.log(id);
-
-			$.ajax({
-				url: "<?php echo base_url('user/delete_website'); ?>",
-				method: "post",
-				data: {
-					[csrfName]: csrfHash,
-					id: id,
-				},
-				success: function(data) {
-					window.location.reload();
 				},
 				error: function(data) {
 					window.location.reload();
@@ -381,6 +277,58 @@
 						window.location.assign(url);
 					}
 				})
+			}
+		});
+
+		$(document).on('click', 'button.addwebmodal_btn', function(e) {
+			e.preventDefault();
+			var num = $('.web_input').length;
+
+			if (parseInt(num) == 10) {
+				$(".add_web_modal_btn").hide();
+				$('.web_name,.web_link').attr("readonly", "true");
+				$('.add_web_modal').modal("hide");
+			} else {
+				$('.add_web_modal').modal("show");
+			}
+		});
+
+		$(document).on('click', 'button.closewebmodal_btn', function(e) {
+			e.preventDefault();
+			$('.add_web_modal').modal("hide");
+		});
+
+		$(document).on('click', 'button.add_web_modal_btn', function() {
+			var csrfName = $('.csrf_token').attr('name');
+			var csrfHash = $('.csrf_token').val();
+			var web_name_new = $('.web_name_new').val();
+			var web_link_new = $('.web_link_new').val();
+
+			if (web_name_new == "" || web_name_new == null) {
+				$('.web_name_new').css('border', '2px solid red');
+				return false;
+			} else {
+				$('.web_name_new').css('border', '1px solid #ced4da');
+			}
+			if (web_link_new == "" || web_link_new == null) {
+				$(".web_link_new").css('border', '2px solid red');
+				return false;
+			}
+
+			var patt = new RegExp('^(https?:\\/\\/)?' + // protocol
+				'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
+				'((\\d{1,3}\\.){3}\\d{1,3}))' + // ip (v4) address
+				'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + //port
+				'(\\?[;&amp;a-z\\d%_.~+=-]*)?' + // query string
+				'(\\#[-a-z\\d_]*)?$', 'i');
+			var res = patt.test(web_link_new);
+			if (res == true) {
+				$(".web_link_err").fadeOut();
+				$('.web_link_new').css('border', '1px solid #ced4da');
+			} else if (res == false) {
+				$(".web_link_new").css('border', '2px solid red');
+				$(".web_link_err").html("Invalid WEB URL").fadeIn();
+				return false;
 			}
 		});
 	});

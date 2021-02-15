@@ -9,7 +9,7 @@
 		// document.getElementById('content').style.marginRight="auto";
 	}
 	$('[data-toggle="tooltip"]').tooltip();
-	setTimeout(() => document.querySelector('.alert').remove(), 5000);
+	setTimeout(() => document.querySelector('.alert').remove(), 6000);
 
 	$(document).ready(function() {
 		$("div ul li a.nav-link").mouseover(function() {

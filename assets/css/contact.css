@@ -1,40 +1,66 @@
 body{
 	background: #141E30;
-	background: -webkit-linear-gradient(to right, #243B55, #141E30)
-	background: linear-gradient(to right, #243B55, #141E30);
+}
+h4{
+	color: #141E30;
+}
+input.form-control,textarea.form-control{
+	border-radius: 0;
 }
 input.form-control:focus,textarea.form-control:focus{
 	border-color: black;
 	box-shadow: none;
 }
-input.form-control{
-	border-radius: 20px
-}
 button.btn{
 	border-radius: 0;
 }
-div.nktechdetails{
-	padding: 50px
+hr{
+	border: 1px solid #141E30;
+	margin: 2rem 0;
+}
+div.row{
+	color: #141E30;
+	margin-bottom: 5px;
 }
 i.fas{
-	margin-right: auto;
+	margin: auto 10px;
+	font-weight: bolder;
+}
+label{
+	color: #141E30;
+	font-weight: bolder;
 }
 i.fab{
 	font-size: 20px;
 	cursor: pointer;
 	padding: 10px
-}b
-i.fab:hover{
-	background-color: white;
-	border-radius: 50%;
 }
-div.row{
-	color: white;
-	margin-bottom: 5px
+i.fa-facebook{
+	color:#3b5998;
 }
-label{
-	color: white;
-	font-weight: bolder;
+i.fa-facebook:hover{
+	border: 1px solid #3b5998;
+    border-radius: 50%;
+    background: #3b5998;
+    color: white;
+}
+i.fa-twitter{
+	color:#1da1f2;
+}
+i.fa-twitter:hover{
+	border: 1px solid #1da1f2;
+    border-radius: 50%;
+    background: #1da1f2;
+    color: white;
+}
+i.fa-linkedin{
+	color:#0077b5;
+}
+i.fa-linkedin:hover{
+	border: 1px solid #0077b5;
+    border-radius: 50%;
+    background: #0077b5;
+    color: white;
 }
 @media only screen and (max-width: 500px) {
 	.col-md-4{

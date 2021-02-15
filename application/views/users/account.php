@@ -42,6 +42,9 @@
 </div> -->
 
 <h4 class="text-center font-weight-bolder mt-4 mr-3 ml-3 mb-0 pb-3 pt-3">QUOTA</h4>
+<div class="ls_div mr-3 ml-3">
+	<a class="btn text-light" style="outline: none;"><i class="fas fa-user mr-2"></i>YOU</a>
+</div>
 <div class="quota_div row mb-3 mr-3 ml-3">
 	<div class="col-md-3 quota_col" style="border-left: none;">
 		<div class="value"><?php echo $balance->bought ?></div>
@@ -61,34 +64,61 @@
 </div>
 
 <h4 class="text-center font-weight-bolder mt-4 mr-3 ml-3 mb-0 pb-3 pt-3">LINKS</h4>
-<div class="ls_div row mb-3 mr-3 ml-3">
-	<div class="col-md-3 tl_col" style="border-left: none;">
-		<div class="value temail"><?php echo $user->total_sms + $user->total_email ?></div>
-		<hr>
-		<h4 class="text-center stared mb-4">Total Sent</h4>
+<?php if ($this->session->userdata("mr_admin") === '1') : ?>
+	<div class="ls_div mr-3 ml-3">
+		<a href="#" class="btn text-light you_sentlinks_btn" style="outline: none;"><i class="fas fa-user mr-2"></i>YOU</a>
+		<a href="#" class="btn text-light total_sentlinks_btn" style="outline: none;opacity: 0.9"><i class="fas fa-users mr-2"></i>ALL USERS</a>
 	</div>
-	<div class="col-md-3 tl_col text-dark">
-		<div class="value tsms"><?php echo $user->total_sms ?></div>
-		<hr>
-		<h4 class="text-center stared mb-4">SMS Sent</h4>
+<?php endif; ?>
+<div class="bg-light mr-3 ml-3">
+	<div class="ls_div you_sentlinks_div row mb-3 mr-3 ml-3">
+		<div class="col-md-3 tl_col" style="border-left: none;">
+			<div class="value temail"><?php echo $user->total_sms + $user->total_email ?></div>
+			<hr>
+			<h4 class="text-center stared mb-4">Total Sent</h4>
+		</div>
+		<div class="col-md-3 tl_col text-dark">
+			<div class="value tsms"><?php echo $user->total_sms ?></div>
+			<hr>
+			<h4 class="text-center stared mb-4">SMS Sent</h4>
+		</div>
+		<div class="col-md-3 tl_col" style="border-bottom: none;">
+			<div class="value temail"><?php echo $user->total_email ?></div>
+			<hr>
+			<h4 class="text-center stared mb-4">Emails Sent</h4>
+		</div>
 	</div>
-	<div class="col-md-3 tl_col" style="border-bottom: none;">
-		<div class="value temail"><?php echo $user->total_email ?></div>
-		<hr>
-		<h4 class="text-center stared mb-4">Emails Sent</h4>
-	</div>
+	<?php if ($this->session->userdata("mr_admin") === '1') : ?>
+		<div class="ls_div total_sentlinks_div row mb-3 mr-3 ml-3" style="display: none">
+			<div class="col-md-3 tl_col" style="border-left: none;">
+				<div class="value temail"><?php echo $sent_links->num_rows() ?></div>
+				<hr>
+				<h4 class="text-center stared mb-4">Total Sent</h4>
+			</div>
+			<div class="col-md-3 tl_col text-dark">
+				<div class="value tsms"><?php echo $sent_links_sms->num_rows() ?></div>
+				<hr>
+				<h4 class="text-center stared mb-4">SMS Sent</h4>
+			</div>
+			<div class="col-md-3 tl_col" style="border-bottom: none;">
+				<div class="value temail"><?php echo $sent_links_email->num_rows() ?></div>
+				<hr>
+				<h4 class="text-center stared mb-4">Emails Sent</h4>
+			</div>
+		</div>
+	<?php endif; ?>
 </div>
 
 <h4 class="text-center font-weight-bolder mt-4 mr-3 ml-3 mb-0 pb-5 pt-3">WEB RATINGS</h4>
 <div class="tr_div row pb-5 mb-5 mr-3 ml-3">
-	<div class="col-md-2 tr_col text-secondary" style="border-left: none;border-right: 2px solid #141E30;">
+	<div class="col-md-2 tr_col text-secondary">
 		<div class="value"><?php echo $user->total_ratings ?></div>
 		<hr>
 		<h4 class="text-center stared mb-4">Total Ratings</h4>
 	</div>
-	<?php if ($user_web->num_rows() <= 5) : ?>
+	<?php if ($user_web->num_rows() <= 10) : ?>
 		<?php foreach ($user_web->result_array() as $info) : ?>
-			<div class="col-md-2 tr_col text-secondary user_web_div" style="border-left: none;border-right: 2px solid #141E30;">
+			<div class="col-md-2 tr_col text-secondary user_web_div">
 				<div class="value"><?php echo $info['total_ratings'] ?></div>
 				<hr>
 				<h4 class="text-center stared user_web mb-4"><?php echo ucfirst($info['web_name']) ?></h4>

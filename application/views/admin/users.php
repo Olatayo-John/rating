@@ -16,9 +16,9 @@
 						<div class="form-group">
 							<label class="mb-0">Website Link</label>
 							<div class="addweberr text-left" id="weberr" style="display:all">
-								<span class="text-danger font-weight-bolder addweberr_span">* Web links must start with http or https</span>
+								<span class="text-danger font-weight-bolder addweberr_span"></span>
 							</div>
-							<input type="url" name="web_link_add" class="web_link_add form-control" placeholder="Website link" required>
+							<input type="url" name="web_link_add" class="web_link_add form-control" placeholder="https://domainname.com" required>
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2 web_btngrp">
 							<button class="btn btn-secondary close_add_web_btn bradius" type="button">Close</button>
@@ -74,9 +74,9 @@
 						</div>
 					</div>
 					<div class="tab_div mt-2">
-						<a href="" class="tab_link prof_a">Profile</a>
-						<a href="" class="tab_link web_a">Websites</a>
-						<a href="" class="tab_link ac_a">Account</a>
+						<a href="" class="tab_link prof_a"><i class="fas fa-user-alt mr-2"></i>Profile</a>
+						<a href="" class="tab_link web_a"><i class="fas fa-tachometer-alt mr-2"></i>Websites</a>
+						<a href="" class="tab_link ac_a"><i class="fas fa-user-cog mr-2"></i>Account</a>
 					</div>
 					<input type="hidden" name="user_id" class="user_id">
 					<input type="hidden" name="user_form_key" class="user_form_key">
@@ -126,7 +126,7 @@
 						<div class="d-flex justify-content-between mb-3">
 							<div class="action_div">
 								<button type="button" class="action_web_btn text-light" style="background-color:#141E30;padding:6px;border:none">
-									Actions
+									<i class="fas fa-ellipsis-h"></i>
 								</button>
 							</div>
 							<div class="add_web">
@@ -145,13 +145,13 @@
 					</div>
 					<div class="account_div">
 						<div class="form-group pwddiv">
-							<label>New Password</label>
+							<label><i class="fas fa-key mr-2"></i>New Password</label>
 							<input type="text" name="u_pwd" class="form-control u_pwd new_pwd">
 							<div class="text-danger font-weight-bolder pwderr">Password will be changed on this user!</div>
 							<div class="text-danger font-weight-bolder new_pwderr" style="display:none">Password must be over 6 characters!</div>
 						</div>
 						<div class="form-group mt-2">
-							<button class="btn btn-dark genpwdbtn" type="button">Generate password</button>
+							<button class="btn text-light genpwdbtn" type="button" style="background:#141E30">Generate password</button>
 						</div>
 						<div class="form-group mt-2 text-right">
 							<button class="btn btn-danger delact_btn" type="button">Delete account</button>
@@ -378,9 +378,6 @@
 				},
 				dataType: "json",
 				success: function(data) {
-					// console.log(data);
-					//console.log(data.infos);
-					//console.log(data.webs);
 
 					$('.csrf-token').val(data.token);
 					$('.user_id').val(data.infos[0].id);
@@ -475,17 +472,17 @@
 
 		$(document).on("click", ".add_web_btn", function() {
 			var webcount = $(".web_form_input").length;
-			// var webcount = 6;
-			// console.log(webcount);
 
-			if (webcount < 5) {
+			if (webcount < 10) {
 				$('.updateusermodal').modal('hide');
 				$(".addusermodal").modal("show");
-			} else if (webcount >= 5) {
-				var con = confirm("User already has 5 websites. Are you sure you want to add more?")
+			} else if (webcount >= 10) {
+				var con = confirm("User already has " + webcount + " websites. Are you sure you want to add more?")
 				if (con === false) {
 					return false;
 				} else if (con === true) {
+					$('.web_name_add').val("");
+					$('.web_link_add').val("");
 					$('.updateusermodal').modal('hide');
 					$(".addusermodal").modal("show");
 				}
@@ -510,16 +507,26 @@
 			} else {
 				$(".web_name_add").css('border', '1px solid #141E30');
 			}
-			if (web_link_add == "" || web_link_add == null || !web_link_add.startsWith("http") || !web_link_add.startsWith("https") || !web_link_add.includes("://") || !web_link_add.includes(".") || web_link_add.endsWith(".")) {
+			if (web_link_add == "" || web_link_add == null) {
 				$(".web_link_add").css('border', '2px solid red');
+				return false;
+			}
+			var patt = new RegExp('^(https?:\\/\\/)?' + // protocol
+				'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
+				'((\\d{1,3}\\.){3}\\d{1,3}))' + // ip (v4) address
+				'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + //port
+				'(\\?[;&amp;a-z\\d%_.~+=-]*)?' + // query string
+				'(\\#[-a-z\\d_]*)?$', 'i');
+			var res = patt.test(web_link_add);
+			if (res == true) {
+				$(".addweberr").hide();
+				$(".web_link_add").css('border', '1px solid #141E30');
+				$(".web_add_spinner").hide();
+			} else if (res == false) {
 				$(".addweberr").show();
 				$(".addweberr_span").html("Invalid WEB URL");
-				$(".web_add_spinner").hide();
+				$(".web_link_add").css('border', '2px solid red');
 				return false;
-			} else {
-				$(".addweberr").hide();
-				$(".addweberr_span").html("* Web links must start with http or https");
-				$(".web_link_add").css('border', '1px solid #141E30');
 			}
 
 			$.ajax({

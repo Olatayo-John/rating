@@ -401,7 +401,7 @@ class Admin extends CI_Controller
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
 			return false;
 		}
-		$res = $this->Adminmodel->user_profupdate($_POST['user_id'], $_POST['form_key'], $_POST['uname'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile']);
+		$res = $this->Adminmodel->user_profupdate($_POST['user_id'], $_POST['form_key'], $_POST['uname'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile'], $_POST['web_quota']);
 		// $res = false;
 		if ($res !== true) {
 			$data['res'] = "failed";
@@ -1148,8 +1148,11 @@ class Admin extends CI_Controller
 		$this->session->unset_userdata('mr_admin');
 		$this->session->unset_userdata('mr_uname');
 		$this->session->unset_userdata('mr_email');
+		$this->session->unset_userdata('mr_mobile');
 		$this->session->unset_userdata('mr_active');
 		$this->session->unset_userdata('mr_sub');
+		$this->session->unset_userdata('mr_web_quota');
+		$this->session->unset_userdata('mr_website_form');
 		$this->session->unset_userdata('mr_form_key');
 		$this->session->unset_userdata('mr_logged_in');
 		// $this->session->sess_destroy();

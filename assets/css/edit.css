@@ -66,8 +66,8 @@ hr.account{
 	border-radius: 0;
 }
 button.btn-dark,button.status_web_btn{
-	padding: 5px;
-	width: 78px;
+	padding: 0px;
+	width: 70px;
 	border-radius: 0;
 	outline: none;
 }
@@ -86,11 +86,27 @@ label i.fas,.tab_link i.fas{
 		left: 15px;
 	}
 }
-@media only screen and (max-width: 767px) {
-	div.hiddendiv{
-		display: none;
+@media only screen and (max-width: 460px) {
+	div.btn_wrapper_div{
+		display: flex !important;
+		flex-direction: column !important;
 	}
-	div.cmp_div{
-		margin-bottom: 20px;
+	div.btn_wrapper_div div:nth-child(1) {
+		height: 40px;
+	}
+	div.btn_wrapper_div div:nth-child(2) {
+		margin-bottom: 10px;
+	}
+}
+@media only screen and (max-width: 767px) {
+	.websites_foreach_div,.websites_foreach_div_header{
+		display: grid !important;
+		grid-template-columns: auto auto auto !important;
+		margin: 0;
+		padding: 0;
+	}
+	.websites_foreach_div_header div{
+		padding: 0;
+		text-align: left !important
 	}
 }

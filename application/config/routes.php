@@ -69,6 +69,7 @@ $route['logout'] = 'user/logout';
 
 //users
 $route['users'] = 'admin/users';
+$route['wtr/(:any)'] = 'user/wtr/$1';
 $route['admin/users/(:any)'] = 'admin/users/$1';
 $route['admin/votes/(:any)'] = 'admin/votes/$1';
 

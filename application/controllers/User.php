@@ -36,7 +36,7 @@ class User extends CI_Controller
 	public function login()
 	{
 		if ($this->session->userdata('mr_logged_in')) {
-			redirect('user/rating');
+			redirect('/');
 		}
 		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape');
 		$this->form_validation->set_rules('pwd', 'Password', 'required|trim|html_escape');
@@ -63,6 +63,7 @@ class User extends CI_Controller
 				$email = $validate->email;
 				$mobile = $validate->mobile;
 				$active = $validate->active;
+				$web_quota = $validate->web_quota;
 				$sub = $validate->sub;
 				$website_form = $validate->website_form;
 				$form_key = $validate->form_key;
@@ -75,6 +76,7 @@ class User extends CI_Controller
 					'mr_mobile' => $mobile,
 					'mr_active' => $active,
 					'mr_sub' => $sub,
+					'mr_web_quota' => $web_quota,
 					'mr_website_form' => $website_form,
 					'mr_form_key' => $form_key,
 					'mr_logged_in' => TRUE,
@@ -105,6 +107,7 @@ class User extends CI_Controller
 		$this->session->unset_userdata('mr_mobile');
 		$this->session->unset_userdata('mr_active');
 		$this->session->unset_userdata('mr_sub');
+		$this->session->unset_userdata('mr_web_quota');
 		$this->session->unset_userdata('mr_website_form');
 		$this->session->unset_userdata('mr_form_key');
 		$this->session->unset_userdata('mr_logged_in');
@@ -127,7 +130,7 @@ class User extends CI_Controller
 
 		if ($this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Log out first.');
-			redirect('rating');
+			redirect('/');
 		}
 		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
 		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
@@ -232,6 +235,7 @@ class User extends CI_Controller
 						$mobile = $res->mobile;
 						$active = $res->active;
 						$sub = $res->sub;
+						$web_quota = $res->web_quota;
 						$website_form = $res->website_form;
 						$form_key = $res->form_key;
 
@@ -243,6 +247,7 @@ class User extends CI_Controller
 							'mr_mobile' => $mobile,
 							'mr_active' => $active,
 							'mr_sub' => $sub,
+							'mr_web_quota' => $web_quota,
 							'mr_website_form' => $website_form,
 							'mr_form_key' => $form_key,
 							'mr_logged_in' => TRUE,
@@ -445,7 +450,7 @@ class User extends CI_Controller
 		if ($act_res == false) {
 			$this->session->set_flashdata('invalid', 'Error changing website status');
 		} else {
-			$this->session->set_flashdata('valid', 'Status Updated!');
+			$this->session->set_flashdata('valid', 'Web Status Updated!');
 		}
 	}
 
@@ -1021,7 +1026,7 @@ class User extends CI_Controller
 		$w = $_GET['w'];
 		$k = $_GET['k'];
 
-		if (empty($w) || empty($k)) {
+		if (!isset($w) || !isset($k)) {
 			// redirect($_SERVER['HTTP_REFERER']);
 			redirect("user/wtr/" . $k);
 			exit();

@@ -101,14 +101,18 @@ class Adminmodel extends CI_Model
 		return $query->result();
 	}
 
-	public function user_profupdate($user_id, $form_key, $uname, $fname, $lname, $email, $mobile)
+	public function user_profupdate($user_id, $form_key, $uname, $fname, $lname, $email, $mobile, $web_quota)
 	{
+		if (!isset($web_quota)) {
+			$web_quota = "10";
+		}
 		$data = array(
 			'uname' => htmlentities($uname),
 			'fname' => htmlentities($fname),
 			'lname' => htmlentities($lname),
 			'email' => strtolower(htmlentities($email)),
 			'mobile' => strtolower(htmlentities($mobile)),
+			'web_quota' => strtolower(htmlentities($web_quota)),
 		);
 
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));

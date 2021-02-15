@@ -11,6 +11,8 @@
 	$('[data-toggle="tooltip"]').tooltip();
 	setTimeout(() => document.querySelector('.alert').remove(), 6000);
 
+	setTimeout(() => document.querySelector('.ajax_alert_div').remove(), 1000);
+
 	$(document).ready(function() {
 		$("div ul li a.nav-link").mouseover(function() {
 			$(this).children().css("color", "#141E30");

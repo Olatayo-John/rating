@@ -19,7 +19,7 @@ class Rate extends Ci_Controller
 			} else if ($res == true) {
 				$data['active'] = $this->Adminmodel->is_user_active($k);
 				if ($data['active']->active === "0" || $data['active']->sub === "0") {
-					$this->session->set_flashdata("invalid", "Invalid User!");
+					$this->session->set_flashdata("invalid", "User account is inactive or has no subscription");
 					redirect("user/wtr/" . $k);
 				} else {
 					$this->load->view('templates/header');

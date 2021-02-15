@@ -62,11 +62,12 @@ i.fa-linkedin:hover{
     background: #0077b5;
     color: white;
 }
-@media only screen and (max-width: 500px) {
-	.col-md-4{
-		width: 150px;
+@media only screen and (max-width: 750px) {
+	div.wrapper_div{
+		display: flex !important;
+		flex-direction: column !important;
 	}
-	div.nktechdetails{
-		margin-top: 40px;
+	div.wrapper_div_second{
+		margin-top: 100px;
 	}
 }

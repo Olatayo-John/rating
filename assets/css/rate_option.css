@@ -7,10 +7,14 @@ body{
 i.fab{
 	font-size: 15px;
 }
-.fa-facebook{
-	background-color: white;
-	color: #3b5998;
-}
 a.btn{
 	border-radius: 0;
+}
+a.wbratebtn{
+	background:#141E30;
+	width: 80%;
+}
+a.wbratebtn:hover{
+	transition: .9s;
+	transform: scale(1.1);
 }

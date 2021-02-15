@@ -45,7 +45,7 @@
 <div class="ls_div mr-3 ml-3">
 	<a class="btn text-light" style="outline: none;"><i class="fas fa-user mr-2"></i>YOU</a>
 </div>
-<div class="quota_div row mb-3 mr-3 ml-3">
+<div class="quota_div row mb-3 mr-3 ml-3 pb-4">
 	<div class="col-md-3 quota_col" style="border-left: none;">
 		<div class="value"><?php echo $balance->bought ?></div>
 		<hr>
@@ -70,7 +70,7 @@
 		<a href="#" class="btn text-light total_sentlinks_btn" style="outline: none;opacity: 0.9"><i class="fas fa-users mr-2"></i>ALL USERS</a>
 	</div>
 <?php endif; ?>
-<div class="bg-light mr-3 ml-3">
+<div class="mr-3 ml-3 pb-4" style="background:white">
 	<div class="ls_div you_sentlinks_div row mb-3 mr-3 ml-3">
 		<div class="col-md-3 tl_col" style="border-left: none;">
 			<div class="value temail"><?php echo $user->total_sms + $user->total_email ?></div>
@@ -109,7 +109,10 @@
 	<?php endif; ?>
 </div>
 
-<h4 class="text-center font-weight-bolder mt-4 mr-3 ml-3 mb-0 pb-5 pt-3">WEB RATINGS</h4>
+<h4 class="text-center font-weight-bolder mt-4 mr-3 ml-3 mb-0 pb-3 pt-3">WEB RATINGS</h4>
+<div style="color:#141E30;font-weight:600;background:white" class="ml-3 mr-3 pl-3 pb-4">
+	<span class="web_num_total"><?php echo $user_web->num_rows(); ?></span> Website(s) out of <?php echo $this->session->userdata("mr_web_quota") ?> <i class="fas fa-question-circle help_i" title="For more website quota, contact us at nktech.in@gmail.com"></i>
+</div>
 <div class="tr_div row pb-5 mb-5 mr-3 ml-3">
 	<div class="col-md-2 tr_col text-secondary">
 		<div class="value"><?php echo $user->total_ratings ?></div>

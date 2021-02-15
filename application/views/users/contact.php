@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/contact.css'); ?>">
-<div class="ml-3 mr-3 mt-3 pb-5 bg-light">
+<div class="ml-3 mr-3 mt-3 pb-5" style="background:white">
 	<h4 class="text-center mb-5 pt-3">CONTACT US</h4>
-	<div class="col-md-12 pt-3" style="display:flex;flex-direction:row">
+	<div class="col-md-12 pt-3 wrapper_div" style="display:flex;flex-direction:row">
 		<div class="col-md-6">
 			<form action="<?php echo base_url('user/contact'); ?>" method="post">
 				<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
@@ -20,7 +20,7 @@
 				</div>
 			</form>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-6 wrapper_div_second">
 			<div class="imagediv text-center mb-5">
 				<img src="<?php echo base_url('assets/images/logo_dark.png') ?>" class="">
 			</div>

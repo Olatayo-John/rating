@@ -114,6 +114,12 @@
 								</div>
 							</div>
 						</div>
+						<div class="form-group">
+							<label><span class="text-danger font-weight-bolder">* </span>Web Quota<i class="fas fa-question-circle ml-2" title="Number of websites a user can create. Default is 10"></i></label>
+							<input type="text" name="web_quota" class="form-control web_quota" placeholder="Web Quota">
+							<div class="text-danger font-weight-bolder web_quota_err" style="display: none;"></div>
+
+						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
 							<div class="spinner-border prof_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
@@ -122,12 +128,17 @@
 							<button class="btn text-light user_profileupdate bradius" type="submit" style="background:#141E30">Update</button>
 						</div>
 					</div>
+
 					<div class="website_div">
 						<div class="d-flex justify-content-between mb-3">
 							<div class="action_div">
-								<button type="button" class="action_web_btn text-light" style="background-color:#141E30;padding:6px;border:none">
+								<button type="button" class="action_web_btn text-light" style="background-color:#141E30;padding:6px;border:none;border-radius: 50%;">
 									<i class="fas fa-ellipsis-h"></i>
 								</button>
+							</div>
+							<div>
+								<span class="web_num_total"></span> Website(s) out of <span class="webnumtotal"></span>
+								<i class="fas fa-question-circle help_i" title="For more website quota, contact us at nktech.in@gmail.com"></i>
 							</div>
 							<div class="add_web">
 								<button type="button" class="add_web_btn text-light" style="background-color:#141E30;padding:6px;border:none">
@@ -143,6 +154,7 @@
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
 						</div>
 					</div>
+
 					<div class="account_div">
 						<div class="form-group pwddiv">
 							<label><i class="fas fa-key mr-2"></i>New Password</label>
@@ -156,7 +168,7 @@
 						<div class="form-group mt-2 text-right">
 							<button class="btn btn-danger delact_btn" type="button">Delete account</button>
 							<button class="btn btn-danger deacti_act_btn" type="button">De-activate account</button>
-							<button class="btn btn-success acti_act_btn" type="button">Activate account</button>
+							<button class="btn text-light acti_act_btn" type="button" style='background:#141E30'>Activate account</button>
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
@@ -247,7 +259,7 @@
 							<?php endif; ?>
 						</td>
 						<td class="text-uppercase"><?php echo $info['uname'] ?></td>
-						<td class=""><?php echo $info['fname'] . " " . $info['lname']  ?></td>
+						<td class=""><?php echo ucfirst($info['fname']) . " " . ucfirst($info['lname'])  ?></td>
 						<td class=""><?php echo $info['mobile'] ?></td>
 						<td class=""><?php echo $info['email'] ?></td>
 						<td class="">
@@ -361,7 +373,8 @@
 			$(".prof_update_spinner").hide();
 			$(".new_pwd").val("");
 			$(".user_accupdate").hide();
-			$(".weberr").hide();
+			$(".weberr,.web_quota_err,.mobileerr,.new_pwderr").hide();
+			// $(".form-control").css("border", "1px solid #ced4da");
 
 			var user_id = $(this).attr("id");
 			var form_key = $(this).attr("form_key");
@@ -387,22 +400,26 @@
 					$('.lname').val(data.infos[0].lname);
 					$('.mobile').val(data.infos[0].mobile);
 					$('.email').val(data.infos[0].email);
+					$('.web_quota').val(data.infos[0].web_quota);
+					$('.webnumtotal').html(data.infos[0].web_quota);
 
 					$('.web_addbtn').attr("userid", data.infos[0].id);
 					$('.web_addbtn').attr("userformkey", data.infos[0].form_key);
 					$('.web_addbtn').attr("useractive", data.infos[0].active);
 
-					if (data.infos[0].fname !== null || data.infos[0].lname !== null) {
-						$('div.nameofuser_h h6').html(data.infos[0].fname + " " + data.infos[0].lname);
-					} else {
+					if (data.infos[0].fname == "" || data.infos[0].lname == "") {
 						$('div.nameofuser_h h6').html(data.infos[0].uname);
+					} else {
+						$('div.nameofuser_h h6').html(data.infos[0].fname + " " + data.infos[0].lname);
 					}
 
 					if (data.webs.length == 0) {
 						$("div.website_form_div").append('<p class="text-center text-dark mt-4 font-weight-bolder">USER HAS NO DATA</p>');
 						$("div.action_div").hide();
+						$('.web_num_total').html("0");
 					} else {
 						$("div.action_div").show();
+						$('.web_num_total').html(data.webs.length);
 						for (let index = 0; index < data.webs.length; index++) {
 							// console.log(data.webs[index]);
 							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
@@ -472,19 +489,23 @@
 
 		$(document).on("click", ".add_web_btn", function() {
 			var webcount = $(".web_form_input").length;
+			var web_quota = $(".web_quota").val();
 
-			if (webcount < 10) {
+			if (webcount < web_quota) {
+				$('.web_name_add').val("");
+				$('.web_link_add').val("");
 				$('.updateusermodal').modal('hide');
 				$(".addusermodal").modal("show");
-			} else if (webcount >= 10) {
-				var con = confirm("User already has " + webcount + " websites. Are you sure you want to add more?")
+			} else if (webcount >= web_quota) {
+				var con = confirm("User quota is" + web_quota + ". Increase user quota to add more websites.")
 				if (con === false) {
 					return false;
 				} else if (con === true) {
-					$('.web_name_add').val("");
-					$('.web_link_add').val("");
-					$('.updateusermodal').modal('hide');
-					$(".addusermodal").modal("show");
+					$('div.website_div,div.account_div').hide();
+					$('a.web_a,a.ac_a').css('border-bottom', 'initial');
+					$("a.prof_a").css('border-bottom', '2px solid #141E30');
+					$('div.profile_div').show();
+					$(".web_quota").css('border', '2px solid red')
 				}
 			}
 		});
@@ -728,6 +749,8 @@
 			var lname = $('.lname').val();
 			var email = $('.email').val();
 			var mobile = $('.mobile').val();
+			var web_quota = $('.web_quota').val();
+			var webcount = $(".web_form_input").length;
 
 			if (uname == "" || uname == null) {
 				$('.uname').css('border', '2px solid red');
@@ -750,12 +773,32 @@
 			}
 			if (mobile.length !== 10) {
 				$('.mobile').css('border', '2px solid red');
-				$(".mobileerr").show();
+				$(".mobileerr").html("Invaid mobile length").show();
 				$(".prof_update_spinner").hide();
 				return false;
 			} else {
 				$('.mobile').css('border', '1px solid #141E30');
 				$(".mobileerr").hide();
+			}
+			if (web_quota == "" || web_quota == null) {
+				$('.web_quota').css('border', '2px solid red');
+				$(".web_quota_err").html("If you don't specify a value, the default quota is 10").show();
+				$(".prof_update_spinner").hide();
+				return false;
+			}
+			if (parseInt(web_quota) < 10) {
+				$('.mobile').css('border', '2px solid red');
+				$(".web_quota_err").html("The default quota is 10").show();
+				$(".prof_update_spinner").hide();
+				return false;
+			}
+			if (parseInt(web_quota) < webcount) {
+				$('.web_quota').css('border', '2px solid red');
+				$(".web_quota_err").html("Number of this user websites(" + webcount + ") cannot be greater than quota(" + web_quota + "). Increase the quota").show();
+				$(".prof_update_spinner").hide();
+				return false;
+			} else {
+				$('.web_quota').css('border', '1px solid #141E30');
 			}
 
 			$.ajax({
@@ -770,6 +813,7 @@
 					lname: lname,
 					email: email,
 					mobile: mobile,
+					web_quota: web_quota
 				},
 				dataType: "json",
 				beforeSend: function() {

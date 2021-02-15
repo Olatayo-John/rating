@@ -38,17 +38,18 @@
 		</div>
 	</form>
 </div>
+
 <div class="con mt-3 mr-3 ml-3 mb-3 pl-4 pr-4 pt-4 web_div">
-	<div class="d-flex" style="justify-content:space-between">
+	<div class="d-flex btn_wrapper_div" style="justify-content:space-between">
 		<div>
 			<h4 class="text-dark">Websites</h4>
 			<hr class="web">
 		</div>
 		<div style="color:#141E30;font-weight:600;">
-			<span class="web_num_total"><?php echo $websites->num_rows(); ?></span> Website(s) out of 10 <i class="fas fa-question-circle help_i" title="For more website quota, contact us at nktech.in@gmail.com"></i>
+			<span class="web_num_total"><?php echo $websites->num_rows(); ?></span> Website(s) out of <?php echo $this->session->userdata("mr_web_quota") ?> <i class="fas fa-question-circle help_i" title="For more website quota, contact us at nktech.in@gmail.com"></i>
 		</div>
 		<div>
-			<?php if ($websites->num_rows() < 10) : ?>
+			<?php if ($websites->num_rows() < $this->session->userdata("mr_web_quota")) : ?>
 				<button type="button" class="text-light btn addwebmodal_btn" style="background:#141E30">
 					<i class="fas fa-plus-circle mr-2"></i>New Website
 				</button>
@@ -80,12 +81,12 @@
 		</div>
 	</div>
 
-	<?php if ($websites->num_rows() < 10) : ?>
+	<?php if ($websites->num_rows() < $this->session->userdata("mr_web_quota")) : ?>
 		<div class="modal add_web_modal">
 			<div class="modal-dialog modal-dialog-top">
 				<div class="modal-content">
 					<div class="modal-header text-danger justify-content-center font-weight-bolder">
-						You can't edit, rename or change any of this information after
+						You can't change or remove any of this information after
 					</div>
 					<div class="modal-body">
 						<form method="post" action="<?php echo base_url("user/user_new_website") ?>" class="add_web_modal_form">
@@ -116,12 +117,12 @@
 	<?php endif; ?>
 
 	<?php if ($websites->num_rows() > 0) : ?>
-		<div class="row col-md-12 mt-4">
+		<div class="row col-md-12 mt-4 websites_foreach_div_header">
 			<div class="col-md-1">
 				<span class="font-weight-bolder">Status</span>
 			</div>
 			<div class="text-center col">
-				<span class="font-weight-bolder">Website Name</span>
+				<span class="font-weight-bolder">Website</span>
 			</div>
 			<div class="col-md-4 text-center">
 				<span class="font-weight-bolder">Actions</span>
@@ -129,7 +130,7 @@
 		</div>
 		<hr>
 		<?php foreach ($websites->result_array() as $web) : ?>
-			<div class="row col-md-12" style="padding-right:0">
+			<div class="row col-md-12 websites_foreach_div" style="padding-right:0">
 				<?php if ($web['active'] == "1") : ?>
 					<div class="col-md-1" style="margin:auto">
 						<i class="fas fa-circle text-success" id="<?php echo $web['id'] ?>"></i>
@@ -283,8 +284,9 @@
 		$(document).on('click', 'button.addwebmodal_btn', function(e) {
 			e.preventDefault();
 			var num = $('.web_input').length;
+			var web_quota = "<?php echo $this->session->userdata("mr_web_quota"); ?>";
 
-			if (parseInt(num) == 10) {
+			if (parseInt(num) >= web_quota) {
 				$(".add_web_modal_btn").hide();
 				$('.web_name,.web_link').attr("readonly", "true");
 				$('.add_web_modal').modal("hide");

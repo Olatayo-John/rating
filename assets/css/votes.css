@@ -6,13 +6,11 @@ input.form-control:focus,select.form-control:focus{
 	box-shadow: none;
 }
 div.rt_div{
-	display: flex;
-	justify-content: center;
-	margin: 0 20px 0 20px;
+	/* margin: 0 20px 0 20px; */
 }
 .rt_col{
-	padding: 0;
-	border-left: 2px solid #243B55;
+	padding: 0 15px;
+	/* border-left: 2px solid #243B55; */
 }
 .value{
 	color: grey;
@@ -80,6 +78,21 @@ td{
 div.user_web_div:nth-last-child(1){
 	border-right: none !important;
 }
+.userweb_div_cal{
+	display: flex;
+	flex-direction: row;
+	width: max-content;
+}
+.user_web_div{
+	padding: 0 15px;
+}
+div.modal-header::-webkit-scrollbar{
+	height: 5px;
+  }
+div.modal-header::-webkit-scrollbar-thumb{
+	background: #141E30;
+	border-radius: 4px;
+}
 @media only screen and (max-width: 500px) {
 	h4.userheader{
 		margin-bottom: 30px;
@@ -92,9 +105,8 @@ div.user_web_div:nth-last-child(1){
 		margin-bottom: 60px;
 	}
 }
-@media only screen and (max-width: 767px) {
-	.rt_col{
-		border: none;
-		border-bottom: 2px solid #243B55;
+@media only screen and (max-width: 387px) {
+	.reload_btn{
+		margin-top: 5px;
 	}
 }

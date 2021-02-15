@@ -62,6 +62,7 @@ class Usermodel extends CI_Model
 			'active' => "0",
 			'website_form' => "0",
 			'sub' => "0",
+			'web_quota' => "10",
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
@@ -534,11 +535,9 @@ class Usermodel extends CI_Model
 			if ($query->active === "0") {
 				return false;
 				exit;
-				// die("inactivate");
 			} else if ($query->active === "1") {
 				return true;
 				exit;
-				// die("activate");
 			}
 		} else {
 			return false;

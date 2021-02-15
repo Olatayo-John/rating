@@ -1,10 +1,10 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/votes.css'); ?>">
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_token">
-<div class="mr-3 ml-3 mt-4 bg-light">
+<div class="mr-3 ml-3 mt-4 mb-5 bg-light">
 	<div class="modal updateusermodal">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
-				<div class="modal-header d-flex flex-column pt-0 pb-0 pl-0 pr-0">
+				<div class="modal-header d-flex flex-column pt-0 pb-0 pl-0 pr-0" style="overflow-x:scroll">
 					<div class="" style="background:#141E30;display: flex;width: 100%;justify-content: space-between;">
 						<div class="username_div ml-3" style="background:#141E30">
 							<h6 class="text-light text-uppercase" style="margin: auto;padding: 7px 0;"></h6>
@@ -14,7 +14,7 @@
 						</div>
 					</div>
 
-					<div class="userweb_div_cal row col-md-12 mb-4 mt-3" style="margin: auto;padding:0;">
+					<div class="userweb_div_cal mb-4 mt-3" style="margin: auto;padding:0;">
 
 					</div>
 					<div class="mb-2 d-flex flex-row col-md-12">
@@ -26,9 +26,9 @@
 					</div>
 
 				</div>
-				<div class="modal-body pt-0" style="overflow-x:scroll;overflow-y: hidden;">
+				<div class="modal-body pt-2" style="overflow-x:scroll;overflow-y: hidden;">
 					<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
-						<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+						<tr class="font-weight-bolder text-light text-center" style="background:#141E30;white-space: nowrap;">
 							<th><span class="icon">
 									Name
 								</span></th>
@@ -59,7 +59,7 @@
 	</div>
 
 	<div class="rt_div row mb-5 pt-3" style="margin: 0">
-		<div class="col rt_col text-secondary" style="border-left: none;">
+		<div class="rt_col text-secondary" style="border-left: none;padding:0 15px">
 			<div class="value tv text-secondary"><?php echo $get_total_ratings->num_rows() ?></div>
 			<h4 class="text-center stared">Reviews</h4>
 		</div>
@@ -109,7 +109,7 @@
 
 	<div class="container-fluid table-responsive mb-4">
 		<table class="table table-center table-hover table-md table-light table-bordered" id="result">
-			<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+			<tr class="font-weight-bolder text-light text-center" style="background:#141E30;white-space:nowrap">
 				<th>
 					<div class="inh">
 						<i class="fas fa-sort" name="uname" type="desc"></i>
@@ -270,6 +270,9 @@
 				},
 				dataType: "json",
 				success: function(data) {
+					console.log(data['users']);
+					console.log(data['user_webs']);
+
 					$('.csrf_token').val(data.token);
 					$('.input_form_key').val(key);
 					$(".indiv_votes_export_csv").attr("href", "indiv_votes_export_csv/" + key);
@@ -278,7 +281,7 @@
 						var tr = $('<tr class="truserreview"></tr>');
 						tr.append('<td colspan="6" class="font-weight-bolder text-dark text-center">User has no data</td>');
 						table.append(tr);
-						$('.updateusermodal').modal('show');
+
 					} else {
 						var table = $('table.tableuserreview');
 						for (var i = 0; i < data['users'].length; i++) {
@@ -291,17 +294,17 @@
 							tr.append('<td class="text-danger">' + data['users'][i].rated_at + '</td>');
 							table.append(tr);
 						}
-
-						if (data['user_webs'].length > 0) {
-							$('div.userweb_div_cal').append('<div class="col text-secondary user_web_div" style="border-left: none;border-right: 1px solid #141E30;"><div class="value">' + data['user_web_total'][0].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4">Total</h6></div>');
-							for (var i = 0; i < data['user_webs'].length; i++) {
-								$('div.userweb_div_cal').append('<div class="col text-secondary user_web_div" style="border-left: none;border-right: 1px solid #141E30;"><div class="value">' + data['user_webs'][i].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4">' + data['user_webs'][i].web_name + '</h6></div>');
-							}
-						}
-
-						$('div.username_div h6').html(btn_uname);
-						$('.updateusermodal').modal('show');
 					}
+
+					if (data['user_webs'].length > 0) {
+						$('div.userweb_div_cal').append('<div class="text-secondary user_web_div" style="border-left: none;"><div class="value">' + data['user_web_total'][0].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4">Total</h6></div>');
+						for (var i = 0; i < data['user_webs'].length; i++) {
+							$('div.userweb_div_cal').append('<div class="text-secondary user_web_div" style="border-left: none;"><div class="value">' + data['user_webs'][i].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4" style="word-break: break-word;">' + data['user_webs'][i].web_name + '</h6></div>');
+						}
+					}
+
+					$('div.username_div h6').html(btn_uname);
+					$('.updateusermodal').modal('show');
 
 				},
 				error: function(data) {

@@ -14,7 +14,7 @@
 						</div>
 					</div>
 
-					<div class="userweb_div_cal mb-4 mt-3" style="margin: auto;padding:0;">
+					<div class="userweb_div_cal mb-4 mt-3 row col-md-12" style="margin: auto;padding:0;">
 
 					</div>
 					<div class="mb-2 d-flex flex-row col-md-12">
@@ -59,7 +59,7 @@
 	</div>
 
 	<div class="rt_div row mb-5 pt-3" style="margin: 0">
-		<div class="rt_col text-secondary" style="border-left: none;padding:0 15px">
+		<div class="rt_col col text-secondary" style="border-left: none;padding:0 15px">
 			<div class="value tv text-secondary"><?php echo $get_total_ratings->num_rows() ?></div>
 			<h4 class="text-center stared">Reviews</h4>
 		</div>
@@ -297,9 +297,9 @@
 					}
 
 					if (data['user_webs'].length > 0) {
-						$('div.userweb_div_cal').append('<div class="text-secondary user_web_div" style="border-left: none;"><div class="value">' + data['user_web_total'][0].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4">Total</h6></div>');
+						$('div.userweb_div_cal').append('<div class="text-secondary col user_web_div" style="border-left: none;"><div class="value">' + data['user_web_total'][0].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4">Total</h6></div>');
 						for (var i = 0; i < data['user_webs'].length; i++) {
-							$('div.userweb_div_cal').append('<div class="text-secondary user_web_div" style="border-left: none;"><div class="value">' + data['user_webs'][i].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4" style="word-break: break-word;">' + data['user_webs'][i].web_name + '</h6></div>');
+							$('div.userweb_div_cal').append('<div class="text-secondary col user_web_div" style="border-left: none;"><div class="value">' + data['user_webs'][i].total_ratings + '</div><h6 class="text-center font-weight-bolder text-uppercase stared user_web mb-4" style="word-break: break-word;">' + data['user_webs'][i].web_name + '</h6></div>');
 						}
 					}
 

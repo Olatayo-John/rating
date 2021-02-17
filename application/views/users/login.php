@@ -5,17 +5,18 @@
 			<h4 class="text-center text-light">LOGIN</h4>
 			<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 			<div class="form-group">
-				<label>Username:</label>
-				<input type="text" name="uname" class="form-control uname" autofocus placeholder="Your Username">
+				<label><i class="fas fa-user mr-2"></i>Username</label>
+				<input type="text" name="uname" class="form-control uname" autofocus="true" placeholder="Your Username" required>
 			</div>
 			<div class="form-group">
-				<label>Password:</label>
-				<input type="password" name="pwd" class="form-control pwd" placeholder="Your Password">
+				<label><i class="fas fa-lock mr-2"></i>Password</label>
+				<input type="password" name="pwd" class="form-control pwd" placeholder="Your Password" required="required">
 			</div>
 			<div class="btngrp">
-				<button class="btn btn-dark loginbtn" type="submit">Log in</button>
+				<button class="btn btn-dark loginbtn" type="submit">Login</button>
 				<a href="<?php echo base_url('user/register'); ?>" class="signupbtn">
-					Sign up <i class="far fa-arrow-alt-circle-right"></i></a>
+					<i class="fas fa-user-plus mr-2"></i>Sign up
+				</a>
 			</div>
 		</form>
 	</div>

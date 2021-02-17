@@ -81,7 +81,7 @@ div.user_web_div:nth-last-child(1){
 .userweb_div_cal{
 	display: flex;
 	flex-direction: row;
-	width: max-content;
+	/* width: max-content; */
 }
 .user_web_div{
 	padding: 0 15px;
@@ -108,5 +108,10 @@ div.modal-header::-webkit-scrollbar-thumb{
 @media only screen and (max-width: 387px) {
 	.reload_btn{
 		margin-top: 5px;
+	}
+}
+@media only screen and (max-width: 1000px) {
+	.userweb_div_cal{
+		width: max-content;
 	}
 }

@@ -8,15 +8,15 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label>First Name</label>
-					<input type="text" name="fname" class="form-control fname" placeholder="First Name">
+					<input type="text" name="fname" class="form-control fname" placeholder="Your First Name">
 				</div>
 				<div class="form-group">
 					<label>Last Name</label>
-					<input type="text" name="lname" class="form-control lname" placeholder="Last Name">
+					<input type="text" name="lname" class="form-control lname" placeholder="Your Last Name">
 				</div>
 				<div class="form-group">
 					<label><span class="text-danger font-weight-bolder">* </span>E-mail</label>
-					<input type="email" name="email" class="form-control email" placeholder="example@domain-name.com" id="email">
+					<input type="email" name="email" class="form-control email" placeholder="example@domain.com" id="email">
 				</div>
 				<div class="form-group">
 					<label><span class="text-danger font-weight-bolder">* </span>Mobile</label>

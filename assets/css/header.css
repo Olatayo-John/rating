@@ -6,16 +6,13 @@
 a:hover{
 	text-decoration: none !important;
 }
-.btn:focus{
+.btn:focus,button:focus{
 	box-shadow: none;
-	outline: 1px dotted;
-}
-button:focus{
-	outline:1px dotted !important;
+	outline: none !important;
 }
 button.btn{
 	border-radius: 0;
-	outline: none;
+	outline: none !important;
 }
 input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
 	border-color: #141E30;
@@ -46,7 +43,7 @@ nav{
 	background-color: white;
 }
 div.alert button.close, .ajax_alert_div button.close{
-	margin-left: 20px;
+	margin-left: 10px;
 	outline: none;
 }
 div.alert button.close:hover{

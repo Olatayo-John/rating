@@ -2,7 +2,9 @@ body{
 	background: #141E30;
 }
 button.renewplanbtn{
-	display: none;
+	/* display: none; */
+	color:white !important;
+	background:#141E30 !important;
 }
 div.error{
 	padding: 5px;
@@ -35,6 +37,9 @@ div.card{
 	padding: 20px;
 	margin: auto;
 	color: white;
+}
+.payment_div p{
+	color: #141E30;
 }
 .sub_btn{
 	border-radius: 50px;

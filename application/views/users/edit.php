@@ -34,7 +34,8 @@
 			<div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
 		</div>
 		<div class="form-group text-left">
-			<button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#141E30">Save</button>
+			<button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#141E30">
+				<i class="fas fa-save mr-2"></i>Save</button>
 		</div>
 	</form>
 </div>
@@ -103,7 +104,7 @@
 							<div class="modal_btn_actions d-flex justify-content-between">
 								<button type="button" class="btn btn-secondary closewebmodal_btn">Close</button>
 								<button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#141E30;">
-									<i class="far fa-save mr-2"></i>Add</button>
+									<i class="fas fa-save mr-2"></i>Save</button>
 							</div>
 						</form>
 					</div>
@@ -183,14 +184,15 @@
 		</div>
 		<div class="form-group">
 			<label><i class="fas fa-lock mr-2"></i>Re-type Password<span class="text-danger"> *</span></label>
-			<input type="text" name="rtn_pwd" class="form-control rtn_pwd">
+			<input type="text" name="rtn_pwd" class="form-control rtn_pwd" placeholder="Re-type Password">
 			<span class="text-danger font-weight-bolder rtn_pwd_err">Passwords do not match</span>
 		</div>
 		<div class="form-group text-right">
 			<button class="btn btn-danger deact_btn" type="button" user_id="<?php echo $user_info->id ?>">De-activate account?</button>
 		</div>
 		<div class="form-group text-left">
-			<button class="btn text-light saveact_btn" type="submit saveact_btn" style="background-color:#141E30">Save</button>
+			<button class="btn text-light saveact_btn" type="submit saveact_btn" style="background-color:#141E30">
+				<i class="fas fa-save mr-2"></i>Save</button>
 		</div>
 	</form>
 </div>

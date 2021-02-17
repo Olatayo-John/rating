@@ -60,10 +60,10 @@
 			</div>
 			<div class="card-footer">
 				<?php if ($this->session->userdata('mr_sub') == '0') : ?>
-					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="500" type="submit">Choose Plan</button>
+					<button class="btn  btn-block sub_btn renewplanbtn" amount="500" type="submit">Choose Plan</button>
 				<?php endif; ?>
 				<?php if ($this->session->userdata('mr_sub') == '1') : ?>
-					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="500" type="submit">Renew Plan</button>
+					<button class="btn  btn-block sub_btn renewplanbtn" amount="500" type="submit">Renew Plan</button>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -96,10 +96,10 @@
 			</div>
 			<div class="card-footer">
 				<?php if ($this->session->userdata('mr_sub') == '0') : ?>
-					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1000" type="submit">Choose Plan</button>
+					<button class="btn  btn-block sub_btn renewplanbtn" amount="1000" type="submit">Choose Plan</button>
 				<?php endif; ?>
 				<?php if ($this->session->userdata('mr_sub') == '1') : ?>
-					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1000" type="submit">Renew Plan</button>
+					<button class="btn  btn-block sub_btn renewplanbtn" amount="1000" type="submit">Renew Plan</button>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -132,10 +132,10 @@
 			</div>
 			<div class="card-footer">
 				<?php if ($this->session->userdata('mr_sub') == '0') : ?>
-					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1500" type="submit">Choose Plan</button>
+					<button class="btn  btn-block sub_btn renewplanbtn" amount="1500" type="submit">Choose Plan</button>
 				<?php endif; ?>
 				<?php if ($this->session->userdata('mr_sub') == '1') : ?>
-					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="1500" type="submit">Renew Plan</button>
+					<button class="btn  btn-block sub_btn renewplanbtn" amount="1500" type="submit">Renew Plan</button>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -168,19 +168,19 @@
 			</div>
 			<div class="card-footer">
 				<?php if ($this->session->userdata('mr_sub') == '0') : ?>
-					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="2000" type="submit">Choose Plan</button>
+					<button class="btn  btn-block sub_btn renewplanbtn" amount="2000" type="submit">Choose Plan</button>
 				<?php endif; ?>
 				<?php if ($this->session->userdata('mr_sub') == '1') : ?>
-					<button class="btn btn-outline-info btn-block sub_btn renewplanbtn" amount="2000" type="submit">Renew Plan</button>
+					<button class="btn  btn-block sub_btn renewplanbtn" amount="2000" type="submit">Renew Plan</button>
 				<?php endif; ?>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div class="ml-3 mr-3 bg-light pb-3 mb-5" style="padding: 10px 30px">
+<div class="ml-3 mr-3 bg-light pb-3 mb-5 payment_div" style="padding: 10px 30px">
 	<p class="text-center font-weight-bolder">Kindly find the details below for payment</p>
-	<p class="mb-0"><strong>Bank</strong> ICICI Bank </p>
+	<p class="mb-0"><strong>Bank: </strong> ICICI Bank </p>
 	<p class="mb-0"> <strong>A/c Name: </strong> NKTechnologies ITSOL Private Limited</p>
 	<p class="mb-0"> <strong>A/c No.: </strong> 721805000099</p>
 	<p class="mb-0"><strong>IFSC: </strong> ICIC0007218</p>

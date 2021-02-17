@@ -36,10 +36,6 @@ a.signupbtn{
 	color: #8BC34A;
 	text-decoration: none;
 }
-a.signupbtn:hover{
-	transform: scale(1.1);
-	transition: transform .2s;
-}
 input.form-control:focus{
 	border-color: black;
 	box-shadow: none;

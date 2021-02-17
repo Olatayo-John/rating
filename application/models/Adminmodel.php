@@ -160,7 +160,7 @@ class Adminmodel extends CI_Model
 			'one_star' => "0",
 		);
 		$this->db->insert('websites', $data);
-		return TRUE;
+		return $this->db->insert_id();
 	}
 
 	public function delete_user_web($web_id, $user_id, $form_key, $web_name)
@@ -201,6 +201,24 @@ class Adminmodel extends CI_Model
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $user_form_key));
 		$query = $this->db->set('active', "1");
+		$query = $this->db->update("users");
+		return true;
+	}
+
+	public function verify_user_sub($user_id, $form_key)
+	{
+		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
+		$query = $this->db->set('sub', "1");
+		$query = $this->db->set('sub_active', "1");
+		$query = $this->db->update("users");
+		return true;
+	}
+
+	public function unverify_user_sub($user_id, $form_key)
+	{
+		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
+		$query = $this->db->set('sub', "0");
+		$query = $this->db->set('sub_active', "0");
 		$query = $this->db->update("users");
 		return true;
 	}
@@ -409,6 +427,7 @@ class Adminmodel extends CI_Model
 	public function update_user_sub()
 	{
 		$this->db->set('sub', '1', FALSE);
+		$this->db->set('sub_active', '1', FALSE);
 		$this->db->where('form_key', $this->session->userdata('mr_form_key'));
 		$this->db->update("users");
 		return true;

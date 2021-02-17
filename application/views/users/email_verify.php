@@ -8,14 +8,15 @@
 			<label class="mt-2">
 				<span class="text-danger font-weight-bolder">* </span>
 				Enter the verification code sent to your mail</label>
-			<input type="text" name="sentcode" class="form-control sentcode" style="border-radius: 0">
+			<input type="text" name="sentcode" class="form-control sentcode" style="border-radius: 0" autofocus required>
 			<div class="text-danger font-weight-bolder codeerr" style="display: none;">Invalid code length</div>
 		</div>
 		<div class="form-group verifybtndiv">
-			<button class="btn text-light verifycodebtn" type="submit" style="background:#141E30">Verify</button>
+			<button class="btn text-light verifycodebtn" type="submit" style="background:#141E30"><i class="fas fa-user-check mr-2"></i>Verify</button>
 		</div>
 		<div class="text-right font-weight-bolder rsendcodediv">
-			<a href="<?php echo base_url('user/resendemailverify/' . $key); ?>" class="text-light rsendcodebtn" id="rsendcodebtn">Resend code?</a>
+			<a href="<?php echo base_url('user/resendemailverify/' . $key); ?>" class="text-danger rsendcodebtn" id="rsendcodebtn">
+				<i class="fas fa-redo-alt mr-2"></i>Resend code?</a>
 		</div>
 	</form>
 </div>

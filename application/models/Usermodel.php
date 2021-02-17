@@ -62,6 +62,7 @@ class Usermodel extends CI_Model
 			'active' => "0",
 			'website_form' => "0",
 			'sub' => "0",
+			'sub_active' => "0",
 			'web_quota' => "10",
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
@@ -257,6 +258,17 @@ class Usermodel extends CI_Model
 		} else {
 			return $query;
 		}
+	}
+
+	public function update_user_websiteform()
+	{
+		$user_id = $this->session->userdata("mr_id");
+		$form_key = $this->session->userdata("mr_form_key");
+
+		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
+		$this->db->set('website_form', '1');
+		$this->db->update('users');
+		return TRUE;
 	}
 
 	public function delete_website($id)

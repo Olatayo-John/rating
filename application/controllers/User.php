@@ -63,8 +63,9 @@ class User extends CI_Controller
 				$email = $validate->email;
 				$mobile = $validate->mobile;
 				$active = $validate->active;
-				$web_quota = $validate->web_quota;
 				$sub = $validate->sub;
+				$sub_active = $validate->sub_active;
+				$web_quota = $validate->web_quota;
 				$website_form = $validate->website_form;
 				$form_key = $validate->form_key;
 
@@ -76,6 +77,7 @@ class User extends CI_Controller
 					'mr_mobile' => $mobile,
 					'mr_active' => $active,
 					'mr_sub' => $sub,
+					'mr_sub_active' => $sub_active,
 					'mr_web_quota' => $web_quota,
 					'mr_website_form' => $website_form,
 					'mr_form_key' => $form_key,
@@ -107,6 +109,7 @@ class User extends CI_Controller
 		$this->session->unset_userdata('mr_mobile');
 		$this->session->unset_userdata('mr_active');
 		$this->session->unset_userdata('mr_sub');
+		$this->session->unset_userdata('mr_sub_active');
 		$this->session->unset_userdata('mr_web_quota');
 		$this->session->unset_userdata('mr_website_form');
 		$this->session->unset_userdata('mr_form_key');
@@ -144,11 +147,12 @@ class User extends CI_Controller
 			$this->load->view('users/register');
 			$this->load->view('templates/footer');
 		} else {
+			$uname = htmlentities($this->input->post('uname'));
+			$pwd = $this->input->post('pwd');
+			$email = htmlentities($this->input->post('email'));
+
 			$act_key =  mt_rand(0, 1000000);
 			$form_key =  htmlentities($this->input->post("uname")) . mt_rand(0, 100000);
-
-			$email = htmlentities($this->input->post('email'));
-			$uname = htmlentities($this->input->post('uname'));
 			$link = base_url() . "emailverify/" . $form_key;
 
 			$mail_res = $this->send_email_code($email, $uname, $act_key, $link);
@@ -190,7 +194,7 @@ class User extends CI_Controller
 
 		$this->email->from('jvweedtest@gmail.com', 'Rating');
 		$this->email->to($email);
-		$this->email->subject("Verification Code");
+		$this->email->subject("Your Verification Code");
 		$this->email->message($body);
 
 		if ($this->email->send()) {
@@ -209,7 +213,7 @@ class User extends CI_Controller
 		} else {
 			$active = $check_res->active;
 			if ($active == '1') {
-				$this->session->set_flashdata('valid', 'Your account is already verified.');
+				$this->session->set_flashdata('valid', 'Your account is verified.');
 				redirect('login');
 			}
 			$this->form_validation->set_rules('sentcode', 'Verification Code', 'required|trim|html_escape');
@@ -235,6 +239,7 @@ class User extends CI_Controller
 						$mobile = $res->mobile;
 						$active = $res->active;
 						$sub = $res->sub;
+						$sub_active = $res->sub_active;
 						$web_quota = $res->web_quota;
 						$website_form = $res->website_form;
 						$form_key = $res->form_key;
@@ -247,6 +252,7 @@ class User extends CI_Controller
 							'mr_mobile' => $mobile,
 							'mr_active' => $active,
 							'mr_sub' => $sub,
+							'mr_sub_active' => $sub_active,
 							'mr_web_quota' => $web_quota,
 							'mr_website_form' => $website_form,
 							'mr_form_key' => $form_key,
@@ -304,9 +310,19 @@ class User extends CI_Controller
 		if ($this->session->userdata('mr_website_form') == "1") {
 			redirect('/');
 		}
-		$this->load->view('templates/header', $data);
-		$this->load->view('users/websites');
-		$this->load->view('templates/footer');
+		$data['webs'] = $this->Usermodel->get_user_websites();
+		$webcount = $data['webs']->num_rows();
+		$webquota = $this->session->userdata('mr_web_quota');
+
+		if ($webcount >= $webquota) {
+			$this->Usermodel->update_user_websiteform();
+			$this->session->set_userdata("mr_website_form", "1");
+			redirect("/");
+		} else {
+			$this->load->view('templates/header', $data);
+			$this->load->view('users/websites', $data);
+			$this->load->view('templates/footer');
+		}
 	}
 
 	public function addwebsites()

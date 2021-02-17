@@ -447,11 +447,12 @@ class Admin extends CI_Controller
 		}
 		$res = $this->Adminmodel->add_website($_POST['user_id'], $_POST['form_key'], $_POST['active'], $_POST['web_name_add'], $_POST['web_link_add']);
 		// $res = true;
-		if ($res !== true) {
+		if (!$res) {
 			$data['res'] = "failed";
 			$data['res_msg'] = "Failed to add website!";
 		} else {
 			$data['res'] = "success";
+			$data['insert_id'] = $res;
 			$data['res_msg'] = "Website added!";
 		}
 
@@ -528,6 +529,56 @@ class Admin extends CI_Controller
 		}
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
+	}
+
+	public function verify_user_sub()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			return false;
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		} else {
+			$res = $this->Adminmodel->verify_user_sub($_POST['user_id'], $_POST['form_key']);
+			// $res = false;
+			if ($res !== true) {
+				$data['res'] = "failed";
+				$data['res_msg'] = "Unable to activate user subscription!";
+			} else {
+				$data['res'] = "success";
+				$data['res_msg'] = "User subscription activated";
+			}
+
+			$data['token'] = $this->security->get_csrf_hash();
+			echo json_encode($data);
+		}
+	}
+
+	public function unverify_user_sub()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			return false;
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		} else {
+			$res = $this->Adminmodel->unverify_user_sub($_POST['user_id'], $_POST['form_key']);
+			// $res = false;
+			if ($res !== true) {
+				$data['res'] = "failed";
+				$data['res_msg'] = "Unable to de-activate user subscription!";
+			} else {
+				$data['res'] = "success";
+				$data['res_msg'] = "User subscription de-activated!";
+			}
+
+			$data['token'] = $this->security->get_csrf_hash();
+			echo json_encode($data);
+		}
 	}
 
 	function user_accupdate()
@@ -1072,6 +1123,10 @@ class Admin extends CI_Controller
 
 	public function pgResponses()
 	{
+		if ($this->session->userdata("mr_sub") == "1") {
+			redirect("plan");
+		}
+
 		$paytmChecksum = "";
 		$paramList = array();
 		$isValidChecksum = "FALSE";
@@ -1095,7 +1150,7 @@ class Admin extends CI_Controller
 		);
 		if ($isValidChecksum == "TRUE") {
 			if ($_POST["STATUS"] == "TXN_SUCCESS") {
-				if (isset($_POST) && count($_POST) > 0) {
+				if (isset($_POST) && count($_POST) > 0 && $this->session->userdata("mr_logged_in")) {
 					$userData = array(
 						'user_id' => $user_id,
 						'user_form_key' => $form_key,
@@ -1111,8 +1166,8 @@ class Admin extends CI_Controller
 						'check_sum_hash' => $_POST['CHECKSUMHASH'],
 						'status' => $_POST['STATUS'],
 					);
-					$res = $this->Adminmodel->save_payment($userData);
-					//$res= true;
+					// $res = $this->Adminmodel->save_payment($userData);
+					$res = true;
 					if ($res == true) {
 						$this->session->set_flashdata('valid', 'Payment Done.');
 						//$this->payment_status($userData);
@@ -1126,19 +1181,19 @@ class Admin extends CI_Controller
 						$this->load->view('templates/footer');
 					}
 				} else {
-					$this->session->set_flashdata('invalid', 'Payment Failed.');
+					$this->session->set_flashdata('invalid', 'Payment Failed not_set_logged.');
 					$this->load->view('templates/header');
 					$this->load->view('admin/pay_status', ['userData' => $userData]);
 					$this->load->view('templates/footer');
 				}
 			} else {
-				$this->session->set_flashdata('invalid', 'Payment Failed.');
+				$this->session->set_flashdata('invalid', 'Payment Failed txn_failed.');
 				$this->load->view('templates/header');
 				$this->load->view('admin/pay_status', ['userData' => $userData]);
 				$this->load->view('templates/footer');
 			}
 		} else {
-			$this->logout();
+			// $this->logout();
 		}
 	}
 

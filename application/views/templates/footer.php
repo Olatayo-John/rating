@@ -11,8 +11,6 @@
 	$('[data-toggle="tooltip"]').tooltip();
 	setTimeout(() => document.querySelector('.alert').remove(), 6000);
 
-	setTimeout(() => document.querySelector('.ajax_alert_div').remove(), 1000);
-
 	$(document).ready(function() {
 		$("div ul li a.nav-link").mouseover(function() {
 			$(this).children().css("color", "#141E30");
@@ -20,6 +18,14 @@
 
 		$("div ul li a.nav-link").mouseout(function() {
 			$(this).children().css("color", "white");
+		});
+
+		$(document).on("click", ".ajax_succ_div_close", function() {
+			$(".ajax_succ_div").fadeOut();
+		});
+
+		$(document).on("click", ".ajax_err_div_close", function() {
+			$(".ajax_err_div").fadeOut();
 		});
 	})
 </script>

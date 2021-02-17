@@ -1,48 +1,66 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/websites.css'); ?>">
-<div class="mr-3 ml-3 mt-3 bg-light" id="content">
-    <div class="modal add_web_modal">
-        <div class="modal-dialog modal-dialog-top">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <form method="post" action="<?php echo base_url("user/add_website") ?>" class="add_web_modal_form">
-                        <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
-                        <div class="form-group">
-                            <label>Website Name</label>
-                            <input type="text" name="web_name" class="web_name form-control" placeholder="Name of the webisite" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="mb-0">Website Link</label>
-                            <div class="text-danger font-weight-bolder mt-0 web_link_err"></div>
-                            <input type="url" name="web_link" class="web_link form-control" placeholder="e.g https://domainname.com" required>
-                        </div>
-                        <div class="modal_btn_actions d-flex justify-content-between">
-                            <button type="button" class="btn btn-secondary closewebmodal_btn">Close</button>
-                            <button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#141E30;">Add</button>
-                        </div>
-                    </form>
+<div class="mr-3 ml-3 mt-3 mb-5 bg-light" id="content">
+    <?php if ($webs->num_rows() < $this->session->userdata("mr_web_quota")) : ?>
+        <div class="modal add_web_modal">
+            <div class="modal-dialog modal-dialog-top">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form method="post" action="<?php echo base_url("user/add_website") ?>" class="add_web_modal_form">
+                            <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                            <div class="form-group">
+                                <label>Website Name</label>
+                                <input type="text" name="web_name" class="web_name form-control" placeholder="Name of the webisite" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="mb-0">Website Link</label>
+                                <div class="text-danger font-weight-bolder mt-0 web_link_err"></div>
+                                <input type="url" name="web_link" class="web_link form-control" placeholder="e.g https://domainname.com" required>
+                            </div>
+                            <div class="modal_btn_actions d-flex justify-content-between">
+                                <button type="button" class="btn btn-secondary closewebmodal_btn">Close</button>
+                                <button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#141E30;">Add</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    <?php endif; ?>
     <form action="<?php echo base_url('user/addwebsites'); ?>" method="post" class="addweb_form">
         <h4 class="text-center mt-3 mb-0">WEBSITES</h4>
         <hr class="mt-2 h_hr">
         <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
         <div class="text-right">
-            <button type="button" class="text-light btn addwebmodal_btn" style="background:#141E30">
-                <i class="fas fa-plus-circle mr-2"></i>Add
-            </button>
+            <?php if ($webs->num_rows() < $this->session->userdata("mr_web_quota")) : ?>
+                <button type="button" class="text-light btn addwebmodal_btn" style="background:#141E30">
+                    <i class="fas fa-plus-circle mr-2"></i>Add
+                </button>
+            <?php endif; ?>
         </div>
         <div class="text-danger text-left instruction_div">
-            <div>You can create a maximum of 10 Webistes.</div>
+            <div>You can create a maximum of <?php echo $this->session->userdata("mr_web_quota") ?> Webistes.</div>
             <div>For more quota, contact us at <a href="mailto:hr@nktech.in">nktech.in</a> for your desired package.</div>
-            <div>You can't edit, rename or change any of this information after.</div>
+            <div>You can't change or remove any of this information after.</div>
         </div>
         <hr>
         <div class="text-center countwebs_div">
-            Created <span class="countwebs">0</span> website(s) out of 10
+            Created <span class="countwebs"><?php echo $webs->num_rows() ?></span> website(s) out of <?php echo $this->session->userdata("mr_web_quota") ?>
         </div>
         <div class="web_info_div" id="web_info_div">
+            <?php foreach ($webs->result_array() as $web) : ?>
+                <div class="d-flex flex-direction-row col-md-12 web_wrapper" id="" webname="" weblink="">
+                    <div class="form-group" style="margin:auto 0">
+                        <span class="web_num"><i class="fas fa-circle"></i></span>
+                    </div>
+                    <div class="form-group col">
+                        <label class="webnamelabel" id="webnamelabel"><?php echo $web['web_name'] ?></label>
+                        <input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="<?php echo $web['web_link'] ?>" readonly required>
+                    </div>
+                    <div class="form-group" style="margin:auto 0">
+
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
 
         <div class="btngrp text-right mt-5" style="display:none">
@@ -61,8 +79,10 @@
         $(document).on('click', 'button.addwebmodal_btn', function(e) {
             e.preventDefault();
             var num = $('.num_inc').val();
+            var web_quota = "<?php echo $this->session->userdata("mr_web_quota") ?>";
+            var web_count = $(".web_wrapper").length;
 
-            if (parseInt(num) == 11) {
+            if (parseInt(num) > web_quota) {
                 $(".add_web_modal_btn").hide();
                 $('.web_name,.web_link').attr("readonly", "true");
                 $('.add_web_modal').modal("hide");
@@ -110,21 +130,35 @@
                 $(".web_link_err").html("Invalid WEB URL").fadeIn();
                 return false;
             }
+            var web_quota = "<?php echo $this->session->userdata("mr_web_quota") ?>";
+            var web_count = $(".web_wrapper").length;
+            var new_web_count = parseInt(web_count) + 1;
 
-            $(".web_info_div").append('<div class="d-flex flex-direction-row col-md-12 web_wrapper" id="' + num + '" webname="' + web_name + '" weblink="' + web_link + '"><div class="form-group" style="margin:auto 0"><span class="web_num"><i class="fas fa-circle"></i></span></div><div class="form-group col"><label class="webname_label" id="webname_label">' + web_name + '</label><input type="url" name="weblink_input" class="form-control weblink_input" id="weblink_input" value="' + web_link + '" readonly required></div><div class="form-group" style="margin:auto 0"><i class="fas fa-times remove_web_i text-danger" web_id="' + num + '" web_name="' + web_name + '" web_link="' + web_link + '"></i></div></div>');
+            if (new_web_count <= web_quota) {
+                $(".web_info_div").append('<div class="d-flex flex-direction-row col-md-12 web_wrapper" id="' + num + '" webname="' + web_name + '" weblink="' + web_link + '"><div class="form-group" style="margin:auto 0"><span class="web_num"><i class="fas fa-circle"></i></span></div><div class="form-group col"><label class="webname_label" id="webname_label">' + web_name + '</label><input type="url" name="weblink_input" class="form-control weblink_input" id="weblink_input" value="' + web_link + '" readonly required></div><div class="form-group" style="margin:auto 0"><i class="fas fa-times remove_web_i text-danger" web_id="' + num + '" web_name="' + web_name + '" web_link="' + web_link + '"></i></div></div>');
 
-            $('.add_web_modal').modal("hide");
-            $('.web_name').val("");
-            $('.web_link').val("");
+                $('.add_web_modal').modal("hide");
+                $('.web_name').val("");
+                $('.web_link').val("");
 
-            var new_num = parseInt(num) + 1;
-            $('.num_inc').val(new_num);
+                var new_num = parseInt(num) + 1;
+                $('.num_inc').val(new_num);
 
-            var countwebs = $('.web_wrapper').length;
-            $(".countwebs").html(countwebs);
-            $(".countwebs_div").fadeIn();
+                $(".countwebs").html(num);
+                $(".countwebs_div").fadeIn();
 
-            $(".btngrp").fadeIn();
+                $(".btngrp").fadeIn();
+            } else {
+                $(".ajax_succ_div").fadeOut();
+                $('.ajax_res_err').html("Web Quota reached");
+                $('.ajax_err_div').fadeIn();
+
+                $('.add_web_modal').modal("hide");
+                $('.web_name').val("");
+                $('.web_link').val("");
+            }
+
+
         });
 
         $(document).on('click', 'i.remove_web_i', function() {

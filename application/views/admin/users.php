@@ -157,18 +157,21 @@
 
 					<div class="account_div">
 						<div class="form-group pwddiv">
-							<label><i class="fas fa-key mr-2"></i>New Password</label>
+							<label><i class="fas fa-lock mr-2"></i>New Password</label>
 							<input type="text" name="u_pwd" class="form-control u_pwd new_pwd">
 							<div class="text-danger font-weight-bolder pwderr">Password will be changed on this user!</div>
 							<div class="text-danger font-weight-bolder new_pwderr" style="display:none">Password must be over 6 characters!</div>
 						</div>
 						<div class="form-group mt-2">
-							<button class="btn text-light genpwdbtn" type="button" style="background:#141E30">Generate password</button>
+							<button class="btn text-light genpwdbtn" type="button" style="background:#141E30"><i class="fas fa-key mr-2"></i>Generate password</button>
 						</div>
-						<div class="form-group mt-2 text-right">
-							<button class="btn btn-danger delact_btn" type="button">Delete account</button>
+						<hr>
+						<div class="form-group mt-2">
+							<button class="btn btn-danger delact_btn" type="button"><i class="fas fa-trash-alt mr-2"></i>Delete account</button>
 							<button class="btn btn-danger deacti_act_btn" type="button">De-activate account</button>
 							<button class="btn text-light acti_act_btn" type="button" style='background:#141E30'>Activate account</button>
+							<button class="btn text-light verifysub_btn" type="button" style='background:#141E30'>Activate user subscription?</button>
+							<button class="btn btn-danger unverifysub_btn" type="button">De-activate user subscription?</button>
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
@@ -374,7 +377,7 @@
 			$(".new_pwd").val("");
 			$(".user_accupdate").hide();
 			$(".weberr,.web_quota_err,.mobileerr,.new_pwderr").hide();
-			// $(".form-control").css("border", "1px solid #ced4da");
+			$('.uname,.email,.mobile,.web_quota,u_pwd').css('border', '1px solid #ced4da');
 
 			var user_id = $(this).attr("id");
 			var form_key = $(this).attr("form_key");
@@ -414,7 +417,7 @@
 					}
 
 					if (data.webs.length == 0) {
-						$("div.website_form_div").append('<p class="text-center text-dark mt-4 font-weight-bolder">USER HAS NO DATA</p>');
+						$("div.website_form_div").append('<p class="text-center no_data text-dark mt-4 font-weight-bolder">USER HAS NO DATA</p>');
 						$("div.action_div").hide();
 						$('.web_num_total').html("0");
 					} else {
@@ -434,6 +437,16 @@
 						$('button.deacti_act_btn').show();
 						$('button.acti_act_btn').hide();
 					}
+
+					if (data.infos[0].sub == "0") {
+						$('button.unverifysub_btn').hide();
+						$('button.verifysub_btn').show();
+					} else if (data.infos[0].sub == "1") {
+						$('button.unverifysub_btn').show();
+						$('button.verifysub_btn').hide();
+					}
+
+
 
 					$(".weberr").show()
 					$('.updateusermodal').modal('show');
@@ -497,7 +510,7 @@
 				$('.updateusermodal').modal('hide');
 				$(".addusermodal").modal("show");
 			} else if (webcount >= web_quota) {
-				var con = confirm("User quota is" + web_quota + ". Increase user quota to add more websites.")
+				var con = confirm("User quota is " + web_quota + ". Increase user quota to add more websites.")
 				if (con === false) {
 					return false;
 				} else if (con === true) {
@@ -519,6 +532,7 @@
 			var csrfName = $('.csrf-token').attr('name');
 			var web_name_add = $('.web_name_add').val();
 			var web_link_add = $('.web_link_add').val();
+			var web_num_total = $('.web_num_total').text();
 
 
 			if (web_name_add == "" || web_name_add == null) {
@@ -579,8 +593,17 @@
 						$('.ajax_res_succ').html(data.res_msg);
 						$('.ajax_succ_div').fadeIn();
 
-						// $('label[web_id=' + id + ']').html(web_name_edit);
-						// $('input[web_id=' + id + ']').val(web_link_edit);
+						$("div.website_form_div").append('<div class="row ' + data.insert_id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.insert_id + '" user_id="' + user_id + '" form_key="' + form_key + '" web_name="' + web_name_add + '" web_link="' + web_link_add + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.insert_id + '" user_id="' + user_id + '" form_key="' + form_key + '" web_name="' + web_name_add + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.insert_id + '">' + web_name_add + '</label><input readonly type="url" name="' + web_name_add + '" class="form-control web_form_input ' + web_name_add + '" web_id="' + data.insert_id + '" placeholder="https://domain-name.com" value="' + web_link_add + '" required></div></div></div>');
+
+						$("div.action_div").show();
+
+						$("p.no_data").hide();
+
+						var new_web_num_total = parseInt(web_num_total) + 1;
+						$('.web_num_total').html(new_web_num_total);
+
+						$('.updateusermodal').modal('show');
+						$(".addusermodal").modal("hide");
 					}
 
 					reload_table();
@@ -634,15 +657,27 @@
 			} else {
 				$(".web_name_edit").css('border', '1px solid #141E30');
 			}
-			if (web_link_edit == "" || web_link_edit == null || !web_link_edit.startsWith("http") || !web_link_edit.startsWith("https") || !web_link_edit.includes("://") || !web_link_edit.includes(".") || web_link_edit.endsWith(".")) {
+
+			if (web_link_edit == "" || web_link_edit == null) {
 				$(".web_link_edit").css('border', '2px solid red');
-				$(".weberr_span").html("Invalid WEB URL");
-				$(".web_update_spinner").hide();
 				return false;
-			} else {
+			}
+			var patt = new RegExp('^(https?:\\/\\/)?' + // protocol
+				'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
+				'((\\d{1,3}\\.){3}\\d{1,3}))' + // ip (v4) address
+				'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + //port
+				'(\\?[;&amp;a-z\\d%_.~+=-]*)?' + // query string
+				'(\\#[-a-z\\d_]*)?$', 'i');
+			var res = patt.test(web_link_edit);
+			if (res == true) {
 				$(".weberr").hide();
-				$(".weberr_span").html("* Web links must start with http or https");
 				$(".web_link_edit").css('border', '1px solid #141E30');
+				$(".web_update_spinner").hide();
+			} else if (res == false) {
+				$(".weberr").show();
+				$(".weberr_span").html("Invalid WEB URL");
+				$(".web_link_edit").css('border', '2px solid red');
+				return false;
 			}
 
 			$.ajax({
@@ -704,6 +739,8 @@
 			var form_key = $(this).attr('form_key');
 			var csrfHash = $('.csrf-token').val();
 			var csrfName = $('.csrf-token').attr('name');
+			var web_num_total = $('.web_num_total').text();
+
 			var con = confirm("Are you sure you want to delete this user website and all of its ratings?");
 			if (con == false) {
 				return false;
@@ -729,6 +766,13 @@
 							$('.ajax_succ_div').fadeIn();
 						}
 						$('.csrf-token').val(data.token);
+
+						var new_web_num_total = parseInt(web_num_total) - 1;
+						$('.web_num_total').html(new_web_num_total);
+						if (parseInt(new_web_num_total) <= 0) {
+							$("div.action_div").hide();
+							$("div.website_form_div").append('<p class="text-center no_data text-dark mt-4 font-weight-bolder">USER HAS NO DATA</p>');
+						}
 					},
 					error: function(data) {
 						alert('Failed to delete. Please refresh page');
@@ -767,7 +811,7 @@
 				$('.email').css('border', '1px solid #141E30');
 			}
 			if (mobile == "" || mobile == null) {
-				$('.uname').css('border', '2px solid red');
+				$('.mobile').css('border', '2px solid red');
 				$(".prof_update_spinner").hide();
 				return false;
 			}
@@ -787,7 +831,7 @@
 				return false;
 			}
 			if (parseInt(web_quota) < 10) {
-				$('.mobile').css('border', '2px solid red');
+				$('.web_quota').css('border', '2px solid red');
 				$(".web_quota_err").html("The default quota is 10").show();
 				$(".prof_update_spinner").hide();
 				return false;
@@ -959,6 +1003,92 @@
 					.done(function() {
 						window.location.reload();
 					});
+			}
+		});
+
+		$(document).on('click', 'button.verifysub_btn', function() {
+			var user_id = $('.user_id').val();
+			var form_key = $('.user_form_key').val();
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var con = confirm("Are you sure you want to verify this user payment?");
+			if (con == false) {
+				return false;
+			} else if (con == true) {
+
+				$.ajax({
+					url: "<?php echo base_url('admin/verify_user_sub'); ?>",
+					method: "post",
+					data: {
+						user_id: user_id,
+						form_key: form_key,
+						[csrfName]: csrfHash
+					},
+					dataType: "json",
+					success: function(data) {
+						$('.csrf-token').val(data.token);
+
+						$('.unverifysub_btn').show();
+						$('.verifysub_btn').hide();
+
+						if (data.res == "failed") {
+							$('.ajax_res_err').html(data.res_msg);
+							$('.ajax_err_div').fadeIn();
+						} else if (data.res == "success") {
+							$('.ajax_res_succ').html(data.res_msg);
+							$('.ajax_succ_div').fadeIn();
+						}
+
+						reload_table();
+
+					},
+					error: function(data) {
+						window.location.reload();
+					}
+				});
+			}
+		});
+
+		$(document).on('click', 'button.unverifysub_btn', function() {
+			var user_id = $('.user_id').val();
+			var form_key = $('.user_form_key').val();
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var con = confirm("Are you sure you want to verify this user payment?");
+			if (con == false) {
+				return false;
+			} else if (con == true) {
+
+				$.ajax({
+					url: "<?php echo base_url('admin/unverify_user_sub'); ?>",
+					method: "post",
+					data: {
+						user_id: user_id,
+						form_key: form_key,
+						[csrfName]: csrfHash
+					},
+					dataType: "json",
+					success: function(data) {
+						$('.csrf-token').val(data.token);
+
+						$('.verifysub_btn').show();
+						$('.unverifysub_btn').hide();
+
+						if (data.res == "failed") {
+							$('.ajax_res_err').html(data.res_msg);
+							$('.ajax_err_div').fadeIn();
+						} else if (data.res == "success") {
+							$('.ajax_res_succ').html(data.res_msg);
+							$('.ajax_succ_div').fadeIn();
+						}
+
+						reload_table();
+
+					},
+					error: function(data) {
+						window.location.reload();
+					}
+				});
 			}
 		});
 

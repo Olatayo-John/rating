@@ -1,8 +1,8 @@
 body{
-	background: #141E30;
+	background: #294a63;
 }
 input.form-control:focus,select.form-control:focus{
-	border-color: #141E30;
+	border-color: #294a63;
 	box-shadow: none;
 }
 div.rt_div{
@@ -90,7 +90,7 @@ div.modal-header::-webkit-scrollbar{
 	height: 5px;
   }
 div.modal-header::-webkit-scrollbar-thumb{
-	background: #141E30;
+	background: #294a63;
 	border-radius: 4px;
 }
 @media only screen and (max-width: 500px) {

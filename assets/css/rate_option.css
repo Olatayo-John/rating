@@ -1,5 +1,5 @@
 body{
-	background: #141E30;
+	background: #294a63;
 }
 .wrapper_div{
 	background-color: white;
@@ -11,7 +11,7 @@ a.btn{
 	border-radius: 0;
 }
 a.wbratebtn{
-	background:#141E30;
+	background:#294a63;
 	width: 80%;
 }
 a.wbratebtn:hover{

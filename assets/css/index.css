@@ -1,7 +1,7 @@
 body{
-	background: #141E30;
-	background: -webkit-linear-gradient(to right, #243B55, #141E30)
-	background: linear-gradient(to right, #243B55, #141E30);
+	background: #294a63;
+	background: -webkit-linear-gradient(to right, #243B55, #294a63)
+	background: linear-gradient(to right, #243B55, #294a63);
 }
 form.gen_link_form{
 	display: none;

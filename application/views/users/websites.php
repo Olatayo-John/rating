@@ -18,7 +18,7 @@
                             </div>
                             <div class="modal_btn_actions d-flex justify-content-between">
                                 <button type="button" class="btn btn-secondary closewebmodal_btn">Close</button>
-                                <button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#141E30;">Add</button>
+                                <button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#294a63;">Add</button>
                             </div>
                         </form>
                     </div>
@@ -32,7 +32,7 @@
         <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
         <div class="text-right">
             <?php if ($webs->num_rows() < $this->session->userdata("mr_web_quota")) : ?>
-                <button type="button" class="text-light btn addwebmodal_btn" style="background:#141E30">
+                <button type="button" class="text-light btn addwebmodal_btn" style="background:#294a63">
                     <i class="fas fa-plus-circle mr-2"></i>Add
                 </button>
             <?php endif; ?>
@@ -65,7 +65,7 @@
 
         <div class="btngrp text-right mt-5" style="display:none">
             <input type="hidden" class="num_inc" value="1">
-            <button class="btn text-light add_allwebbtn" type="submit" style="background:#141E30">Create</button>
+            <button class="btn text-light add_allwebbtn" type="submit" style="background:#294a63">Create</button>
         </div>
     </form>
 </div>

@@ -1,17 +1,14 @@
 body{
-	background: #141E30;
-	/* background: -webkit-linear-gradient(to right, #243B55, #141E30);
-	background: linear-gradient(to right, #243B55, #141E30); */
+	background: #294a63;
 }
 label{
-	color: #141E30;
-	/* font-weight: bold; */
+	color: #294a63;
 }
 button:focus{
 	outline: none;
 }
 input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
-	border-color: #141E30;
+	border-color: #294a63;
 	box-shadow: none;
 }
 .con{
@@ -23,10 +20,10 @@ input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
 	justify-content: space-evenly;
 }
 .tab_div a.prof_a{
-	border-bottom: 2px solid #141E30;
+	border-bottom: 2px solid #294a63;
 }
 .tab_link{
-	color: #141E30;
+	color: #294a63;
 	font-weight: bold;
 	font-size: 15px;
 }
@@ -43,19 +40,19 @@ h4{
 hr.p_i{
 	margin: auto 0;
 	margin-bottom: 30px;
-	border-bottom: 3px solid #141E30;
+	border-bottom: 3px solid #294a63;
 	width: 150px;
 }
 hr.web{
 	margin: auto 0;
 	margin-bottom: 30px;
-	border-bottom: 3px solid #141E30;
+	border-bottom: 3px solid #294a63;
 	width: 70px;
 }
 hr.account{
 	margin: auto 0;
 	margin-bottom: 30px;
-	border-bottom: 3px solid #141E30;
+	border-bottom: 3px solid #294a63;
 	width: 120px;
 }
 .web_input{
@@ -75,10 +72,10 @@ button.btn-dark,button.status_web_btn{
 	display: none;
 }
 label i.fas,.tab_link i.fas{
-	color: #141E30;
+	color: #294a63;
 }
 .help_i{
-	color: #141E30;
+	color: #294a63;
 	cursor: pointer;
 }
 @media only screen and (max-width: 580px) {

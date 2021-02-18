@@ -98,7 +98,7 @@ class Admin extends CI_Controller
 		$output = "";
 
 		$data = $this->Adminmodel->get_user_details($config["per_page"], $offset);
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #294a63">
 		<th>
 		<span>Status</span>
 		</th>
@@ -163,10 +163,10 @@ class Admin extends CI_Controller
 				$output .= '</td>
 				<td class="font-weight-bolder">
 				<div class="d-flex" style="justify-content:space-around">
-				<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#294a63">
 				<i class="fas fa-user-alt text-light "></i>
 				</button>
-				<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#294a63">
 				<i class="fas fa-trash-alt text-danger "></i>
 				</button>
 				</div>
@@ -193,7 +193,7 @@ class Admin extends CI_Controller
 			$query = $this->input->post('query');
 		}
 		$data = $this->Adminmodel->users_search_user($query);
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #294a63">
 		<th>
 		<span>Status</span>
 		</th>
@@ -243,10 +243,10 @@ class Admin extends CI_Controller
 				$output .= '</td>
 				<td class="font-weight-bolder">
 				<div class="d-flex" style="justify-content:space-around">
-				<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#294a63">
 				<i class="fas fa-user-alt text-light "></i>
 				</button>
-				<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#294a63">
 				<i class="fas fa-trash-alt text-danger "></i>
 				</button>
 				</div>
@@ -269,7 +269,7 @@ class Admin extends CI_Controller
 		}
 		$data = $this->Adminmodel->users_filter_param($_POST['param'], $_POST['type']);
 		$output = "";
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background: #294a63">
 		<th>
 		<span>Status</span>
 		</th>
@@ -334,10 +334,10 @@ class Admin extends CI_Controller
 				$output .= '</td>
 				<td class="font-weight-bolder">
 				<div class="d-flex" style="justify-content:space-around">
-				<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<button class="btn text-light editbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#294a63">
 				<i class="fas fa-user-alt text-light "></i>
 				</button>
-				<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<button class="btn text-light delbtn" id="' . $info['id'] . '" form_key="' . $info['form_key'] . '" style="background:#294a63">
 				<i class="fas fa-trash-alt text-danger "></i>
 				</button>
 				</div>
@@ -793,7 +793,7 @@ class Admin extends CI_Controller
 		$output = "";
 
 		$data = $this->Adminmodel->get_user_votes($config["per_page"], $offset);
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;">
 		<th>
 		<div class="inh">
 		<i class="fas fa-sort" name="uname" type="desc"></i>
@@ -841,7 +841,7 @@ class Admin extends CI_Controller
 				<td class="tv">' . $info["total_email"] . '</td>
 				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
 				<td class="font-weight-bolder">
-				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#294a63">
 				<i class="fas fa-poll text-light"></i></button>
 				</td>
 				</tr>';
@@ -862,7 +862,7 @@ class Admin extends CI_Controller
 		}
 		$data = $this->Adminmodel->votes_filter_param($_POST['param'], $_POST['type']);
 		$output = "";
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;">
 		<th>
 		<div class="inh">
 		<i class="fas fa-sort" name="uname" type="desc"></i>
@@ -910,7 +910,7 @@ class Admin extends CI_Controller
 				<td class="tv">' . $info["total_email"] . '</td>
 				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
 				<td class="font-weight-bolder">
-				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#294a63">
 				<i class="fas fa-poll text-light"></i></button>
 				</td>
 				</tr>';
@@ -935,7 +935,7 @@ class Admin extends CI_Controller
 			$query = $this->input->post('query');
 		}
 		$data = $this->Adminmodel->votes_search_user($query);
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;">
 		<th>
 		<div class="inh">
 		<span>User</span>
@@ -978,7 +978,7 @@ class Admin extends CI_Controller
 				<td class="tv">' . $info["total_email"] . '</td>
 				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
 				<td class="font-weight-bolder">
-				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
+				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#294a63">
 				<i class="fas fa-poll text-light"></i></button>
 				</td>
 				</tr>';
@@ -1045,7 +1045,7 @@ class Admin extends CI_Controller
 		$data = $this->Adminmodel->search_ind_votes($query, $_POST['key']);
 		// echo json_encode($data);
 		$output .= '<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
-		<tr class="font-weight-bolder text-light text-center" style="background:#141E30;">
+		<tr class="font-weight-bolder text-light text-center" style="background:#294a63;">
 		<th><span class="icon">
 		Name
 		</span></th>

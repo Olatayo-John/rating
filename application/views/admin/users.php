@@ -25,7 +25,7 @@
 							<div class="spinner-border web_add_spinner" style="position:absolute;right:70px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
 								<span class="sr-only">Loading...</span>
 							</div>
-							<button class="btn text-light web_addbtn bradius" userid="" userformkey="" useractive="" type="submit" style="background:#141E30">Add</button>
+							<button class="btn text-light web_addbtn bradius" userid="" userformkey="" useractive="" type="submit" style="background:#294a63">Add</button>
 						</div>
 					</div>
 			</div>
@@ -53,7 +53,7 @@
 						<div class="spinner-border web_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
 							<span class="sr-only">Loading...</span>
 						</div>
-						<button class="btn text-light user_webpdate bradius" style="background:#141E30">Update</button>
+						<button class="btn text-light user_webpdate bradius" style="background:#294a63">Update</button>
 					</div>
 				</div>
 			</div>
@@ -64,7 +64,7 @@
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
 				<div class="modal-body">
-					<div class="row d-flex justify-content-between" style="background:#141E30;">
+					<div class="row d-flex justify-content-between" style="background:#294a63;">
 						<div class="nameofuser_h">
 							<h6 class="text-light mt-auto mb-auto" style="text-transform:uppercase"></h6>
 						</div>
@@ -126,7 +126,7 @@
 						<div class="form-group">
 							<div class="d-flex" style="justify-content:space-between">
 								<label>Link<i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></label>
-								<div class="linkcopyalert font-weight-bolder" style="display:none;color:#141E30">Copied to your clipboard</div>
+								<div class="linkcopyalert font-weight-bolder" style="display:none;color:#294a63">Copied to your clipboard</div>
 							</div>
 							<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' readonly>
 						</div>
@@ -135,14 +135,14 @@
 							<div class="spinner-border prof_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
 								<span class="sr-only">Loading...</span>
 							</div>
-							<button class="btn text-light user_profileupdate bradius" type="submit" style="background:#141E30">Update</button>
+							<button class="btn text-light user_profileupdate bradius" type="submit" style="background:#294a63">Update</button>
 						</div>
 					</div>
 
 					<div class="website_div">
 						<div class="d-flex justify-content-between mb-3">
 							<div class="action_div">
-								<button type="button" class="action_web_btn text-light" style="background-color:#141E30;padding:6px;border:none;border-radius: 50%;">
+								<button type="button" class="action_web_btn text-light" style="background-color:#294a63;padding:6px;border:none;border-radius: 50%;">
 									<i class="fas fa-ellipsis-h"></i>
 								</button>
 							</div>
@@ -151,7 +151,7 @@
 								<i class="fas fa-question-circle help_i" title="For more website quota, contact us at nktech.in@gmail.com"></i>
 							</div>
 							<div class="add_web">
-								<button type="button" class="add_web_btn text-light" style="background-color:#141E30;padding:6px;border:none">
+								<button type="button" class="add_web_btn text-light" style="background-color:#294a63;padding:6px;border:none">
 									<i class="fas fa-plus-circle"></i>
 									Add Website
 								</button>
@@ -168,16 +168,16 @@
 					<div class="payment_div">
 						<div class="pt-4 d-flex" style="justify-content: space-between;">
 							<div>
-								<a href="<?php echo base_url(''); ?>" class="btn text-light paymentcsvbtn" style="background:#141E30;">
+								<a href="<?php echo base_url(''); ?>" class="btn text-light paymentcsvbtn" style="background:#294a63;">
 									<i class="fas fa-file-csv mr-2"></i>CSV Download
 								</a>
 							</div>
 							<div>
-								<div class="font-weight-bolder verifysub_btn mb-2">Subscription is not active</div>
-								<div style="color:#141E30" class="font-weight-bolder unverifysub_btn mb-2">Subscription is active</div>
+								<div class="font-weight-bolder text-danger verifysub_btn mb-2">Subscription is not active</div>
+								<div class="font-weight-bolder text-success unverifysub_btn mb-2">Subscription is active</div>
 							</div>
 							<div>
-								<button class="btn text-light verifysub_btn" type="button" style='background:#141E30'>Activate subscription?</button>
+								<button class="btn text-light verifysub_btn" type="button" style='background:#294a63'>Activate subscription?</button>
 								<button class="btn btn-danger unverifysub_btn" type="button">De-activate user subscription?</button>
 							</div>
 						</div>
@@ -185,7 +185,7 @@
 
 						<div class="payment_table_div" style="overflow-x:scroll;overflow-y:hidden;">
 							<table class="table table-bordered table-center table-hover tablepayment" id="tablepayment">
-								<tr class="font-weight-bolder text-light text-center" style="background:#141E30;white-space: nowrap;">
+								<tr class="font-weight-bolder text-light text-center" style="background:#294a63;white-space: nowrap;">
 									<th><span class="icon">
 											Merchant ID
 										</span></th>
@@ -233,20 +233,20 @@
 							<div class="text-danger font-weight-bolder new_pwderr" style="display:none">Password must be over 6 characters!</div>
 						</div>
 						<div class="form-group mt-2">
-							<button class="btn text-light genpwdbtn" type="button" style="background:#141E30"><i class="fas fa-key mr-2"></i>Generate password</button>
+							<button class="btn text-light genpwdbtn" type="button" style="background:#294a63"><i class="fas fa-key mr-2"></i>Generate password</button>
 						</div>
 						<hr>
 						<div class="form-group mt-2">
 							<button class="btn btn-danger delact_btn" type="button"><i class="fas fa-trash-alt mr-2"></i>Delete account</button>
 							<button class="btn btn-danger deacti_act_btn" type="button"><i class="fas fa-user-alt-slash mr-2"></i>De-activate account</button>
-							<button class="btn text-light acti_act_btn" type="button" style='background:#141E30'><i class="fas fa-user-check mr-2"></i>Activate account</button>
+							<button class="btn text-light acti_act_btn" type="button" style='background:#294a63'><i class="fas fa-user-check mr-2"></i>Activate account</button>
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
 							<div class="spinner-border acct_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
 								<span class="sr-only">Loading...</span>
 							</div>
-							<button class="btn text-light user_accupdate bradius" style="background:#141E30;display:none">Update</button>
+							<button class="btn text-light user_accupdate bradius" style="background:#294a63;display:none">Update</button>
 						</div>
 					</div>
 
@@ -258,15 +258,15 @@
 
 	<div class="d-flex pt-5 mb-3 pt-0 pb-0 pl-0 pr-0 col-md-12">
 		<div class="col">
-			<a href="<?php echo base_url('admin/users_export_csv'); ?>" class="btn text-light csvbtn" style="background:#141E30;">
+			<a href="<?php echo base_url('admin/users_export_csv'); ?>" class="btn text-light csvbtn" style="background:#294a63;">
 				<i class="fas fa-file-csv mr-2"></i>CSV Download
 			</a>
-			<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background:#141E30;">
+			<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background:#294a63;">
 				<i class="fas fa-sync-alt"></i>
 			</button>
 		</div>
 		<div class="col">
-			<div class="d-flex flex-row" style="border-bottom: 1px solid #141E30">
+			<div class="d-flex flex-row" style="border-bottom: 1px solid #294a63">
 				<span class="" style="border-radius: 0;display:inline-flex; "><i class="fas fa-search"></i></span>
 				<input type="text" name="search_user" id="search_user" class="form-control search_user" placeholder="Search by any field" style="border-radius: 0" autofocus>
 			</div>
@@ -276,7 +276,7 @@
 
 	<div class="container-fluid table-responsive">
 		<table class="table table-center table-hover table-md table-light table-bordered usertable">
-			<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
+			<tr class="font-weight-bolder text-light text-center" style="background: #294a63">
 				<th>
 					<span>Status</span>
 				</th>
@@ -343,10 +343,10 @@
 						</td>
 						<td class="font-weight-bolder">
 							<div class="d-flex" style="justify-content:space-around">
-								<button class="btn text-light editbtn" id="<?php echo $info['id'] ?>" form_key="<?php echo $info['form_key'] ?>" style="background:#141E30">
+								<button class="btn text-light editbtn" id="<?php echo $info['id'] ?>" form_key="<?php echo $info['form_key'] ?>" style="background:#294a63">
 									<i class="fas fa-user-alt text-light "></i>
 								</button>
-								<button class="btn text-light delbtn" id="<?php echo $info['id'] ?>" form_key="<?php echo $info['form_key'] ?>" style="background:#141E30">
+								<button class="btn text-light delbtn" id="<?php echo $info['id'] ?>" form_key="<?php echo $info['form_key'] ?>" style="background:#294a63">
 									<i class="fas fa-trash-alt text-danger "></i>
 								</button>
 							</div>
@@ -612,7 +612,7 @@
 				} else if (con === true) {
 					$('div.website_div,div.account_div').hide();
 					$('a.web_a,a.ac_a').css('border-bottom', 'initial');
-					$("a.prof_a").css('border-bottom', '2px solid #141E30');
+					$("a.prof_a").css('border-bottom', '2px solid #294a63');
 					$('div.profile_div').show();
 					$(".web_quota").css('border', '2px solid red')
 				}
@@ -636,7 +636,7 @@
 				$(".web_add_spinner").hide();
 				return false;
 			} else {
-				$(".web_name_add").css('border', '1px solid #141E30');
+				$(".web_name_add").css('border', '1px solid #294a63');
 			}
 			if (web_link_add == "" || web_link_add == null) {
 				$(".web_link_add").css('border', '2px solid red');
@@ -651,7 +651,7 @@
 			var res = patt.test(web_link_add);
 			if (res == true) {
 				$(".addweberr").hide();
-				$(".web_link_add").css('border', '1px solid #141E30');
+				$(".web_link_add").css('border', '1px solid #294a63');
 				$(".web_add_spinner").hide();
 			} else if (res == false) {
 				$(".addweberr").show();
@@ -751,7 +751,7 @@
 				$(".web_update_spinner").hide();
 				return false;
 			} else {
-				$(".web_name_edit").css('border', '1px solid #141E30');
+				$(".web_name_edit").css('border', '1px solid #294a63');
 			}
 
 			if (web_link_edit == "" || web_link_edit == null) {
@@ -767,7 +767,7 @@
 			var res = patt.test(web_link_edit);
 			if (res == true) {
 				$(".weberr").hide();
-				$(".web_link_edit").css('border', '1px solid #141E30');
+				$(".web_link_edit").css('border', '1px solid #294a63');
 				$(".web_update_spinner").hide();
 			} else if (res == false) {
 				$(".weberr").show();
@@ -798,7 +798,7 @@
 					$('.user_webpdate').html("Update");
 					$('.user_webpdate').removeAttr("disabled");
 					$('.user_webpdate').css("cursor", "pointer");
-					$('.user_webpdate').css("background", "#141E30");
+					$('.user_webpdate').css("background", "#294a63");
 					$('.csrf-token').val(data.token);
 
 					if (data.res == "failed") {
@@ -897,14 +897,14 @@
 				$(".prof_update_spinner").hide();
 				return false;
 			} else {
-				$('.uname').css('border', '1px solid #141E30');
+				$('.uname').css('border', '1px solid #294a63');
 			}
 			if (email == "" || email == null) {
 				$('.email').css('border', '2px solid red');
 				$(".prof_update_spinner").hide();
 				return false;
 			} else {
-				$('.email').css('border', '1px solid #141E30');
+				$('.email').css('border', '1px solid #294a63');
 			}
 			if (mobile == "" || mobile == null) {
 				$('.mobile').css('border', '2px solid red');
@@ -917,7 +917,7 @@
 				$(".prof_update_spinner").hide();
 				return false;
 			} else {
-				$('.mobile').css('border', '1px solid #141E30');
+				$('.mobile').css('border', '1px solid #294a63');
 				$(".mobileerr").hide();
 			}
 			if (web_quota == "" || web_quota == null) {
@@ -938,7 +938,7 @@
 				$(".prof_update_spinner").hide();
 				return false;
 			} else {
-				$('.web_quota').css('border', '1px solid #141E30');
+				$('.web_quota').css('border', '1px solid #294a63');
 			}
 
 			$.ajax({
@@ -966,7 +966,7 @@
 					$('.user_profileupdate').html("Update");
 					$('.user_profileupdate').removeAttr("disabled");
 					$('.user_profileupdate').css("cursor", "pointer");
-					$('.user_profileupdate').css("background", "#141E30");
+					$('.user_profileupdate').css("background", "#294a63");
 					$('.csrf-token').val(data.token);
 
 					if (data.res == "failed") {
@@ -1205,7 +1205,7 @@
 				$(".user_accupdate").hide();
 				return false;
 			} else {
-				$('.new_pwd').css('border', '1px solid #141E30');
+				$('.new_pwd').css('border', '1px solid #294a63');
 				$('.new_pwderr').removeClass('text-danger').addClass('text-success');
 			}
 
@@ -1232,7 +1232,7 @@
 				$(".acct_update_spinner").hide();
 				return false;
 			} else {
-				$('.new_pwd').css('border', '1px solid #141E30');
+				$('.new_pwd').css('border', '1px solid #294a63');
 				$('.new_pwderr').removeClass('text-danger').addClass('text-success');
 			}
 
@@ -1258,7 +1258,7 @@
 					$('.user_accupdate').html("Update");
 					$('.user_accupdate').removeAttr("disabled");
 					$('.user_accupdate').css("cursor", "pointer");
-					$('.user_accupdate').css("background", "#141E30");
+					$('.user_accupdate').css("background", "#294a63");
 
 					$('.csrf-token').val(data.token);
 

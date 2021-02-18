@@ -12,7 +12,7 @@
 			<div class="text-danger font-weight-bolder codeerr" style="display: none;">Invalid code length</div>
 		</div>
 		<div class="form-group verifybtndiv">
-			<button class="btn text-light verifycodebtn" type="submit" style="background:#141E30"><i class="fas fa-user-check mr-2"></i>Verify</button>
+			<button class="btn text-light verifycodebtn" type="submit" style="background:#294a63"><i class="fas fa-user-check mr-2"></i>Verify</button>
 		</div>
 		<div class="text-right font-weight-bolder rsendcodediv">
 			<a href="<?php echo base_url('user/resendemailverify/' . $key); ?>" class="text-danger rsendcodebtn" id="rsendcodebtn">

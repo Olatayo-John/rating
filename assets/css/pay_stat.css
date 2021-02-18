@@ -1,12 +1,12 @@
 h4{
-	color: #141E30;
+	color: #294a63;
 }
 p{
 	margin: 0 !important;
 	font-weight: bold;
 }
 body{
-	background: #141E30;
+	background: #294a63;
 }
 input.form-control:focus,textarea.form-control:focus{
 	border-color: black;
@@ -14,14 +14,14 @@ input.form-control:focus,textarea.form-control:focus{
 }
 hr.h_hr{
 	margin-top: 0;
-	border-top: 2px solid #141E30;
+	border-top: 2px solid #294a63;
 	width: 150px;
 }
 .form-control{
 	border-radius: 0;
 }
 label{
-	color: #141E30;;
+	color: #294a63;;
 	font-weight: bold;
 }
 div.btnlinkgrp{

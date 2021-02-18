@@ -25,7 +25,7 @@
 					<strong>You have an active subscription.</strong>
 				</div>
 				<div>
-					<a href="<?php echo base_url("user/account"); ?>" class="font-weight-bolder mr-2" style="color:#141E30">Check your quota here</a>
+					<a href="<?php echo base_url("user/account"); ?>" class="font-weight-bolder mr-2" style="color:#294a63">Check your quota here</a>
 				</div>
 			</div>
 		</div>

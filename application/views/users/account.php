@@ -110,7 +110,7 @@
 </div>
 
 <h4 class="text-center font-weight-bolder mt-4 mr-3 ml-3 mb-0 pb-3 pt-3">WEB RATINGS</h4>
-<div style="color:#141E30;font-weight:600;background:white" class="ml-3 mr-3 pl-3 pb-4">
+<div style="color:#294a63;font-weight:600;background:white" class="ml-3 mr-3 pl-3 pb-4">
 	<span class="web_num_total"><?php echo $user_web->num_rows(); ?></span> Website(s) out of <?php echo $this->session->userdata("mr_web_quota") ?> <i class="fas fa-question-circle help_i" title="For more website quota, contact us at nktech.in@gmail.com"></i>
 </div>
 <div class="tr_div row pb-5 mb-5 mr-3 ml-3">

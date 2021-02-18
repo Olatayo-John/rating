@@ -13,7 +13,7 @@
 
 	$(document).ready(function() {
 		$("div ul li a.nav-link").mouseover(function() {
-			$(this).children().css("color", "#141E30");
+			$(this).children().css("color", "#294a63");
 		});
 
 		$("div ul li a.nav-link").mouseout(function() {

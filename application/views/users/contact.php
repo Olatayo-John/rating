@@ -16,7 +16,7 @@
 				</div>
 				<div class="g-recaptcha form-group" data-sitekey="xxxxxxxxxx"></div>
 				<div class="subbtngrp text-center">
-					<button class="btn text-light btn-block" style="background:#141E30">Submit</button>
+					<button class="btn text-light btn-block" style="background:#294a63">Submit</button>
 				</div>
 			</form>
 		</div>

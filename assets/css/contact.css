@@ -1,8 +1,8 @@
 body{
-	background: #141E30;
+	background: #294a63;
 }
 h4{
-	color: #141E30;
+	color: #294a63;
 }
 input.form-control,textarea.form-control{
 	border-radius: 0;
@@ -15,11 +15,11 @@ button.btn{
 	border-radius: 0;
 }
 hr{
-	border: 1px solid #141E30;
+	border: 1px solid #294a63;
 	margin: 2rem 0;
 }
 div.row{
-	color: #141E30;
+	color: #294a63;
 	margin-bottom: 5px;
 }
 i.fas{
@@ -27,7 +27,7 @@ i.fas{
 	font-weight: bolder;
 }
 label{
-	color: #141E30;
+	color: #294a63;
 	font-weight: bolder;
 }
 i.fab{

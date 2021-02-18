@@ -1,24 +1,24 @@
 body{
-	background: #141E30;
-	background: -webkit-linear-gradient(to right, #243B55, #141E30);
-	background: linear-gradient(to right, #243B55, #141E30);
+	background: #294a63;
+	background: -webkit-linear-gradient(to right, #243B55, #294a63);
+	background: linear-gradient(to right, #243B55, #294a63);
 }
 .user_reg_form{
 	padding: 20px;
 }
 h4{
-	color: #141E30;
+	color: #294a63;
 	/* font-weight: bold; */
 }
 label,.fa-eye,.fa-eye-slash,.fa-question-circle,.fas-question-circle{
-	color: #141E30;
+	color: #294a63;
 }
 hr{
-	border:1px solid #141E30;
+	border:1px solid #294a63;
 	width: 150px;
 }
 .fa-question-circle,.fas-question-circle{
-	color: #141E30;
+	color: #294a63;
 	cursor: pointer;
 }
 div.btngrp{

@@ -15,7 +15,7 @@
 
 <style type="text/css">
 	body {
-		background: #141E30;
+		background: #294a63;
 		cursor: not-allowed;
 	}
 </style>

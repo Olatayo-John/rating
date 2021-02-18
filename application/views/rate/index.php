@@ -41,7 +41,7 @@
 	</div>
 
 	<div class="submit">
-		<button class="btn text-light submitbtn" type="button" style="border-radius: 0;background: #141E30 !important;">Submit</button>
+		<button class="btn text-light submitbtn" type="button" style="border-radius: 0;background: #294a63 !important;">Submit</button>
 	</div>
 
 	<div class="modal msgmodal">
@@ -66,7 +66,7 @@
 						<div class="spinner-border res_spinner" style="position:absolute;right:90px;width:20px;height:20px;top:unset;left:unset;;margin-top:5px;display:none">
 							<span class="sr-only">Loading...</span>
 						</div>
-						<button class="btn text-light submitmodalbtn" name="submitmodalbtn" type="submit" style="background: #141E30 !important;">Submit</button>
+						<button class="btn text-light submitmodalbtn" name="submitmodalbtn" type="submit" style="background: #294a63 !important;">Submit</button>
 					</div>
 				</div>
 			</div>

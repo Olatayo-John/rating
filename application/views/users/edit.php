@@ -36,12 +36,12 @@
 		<div class="form-group">
 			<div class="d-flex" style="justify-content:space-between">
 				<label>Your Link<i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></label>
-				<div class="linkcopyalert font-weight-bolder" style="display:none;color:#141E30">Copied to your clipboard</div>
+				<div class="linkcopyalert font-weight-bolder" style="display:none;color:#294a63">Copied to your clipboard</div>
 			</div>
 			<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' value="<?php echo base_url("wtr/") . $user_info->form_key ?>" readonly>
 		</div>
 		<div class="form-group text-left">
-			<button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#141E30">
+			<button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#294a63">
 				<i class="fas fa-save mr-2"></i>Save</button>
 		</div>
 	</form>
@@ -53,12 +53,12 @@
 			<h4 class="text-dark">Websites</h4>
 			<hr class="web">
 		</div>
-		<div style="color:#141E30;font-weight:600;">
+		<div style="color:#294a63;font-weight:600;">
 			<span class="web_num_total"><?php echo $websites->num_rows(); ?></span> Website(s) out of <?php echo $this->session->userdata("mr_web_quota") ?> <i class="fas fa-question-circle help_i" title="For more website quota, contact us at nktech.in@gmail.com"></i>
 		</div>
 		<div>
 			<?php if ($websites->num_rows() < $this->session->userdata("mr_web_quota")) : ?>
-				<button type="button" class="text-light btn addwebmodal_btn" style="background:#141E30">
+				<button type="button" class="text-light btn addwebmodal_btn" style="background:#294a63">
 					<i class="fas fa-plus-circle mr-2"></i>New Website
 				</button>
 			<?php endif ?>
@@ -110,7 +110,7 @@
 							</div>
 							<div class="modal_btn_actions d-flex justify-content-between">
 								<button type="button" class="btn btn-secondary closewebmodal_btn">Close</button>
-								<button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#141E30;">
+								<button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#294a63;">
 									<i class="fas fa-save mr-2"></i>Save</button>
 							</div>
 						</form>
@@ -154,7 +154,7 @@
 				</div>
 				<div class="col-md-4" style="padding:0">
 					<div class="d-flex flex-row" style="justify-content:center">
-						<button type="button" class="btn text-light edit_web_btn " id="<?php echo $web['id'] ?>" style="background:#141E30">
+						<button type="button" class="btn text-light edit_web_btn " id="<?php echo $web['id'] ?>" style="background:#294a63">
 							View
 						</button>
 						<?php if ($web['active'] == "1") : ?>
@@ -163,7 +163,7 @@
 							</button>
 						<?php endif; ?>
 						<?php if ($web['active'] == "0") : ?>
-							<button type="button" class="btn text-light status_web_btn ml-2" id="<?php echo $web['id'] ?>" status="1" style="background:#141E30">
+							<button type="button" class="btn text-light status_web_btn ml-2" id="<?php echo $web['id'] ?>" status="1" style="background:#294a63">
 								Activate
 							</button>
 						<?php endif; ?>
@@ -198,7 +198,7 @@
 			<button class="btn btn-danger deact_btn" type="button" user_id="<?php echo $user_info->id ?>"><i class="fas fa-user-alt-slash mr-2"></i>De-activate account?</button>
 		</div>
 		<div class="form-group text-left">
-			<button class="btn text-light saveact_btn" type="submit saveact_btn" style="background-color:#141E30">
+			<button class="btn text-light saveact_btn" type="submit saveact_btn" style="background-color:#294a63">
 				<i class="fas fa-save mr-2"></i>Save</button>
 		</div>
 	</form>

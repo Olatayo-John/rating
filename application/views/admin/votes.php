@@ -5,8 +5,8 @@
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
 				<div class="modal-header d-flex flex-column pt-0 pb-0 pl-0 pr-0" style="overflow-x:scroll">
-					<div class="" style="background:#141E30;display: flex;width: 100%;justify-content: space-between;">
-						<div class="username_div ml-3" style="background:#141E30">
+					<div class="" style="background:#294a63;display: flex;width: 100%;justify-content: space-between;">
+						<div class="username_div ml-3" style="background:#294a63">
 							<h6 class="text-light text-uppercase" style="margin: auto;padding: 7px 0;"></h6>
 						</div>
 						<div class="close_x_div">
@@ -18,17 +18,17 @@
 
 					</div>
 					<div class="mb-2 d-flex flex-row col-md-12">
-						<a href="" class="btn text-light indiv_votes_export_csv col-md-3" style="background:#141E30">
+						<a href="" class="btn text-light indiv_votes_export_csv col-md-3" style="background:#294a63">
 							<i class="fas fa-file-csv mr-2"></i>CSV Export
 						</a>
 						<input type="hidden" name="input_form_key" class="input_form_key">
-						<input type="text" name="search_ind_votes" id="search_ind_votes" class="form-control ml-5 search_ind_votes" placeholder="Search by Name" style="border-radius: 0;border-bottom: 1px solid #141E30;display:none" autofocus>
+						<input type="text" name="search_ind_votes" id="search_ind_votes" class="form-control ml-5 search_ind_votes" placeholder="Search by Name" style="border-radius: 0;border-bottom: 1px solid #294a63;display:none" autofocus>
 					</div>
 
 				</div>
 				<div class="modal-body pt-2" style="overflow-x:scroll;overflow-y: hidden;">
 					<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
-						<tr class="font-weight-bolder text-light text-center" style="background:#141E30;white-space: nowrap;">
+						<tr class="font-weight-bolder text-light text-center" style="background:#294a63;white-space: nowrap;">
 							<th><span class="icon">
 									Name
 								</span></th>
@@ -91,16 +91,16 @@
 
 	<div class="d-flex justify-content-column mb-3">
 		<div class="col">
-			<a href="<?php echo base_url('admin/votes_export_csv'); ?>" class="btn text-light csvbtn" style="background:#141E30;">
+			<a href="<?php echo base_url('admin/votes_export_csv'); ?>" class="btn text-light csvbtn" style="background:#294a63;">
 				<i class="fas fa-file-csv mr-2"></i>CSV Export
 			</a>
-			<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background:#141E30;">
+			<button class="btn text-light reload_btn" data-toggle="tooltip" title="Reload table" style="background:#294a63;">
 				<i class="fas fa-sync-alt"></i>
 			</button>
 		</div>
 
 		<div class="col ml-auto">
-			<div class="d-flex flex-row search_user_div" style="border-bottom: 1px solid #141E30">
+			<div class="d-flex flex-row search_user_div" style="border-bottom: 1px solid #294a63">
 				<span class="" style="border-radius: 0;display:inline-flex; "><i class="fas fa-search"></i></span>
 				<input type="text" name="search_user" id="search_user" class="form-control search_user" placeholder="Search by user..." style="border-radius: 0" autofocus>
 			</div>
@@ -109,7 +109,7 @@
 
 	<div class="container-fluid table-responsive mb-4">
 		<table class="table table-center table-hover table-md table-light table-bordered" id="result">
-			<tr class="font-weight-bolder text-light text-center" style="background:#141E30;white-space:nowrap">
+			<tr class="font-weight-bolder text-light text-center" style="background:#294a63;white-space:nowrap">
 				<th>
 					<div class="inh">
 						<i class="fas fa-sort" name="uname" type="desc"></i>
@@ -159,7 +159,7 @@
 						<td class="tv"><?php echo $info['total_email'] ?></td>
 						<td class="text-lowercase"><?php echo base_url() . 'user/wtr/' . $info['form_key'] ?></td>
 						<td class="font-weight-bolder">
-							<button class="btn text-light vv_btn" uname="<?php echo $info['uname'] ?>" form_key="<?php echo $info['form_key'] ?>" style="background:#141E30">
+							<button class="btn text-light vv_btn" uname="<?php echo $info['uname'] ?>" form_key="<?php echo $info['form_key'] ?>" style="background:#294a63">
 								<i class="fas fa-poll text-light"></i>
 							</button>
 						</td>

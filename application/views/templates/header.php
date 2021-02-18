@@ -35,7 +35,7 @@
 		<button class="btn btn-outline-dark menubtn mr-auto" onclick="opennav()">&#9776;</button>
 
 		<div class="navbar-brand text-uppercase font-weight-bolder" style="font-size: 1.1rem;">
-			<a href="<?php echo base_url('profile') ?>" style="color:#141E30"><?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : '') ?></a>
+			<a href="<?php echo base_url('profile') ?>" style="color:#294a63"><?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : '') ?></a>
 		</div>
 
 		<div class="side-nav" id="side-nav">

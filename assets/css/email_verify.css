@@ -1,17 +1,17 @@
 body{
-	background: #141E30;
+	background: #294a63;
 }
 label{
-	color: #141E30;
+	color: #294a63;
 }
 .email_verify_form{
 	padding: 20px;
 }
 h4{
-	color: #141E30;
+	color: #294a63;
 }
 hr{
-	border:1px solid #141E30;
+	border:1px solid #294a63;
 	width: 150px;
 }
 input.form-control{

@@ -45,8 +45,8 @@
 		</div>
 
 		<div class="btngrp container">
-			<button class="btn text-light registerbtn" type="submit" style="background:#141E30">Register</button>
-			<a href="<?php echo base_url('user/login'); ?>" class="loginbtn text-info" style="colosr:#141E30">
+			<button class="btn text-light registerbtn" type="submit" style="background:#294a63">Register</button>
+			<a href="<?php echo base_url('user/login'); ?>" class="loginbtn text-info" style="colosr:#294a63">
 				Already a user? <i class="far fa-arrow-alt-circle-right"></i></a>
 		</div>
 	</form>

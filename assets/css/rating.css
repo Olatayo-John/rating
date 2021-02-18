@@ -3,13 +3,13 @@ body{
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-size: cover; */
-	background: #141E30 !important;
+	background: #294a63 !important;
 }
 button.btn{
 	border-radius: 0;
 }
 input.form-control:focus,textarea.form-control:focus{
-	border-color: #141E30;
+	border-color: #294a63;
 	box-shadow: none;
 }
 div.r_container{

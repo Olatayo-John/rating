@@ -23,7 +23,7 @@
                 <h1>404</h1>
             </div>
             <h3>The page you requested for is unavailable!!</h3>
-            <a href="<?php echo base_url(); ?>" class="btn text-light mt-4" style="background:#141E30;border-radius:0">HOMEPAGE</a>
+            <a href="<?php echo base_url(); ?>" class="btn text-light mt-4" style="background:#294a63;border-radius:0">HOMEPAGE</a>
         </div>
     </div>
 </body>

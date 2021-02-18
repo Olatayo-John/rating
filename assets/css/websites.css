@@ -1,22 +1,22 @@
 body{
-	background: #141E30;
+	background: #294a63;
 }
 .addweb_form{
 	padding: 20px;
 }
 h4{
-	color: #141E30;
+	color: #294a63;
 	font-weight: bold;
 }
 hr.h_hr{
-	border:1px solid #141E30;
+	border:1px solid #294a63;
 	width: 70px;
 }
 div.instruction_div div{
     font-weight: bolder;
 }
 span.web_num{
-    color: #141E30;
+    color: #294a63;
 }
 .remove_web_i{
     cursor: pointer;

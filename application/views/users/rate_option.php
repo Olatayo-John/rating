@@ -31,8 +31,8 @@
 
 		<?php elseif ($active->active === "0") : ?>
 			<div class="pt-3 text-center">
-				<h6 class="text-center text-uppercase" style="font-weight:bolder;color:#141E30">User account is not active!!</h6>
-				<a href="<?php echo base_url(); ?>" class="btn text-light mt-4" style="background:#141E30;border-radius:0">
+				<h6 class="text-center text-uppercase" style="font-weight:bolder;color:#294a63">User account is not active!!</h6>
+				<a href="<?php echo base_url(); ?>" class="btn text-light mt-4" style="background:#294a63;border-radius:0">
 					<i class="fas fa-home mr-2"></i>HOMEPAGE</a>
 			</div>
 			<hr>

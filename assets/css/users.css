@@ -42,7 +42,7 @@ span.close_x_icon{
 	text-decoration: none;
 	color: #141E30;
 }
-.website_div,.account_div{
+.website_div,.account_div,.payment_div{
 	display: none;
 }
 .profile_div,.website_div,.account_div{

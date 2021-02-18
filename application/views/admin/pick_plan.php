@@ -11,7 +11,7 @@
 	<div class="container mb-5">
 		<div class="bg-danger error" style="border-radius: 3px">
 			<i class="fas fa-exclamation-circle"></i>
-			<strong>You have no active subscription. Pick a plan to continue using our services.</strong>
+			<strong>You have no active subscription. Pick a plan to use our services.</strong>
 		</div>
 	</div>
 <?php endif; ?>

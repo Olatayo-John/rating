@@ -26,24 +26,32 @@ $(document).ready(function () {
 
 	$(document).on('click', 'a.prof_a', function (e) {
 		e.preventDefault();
-		$('div.website_div,div.account_div').hide();
-		$('a.web_a,a.ac_a').css('border-bottom', 'initial');
+		$('div.website_div,div.account_div,div.payment_div').hide();
+		$('a.pay_a,a.web_a,a.ac_a').css('border-bottom', 'initial');
 		$(this).css('border-bottom', '2px solid #141E30');
 		$('div.profile_div').show();
 	});
 
 	$(document).on('click', 'a.web_a', function (e) {
 		e.preventDefault();
-		$('div.profile_div,div.account_div').hide();
-		$('a.prof_a,a.ac_a').css('border-bottom', 'initial');
+		$('div.profile_div,div.account_div,div.payment_div').hide();
+		$('a.prof_a,a.pay_a,a.ac_a').css('border-bottom', 'initial');
 		$(this).css('border-bottom', '2px solid #141E30');
 		$('div.website_div').show();
 	});
 
+	$(document).on('click', 'a.pay_a', function (e) {
+		e.preventDefault();
+		$('div.profile_div,div.account_div,div.website_div').hide();
+		$('a.prof_a,a.ac_a,a.web_a').css('border-bottom', 'initial');
+		$(this).css('border-bottom', '2px solid #141E30');
+		$('div.payment_div').show();
+	});
+
 	$(document).on('click', 'a.ac_a', function (e) {
 		e.preventDefault();
-		$('div.profile_div, div.website_div').hide();
-		$('a.prof_a, a.web_a').css('border-bottom', 'initial');
+		$('div.profile_div, div.website_div,div.payment_div').hide();
+		$('a.prof_a,a.pay_a,a.web_a').css('border-bottom', 'initial');
 		$(this).css('border-bottom', '2px solid #141E30');
 		$('div.account_div').show();
 	});

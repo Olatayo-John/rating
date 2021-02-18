@@ -54,6 +54,8 @@ class Usermodel extends CI_Model
 	public function register($act_key, $form_key)
 	{
 		$data = array(
+			's_admin' => '0',
+			'admin' => '0',
 			'uname' => htmlentities($this->input->post('uname')),
 			'fname' => htmlentities($this->input->post('fname')),
 			'lname' => htmlentities($this->input->post('lname')),

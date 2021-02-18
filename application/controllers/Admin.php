@@ -12,11 +12,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/account');
+			redirect('account');
 		}
 		if ($this->session->userdata('mr_admin') == "1") {
 			$this->votes($offset = 0);
@@ -29,7 +29,7 @@ class Admin extends CI_Controller
 
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
@@ -386,6 +386,7 @@ class Admin extends CI_Controller
 			$output = array();
 			$data['infos'] = $this->Adminmodel->get_user($_POST['user_id'], $_POST['form_key']);
 			$data['webs'] = $this->Adminmodel->get_user_websites($_POST['user_id'], $_POST['form_key']);
+			$data['pays'] = $this->Adminmodel->get_user_payments($_POST['user_id'], $_POST['form_key']);
 			$data['token'] = $this->security->get_csrf_hash();
 			echo json_encode($data);
 		}
@@ -443,7 +444,7 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		$res = $this->Adminmodel->add_website($_POST['user_id'], $_POST['form_key'], $_POST['active'], $_POST['web_name_add'], $_POST['web_link_add']);
 		// $res = true;
@@ -622,11 +623,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('login');
 		}
 		$this->form_validation->set_rules('full_name', 'Full Name', 'required|trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'trim|valid_email|html_escape');
@@ -648,13 +649,13 @@ class Admin extends CI_Controller
 			$res = true;
 			if ($res !== TRUE) {
 				$this->session->set_flashdata('invalid', 'Registration Failed');
-				redirect('user/register');
+				redirect('register');
 				exit();
 			} else {
 				if (isset($_POST['mail_chkbox']) && isset($_POST['mobile_chkbox'])) {
 					$fname = $this->input->post('full_name');
 					$email = $this->input->post('email');
-					$link = base_url() . "user/rate/" . $form_key;
+					$link = base_url() . "rate/" . $form_key;
 					$mobile = $this->input->post('mobile');
 					$login_link = base_url();
 					$res = $this->send_email_code($fname, $randpwd, $email, $link, $login_link);
@@ -663,7 +664,7 @@ class Admin extends CI_Controller
 				} elseif (isset($_POST['mail_chkbox'])) {
 					$fname = $this->input->post('full_name');
 					$email = $this->input->post('email');
-					$link = base_url() . "user/rate/" . $form_key;
+					$link = base_url() . "rate/" . $form_key;
 					$mobile = $this->input->post('mobile');
 					$login_link = base_url();
 					$res = $this->send_email_code($fname, $randpwd, $email, $link, $login_link);
@@ -713,11 +714,11 @@ class Admin extends CI_Controller
 
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('login');
 		}
 		$config['base_url'] = base_url() . "admin/votes/";
 		$config['total_rows'] = $this->db->count_all('user_details');
@@ -760,7 +761,7 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
@@ -781,11 +782,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('login');
 		}
 		$config['per_page'] = 10;
 		$offset = 0;
@@ -838,7 +839,7 @@ class Admin extends CI_Controller
 				<td class="tv">' . $info["total_ratings"] . '</td>
 				<td class="tv">' . $info["total_sms"] . '</td>
 				<td class="tv">' . $info["total_email"] . '</td>
-				<td class="text-lowercase">' . base_url() . 'user/wtr/' . $info['form_key'] . '</td>
+				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
 				<td class="font-weight-bolder">
 				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
 				<i class="fas fa-poll text-light"></i></button>
@@ -853,11 +854,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('login');
 		}
 		$data = $this->Adminmodel->votes_filter_param($_POST['param'], $_POST['type']);
 		$output = "";
@@ -907,7 +908,7 @@ class Admin extends CI_Controller
 				<td class="tv">' . $info["total_ratings"] . '</td>
 				<td class="tv">' . $info["total_sms"] . '</td>
 				<td class="tv">' . $info["total_email"] . '</td>
-				<td class="text-lowercase">' . base_url() . 'user/wtr/' . $info['form_key'] . '</td>
+				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
 				<td class="font-weight-bolder">
 				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
 				<i class="fas fa-poll text-light"></i></button>
@@ -922,11 +923,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('login');
 		}
 		$output = '';
 		$query = '';
@@ -975,7 +976,7 @@ class Admin extends CI_Controller
 				<td class="tv">' . $info["total_ratings"] . '</td>
 				<td class="tv">' . $info["total_sms"] . '</td>
 				<td class="tv">' . $info["total_email"] . '</td>
-				<td class="text-lowercase">' . base_url() . 'user/wtr/' . $info['form_key'] . '</td>
+				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
 				<td class="font-weight-bolder">
 				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#141E30">
 				<i class="fas fa-poll text-light"></i></button>
@@ -990,11 +991,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('login');
 		} else {
 			$data['users'] = $this->Adminmodel->get_ratings($_POST['key']);
 			$data['user_webs'] = $this->Adminmodel->getuserwebsites($_POST['key']);
@@ -1009,11 +1010,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('login');
 		}
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=user_votes.csv");
@@ -1030,11 +1031,11 @@ class Admin extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user/login');
+			redirect('login');
 		}
 		$output = '';
 		$query = '';
@@ -1123,10 +1124,6 @@ class Admin extends CI_Controller
 
 	public function pgResponses()
 	{
-		if ($this->session->userdata("mr_sub") == "1") {
-			redirect("plan");
-		}
-
 		$paytmChecksum = "";
 		$paramList = array();
 		$isValidChecksum = "FALSE";
@@ -1150,7 +1147,7 @@ class Admin extends CI_Controller
 		);
 		if ($isValidChecksum == "TRUE") {
 			if ($_POST["STATUS"] == "TXN_SUCCESS") {
-				if (isset($_POST) && count($_POST) > 0 && $this->session->userdata("mr_logged_in")) {
+				if (isset($_POST) && count($_POST) > 0) {
 					$userData = array(
 						'user_id' => $user_id,
 						'user_form_key' => $form_key,
@@ -1166,28 +1163,38 @@ class Admin extends CI_Controller
 						'check_sum_hash' => $_POST['CHECKSUMHASH'],
 						'status' => $_POST['STATUS'],
 					);
-					// $res = $this->Adminmodel->save_payment($userData);
-					$res = true;
-					if ($res == true) {
-						$this->session->set_flashdata('valid', 'Payment Done.');
-						//$this->payment_status($userData);
-						$this->load->view('templates/header');
-						$this->load->view('admin/pay_status', ['userData' => $userData]);
-						$this->load->view('templates/footer');
-					} else {
-						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
-						$this->load->view('templates/header');
-						$this->load->view('admin/pay_status', ['userData' => $userData]);
-						$this->load->view('templates/footer');
+
+					$this->Adminmodel->save_payment($userData);
+					$res = $this->Adminmodel->getuserbykey($form_key);
+					$admin_res = $this->Adminmodel->getsadmin();
+
+					$admin_mail = $admin_res->email;
+					$user_name = $res->uname;
+					$user_mail = $res->email;
+					$m_id = $_POST['MID'];
+					$txn_id = $_POST['TXNID'];
+					$order_id = $_POST['ORDERID'];
+					$user_amt = $_POST['TXNAMOUNT'];
+					$payment_mode = $_POST['PAYMENTMODE'];
+					$bank_name = $_POST['BANKNAME'];
+					$status = $_POST['STATUS'];
+
+					if (isset($admin_mail)) {
+						$this->notifyadmin($admin_mail, $user_name, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status);
 					}
+
+					$this->session->set_flashdata('valid', 'Payment Done. Please wait while we verify your payment');
+					$this->load->view('templates/header');
+					$this->load->view('admin/pay_status', ['userData' => $userData]);
+					$this->load->view('templates/footer');
 				} else {
-					$this->session->set_flashdata('invalid', 'Payment Failed not_set_logged.');
+					$this->session->set_flashdata('invalid', 'Payment Failed.');
 					$this->load->view('templates/header');
 					$this->load->view('admin/pay_status', ['userData' => $userData]);
 					$this->load->view('templates/footer');
 				}
 			} else {
-				$this->session->set_flashdata('invalid', 'Payment Failed txn_failed.');
+				$this->session->set_flashdata('invalid', 'Payment Failed.');
 				$this->load->view('templates/header');
 				$this->load->view('admin/pay_status', ['userData' => $userData]);
 				$this->load->view('templates/footer');
@@ -1197,10 +1204,40 @@ class Admin extends CI_Controller
 		}
 	}
 
+	public function notifyadmin($admin_mail, $user_name, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status)
+	{
+		$config['protocol']    = 'smtp';
+		$config['smtp_host']    = 'ssl://smtp.gmail.com';
+		$config['smtp_port']    = '465';
+		$config['smtp_timeout'] = '7';
+		$config['smtp_user']    = 'jvweedtest@gmail.com';
+		$config['smtp_pass']    = 'Jvweedtest9!';
+		$config['charset']    = 'iso-8859-1';
+		$config['mailtype'] = 'text';
+		$config['validation'] = TRUE;
+
+		$this->load->library('email', $config);
+		$this->email->set_newline("\r\n");
+
+		$body = "Dear Admin.\n\n" . ucfirst($user_name) . " has subscribed for a new quota using PAYTM. Below are the payment details\n\nUser: " . $user_name . "\nMerchant ID: " . $m_id . "\nTax ID: " . $txn_id . "\nOrder ID: " . $order_id . "\nAmount Paid: " . $user_amt . "\nPayment Mode: " . $payment_mode . "\nBank:" . $bank_name . "\nPayment Status: " . $status . "\n\nLogin " . base_url("/users") . " to verify payment and activate user subscription\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+
+		$this->email->from('jvweedtest@gmail.com', 'Rating');
+		$this->email->to($admin_mail);
+		$this->email->subject('New Subscription');
+		$this->email->message($body);
+
+		if ($this->email->send()) {
+			return true;
+		} else {
+			return $this->email->print_debugger();
+		}
+	}
+
 	public function logout()
 	{
 		$this->session->unset_userdata('mr_id');
 		$this->session->unset_userdata('mr_admin');
+		$this->session->unset_userdata('mr_s_admin');
 		$this->session->unset_userdata('mr_uname');
 		$this->session->unset_userdata('mr_email');
 		$this->session->unset_userdata('mr_mobile');

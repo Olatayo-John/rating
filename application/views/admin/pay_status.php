@@ -4,7 +4,7 @@
 
 <div class="container mt-3 mb-5 pb-3" style="background:white">
 	<?php if ($userData['status'] == 'TXN_FAILURE') : ?>
-		<h4 class="text-center text-danger">Payment Failed</h4>
+		<h4 class="text-center text-danger pt-3">Payment Failed</h4>
 		<hr class="pb-2 h_hr" style="width: 90px;">
 		<div class="form-group mt-4">
 			<label>STATUS</label>
@@ -60,9 +60,10 @@
 		<h4 class="text-center text-uppercase pt-3">Payment Successfull</h4>
 		<hr class="pb-2 h_hr">
 		<div class="text-danger text-left">
-			<p>Quota has been renewed</p>
+			<p>Payment Done</p>
+			<p>You'll be notified once your payment has been verified</p>
+			<p>For any queries, contact us at <a href="mailto:hr@nktech.in">nktech.in</a></p>
 			<p>Save this details for future reference</p>
-			<p>Login -> Account</p>
 		</div>
 		<div class="form-group mt-4">
 			<label>STATUS</label>

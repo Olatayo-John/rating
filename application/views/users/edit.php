@@ -33,6 +33,13 @@
 			<input type="number" name="mobile" class="form-control mobile" value="<?php echo $user_info->mobile ?>" placeholder="0123456789">
 			<div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
 		</div>
+		<div class="form-group">
+			<div class="d-flex" style="justify-content:space-between">
+				<label>Your Link<i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></label>
+				<div class="linkcopyalert font-weight-bolder" style="display:none;color:#141E30">Copied to your clipboard</div>
+			</div>
+			<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' value="<?php echo base_url("wtr/") . $user_info->form_key ?>" readonly>
+		</div>
 		<div class="form-group text-left">
 			<button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#141E30">
 				<i class="fas fa-save mr-2"></i>Save</button>
@@ -126,7 +133,7 @@
 				<span class="font-weight-bolder">Website</span>
 			</div>
 			<div class="col-md-4 text-center">
-				<span class="font-weight-bolder">Actions</span>
+				<span class="font-weight-bolder">Actions<i class="fas fa-question-circle ml-2" title="Only active websites will be available for giving reviews"></i></span>
 			</div>
 		</div>
 		<hr>
@@ -168,7 +175,7 @@
 </div>
 </div>
 
-<div class="con mt-3 mr-3 ml-3 mb-3 pl-4 pt-4  ac_div">
+<div class="con mt-3 mr-3 ml-3 mb-3 pl-4 pt-4 ac_div">
 	<h4 class="text-dark">Account Settings</h4>
 	<hr class="account">
 	<form action="<?php echo base_url('user/account_edit'); ?>" method="post">
@@ -179,16 +186,16 @@
 		</div>
 		<div class="form-group">
 			<label><i class="fas fa-lock mr-2"></i>New Password<span class="text-danger"> *</span></label>
-			<input type="number" name="n_pwd" class="form-control n_pwd" placeholder="Password must be at least 6 characters long">
+			<input type="password" minlenght="6" name="n_pwd" class="form-control n_pwd" placeholder="Password must be at least 6 characters long">
 			<span class="text-danger font-weight-bolder n_pwd_err">Password is too short</span>
 		</div>
 		<div class="form-group">
 			<label><i class="fas fa-lock mr-2"></i>Re-type Password<span class="text-danger"> *</span></label>
-			<input type="text" name="rtn_pwd" class="form-control rtn_pwd" placeholder="Re-type Password">
+			<input type="password" minlenght="6" name="rtn_pwd" class="form-control rtn_pwd" placeholder="Re-type Password">
 			<span class="text-danger font-weight-bolder rtn_pwd_err">Passwords do not match</span>
 		</div>
 		<div class="form-group text-right">
-			<button class="btn btn-danger deact_btn" type="button" user_id="<?php echo $user_info->id ?>">De-activate account?</button>
+			<button class="btn btn-danger deact_btn" type="button" user_id="<?php echo $user_info->id ?>"><i class="fas fa-user-alt-slash mr-2"></i>De-activate account?</button>
 		</div>
 		<div class="form-group text-left">
 			<button class="btn text-light saveact_btn" type="submit saveact_btn" style="background-color:#141E30">
@@ -200,6 +207,15 @@
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/edit.js'); ?>"></script>
 <script>
+	function copylink_fun(element) {
+		var link = $("<input>");
+		$("body").append(link);
+		link.val($(element).val()).select();
+		document.execCommand("copy");
+		link.remove();
+		$('.linkcopyalert').fadeIn("slow").delay("5000").fadeOut("slow");
+	}
+
 	$(document).ready(function() {
 		$("[data-toggle]").tooltip()
 
@@ -335,5 +351,6 @@
 				return false;
 			}
 		});
+
 	});
 </script>

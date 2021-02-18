@@ -59,6 +59,7 @@ class User extends CI_Controller
 			if ($validate) {
 				$id = $validate->id;
 				$admin = $validate->admin;
+				$s_admin = $validate->s_admin;
 				$uname = $validate->uname;
 				$email = $validate->email;
 				$mobile = $validate->mobile;
@@ -72,6 +73,7 @@ class User extends CI_Controller
 				$user_sess = array(
 					'mr_id' => $id,
 					'mr_admin' => $admin,
+					'mr_s_admin' => $s_admin,
 					'mr_uname' => $uname,
 					'mr_email' => $email,
 					'mr_mobile' => $mobile,
@@ -90,8 +92,8 @@ class User extends CI_Controller
 						redirect('plan');
 						exit();
 					} elseif ($this->session->userdata('mr_sub') == "1") {
-						// redirect('user/account');
-						redirect('user/profile');
+						// redirect('account');
+						redirect('profile');
 					}
 				} else {
 					redirect('websites');
@@ -103,6 +105,7 @@ class User extends CI_Controller
 	public function logout()
 	{
 		$this->session->unset_userdata('mr_id');
+		$this->session->unset_userdata('mr_s_admin');
 		$this->session->unset_userdata('mr_admin');
 		$this->session->unset_userdata('mr_uname');
 		$this->session->unset_userdata('mr_email');
@@ -234,6 +237,7 @@ class User extends CI_Controller
 					} else if ($res->active == "1") {
 						$id = $res->id;
 						$admin = $res->admin;
+						$s_admin = $res->s_admin;
 						$uname = $res->uname;
 						$email = $res->email;
 						$mobile = $res->mobile;
@@ -247,6 +251,7 @@ class User extends CI_Controller
 						$user_sess = array(
 							'mr_id' => $id,
 							'mr_admin' => $admin,
+							'mr_s_admin' => $s_admin,
 							'mr_uname' => $uname,
 							'mr_email' => $email,
 							'mr_mobile' => $mobile,
@@ -375,7 +380,7 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape');
 		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
@@ -384,15 +389,15 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
 
 		if ($this->form_validation->run() === FALSE) {
-			redirect('user/profile');
+			redirect('profile');
 		} else {
 			$res = $this->Usermodel->personal_edit();
 			if ($res !== TRUE) {
-				$this->session->set_flashdata('invalid', 'Update Failed');
-				redirect('user/profile');
+				$this->session->set_flashdata('invalid', 'Profile Update Failed');
+				redirect('profile');
 			} else {
-				$this->session->set_flashdata('valid', 'Updated');
-				redirect('user/profile');
+				$this->session->set_flashdata('valid', 'Profile Updated');
+				redirect('profile');
 			}
 		}
 	}
@@ -401,7 +406,7 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		$act_res = $this->Usermodel->edit_website($_POST['id']);
 		if ($act_res == false) {
@@ -423,7 +428,7 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		$this->form_validation->set_rules('web_name_new', 'Name', 'required|trim|html_escape');
 		$this->form_validation->set_rules('web_link_new', 'Link', 'required|trim|html_escape');
@@ -446,7 +451,7 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		$act_res = $this->Usermodel->delete_website($_POST['id']);
 		if ($act_res == false) {
@@ -460,13 +465,17 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		$act_res = $this->Usermodel->website_status($_POST['id'], $_POST['status']);
 		if ($act_res == false) {
 			$this->session->set_flashdata('invalid', 'Error changing website status');
 		} else {
-			$this->session->set_flashdata('valid', 'Web Status Updated!');
+			if ($_POST['status'] == "1") {
+				$this->session->set_flashdata('valid', 'Website Activated!');
+			} else if ($_POST['status'] == "0") {
+				$this->session->set_flashdata('valid', 'Website De-activated!');
+			}
 		}
 	}
 
@@ -474,7 +483,7 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('/');
 		}
 
 		$this->form_validation->set_rules('c_pwd', 'Current Password', 'required|trim');
@@ -482,7 +491,7 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('rtn_pwd', 'Re-type Password', 'required|trim|min_length[6]|matches[n_pwd]');
 
 		if ($this->form_validation->run() == false) {
-			redirect('user/profile');
+			redirect('profile');
 		} else {
 			$pwd_res = $this->Usermodel->check_pwd();
 			if ($pwd_res == false) {
@@ -499,7 +508,7 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		$act_res = $this->Usermodel->deact_account();
 		if ($act_res == false) {
@@ -511,7 +520,7 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		$act_res = $this->Usermodel->search_website($_POST['search_data']);
 		$output = '';
@@ -693,7 +702,7 @@ class User extends CI_Controller
 		$myfile = fopen("body.txt", "w") or die("Unable to open file!");
 		$txt = "Click the link below, to rate any of my websites\n";
 		fwrite($myfile, $txt);
-		$txt = base_url() . "user/wtr/" . $this->session->userdata("mr_form_key") . "\n\n";
+		$txt = base_url() . "wtr/" . $this->session->userdata("mr_form_key") . "\n\n";
 		fwrite($myfile, $txt);
 		$txt = $this->session->userdata("mr_uname") . "\n";
 		fwrite($myfile, $txt);
@@ -1044,13 +1053,13 @@ class User extends CI_Controller
 
 		if (!isset($w) || !isset($k)) {
 			// redirect($_SERVER['HTTP_REFERER']);
-			redirect("user/wtr/" . $k);
+			redirect("wtr/" . $k);
 			exit();
 		} else {
 			$res = $this->Usermodel->check_cred($w, $k);
 			if ($res == false) {
 				$this->session->set_flashdata("invalid", "Invalid Link!");
-				redirect("user/wtr/" . $k);
+				redirect("wtr/" . $k);
 			} elseif ($res == true) {
 				redirect('rate?w=' . $w . '&k=' . $k);
 			}
@@ -1210,7 +1219,7 @@ class User extends CI_Controller
 
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
@@ -1226,7 +1235,7 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user/login');
+			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');

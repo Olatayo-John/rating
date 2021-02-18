@@ -45,7 +45,6 @@
 					<div class="form-group">
 						<label class="mb-0">Website Link</label>
 						<div class="weberr text-left" id="weberr" style="display:all">
-							<span class="text-danger font-weight-bolder weberr_span">* Web links must start with http or https</span>
 						</div>
 						<input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Website link" required>
 					</div>
@@ -73,13 +72,17 @@
 							<span class="text-light close_x_icon">&times</span>
 						</div>
 					</div>
+
 					<div class="tab_div mt-2">
 						<a href="" class="tab_link prof_a"><i class="fas fa-user-alt mr-2"></i>Profile</a>
 						<a href="" class="tab_link web_a"><i class="fas fa-tachometer-alt mr-2"></i>Websites</a>
+						<a href="" class="tab_link pay_a"><i class="fas fa-wallet mr-2"></i>Payments</a>
 						<a href="" class="tab_link ac_a"><i class="fas fa-user-cog mr-2"></i>Account</a>
 					</div>
+
 					<input type="hidden" name="user_id" class="user_id">
 					<input type="hidden" name="user_form_key" class="user_form_key">
+
 					<div class="profile_div">
 						<div class="form-group">
 							<label><span class="text-danger font-weight-bolder">* </span>Username</label>
@@ -120,6 +123,13 @@
 							<div class="text-danger font-weight-bolder web_quota_err" style="display: none;"></div>
 
 						</div>
+						<div class="form-group">
+							<div class="d-flex" style="justify-content:space-between">
+								<label>Link<i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></label>
+								<div class="linkcopyalert font-weight-bolder" style="display:none;color:#141E30">Copied to your clipboard</div>
+							</div>
+							<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' readonly>
+						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
 							<div class="spinner-border prof_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
@@ -155,6 +165,66 @@
 						</div>
 					</div>
 
+					<div class="payment_div">
+						<div class="pt-4 d-flex" style="justify-content: space-between;">
+							<div>
+								<a href="<?php echo base_url(''); ?>" class="btn text-light paymentcsvbtn" style="background:#141E30;">
+									<i class="fas fa-file-csv mr-2"></i>CSV Download
+								</a>
+							</div>
+							<div>
+								<div class="font-weight-bolder verifysub_btn mb-2">Subscription is not active</div>
+								<div style="color:#141E30" class="font-weight-bolder unverifysub_btn mb-2">Subscription is active</div>
+							</div>
+							<div>
+								<button class="btn text-light verifysub_btn" type="button" style='background:#141E30'>Activate subscription?</button>
+								<button class="btn btn-danger unverifysub_btn" type="button">De-activate user subscription?</button>
+							</div>
+						</div>
+						<hr>
+
+						<div class="payment_table_div" style="overflow-x:scroll;overflow-y:hidden;">
+							<table class="table table-bordered table-center table-hover tablepayment" id="tablepayment">
+								<tr class="font-weight-bolder text-light text-center" style="background:#141E30;white-space: nowrap;">
+									<th><span class="icon">
+											Merchant ID
+										</span></th>
+									<th><span>
+											Transaction ID
+										</span class="icon"></th>
+									<th><span>
+											Order ID
+										</span></th>
+									<th><span>
+											Payment Mode
+										</span></th>
+									<th><span>
+											Gateway Mode
+										</span></th>
+									<th><span>
+											Bank Name
+										</span></th>
+									<th><span>
+											Bank ID
+										</span></th>
+									<th><span>
+											Amount
+										</span class="icon"></th>
+									<th><span>
+											Status
+										</span></th>
+									<th class="text-danger"><span>
+											Date
+										</span></th>
+								</tr>
+							</table>
+						</div>
+
+						<div class="updatebtngrp text-right mb-2 web_btngrp">
+							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
+						</div>
+					</div>
+
 					<div class="account_div">
 						<div class="form-group pwddiv">
 							<label><i class="fas fa-lock mr-2"></i>New Password</label>
@@ -168,10 +238,8 @@
 						<hr>
 						<div class="form-group mt-2">
 							<button class="btn btn-danger delact_btn" type="button"><i class="fas fa-trash-alt mr-2"></i>Delete account</button>
-							<button class="btn btn-danger deacti_act_btn" type="button">De-activate account</button>
-							<button class="btn text-light acti_act_btn" type="button" style='background:#141E30'>Activate account</button>
-							<button class="btn text-light verifysub_btn" type="button" style='background:#141E30'>Activate user subscription?</button>
-							<button class="btn btn-danger unverifysub_btn" type="button">De-activate user subscription?</button>
+							<button class="btn btn-danger deacti_act_btn" type="button"><i class="fas fa-user-alt-slash mr-2"></i>De-activate account</button>
+							<button class="btn text-light acti_act_btn" type="button" style='background:#141E30'><i class="fas fa-user-check mr-2"></i>Activate account</button>
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
@@ -181,6 +249,7 @@
 							<button class="btn text-light user_accupdate bradius" style="background:#141E30;display:none">Update</button>
 						</div>
 					</div>
+
 				</div>
 
 			</div>
@@ -206,7 +275,7 @@
 	</div>
 
 	<div class="container-fluid table-responsive">
-		<table class="table table-center table-hover table-md table-light table-bordered">
+		<table class="table table-center table-hover table-md table-light table-bordered usertable">
 			<tr class="font-weight-bolder text-light text-center" style="background: #141E30">
 				<th>
 					<span>Status</span>
@@ -295,6 +364,15 @@
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/users.js'); ?>"></script>
 <script type="text/javascript">
+	function copylink_fun(element) {
+		var link = $("<input>");
+		$("body").append(link);
+		link.val($(element).val()).select();
+		document.execCommand("copy");
+		link.remove();
+		$('.linkcopyalert').fadeIn("slow").delay("5000").fadeOut("slow");
+	}
+
 	$(document).ready(function() {
 		// $(".updateusermodal").show();
 		$(document).on('click', 'button.reload_btn', function() {
@@ -311,7 +389,7 @@
 					[csrfName]: csrfHash
 				},
 				success: function(data) {
-					$('.table').html(data);
+					$('table.usertable').html(data);
 					$(".table_pag_div").show();
 				}
 			})
@@ -378,6 +456,7 @@
 			$(".user_accupdate").hide();
 			$(".weberr,.web_quota_err,.mobileerr,.new_pwderr").hide();
 			$('.uname,.email,.mobile,.web_quota,u_pwd').css('border', '1px solid #ced4da');
+			$("tr.tr_nopayment,tr.tr_payment").remove();
 
 			var user_id = $(this).attr("id");
 			var form_key = $(this).attr("form_key");
@@ -394,28 +473,35 @@
 				},
 				dataType: "json",
 				success: function(data) {
+					var baseurl = "<?php echo base_url("wtr/"); ?>";
 
 					$('.csrf-token').val(data.token);
 					$('.user_id').val(data.infos[0].id);
 					$('.user_form_key').val(data.infos[0].form_key);
+
+					//data for profie tab
 					$('.uname').val(data.infos[0].uname);
 					$('.fname').val(data.infos[0].fname);
 					$('.lname').val(data.infos[0].lname);
 					$('.mobile').val(data.infos[0].mobile);
 					$('.email').val(data.infos[0].email);
 					$('.web_quota').val(data.infos[0].web_quota);
+					$('.linkshare').val(baseurl + data.infos[0].form_key);
+
 					$('.webnumtotal').html(data.infos[0].web_quota);
 
 					$('.web_addbtn').attr("userid", data.infos[0].id);
 					$('.web_addbtn').attr("userformkey", data.infos[0].form_key);
 					$('.web_addbtn').attr("useractive", data.infos[0].active);
 
+					//user name to show on top of modal
 					if (data.infos[0].fname == "" || data.infos[0].lname == "") {
 						$('div.nameofuser_h h6').html(data.infos[0].uname);
 					} else {
 						$('div.nameofuser_h h6').html(data.infos[0].fname + " " + data.infos[0].lname);
 					}
 
+					//data for website tab
 					if (data.webs.length == 0) {
 						$("div.website_form_div").append('<p class="text-center no_data text-dark mt-4 font-weight-bolder">USER HAS NO DATA</p>');
 						$("div.action_div").hide();
@@ -430,6 +516,26 @@
 						$("button.user_webpdate").show();
 					}
 
+					//data for payments tab
+					if (data.infos[0].sub_active == "0") {
+						$('.unverifysub_btn').hide();
+						$('.verifysub_btn').show();
+					} else if (data.infos[0].sub_active == "1") {
+						$('.unverifysub_btn').show();
+						$('.verifysub_btn').hide();
+					}
+
+					if (data.pays.length == 0) {
+						$("table.tablepayment").append('<tr class="tr_nopayment"><td colspan="10" class="font-weight-bolder text-dark text-center text-uppercase">No payment data found</td></tr>');
+					} else {
+						$("div.tr_nopayment").remove();
+						for (let index = 0; index < data.pays.length; index++) {
+							$("table.tablepayment").append('<tr class="tr_payment text-center"><td class="text-dark text-uppercase">' + data.pays[index].m_id + '</td><td class="text-dark text-lowercase">' + data.pays[index].txn_id + '</td><td class="text-dark text-lowercase">' + data.pays[index].order_id + '</td><td class="text-dark text-uppercase">' + data.pays[index].payment_mode + '</td><td class="text-dark text-uppercase">' + data.pays[index].gateway_name + '</td><td class="text-dark text-uppercase">' + data.pays[index].bank_name + '</td><td class="text-dark text-lowercase">' + data.pays[index].bank_txn_id + '</td><td class="text-dark text-lowercase">' + data.pays[index].paid_amt + '</td><td class="text-dark text-lowercase">' + data.pays[index].status + '</td><td class="text-dark text-lowercase">' + data.pays[index].paid_at + '</td></tr>');
+						}
+						$("button.user_webpdate").show();
+					}
+
+					//for account tab
 					if (data.infos[0].active == "0") {
 						$('button.deacti_act_btn').hide();
 						$('button.acti_act_btn').show();
@@ -437,16 +543,6 @@
 						$('button.deacti_act_btn').show();
 						$('button.acti_act_btn').hide();
 					}
-
-					if (data.infos[0].sub == "0") {
-						$('button.unverifysub_btn').hide();
-						$('button.verifysub_btn').show();
-					} else if (data.infos[0].sub == "1") {
-						$('button.unverifysub_btn').show();
-						$('button.verifysub_btn').hide();
-					}
-
-
 
 					$(".weberr").show()
 					$('.updateusermodal').modal('show');
@@ -510,7 +606,7 @@
 				$('.updateusermodal').modal('hide');
 				$(".addusermodal").modal("show");
 			} else if (webcount >= web_quota) {
-				var con = confirm("User quota is " + web_quota + ". Increase user quota to add more websites.")
+				var con = confirm("User current quota is " + web_quota + ". Increase user quota to add more websites.")
 				if (con === false) {
 					return false;
 				} else if (con === true) {
@@ -587,11 +683,11 @@
 					if (data.res == "failed") {
 						$(".web_add_spinner,.ajax_succ_div").fadeOut();
 						$('.ajax_res_err').html(data.res_msg);
-						$('.ajax_err_div').fadeIn();
+						$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 					} else if (data.res == "success") {
 						$(".web_add_spinner,.ajax_err_div").fadeOut();
 						$('.ajax_res_succ').html(data.res_msg);
-						$('.ajax_succ_div').fadeIn();
+						$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 
 						$("div.website_form_div").append('<div class="row ' + data.insert_id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.insert_id + '" user_id="' + user_id + '" form_key="' + form_key + '" web_name="' + web_name_add + '" web_link="' + web_link_add + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.insert_id + '" user_id="' + user_id + '" form_key="' + form_key + '" web_name="' + web_name_add + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.insert_id + '">' + web_name_add + '</label><input readonly type="url" name="' + web_name_add + '" class="form-control web_form_input ' + web_name_add + '" web_id="' + data.insert_id + '" placeholder="https://domain-name.com" value="' + web_link_add + '" required></div></div></div>');
 
@@ -708,11 +804,11 @@
 					if (data.res == "failed") {
 						$(".web_update_spinner,.ajax_succ_div").fadeOut();
 						$('.ajax_res_err').html(data.res_msg);
-						$('.ajax_err_div').fadeIn();
+						$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 					} else if (data.res == "success") {
 						$(".web_update_spinner,.ajax_err_div").fadeOut();
 						$('.ajax_res_succ').html(data.res_msg);
-						$('.ajax_succ_div').fadeIn();
+						$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						$('label[web_id=' + id + ']').html(web_name_edit);
 						$('input[web_id=' + id + ']').val(web_link_edit);
 					}
@@ -759,11 +855,11 @@
 					success: function(data) {
 						if (data.res == "failed") {
 							$('.ajax_res_err').html(data.res_msg);
-							$('.ajax_err_div').fadeIn();
+							$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						} else if (data.res == "success") {
 							$("div.website_form_div div." + web_id).remove();
 							$('.ajax_res_succ').html(data.res_msg);
-							$('.ajax_succ_div').fadeIn();
+							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						}
 						$('.csrf-token').val(data.token);
 
@@ -876,11 +972,11 @@
 					if (data.res == "failed") {
 						$(".prof_update_spinner,.ajax_succ_div").fadeOut();
 						$('.ajax_res_err').html(data.res_msg);
-						$('.ajax_err_div').fadeIn();
+						$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 					} else if (data.res == "success") {
 						$(".prof_update_spinner,.ajax_err_div").fadeOut();
 						$('.ajax_res_succ').html(data.res_msg);
-						$('.ajax_succ_div').fadeIn();
+						$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 					}
 
 					reload_table();
@@ -918,11 +1014,11 @@
 						if (data.res == "failed") {
 							$(".ajax_succ_div").fadeOut();
 							$('.ajax_res_err').html(data.res_msg);
-							$('.ajax_err_div').fadeIn();
+							$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						} else if (data.res == "success") {
 							$(".ajax_err_div").fadeOut();
 							$('.ajax_res_succ').html(data.res_msg);
-							$('.ajax_succ_div').fadeIn();
+							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						}
 
 						reload_table();
@@ -961,10 +1057,10 @@
 						// $('i.' + user_form_key).removeClass("text-danger").addClass("text-success");
 						if (data.res == "failed") {
 							$('.ajax_res_err').html(data.res_msg);
-							$('.ajax_err_div').fadeIn();
+							$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						} else if (data.res == "success") {
 							$('.ajax_res_succ').html(data.res_msg);
-							$('.ajax_succ_div').fadeIn();
+							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						}
 						reload_table();
 						$('.csrf-token').val(data.token);
@@ -1011,6 +1107,9 @@
 			var form_key = $('.user_form_key').val();
 			var csrfHash = $('.csrf-token').val();
 			var csrfName = $('.csrf-token').attr('name');
+			var payments = $(".tr_payment").length;
+			console.log(payments);
+
 			var con = confirm("Are you sure you want to verify this user payment?");
 			if (con == false) {
 				return false;
@@ -1033,10 +1132,10 @@
 
 						if (data.res == "failed") {
 							$('.ajax_res_err').html(data.res_msg);
-							$('.ajax_err_div').fadeIn();
+							$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						} else if (data.res == "success") {
 							$('.ajax_res_succ').html(data.res_msg);
-							$('.ajax_succ_div').fadeIn();
+							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						}
 
 						reload_table();
@@ -1076,10 +1175,10 @@
 
 						if (data.res == "failed") {
 							$('.ajax_res_err').html(data.res_msg);
-							$('.ajax_err_div').fadeIn();
+							$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						} else if (data.res == "success") {
 							$('.ajax_res_succ').html(data.res_msg);
-							$('.ajax_succ_div').fadeIn();
+							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						}
 
 						reload_table();
@@ -1166,20 +1265,17 @@
 					if (data.res == "failed") {
 						$(".acct_update_spinner,.ajax_succ_div").fadeOut();
 						$('.ajax_res_err').html(data.res_msg);
-						$('.ajax_err_div').fadeIn();
+						$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 					} else if (data.res == "success") {
 						$(".acct_update_spinner").fadeOut();
 						$('.ajax_res_succ').html(data.res_msg);
-						$('.ajax_succ_div,.ajax_err_div').fadeIn();
+						$('.ajax_succ_div,.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 					}
 				},
 				error: function(data) {
 					alert("Error updating user profile!");
 					// window.location.reload();
 				}
-				// .done(function() {
-				// 	window.location.reload();
-				// });
 			});
 
 		});

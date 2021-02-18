@@ -101,6 +101,14 @@ class Adminmodel extends CI_Model
 		return $query->result();
 	}
 
+	public function get_user_payments($id, $form_key)
+	{
+		$this->db->order_by('id', 'desc');
+		$this->db->where(array('user_id' => $id, 'user_form_key' => $form_key));
+		$query = $this->db->get('payment');
+		return $query->result();
+	}
+
 	public function user_profupdate($user_id, $form_key, $uname, $fname, $lname, $email, $mobile, $web_quota)
 	{
 		if (!isset($web_quota)) {
@@ -217,7 +225,7 @@ class Adminmodel extends CI_Model
 	public function unverify_user_sub($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
-		$query = $this->db->set('sub', "0");
+		$query = $this->db->set('sub', "1");
 		$query = $this->db->set('sub_active', "0");
 		$query = $this->db->update("users");
 		return true;
@@ -427,10 +435,30 @@ class Adminmodel extends CI_Model
 	public function update_user_sub()
 	{
 		$this->db->set('sub', '1', FALSE);
-		$this->db->set('sub_active', '1', FALSE);
+		$this->db->set('sub_active', '0', FALSE);
 		$this->db->where('form_key', $this->session->userdata('mr_form_key'));
 		$this->db->update("users");
 		return true;
+	}
+
+	public function getsadmin()
+	{
+		$query = $this->db->get_where('users', array('s_admin' => '1'));
+		if ($query->num_rows() <= 0) {
+			return false;
+		} else {
+			return $query->row();
+		}
+	}
+
+	public function getuserbykey($form_key)
+	{
+		$query = $this->db->get_where('users', array('form_key' => $form_key));
+		if ($query->num_rows() <= 0) {
+			return false;
+		} else {
+			return $query->row();
+		}
 	}
 
 	public function all_total_ratings()

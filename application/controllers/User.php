@@ -49,6 +49,10 @@ class User extends CI_Controller
 				$this->session->set_flashdata('invalid', 'Username/Password is wrong');
 				redirect('user');
 			}
+			if ($validate == "inactive_access") {
+				$this->session->set_flashdata('invalid', 'Your account has been de-activated by Admin');
+				redirect('/');
+			}
 			if ($validate == "inactive") {
 				$res_login = $this->Usermodel->login_get_key();
 				if ($res_login) {

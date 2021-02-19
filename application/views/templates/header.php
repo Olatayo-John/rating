@@ -69,13 +69,16 @@
 							<i class="fas fa-retweet"></i>Renew Plan</a>
 					</li>
 				<?php endif; ?>
-				<li class="nav-item"><a href="<?php echo base_url('contact') ?>" class="nav-link"><i class="fas fa-id-card"></i>Contact Us</a>
-				</li>
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_admin') == "1") : ?>
+					<li class="nav-item"><a href="<?php echo base_url('payments') ?>" class="nav-link">
+							<i class="fas fa-wallet"></i>Payments</a>
+					</li>
 					<li class="nav-item"><a href="<?php echo base_url('feedbacks') ?>" class="nav-link">
 							<i class="fas fa-comment"></i>Feedbacks</a>
 					</li>
 				<?php endif; ?>
+				<li class="nav-item"><a href="<?php echo base_url('contact') ?>" class="nav-link"><i class="fas fa-id-card"></i>Contact Us</a>
+				</li>
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>
 					<li class="nav-item"><a href="<?php echo base_url('logout') ?>" class="nav-link text-danger">
 							<i class="fas fa-sign-out-alt"></i>Logout</a>

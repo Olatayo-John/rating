@@ -76,7 +76,7 @@
 					<div class="tab_div mt-2">
 						<a href="" class="tab_link prof_a"><i class="fas fa-user-alt mr-2"></i>Profile</a>
 						<a href="" class="tab_link web_a"><i class="fas fa-tachometer-alt mr-2"></i>Websites</a>
-						<a href="" class="tab_link pay_a"><i class="fas fa-wallet mr-2"></i>Payments</a>
+						<a href="" class="tab_link pay_a"><i class="fas fa-wallet mr-2"></i>Subscription</a>
 						<a href="" class="tab_link ac_a"><i class="fas fa-user-cog mr-2"></i>Account</a>
 					</div>
 
@@ -116,12 +116,6 @@
 									<div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
 								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label><span class="text-danger font-weight-bolder">* </span>Web Quota<i class="fas fa-question-circle ml-2" title="Number of websites a user can create. Default is 10"></i></label>
-							<input type="text" name="web_quota" class="form-control web_quota" placeholder="Web Quota">
-							<div class="text-danger font-weight-bolder web_quota_err" style="display: none;"></div>
-
 						</div>
 						<div class="form-group">
 							<div class="d-flex" style="justify-content:space-between">
@@ -166,61 +160,24 @@
 					</div>
 
 					<div class="payment_div">
-						<div class="pt-4 d-flex" style="justify-content: space-between;">
+						<div class="form-group pt-4">
+							<label><span class="text-danger font-weight-bolder">* </span>Current Web Quota<i class="fas fa-question-circle ml-2" title="To update quota, de-activate user subscription"></i></label>
+							<input type="text" name="web_quota" class="form-control web_quota" placeholder="Web Quota">
+							<div class="text-danger font-weight-bolder web_quota_err" style="display: none;"></div>
+
+						</div>
+						<div class="form-group d-flex" style="justify-content: space-between;">
 							<div>
-								<a href="<?php echo base_url(''); ?>" class="btn text-light paymentcsvbtn" style="background:#294a63;">
-									<i class="fas fa-file-csv mr-2"></i>CSV Download
-								</a>
+								<div class="font-weight-bolder text-danger verifysub_btn mb-2">User subscription is not active</div>
+								<div class="font-weight-bolder text-success unverifysub_btn mb-2">User subscription is active</div>
 							</div>
 							<div>
-								<div class="font-weight-bolder text-danger verifysub_btn mb-2">Subscription is not active</div>
-								<div class="font-weight-bolder text-success unverifysub_btn mb-2">Subscription is active</div>
-							</div>
-							<div>
-								<button class="btn text-light verifysub_btn" type="button" style='background:#294a63'>Activate subscription?</button>
+								<button class="btn text-light verifysub_btn" type="button" style='background:#294a63'>Update & Activate subscription?</button>
 								<button class="btn btn-danger unverifysub_btn" type="button">De-activate user subscription?</button>
 							</div>
 						</div>
-						<hr>
 
-						<div class="payment_table_div" style="overflow-x:scroll;overflow-y:hidden;">
-							<table class="table table-bordered table-center table-hover tablepayment" id="tablepayment">
-								<tr class="font-weight-bolder text-light text-center" style="background:#294a63;white-space: nowrap;">
-									<th><span class="icon">
-											Merchant ID
-										</span></th>
-									<th><span>
-											Transaction ID
-										</span class="icon"></th>
-									<th><span>
-											Order ID
-										</span></th>
-									<th><span>
-											Payment Mode
-										</span></th>
-									<th><span>
-											Gateway Mode
-										</span></th>
-									<th><span>
-											Bank Name
-										</span></th>
-									<th><span>
-											Bank ID
-										</span></th>
-									<th><span>
-											Amount
-										</span class="icon"></th>
-									<th><span>
-											Status
-										</span></th>
-									<th class="text-danger"><span>
-											Date
-										</span></th>
-								</tr>
-							</table>
-						</div>
-
-						<div class="updatebtngrp text-right mb-2 web_btngrp">
+						<div class="updatebtngrp text-left mb-2 web_btngrp">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
 						</div>
 					</div>
@@ -325,9 +282,11 @@
 					<tr class="text-dark text-center">
 						<td class="">
 							<?php if ($info['active'] == 0) : ?>
-								<i class="fas fa-circle text-danger <?php echo $info['form_key'] ?>"></i>
+								<i class="fas fa-circle text-warning <?php echo $info['form_key'] ?>"></i>
 							<?php elseif ($info['active'] == 1) : ?>
 								<i class="fas fa-circle text-success <?php echo $info['form_key'] ?>"></i>
+							<?php elseif ($info['active'] == 2) : ?>
+								<i class="fas fa-circle text-danger <?php echo $info['form_key'] ?>"></i>
 							<?php endif; ?>
 						</td>
 						<td class="text-uppercase"><?php echo $info['uname'] ?></td>
@@ -485,7 +444,6 @@
 					$('.lname').val(data.infos[0].lname);
 					$('.mobile').val(data.infos[0].mobile);
 					$('.email').val(data.infos[0].email);
-					$('.web_quota').val(data.infos[0].web_quota);
 					$('.linkshare').val(baseurl + data.infos[0].form_key);
 
 					$('.webnumtotal').html(data.infos[0].web_quota);
@@ -511,16 +469,20 @@
 						$('.web_num_total').html(data.webs.length);
 						for (let index = 0; index < data.webs.length; index++) {
 							// console.log(data.webs[index]);
-							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
+							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
 						}
 						$("button.user_webpdate").show();
 					}
 
 					//data for payments tab
+					$('.web_quota').val(data.infos[0].web_quota);
+
 					if (data.infos[0].sub_active == "0") {
+						$('.web_quota').removeAttr("readonly");
 						$('.unverifysub_btn').hide();
 						$('.verifysub_btn').show();
 					} else if (data.infos[0].sub_active == "1") {
+						$('.web_quota').attr("readonly", "true");
 						$('.unverifysub_btn').show();
 						$('.verifysub_btn').hide();
 					}
@@ -540,6 +502,9 @@
 						$('button.deacti_act_btn').hide();
 						$('button.acti_act_btn').show();
 					} else if (data.infos[0].active == "1") {
+						$('button.deacti_act_btn').show();
+						$('button.acti_act_btn').hide();
+					} else if (data.infos[0].active < "2") {
 						$('button.deacti_act_btn').show();
 						$('button.acti_act_btn').hide();
 					}
@@ -610,10 +575,10 @@
 				if (con === false) {
 					return false;
 				} else if (con === true) {
-					$('div.website_div,div.account_div').hide();
-					$('a.web_a,a.ac_a').css('border-bottom', 'initial');
-					$("a.prof_a").css('border-bottom', '2px solid #294a63');
-					$('div.profile_div').show();
+					$('div.website_div,div.account_div,div.profile_div').hide();
+					$('a.web_a,a.ac_a,a.prof_a').css('border-bottom', 'initial');
+					$("a.pay_a").css('border-bottom', '2px solid #294a63');
+					$('div.payment_div').show();
 					$(".web_quota").css('border', '2px solid red')
 				}
 			}
@@ -831,6 +796,7 @@
 		$(document).on("click", ".del_web_btn", function() {
 			var web_id = $(this).attr('web_id');
 			var web_name = $(this).attr('web_name');
+			var web_link = $(this).attr('web_link');
 			var user_id = $(this).attr('user_id');
 			var form_key = $(this).attr('form_key');
 			var csrfHash = $('.csrf-token').val();
@@ -847,6 +813,7 @@
 					data: {
 						web_id: web_id,
 						web_name: web_name,
+						web_link: web_link,
 						user_id: user_id,
 						form_key: form_key,
 						[csrfName]: csrfHash
@@ -889,8 +856,6 @@
 			var lname = $('.lname').val();
 			var email = $('.email').val();
 			var mobile = $('.mobile').val();
-			var web_quota = $('.web_quota').val();
-			var webcount = $(".web_form_input").length;
 
 			if (uname == "" || uname == null) {
 				$('.uname').css('border', '2px solid red');
@@ -920,26 +885,6 @@
 				$('.mobile').css('border', '1px solid #294a63');
 				$(".mobileerr").hide();
 			}
-			if (web_quota == "" || web_quota == null) {
-				$('.web_quota').css('border', '2px solid red');
-				$(".web_quota_err").html("If you don't specify a value, the default quota is 10").show();
-				$(".prof_update_spinner").hide();
-				return false;
-			}
-			if (parseInt(web_quota) < 10) {
-				$('.web_quota').css('border', '2px solid red');
-				$(".web_quota_err").html("The default quota is 10").show();
-				$(".prof_update_spinner").hide();
-				return false;
-			}
-			if (parseInt(web_quota) < webcount) {
-				$('.web_quota').css('border', '2px solid red');
-				$(".web_quota_err").html("Number of this user websites(" + webcount + ") cannot be greater than quota(" + web_quota + "). Increase the quota").show();
-				$(".prof_update_spinner").hide();
-				return false;
-			} else {
-				$('.web_quota').css('border', '1px solid #294a63');
-			}
 
 			$.ajax({
 				url: "<?php echo base_url('admin/user_profupdate') ?>",
@@ -953,7 +898,6 @@
 					lname: lname,
 					email: email,
 					mobile: mobile,
-					web_quota: web_quota
 				},
 				dataType: "json",
 				beforeSend: function() {
@@ -1107,10 +1051,31 @@
 			var form_key = $('.user_form_key').val();
 			var csrfHash = $('.csrf-token').val();
 			var csrfName = $('.csrf-token').attr('name');
-			var payments = $(".tr_payment").length;
-			console.log(payments);
+			var web_quota = $('.web_quota').val();
+			var webcount = $(".web_form_input").length;
 
-			var con = confirm("Are you sure you want to verify this user payment?");
+			if (web_quota == "" || web_quota == null) {
+				$('.web_quota').css('border', '2px solid red');
+				$(".web_quota_err").html("Specify a value, the default quota is 10").show();
+				$(".prof_update_spinner").hide();
+				return false;
+			}
+			if (parseInt(web_quota) < 10) {
+				$('.web_quota').css('border', '2px solid red');
+				$(".web_quota_err").html("The default quota is 10").show();
+				$(".prof_update_spinner").hide();
+				return false;
+			}
+			if (parseInt(web_quota) < webcount) {
+				$('.web_quota').css('border', '2px solid red');
+				$(".web_quota_err").html("Number of this user websites(" + webcount + ") cannot be greater than quota(" + web_quota + "). Increase the quota").show();
+				$(".prof_update_spinner").hide();
+				return false;
+			} else {
+				$('.web_quota').css('border', '1px solid #294a63');
+			}
+
+			var con = confirm("Are you sure? This user would be able to collect reviews");
 			if (con == false) {
 				return false;
 			} else if (con == true) {
@@ -1120,6 +1085,7 @@
 					method: "post",
 					data: {
 						user_id: user_id,
+						web_quota: web_quota,
 						form_key: form_key,
 						[csrfName]: csrfHash
 					},
@@ -1134,6 +1100,7 @@
 							$('.ajax_res_err').html(data.res_msg);
 							$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						} else if (data.res == "success") {
+							$('.web_quota').attr("readonly", "true");
 							$('.ajax_res_succ').html(data.res_msg);
 							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						}
@@ -1152,12 +1119,12 @@
 			var user_id = $('.user_id').val();
 			var form_key = $('.user_form_key').val();
 			var csrfHash = $('.csrf-token').val();
-			var csrfName = $('.csrf-token').attr('name');
-			var con = confirm("Are you sure you want to verify this user payment?");
+			var csrfName = $('.csrf-token').attr('name')
+
+			var con = confirm("Are you sure? This user wount be able to collect reviews");
 			if (con == false) {
 				return false;
 			} else if (con == true) {
-
 				$.ajax({
 					url: "<?php echo base_url('admin/unverify_user_sub'); ?>",
 					method: "post",
@@ -1177,6 +1144,7 @@
 							$('.ajax_res_err').html(data.res_msg);
 							$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						} else if (data.res == "success") {
+							$('.web_quota').removeAttr("readonly");
 							$('.ajax_res_succ').html(data.res_msg);
 							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						}

@@ -7,7 +7,7 @@
 	<form method="post" action="<?php echo PAYTM_TXN_URL ?>" name="f1" class="f1">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token">
 		<?php foreach ($paytm_info as $name => $value) : ?>
-			<input type="hidden" name="<?php echo $name ?>" value="<?php echo $value ?>" class="form-control">
+			<input type="text" name="<?php echo $name ?>" value="<?php echo $value ?>" class="form-control">
 		<?php endforeach; ?>
 		<input type="hidden" name="CHECKSUMHASH" value="<?php echo $checkSum ?>" class="form-control">
 	</form>

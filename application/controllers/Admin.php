@@ -402,7 +402,7 @@ class Admin extends CI_Controller
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
 			return false;
 		}
-		$res = $this->Adminmodel->user_profupdate($_POST['user_id'], $_POST['form_key'], $_POST['uname'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile'], $_POST['web_quota']);
+		$res = $this->Adminmodel->user_profupdate($_POST['user_id'], $_POST['form_key'], $_POST['uname'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile']);
 		// $res = false;
 		if ($res !== true) {
 			$data['res'] = "failed";
@@ -471,7 +471,7 @@ class Admin extends CI_Controller
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
 			return false;
 		}
-		$res = $this->Adminmodel->delete_user_web($_POST['web_id'], $_POST['user_id'], $_POST['form_key'], $_POST['web_name']);
+		$res = $this->Adminmodel->delete_user_web($_POST['web_id'], $_POST['user_id'], $_POST['form_key'], $_POST['web_name'], $_POST['web_link']);
 		// $res = false;
 		if ($res !== true) {
 			$data['res'] = "failed";
@@ -542,7 +542,7 @@ class Admin extends CI_Controller
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
 			return false;
 		} else {
-			$res = $this->Adminmodel->verify_user_sub($_POST['user_id'], $_POST['form_key']);
+			$res = $this->Adminmodel->verify_user_sub($_POST['user_id'], $_POST['form_key'], $_POST['web_quota']);
 			// $res = false;
 			if ($res !== true) {
 				$data['res'] = "failed";
@@ -1084,6 +1084,24 @@ class Admin extends CI_Controller
 		echo $output;
 	}
 
+	public function payments()
+	{
+		$data['title'] = "payments";
+
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('user');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('/');
+		}
+
+		$this->load->view('templates/header');
+		$this->load->view('admin/payments');
+		$this->load->view('templates/footer');
+	}
+
 	public function pick_plan()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
@@ -1099,8 +1117,6 @@ class Admin extends CI_Controller
 	{
 		$checkSum = "";
 		$data = array();
-		//$MSISDN= "+917456034856";
-		//$EMAIL= "olatayoefficient@gmail.com";
 
 		$data["MID"] = PAYTM_MERCHANT_MID;
 		$data["CUST_ID"] = $this->session->userdata('mr_id');
@@ -1111,12 +1127,8 @@ class Admin extends CI_Controller
 		$data["WEBSITE"] = PAYTM_MERCHANT_WEBSITE;
 		$data["CALLBACK_URL"] = base_url("admin/pgResponses");
 
-		//$data["MSISDN"]= $MSISDN;
-		//$data["EMAIL"]= $EMAIL;
-		//$data["VERIFIED_BY"]= "EMAIL";
-		//$data["IS_USER_VERIFIED"]=>"YES";
-
 		$checkSum = getChecksumFromArray($data, PAYTM_MERCHANT_KEY);
+
 		$this->load->view('templates/header');
 		$this->load->view('admin/pgresponse', ['paytm_info' => $data, 'checkSum' => $checkSum]);
 		$this->load->view('templates/footer');
@@ -1128,8 +1140,6 @@ class Admin extends CI_Controller
 		$paramList = array();
 		$isValidChecksum = "FALSE";
 		$paramList = $_POST;
-		$user_id = $this->session->userdata('mr_id');
-		$form_key = $this->session->userdata('mr_form_key');
 
 		$paytmChecksum = isset($_POST["CHECKSUMHASH"]) ? $_POST["CHECKSUMHASH"] : "";
 		$isValidChecksum = verifychecksum_e($paramList, PAYTM_MERCHANT_KEY, $paytmChecksum);
@@ -1148,9 +1158,8 @@ class Admin extends CI_Controller
 		if ($isValidChecksum == "TRUE") {
 			if ($_POST["STATUS"] == "TXN_SUCCESS") {
 				if (isset($_POST) && count($_POST) > 0) {
+
 					$userData = array(
-						'user_id' => $user_id,
-						'user_form_key' => $form_key,
 						'm_id' => $_POST['MID'],
 						'txn_id' => $_POST['TXNID'],
 						'order_id' => $_POST['ORDERID'],
@@ -1165,12 +1174,9 @@ class Admin extends CI_Controller
 					);
 
 					$this->Adminmodel->save_payment($userData);
-					$res = $this->Adminmodel->getuserbykey($form_key);
 					$admin_res = $this->Adminmodel->getsadmin();
 
 					$admin_mail = $admin_res->email;
-					$user_name = $res->uname;
-					$user_mail = $res->email;
 					$m_id = $_POST['MID'];
 					$txn_id = $_POST['TXNID'];
 					$order_id = $_POST['ORDERID'];
@@ -1180,7 +1186,7 @@ class Admin extends CI_Controller
 					$status = $_POST['STATUS'];
 
 					if (isset($admin_mail)) {
-						$this->notifyadmin($admin_mail, $user_name, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status);
+						$this->notifyadmin($admin_mail, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status);
 					}
 
 					$this->session->set_flashdata('valid', 'Payment Done. Please wait while we verify your payment');
@@ -1204,7 +1210,7 @@ class Admin extends CI_Controller
 		}
 	}
 
-	public function notifyadmin($admin_mail, $user_name, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status)
+	public function notifyadmin($admin_mail, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status)
 	{
 		$config['protocol']    = 'smtp';
 		$config['smtp_host']    = 'ssl://smtp.gmail.com';
@@ -1219,7 +1225,17 @@ class Admin extends CI_Controller
 		$this->load->library('email', $config);
 		$this->email->set_newline("\r\n");
 
-		$body = "Dear Admin.\n\n" . ucfirst($user_name) . " has subscribed for a new quota using PAYTM. Below are the payment details\n\nUser: " . $user_name . "\nMerchant ID: " . $m_id . "\nTax ID: " . $txn_id . "\nOrder ID: " . $order_id . "\nAmount Paid: " . $user_amt . "\nPayment Mode: " . $payment_mode . "\nBank:" . $bank_name . "\nPayment Status: " . $status . "\n\nLogin " . base_url("/users") . " to verify payment and activate user subscription\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+		if ($user_amt == "500") {
+			$quota = "500";
+		} elseif ($user_amt == "1000") {
+			$quota = "1000";
+		} elseif ($user_amt == "1500") {
+			$quota = "1500";
+		} elseif ($user_amt == "2000") {
+			$quota = "2000";
+		}
+
+		$body = "Dear Admin.\n\n New user subscribtion for a new quota using PAYTM. Below are the payment details\n\nMerchant ID: " . $m_id . "\nTax ID: " . $txn_id . "\nOrder ID: " . $order_id . "\nAmount Paid: " . $user_amt . "\Quota Paid For: " . $quota . "\nPayment Mode: " . $payment_mode . "\nBank:" . $bank_name . "\nPayment Status: " . $status . "\n\nLogin " . base_url("/users") . " to verify payment and activate user subscription\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
 
 		$this->email->from('jvweedtest@gmail.com', 'Rating');
 		$this->email->to($admin_mail);

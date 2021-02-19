@@ -17,6 +17,10 @@ class Usermodel extends CI_Model
 			return "inactive";
 			exit();
 		}
+		if ($user->active == "2") {
+			return "inactive_access";
+			exit();
+		}
 		if ($user->active == "1") {
 			if (password_verify($pwd, $user->password)) {
 				return $user;

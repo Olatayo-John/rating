@@ -119,18 +119,14 @@ class Adminmodel extends CI_Model
 		return $query->result();
 	}
 
-	public function user_profupdate($user_id, $form_key, $uname, $fname, $lname, $email, $mobile, $web_quota)
+	public function user_profupdate($user_id, $form_key, $uname, $fname, $lname, $email, $mobile)
 	{
-		if (!isset($web_quota)) {
-			$web_quota = "10";
-		}
 		$data = array(
 			'uname' => htmlentities($uname),
 			'fname' => htmlentities($fname),
 			'lname' => htmlentities($lname),
 			'email' => strtolower(htmlentities($email)),
 			'mobile' => strtolower(htmlentities($mobile)),
-			'web_quota' => strtolower(htmlentities($web_quota)),
 		);
 
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
@@ -181,9 +177,9 @@ class Adminmodel extends CI_Model
 		return $this->db->insert_id();
 	}
 
-	public function delete_user_web($web_id, $user_id, $form_key, $web_name)
+	public function delete_user_web($web_id, $user_id, $form_key, $web_name, $web_link)
 	{
-		$this->db->where(array('id' => $web_id, 'user_id' => $user_id, 'form_key' => $form_key, 'web_name' => $web_name));
+		$this->db->where(array('id' => $web_id, 'user_id' => $user_id, 'form_key' => $form_key, 'web_name' => $web_name, 'web_link' => $web_link));
 		$this->db->delete("websites");
 
 		$aff_rows = $this->delete_userratings($form_key, $web_name);
@@ -210,7 +206,7 @@ class Adminmodel extends CI_Model
 	public function deactivateuser($user_id, $user_form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $user_form_key));
-		$query = $this->db->set('active', "0");
+		$query = $this->db->set('active', "2");
 		$query = $this->db->update("users");
 		return true;
 	}
@@ -223,11 +219,16 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function verify_user_sub($user_id, $form_key)
+	public function verify_user_sub($user_id, $form_key, $web_quota)
 	{
+		if (!isset($web_quota)) {
+			$web_quota = "10";
+		}
+
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
-		$query = $this->db->set('sub', "1");
-		$query = $this->db->set('sub_active', "1");
+		$this->db->set('web_quota', $web_quota);
+		$this->db->set('sub', "1");
+		$this->db->set('sub_active', "1");
 		$query = $this->db->update("users");
 		return true;
 	}
@@ -425,11 +426,13 @@ class Adminmodel extends CI_Model
 
 	public function save_payment($userData)
 	{
+		print_r($userData);
+		die;
 		$this->db->insert('payment', $userData);
-		$quota_amount = round($userData['paid_amt']);
-		$this->save_plan($quota_amount);
-		$this->update_user_sub();
-		$this->session->set_userdata('mr_sub', '1');
+		// $quota_amount = round($userData['paid_amt']);
+		// $this->save_plan($quota_amount);
+		// $this->update_user_sub();
+		// $this->session->set_userdata('mr_sub', '1');
 		return true;
 	}
 

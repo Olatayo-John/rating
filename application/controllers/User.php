@@ -315,6 +315,7 @@ class User extends CI_Controller
 		if ($this->session->userdata('mr_website_form') == "1") {
 			redirect('/');
 		}
+
 		$data['webs'] = $this->Usermodel->get_user_websites();
 		$webcount = $data['webs']->num_rows();
 		$webquota = $this->session->userdata('mr_web_quota');
@@ -740,6 +741,7 @@ class User extends CI_Controller
 		if ($this->email->send()) {
 			return true;
 		} else {
+			log_message('error', $this->email->print_debugger());
 			return $this->email->print_debugger();
 		}
 	}
@@ -980,6 +982,7 @@ class User extends CI_Controller
 		if ($this->email->send()) {
 			return true;
 		} else {
+			log_message('error', $this->email->print_debugger());
 			return $this->email->print_debugger();
 		}
 	}

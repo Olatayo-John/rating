@@ -44,25 +44,14 @@ class Adminmodel extends CI_Model
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$this->db->delete('users');
-		$this->delete_user_details($user_id, $form_key);
-		$this->delete_user_quota($user_id, $form_key);
+
 		$this->delete_user_ratings($form_key);
+		$this->delete_user_payments($user_id, $form_key);
+		$this->delete_user_quota($user_id, $form_key);
 		$this->delete_user_sentlinks($user_id);
+		$this->delete_user_details($user_id, $form_key);
 		$this->delete_user_websites($user_id, $form_key);
-		return true;
-	}
 
-	public function delete_user_details($user_id, $form_key)
-	{
-		$this->db->where(array('user_id' => $user_id, 'form_key' => $form_key));
-		$this->db->delete('user_details');
-		return true;
-	}
-
-	public function delete_user_quota($user_id, $form_key)
-	{
-		$this->db->where(array('by_user_id' => $user_id, 'by_form_key' => $form_key));
-		$this->db->delete('quota');
 		return true;
 	}
 
@@ -73,10 +62,31 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
+	public function delete_user_payments($user_id, $form_key)
+	{
+		$this->db->where(array('user_id' => $user_id, 'user_form_key' => $form_key));
+		$this->db->delete('payment');
+		return true;
+	}
+
+	public function delete_user_quota($user_id, $form_key)
+	{
+		$this->db->where(array('by_user_id' => $user_id, 'by_form_key' => $form_key));
+		$this->db->delete('quota');
+		return true;
+	}
+
 	public function delete_user_sentlinks($user_id)
 	{
 		$this->db->where('user_id', $user_id);
 		$this->db->delete('sent_links');
+		return true;
+	}
+
+	public function delete_user_details($user_id, $form_key)
+	{
+		$this->db->where(array('user_id' => $user_id, 'form_key' => $form_key));
+		$this->db->delete('user_details');
 		return true;
 	}
 

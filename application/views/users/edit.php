@@ -150,7 +150,7 @@
 					</div>
 				<?php endif; ?>
 				<div class="form-group col">
-					<input type="text" name="web_name" class="form-control web_input" value="<?php echo ucfirst($web['web_name']) ?>" id="<?php echo $web['id'] ?>" placeholder="Website name" readonly>
+					<input type="text" name="web_name" class="form-control web_input text-center text-uppercase" value="<?php echo ucfirst($web['web_name']) ?>" id="<?php echo $web['id'] ?>" placeholder="Website name" readonly>
 				</div>
 				<div class="col-md-4" style="padding:0">
 					<div class="d-flex flex-row" style="justify-content:center">

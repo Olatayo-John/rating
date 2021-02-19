@@ -185,8 +185,7 @@
 	<p class="mb-0"> <strong>A/c No.: </strong> 721805000099</p>
 	<p class="mb-0"><strong>IFSC: </strong> ICIC0007218</p>
 	<p class="mb-0"><strong>Branch: </strong> SEC-62 Noida</p>
-	<p class="mb-0"><strong>Addresses: </strong> Office No.308,3rd Floor,A-40, I-Thum Tower, Noida Sector-62, 201301
-		NKTechnologies ITSOL Private Limited</p>
+	<p class="mb-0"><strong>Addresses: </strong> Office No.308,3rd Floor,A-40, I-Thum Tower, Noida Sector-62, 201301</p>
 </div>
 
 

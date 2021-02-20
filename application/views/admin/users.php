@@ -193,6 +193,7 @@
 							<button class="btn text-light genpwdbtn" type="button" style="background:#294a63"><i class="fas fa-key mr-2"></i>Generate password</button>
 						</div>
 						<hr>
+						<div class="act_info font-weight-bolder"></div>
 						<div class="form-group mt-2">
 							<button class="btn btn-danger delact_btn" type="button"><i class="fas fa-trash-alt mr-2"></i>Delete account</button>
 							<button class="btn btn-danger deacti_act_btn" type="button"><i class="fas fa-user-alt-slash mr-2"></i>De-activate account</button>
@@ -499,14 +500,17 @@
 
 					//for account tab
 					if (data.infos[0].active == "0") {
+						$(".act_info").html("User verification not done!").show();
 						$('button.deacti_act_btn').hide();
 						$('button.acti_act_btn').show();
 					} else if (data.infos[0].active == "1") {
+						$(".act_info").html("Account is active").show();
 						$('button.deacti_act_btn').show();
 						$('button.acti_act_btn').hide();
-					} else if (data.infos[0].active < "2") {
-						$('button.deacti_act_btn').show();
-						$('button.acti_act_btn').hide();
+					} else if (data.infos[0].active == "2") {
+						$(".act_info").html("Account is not active").show();
+						$('button.deacti_act_btn').hide();
+						$('button.acti_act_btn').show();
 					}
 
 					$(".weberr").show()

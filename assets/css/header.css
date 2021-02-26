@@ -7,7 +7,7 @@ a:hover{
 	text-decoration: none !important;
 }
 .btn:focus,button:focus{
-	box-shadow: none;
+	box-shadow: none !important;
 	outline: none !important;
 }
 button.btn{
@@ -17,6 +17,7 @@ button.btn{
 input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
 	border-color: #294a63;
 	box-shadow: none;
+	background-color: transparent; 
 }
 div.spinnerdiv{
 	top: 0;

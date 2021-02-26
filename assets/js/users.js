@@ -61,8 +61,18 @@ $(document).ready(function () {
 	// });
 
 	$(document).on('click', '.genpwdbtn', function () {
-		var randpwd = Math.floor((Math.random() * 10000000) + 1);
-		var pwd = $('.u_pwd').val(randpwd);
+		// var randpwd = Math.floor((Math.random() * 10000000) + 1);
+		// var pwd = $('.u_pwd').val(randpwd);
+		// $(".user_accupdate").show();
+
+		var length = 10;
+		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		var val = "";
+
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			val += charset.charAt(Math.floor(Math.random() * n));
+		}
+		var pwd = $('.u_pwd').val(val);
 		$(".user_accupdate").show();
 	});
 

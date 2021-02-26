@@ -87,6 +87,7 @@
 						<div class="form-group">
 							<label><span class="text-danger font-weight-bolder">* </span>Username</label>
 							<input type="text" name="uname" class="form-control uname" placeholder="Username">
+							<span class="unameerr text-danger" style="display:none">Username already exist</span>
 						</div>
 						<div class="row">
 							<div class="col-md-6">
@@ -351,6 +352,7 @@
 				success: function(data) {
 					$('table.usertable').html(data);
 					$(".table_pag_div").show();
+					$('#search_user').val("");
 				}
 			})
 		}
@@ -383,6 +385,7 @@
 		});
 
 		$(document).on('click', 'i.fa-sort', function() {
+			$('#search_user').val("");
 			var param = $(this).attr('name');
 			var type = $(this).attr('type');
 			var csrfName = $('.csrf-token').attr('name');
@@ -483,7 +486,10 @@
 						$('.unverifysub_btn').hide();
 						$('.verifysub_btn').show();
 					} else if (data.infos[0].sub_active == "1") {
-						$('.web_quota').attr("readonly", "true");
+						$('.web_quota').attr({
+							readonly: "true",
+							disabled: "disabled"
+						});
 						$('.unverifysub_btn').show();
 						$('.verifysub_btn').hide();
 					}
@@ -849,6 +855,36 @@
 			}
 		});
 
+		$(".uname").keyup(function() {
+			var uname_val = $(".uname").val();
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			$.ajax({
+				url: "<?php echo base_url("user/check_duplicate_username") ?>",
+				method: "post",
+				dataType: "json",
+				data: {
+					[csrfName]: csrfHash,
+					uname_val: uname_val
+				},
+				success: function(data) {
+					$(".csrf-token").val(data.token);
+					if (data.user_data > 0) {
+						$('.unameerr').show();
+						$(".uname").css('border', '1px solid red');
+						$(".user_profileupdate").attr("disabled", "disabled").hide();
+					} else {
+						$('.unameerr').hide();
+						$(".uname").css('border', '1px solid #ced4da');
+						$(".user_profileupdate").removeAttr("disabled").show();
+					}
+				},
+				error: function(data) {
+					alert('error filtering. Please refresh and try again');
+				}
+			});
+		});
+
 		$(document).on('click', '.user_profileupdate', function(e) {
 			e.preventDefault();
 			var user_id = $('.user_id').val();
@@ -956,8 +992,6 @@
 					},
 					dataType: "json",
 					success: function(data) {
-						$('.deacti_act_btn').hide();
-						$('.acti_act_btn').show();
 						// $('i.' + user_form_key).removeClass("text-success").addClass("text-danger");
 						if (data.res == "failed") {
 							$(".ajax_succ_div").fadeOut();
@@ -967,6 +1001,9 @@
 							$(".ajax_err_div").fadeOut();
 							$('.ajax_res_succ').html(data.res_msg);
 							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
+							$(".act_info").html("Account is not active").show();
+							$('.deacti_act_btn').hide();
+							$('.acti_act_btn').show();
 						}
 
 						reload_table();
@@ -1000,8 +1037,6 @@
 					},
 					dataType: "json",
 					success: function(data) {
-						$('.deacti_act_btn').show();
-						$('.acti_act_btn').hide();
 						// $('i.' + user_form_key).removeClass("text-danger").addClass("text-success");
 						if (data.res == "failed") {
 							$('.ajax_res_err').html(data.res_msg);
@@ -1009,6 +1044,9 @@
 						} else if (data.res == "success") {
 							$('.ajax_res_succ').html(data.res_msg);
 							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
+							$(".act_info").html("Account is active").show();
+							$('.deacti_act_btn').show();
+							$('.acti_act_btn').hide();
 						}
 						reload_table();
 						$('.csrf-token').val(data.token);

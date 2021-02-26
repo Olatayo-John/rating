@@ -11,8 +11,19 @@ $(document).ready(function () {
 	});
 
 	$("button.genpwdbtn").click(function () {
-		var randpwd = Math.floor((Math.random() * 10000000) + 1);
-		var pwd = $('.pwd').val(randpwd);
+		// var randpwd = Math.floor((Math.random() * 10000000) + 1);
+		// var pwd = $('.pwd').val(randpwd);
+		// $('i.fa-eye').show();
+		// $('i.fa-eye-slash').hide();
+
+		var length = 10;
+		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		var val = "";
+
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			val += charset.charAt(Math.floor(Math.random() * n));
+		}
+		var pwd = $('.pwd').val(val);
 		$('i.fa-eye').show();
 		$('i.fa-eye-slash').hide();
 	});

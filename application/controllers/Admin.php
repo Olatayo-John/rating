@@ -145,9 +145,11 @@ class Admin extends CI_Controller
 				$output .= '<tr class="text-dark text-center">
 				<td>';
 				if ($info['active'] == 0) {
-					$output .= '<i class="fas fa-circle text-danger"></i>';
+					$output .= '<i class="fas fa-circle text-warning"></i>';
 				} elseif ($info['active'] == 1) {
 					$output .= '<i class="fas fa-circle text-success"></i>';
+				} elseif ($info['active'] == 2) {
+					$output .= '<i class="fas fa-circle text-danger"></i>';
 				}
 				$output .= '</td>
 				<td class="text-uppercase">' . $info['uname'] . '</td>
@@ -225,9 +227,11 @@ class Admin extends CI_Controller
 				$output .= '<tr class="text-dark text-center">
 				<td>';
 				if ($info['active'] == 0) {
-					$output .= '<i class="fas fa-circle text-danger"></i>';
+					$output .= '<i class="fas fa-circle text-warning"></i>';
 				} elseif ($info['active'] == 1) {
 					$output .= '<i class="fas fa-circle text-success"></i>';
+				} elseif ($info['active'] == 2) {
+					$output .= '<i class="fas fa-circle text-danger"></i>';
 				}
 				$output .= '</td>
 				<td class="text-uppercase">' . $info['uname'] . '</td>
@@ -316,9 +320,11 @@ class Admin extends CI_Controller
 				$output .= '<tr class="text-dark text-center">
 				<td>';
 				if ($info['active'] == 0) {
-					$output .= '<i class="fas fa-circle text-danger"></i>';
+					$output .= '<i class="fas fa-circle text-warning"></i>';
 				} elseif ($info['active'] == 1) {
 					$output .= '<i class="fas fa-circle text-success"></i>';
+				} elseif ($info['active'] == 2) {
+					$output .= '<i class="fas fa-circle text-danger"></i>';
 				}
 				$output .= '</td>
 				<td class="text-uppercase">' . $info['uname'] . '</td>
@@ -1090,16 +1096,180 @@ class Admin extends CI_Controller
 
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user');
+			redirect('/');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
 			$this->session->set_flashdata('acces_denied', 'Access Denied.');
 			redirect('/');
 		}
 
-		$this->load->view('templates/header');
+		$data['pays'] = $this->Adminmodel->get_all_payments();
+		$this->load->view('templates/header', $data);
 		$this->load->view('admin/payments');
 		$this->load->view('templates/footer');
+	}
+
+	public function reload_table_payments()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('login');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('login');
+		}
+		$output = '';
+		$query = '';
+		if ($this->input->post('query')) {
+			$query = $this->input->post('query');
+		}
+		$data = $this->Adminmodel->get_all_payments($query);
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;white-space: nowrap;">
+		<th><span class="icon">
+				Merchant ID
+			</span></th>
+		<th><span>
+				Transaction ID
+			</span class="icon"></th>
+		<th><span>
+				Order ID
+			</span></th>
+		<th><span>
+				Payment Mode
+			</span></th>
+		<th><span>
+				Gateway Mode
+			</span></th>
+		<th><span>
+				Bank Name
+			</span></th>
+		<th><span>
+				Bank ID
+			</span></th>
+		<th><span>
+				Amount
+			</span class="icon"></th>
+		<th><span>
+				Status
+			</span></th>
+		<th class="text-danger"><span>
+				Date
+			</span></th>
+		</tr>';
+		if ($data->num_rows() == 0) {
+			$output .= '<tr class="text-light">
+			<td colspan="10" class="font-weight-bolder text-dark text-center">No data found</td>
+			</tr>';
+		} else {
+			foreach ($data->result_array() as $info) {
+				$output .= ' <tr class="text-center">
+				<td>' . $info["m_id"] . '</td>
+				<td>' . $info["txn_id"] . '</td>
+				<td>' . $info["order_id"] . '</td>
+				<td>' . $info["payment_mode"] . '</td>
+				<td>' . $info["gateway_name"] . '</td>
+				<td>' . $info["bank_name"] . '</td>
+				<td>' . $info["bank_txn_id"] . '</td>
+				<td><i class="fas fa-rupee-sign"></i>' . $info["paid_amt"] . '</td>
+				<td>' . $info["status"] . '</td>
+				<td>' . $info["paid_at"] . '</td>
+				</tr>';
+			}
+		}
+		echo $output;
+	}
+
+	public function payments_export_csv()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('login');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('user');
+		}
+		header("Content-Type: text/csv; charset=utf-8");
+		header("Content-Disposition: attachment; filename=payments.csv");
+		$output = fopen("php://output", "w");
+		fputcsv($output, array('ID', 'User ID', 'Merchant ID', 'Transaction ID', 'Order ID', 'Currency', 'Amount', 'Payment Mode', 'Gateway Mode', 'Bank Transaction ID', 'Bank Name', 'Status', 'Date'));
+		$data = $this->Adminmodel->payments_export_csv();
+		foreach ($data as $row) {
+			fputcsv($output, $row);
+		}
+		fclose($output);
+	}
+
+	public function payments_search()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('login');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('login');
+		}
+		$output = '';
+		$query = '';
+		if ($this->input->post('query')) {
+			$query = $this->input->post('query');
+		}
+		$data = $this->Adminmodel->payments_search($query);
+		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;white-space: nowrap;">
+		<th><span class="icon">
+				Merchant ID
+			</span></th>
+		<th><span>
+				Transaction ID
+			</span class="icon"></th>
+		<th><span>
+				Order ID
+			</span></th>
+		<th><span>
+				Payment Mode
+			</span></th>
+		<th><span>
+				Gateway Mode
+			</span></th>
+		<th><span>
+				Bank Name
+			</span></th>
+		<th><span>
+				Bank ID
+			</span></th>
+		<th><span>
+				Amount
+			</span class="icon"></th>
+		<th><span>
+				Status
+			</span></th>
+		<th class="text-danger"><span>
+				Date
+			</span></th>
+		</tr>';
+		if ($data->num_rows() == 0) {
+			$output .= '<tr class="text-light">
+			<td colspan="10" class="font-weight-bolder text-dark text-center">No data found</td>
+			</tr>';
+		} else {
+			foreach ($data->result_array() as $info) {
+				$output .= ' <tr class="text-center">
+				<td>' . $info["m_id"] . '</td>
+				<td>' . $info["txn_id"] . '</td>
+				<td>' . $info["order_id"] . '</td>
+				<td>' . $info["payment_mode"] . '</td>
+				<td>' . $info["gateway_name"] . '</td>
+				<td>' . $info["bank_name"] . '</td>
+				<td>' . $info["bank_txn_id"] . '</td>
+				<td><i class="fas fa-rupee-sign"></i>' . $info["paid_amt"] . '</td>
+				<td>' . $info["status"] . '</td>
+				<td>' . $info["paid_at"] . '</td>
+				</tr>';
+			}
+		}
+		echo $output;
 	}
 
 	public function pick_plan()

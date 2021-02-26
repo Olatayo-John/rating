@@ -133,5 +133,6 @@ $(document).ready(function() {
 		$('.e_mobile').hide();
 		$('.msgmodal').modal('hide');
 	});
+
 	
 });

@@ -119,6 +119,40 @@ class Adminmodel extends CI_Model
 		return $query->result();
 	}
 
+	public function get_all_payments()
+	{
+		$this->db->order_by('id', 'desc');
+		$query = $this->db->get('payment');
+		return $query;
+	}
+
+	public function payments_export_csv()
+	{
+		$this->db->order_by('id', 'desc');
+		$this->db->select('id,user_id,m_id,txn_id,order_id,currency,paid_amt,payment_mode,gateway_name,bank_txn_id,bank_name,status,paid_at');
+		$query = $this->db->get('payment');
+		return $query->result_array();
+	}
+
+	public function payments_search($query)
+	{
+		$this->db->select('*');
+		$this->db->from('payment');
+		if ($query != '') {
+			$this->db->like('m_id', $query);
+			$this->db->or_like('txn_id', $query);
+			$this->db->or_like('order_id', $query);
+			$this->db->or_like('paid_amt', $query);
+			$this->db->or_like('payment_mode', $query);
+			$this->db->or_like('gateway_name', $query);
+			$this->db->or_like('bank_txn_id', $query);
+			$this->db->or_like('bank_name', $query);
+			$this->db->or_like('status', $query);
+		}
+		$this->db->order_by('id', 'DESC');
+		return $this->db->get();
+	}
+
 	public function user_profupdate($user_id, $form_key, $uname, $fname, $lname, $email, $mobile)
 	{
 		$data = array(

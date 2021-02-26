@@ -13,6 +13,7 @@
 		<div class="form-group">
 			<label><span class="text-danger">* </span>Username</label>
 			<input type="text" name="uname" class="form-control uname" value="<?php echo $user_info->uname ?>" placeholder="Pick a Username">
+			<span class="unameerr text-danger" style="display:none">Username already exist</span>
 		</div>
 		<div class="row">
 			<div class="form-group col-md-6">
@@ -218,6 +219,36 @@
 
 	$(document).ready(function() {
 		$("[data-toggle]").tooltip()
+
+		$(".uname").keyup(function() {
+			var uname_val = $(".uname").val();
+			var csrfName = $(".csrf_token").attr("name");
+			var csrfHash = $(".csrf_token").val();
+			$.ajax({
+				url: "<?php echo base_url("user/check_duplicate_username") ?>",
+				method: "post",
+				dataType: "json",
+				data: {
+					[csrfName]: csrfHash,
+					uname_val: uname_val
+				},
+				success: function(data) {
+					$(".csrf_token").val(data.token);
+					if (data.user_data > 0) {
+						$('.unameerr').show();
+						$(".uname").css('border', '1px solid red');
+						$(".save_pinfo_btn").attr("disabled", "disabled").hide();
+					} else {
+						$('.unameerr').hide();
+						$(".uname").css('border', '1px solid #ced4da');
+						$(".save_pinfo_btn").removeAttr("disabled").show();
+					}
+				},
+				error: function(data) {
+					alert('error filtering. Please refresh and try again');
+				}
+			});
+		});
 
 		$(document).on('click', 'button.edit_web_btn', function() {
 			var csrfName = $('.csrf_token').attr('name');

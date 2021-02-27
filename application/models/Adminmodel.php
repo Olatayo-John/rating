@@ -160,6 +160,27 @@ class Adminmodel extends CI_Model
 		return $this->db->get();
 	}
 
+	public function get_all_logs()
+	{
+		$this->db->order_by('id', 'desc');
+		$query = $this->db->get('activity');
+		return $query;
+	}
+
+	public function logs_export_csv()
+	{
+		$this->db->order_by('id', 'desc');
+		$this->db->select('id,msg,act_time');
+		$query = $this->db->get('activity');
+		return $query->result_array();
+	}
+
+	public function clear_logs()
+	{
+		$this->db->truncate('activity');
+		return true;
+	}
+
 	public function user_profupdate($user_id, $form_key, $uname, $fname, $lname, $email, $mobile)
 	{
 		$data = array(
@@ -580,10 +601,6 @@ class Adminmodel extends CI_Model
 		return $query->result_array();
 	}
 
-
-
-
-
 	public function check_quota_expire()
 	{
 		$form_key = $this->session->userdata('mr_form_key');
@@ -610,6 +627,7 @@ class Adminmodel extends CI_Model
 	public function sub_update($form_key)
 	{
 		$this->db->set('sub', '0');
+		$this->db->set('sub_active', '0');
 		$this->db->where('form_key', $form_key);
 		$this->db->update('users');
 		$this->session->set_userdata('mr_sub', '0');

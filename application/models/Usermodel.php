@@ -32,6 +32,14 @@ class Usermodel extends CI_Model
 		}
 	}
 
+	public function user_latestact()
+	{
+		$this->db->set("latest_activity", date(DATE_COOKIE), TRUE);
+		$this->db->where('id', $this->session->userdata('mr_id'));
+		$this->db->update("users");
+		return true;
+	}
+
 	public function login_get_key()
 	{
 		$uname = htmlentities($this->input->post('uname'));
@@ -479,6 +487,7 @@ class Usermodel extends CI_Model
 		$length = '1';
 		$this->userdetails_email_update($num);
 		$this->user_quota_update($length);
+		$this->log_act($type = "smail_sent");
 		return true;
 	}
 
@@ -501,6 +510,7 @@ class Usermodel extends CI_Model
 		$this->db->insert('sent_links', $data);
 		$num = count($emaildata);
 		$this->userdetails_email_update($num);
+		$this->log_act($type = "mmail_sent");
 		return true;
 	}
 
@@ -516,6 +526,7 @@ class Usermodel extends CI_Model
 		$length = '1';
 		$this->userdetails_sms_update($num);
 		$this->user_quota_update($length);
+		$this->log_act($type = "ssms_sent");
 		return true;
 	}
 
@@ -537,6 +548,7 @@ class Usermodel extends CI_Model
 		$num = count($mobiledata);
 		$this->db->insert('sent_links', $data);
 		$this->userdetails_sms_update($num);
+		$this->log_act($type = "ssms_sent");
 		return true;
 	}
 
@@ -727,5 +739,39 @@ class Usermodel extends CI_Model
 		$this->db->select('id,name,user_mail,bdy');
 		$query = $this->db->get('contact');
 		return $query->result_array();
+	}
+
+	public function log_act($type)
+	{
+		if ($type == "logout") {
+			$msg = "Logged Out. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "login") {
+			$msg = "Logged In. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "login_false") {
+			$msg = "Failed Login Attempt- Wrong Username/Password. [Name: " . $this->input->post('uname') . "]";
+		} elseif ($type == "inactive_access") {
+			$msg = "Failed Login Attempt- Inactive Access. [Name: " . $this->input->post('uname') . "]";
+		} elseif ($type == "inactive") {
+			$msg = "Failed Login Attempt- Inactive Account. [Name: " . $this->input->post('uname') . "]";
+		} elseif ($type == "smail_sent") {
+			$msg = "Sent single mail. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "mmail_sent") {
+			$msg = "Sent multiple mails. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "ssms_sent") {
+			$msg = "Sent single sms. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "msms_sent") {
+			$msg = "Sent multiple sms. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "mail_err") {
+			$msg = "Mail couldn't be sent. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "db_err") {
+			$msg = "Couldn't save to Database. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		}
+
+		$data = array(
+			'msg' => $msg,
+			'act_time' => date(DATE_COOKIE),
+		);
+		$this->db->insert("activity", $data);
+		return true;
 	}
 }

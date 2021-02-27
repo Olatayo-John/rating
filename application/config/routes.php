@@ -65,6 +65,7 @@ $route['plan'] = 'admin/pick_plan';
 $route['contact'] = 'user/contact';
 $route['feedbacks'] = 'user/feedbacks';
 $route['payments'] = 'admin/payments';
+$route['logs'] = 'admin/logs';
 
 // $route['pgResponses'] = 'admin/pgResponses';
 

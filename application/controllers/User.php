@@ -46,14 +46,17 @@ class User extends CI_Controller
 		} else {
 			$validate = $this->Usermodel->login();
 			if ($validate == FALSE) {
+				$this->Usermodel->log_act($type = "login_false");
 				$this->session->set_flashdata('invalid', 'Username/Password is wrong');
 				redirect('user');
 			}
 			if ($validate == "inactive_access") {
+				$this->Usermodel->log_act($type = "inactive_access");
 				$this->session->set_flashdata('invalid', 'Your account has been de-activated by Admin');
 				redirect('/');
 			}
 			if ($validate == "inactive") {
+				$this->Usermodel->log_act($type = "inactive");
 				$res_login = $this->Usermodel->login_get_key();
 				if ($res_login) {
 					$this->session->set_flashdata('invalid', 'Your account is not verified');
@@ -90,6 +93,10 @@ class User extends CI_Controller
 					'mr_logged_in' => TRUE,
 				);
 				$this->session->set_userdata($user_sess);
+
+				$this->Usermodel->user_latestact();
+				$this->Usermodel->log_act($type = "login");
+
 				if ($this->session->userdata('mr_website_form') == "1") {
 					if ($this->session->userdata('mr_sub') == "0") {
 						$this->session->set_flashdata('invalid', 'You have no active subscription.');
@@ -111,6 +118,8 @@ class User extends CI_Controller
 
 	public function logout()
 	{
+		$this->Usermodel->log_act($type = "logout");
+
 		$this->session->unset_userdata('mr_id');
 		$this->session->unset_userdata('mr_s_admin');
 		$this->session->unset_userdata('mr_admin');
@@ -575,6 +584,33 @@ class User extends CI_Controller
 		echo json_encode($output);
 	} */
 
+	public function getlink()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('user');
+		}
+		if ($this->session->userdata('mr_sub') == "0") {
+			return FALSE;
+			exit();
+		}
+		$myfile = fopen("body.txt", "w") or die("Unable to open file!");
+		$txt = "Click the link below, to rate any of my websites\n";
+		fwrite($myfile, $txt);
+		$txt = base_url() . "wtr/" . $this->session->userdata("mr_form_key") . "\n\n";
+		fwrite($myfile, $txt);
+		$txt = $this->session->userdata("mr_uname") . "\n";
+		fwrite($myfile, $txt);
+		$txt = $this->session->userdata("mr_email") . "\n";
+		fwrite($myfile, $txt);
+		$txt = "Regards";
+		fwrite($myfile, $txt);
+		fclose($myfile);
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
 	public function quota_send_mail_expire($usermail_expire)
 	{
 		$config['protocol']    = 'smtp';
@@ -670,12 +706,14 @@ class User extends CI_Controller
 				$bdy = htmlentities($this->input->post('bdy'));
 				$mail_res = $this->link_send_mail($email, $subj, $bdy);
 				if ($mail_res !== true) {
+					$this->Usermodel->log_act($type = "mail_err");
 					$this->session->set_flashdata('invalid', $mail_res);
 					redirect($_SERVER['HTTP_REFERER']);
 					exit;
 				} else {
 					$res = $this->Usermodel->save_info();
 					if ($res !== true) {
+						$this->Usermodel->log_act($type = "db_err");
 						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
 						redirect($_SERVER['HTTP_REFERER']);
 						exit;
@@ -698,33 +736,6 @@ class User extends CI_Controller
 		}
 	}
 
-	public function getlink()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user');
-		}
-		if ($this->session->userdata('mr_sub') == "0") {
-			return FALSE;
-			exit();
-		}
-		$myfile = fopen("body.txt", "w") or die("Unable to open file!");
-		$txt = "Click the link below, to rate any of my websites\n";
-		fwrite($myfile, $txt);
-		$txt = base_url() . "wtr/" . $this->session->userdata("mr_form_key") . "\n\n";
-		fwrite($myfile, $txt);
-		$txt = $this->session->userdata("mr_uname") . "\n";
-		fwrite($myfile, $txt);
-		$txt = $this->session->userdata("mr_email") . "\n";
-		fwrite($myfile, $txt);
-		$txt = "Regards";
-		fwrite($myfile, $txt);
-		fclose($myfile);
-
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
-	}
-
 	public function link_send_mail($email, $subj, $bdy)
 	{
 		$config['protocol']    = 'smtp';
@@ -741,7 +752,7 @@ class User extends CI_Controller
 		$this->email->set_newline("\r\n");
 
 
-		$this->email->from('jvweedtest@gmail.com', 'Rating');
+		$this->email->from('Rating');
 		$this->email->to($email);
 		$this->email->subject($subj);
 		$this->email->message($bdy);

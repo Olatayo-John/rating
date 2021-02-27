@@ -88,7 +88,7 @@ div.side-nav{
 	top: 0;
 	left: 0;
 	z-index: 1;
-	height: 100vh;
+	height: 100%;
 	width: 0;
 	padding-top: 70px;
 	transition: 0.3s;

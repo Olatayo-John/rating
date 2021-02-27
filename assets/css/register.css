@@ -28,7 +28,6 @@ div.btngrp{
 	margin-top: 25px;
 }
 button.registerbtn{
-	width: 300px;
 	border-radius: 0;
 	margin: auto;
 }
@@ -57,7 +56,6 @@ i.fa-eye,i.fa-eye-slash{
 	a.loginbtn{
 		text-align: center;
 		margin-top: 10px;
-		margin-bottom: 40px;
 	}
 	h6.linkinfo{
 		margin-top: 20px;

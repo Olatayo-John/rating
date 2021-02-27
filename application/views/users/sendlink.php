@@ -5,10 +5,10 @@
 			<div class="modal-content">
 				<form enctype="multipart/form-data" method="post" id="upload_csv">
 					<div class="modal-body">
-						<h6 class="font-weight-bolder text-danger">
+						<h6 class="font-weight-bolder text-danger text-center">
 							*CSV file must have header of only "Email"
 						</h6>
-						<input type="file" name="csv_file" id="csv_file" accept=".csv">
+						<input type="file" name="csv_file" id="csv_file" accept=".csv" class="form-control" style="border:none">
 					</div>
 					<div class="modal-footer justify-content-between">
 						<button class="btn btn-secondary closebtn" type="button">Close</button>
@@ -24,10 +24,10 @@
 			<div class="modal-content">
 				<form enctype="multipart/form-data" method="post" id="smsupload_csv">
 					<div class="modal-body">
-						<h6 class="font-weight-bolder text-danger">
+						<h6 class="font-weight-bolder text-danger text-center">
 							*CSV file must have header of only "Phonenumber"
 						</h6>
-						<input type="file" name="sms_csv_file" id="sms_csv_file" accept=".csv">
+						<input type="file" name="sms_csv_file" id="sms_csv_file" accept=".csv" class="form-control" style="border:none">
 					</div>
 					<div class="modal-footer justify-content-between">
 						<button class="btn btn-secondary smsclosebtn" type="button">Close</button>
@@ -53,7 +53,7 @@
 			<input type="hidden" name="link_for" class="link_for">
 			<button class="btn text-light importemail" type="button" style="background-color:#294a63">Import emails in CSV format</button>
 			<a href="<?php echo base_url('user/email_sample_csv'); ?>" class="email_sample_csv btn btn-danger">
-				<i class="fas fa-file-csv mr-2"></i>Download sample csv</a>
+				<i class="fas fa-file-csv mr-2"></i>Download sample CSV</a>
 		</div>
 		<div class="form-group">
 			<label>E-mail</label>

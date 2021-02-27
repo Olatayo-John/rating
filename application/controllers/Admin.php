@@ -1452,6 +1452,66 @@ class Admin extends CI_Controller
 		}
 	}
 
+	public function logs()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('login');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('user');
+		}
+		$data['title'] = "logs";
+		$data['logs'] = $this->Adminmodel->get_all_logs();
+		$this->load->view('templates/header', $data);
+		$this->load->view('admin/logs');
+		$this->load->view('templates/footer');
+	}
+
+	public function logs_export_csv()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('login');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('user');
+		}
+		header("Content-Type: text/csv; charset=utf-8");
+		header("Content-Disposition: attachment; filename=logs.csv");
+		$output = fopen("php://output", "w");
+		fputcsv($output, array('ID', 'Description', 'Date/Time'));
+		$data = $this->Adminmodel->logs_export_csv();
+		foreach ($data as $row) {
+			fputcsv($output, $row);
+		}
+		fclose($output);
+	}
+
+	public function clear_logs()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('login');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('user');
+		}
+
+		$res = $this->Adminmodel->clear_logs();
+
+		if ($res !== true) {
+			$this->session->set_flashdata('invalid', 'Error clearing data');
+			redirect('logs');
+		} else {
+			$this->session->set_flashdata('valid', 'Logs cleared!');
+			redirect('logs');
+		}
+	}
+
 	public function logout()
 	{
 		$this->session->unset_userdata('mr_id');

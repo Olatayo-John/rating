@@ -34,13 +34,15 @@
 
 		<button class="btn btn-outline-dark menubtn mr-auto" onclick="opennav()">&#9776;</button>
 
-		<div class="navbar-brand text-uppercase font-weight-bolder" style="font-size: 1.1rem;">
-			<a href="<?php echo base_url('profile') ?>" style="color:#294a63">
-				<span>
-					<i class="fas fa-user-circle p_icon"></i>
-				</span>
-				<?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : '') ?></a>
-		</div>
+		<?php if ($this->session->userdata('mr_logged_in')) : ?>
+			<div class="navbar-brand text-uppercase font-weight-bolder" style="font-size: 1.1rem;">
+				<a href="<?php echo base_url('profile') ?>" style="color:#294a63">
+					<span>
+						<i class="fas fa-user-circle p_icon"></i>
+					</span>
+					<?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : '') ?></a>
+			</div>
+		<?php endif; ?>
 
 		<div class="side-nav" id="side-nav">
 			<a href="javascript:void(0)" class="closex" onclick="closenav()">&times;</a>
@@ -77,6 +79,9 @@
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_admin') == "1") : ?>
 					<li class="nav-item"><a href="<?php echo base_url('payments') ?>" class="nav-link" style="<?php echo ($url == 'payments') ? 'border-left: 3px solid white;border-right: 3px solid white;opacity: 0.5;' : '' ?>">
 							<i class="fas fa-wallet"></i>Payments</a>
+					</li>
+					<li class="nav-item"><a href="<?php echo base_url('logs') ?>" class="nav-link" style="<?php echo ($url == 'logs') ? 'border-left: 3px solid white;border-right: 3px solid white;opacity: 0.5;' : '' ?>">
+							<i class="fas fa-clipboard-check"></i>Activity Log</a>
 					</li>
 					<li class="nav-item"><a href="<?php echo base_url('feedbacks') ?>" class="nav-link" style="<?php echo ($url == 'feedbacks') ? 'border-left: 3px solid white;border-right: 3px solid white;opacity: 0.5;' : '' ?>">
 							<i class="fas fa-comment"></i>Feedbacks</a>

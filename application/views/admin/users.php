@@ -79,6 +79,7 @@
 						<a href="" class="tab_link pay_a"><i class="fas fa-wallet mr-2"></i>Quota</a>
 						<a href="" class="tab_link ac_a"><i class="fas fa-user-cog mr-2"></i>Account</a>
 					</div>
+					<hr>
 
 					<input type="hidden" name="user_id" class="user_id">
 					<input type="hidden" name="user_form_key" class="user_form_key">

@@ -1,10 +1,20 @@
 body{
 	background: #294a63;
-	/* background: -webkit-linear-gradient(to right, #243B55, #294a63);
-	background: linear-gradient(to right, #243B55, #294a63); */
 }
 .btn{
 	border-radius: 0;
+}
+.tab_div a.mail_a{
+	border-bottom: 2px solid #294a63;
+}
+.tab_link{
+	color: #294a63;
+	font-weight: bold;
+	font-size: 15px;
+}
+.tab_link:hover{
+	text-decoration: none;
+	color: black;
 }
 form.gen_link_form{
 	display: all;
@@ -12,41 +22,20 @@ form.gen_link_form{
 form.sms_gen_link_form{
 	display: none;
 }
-input[type=radio] {
-	width: 100%;
-	height: -webkit-fill-available;
-}
 label{
 	font-weight: bolder;
-	color: white;
+	color: #294a63;;
 }
 button.genlinkbtn{
 	display: none;
 	/* visibility: hidden; */
 }
-input.form-control:focus,textarea.form-control:focus{
-	border-color: black;
-	box-shadow: none;
-}
-@media only screen and (max-width: 540px) {
+@media only screen and (max-width: 620px) {
 	div.import,div.sms_import{
 		display: flex;
 		flex-direction: column;
 	}
 	button.importemail,button.smsimport{
 		margin: 10px 0;
-	}
-}
-@media only screen and (max-width: 767px) {
-	form.gen_link_form,form.sms_gen_link_form{
-		margin-top: 50px;
-	}
-	div.sendlinkdiv{
-		text-align: center;
-		border-radius: 0;
-		margin-bottom: 40px;
-	}
-	button.sendlinkbtn,button.smssendlinkbtn{
-		width: 50%;
 	}
 }

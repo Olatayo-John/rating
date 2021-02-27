@@ -104,6 +104,13 @@ class Adminmodel extends CI_Model
 		return $query->result();
 	}
 
+	public function getuserquota($id, $form_key)
+	{
+		$this->db->where(array('by_user_id' => $id, 'by_form_key' => $form_key));
+		$query = $this->db->get('quota');
+		return $query->result();
+	}
+
 	public function get_user_websites($id, $form_key)
 	{
 		$this->db->where(array('user_id' => $id, 'form_key' => $form_key));
@@ -253,14 +260,10 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function verify_user_sub($user_id, $form_key, $web_quota)
+	public function verify_user_sub($user_id, $form_key)
 	{
-		if (!isset($web_quota)) {
-			$web_quota = "10";
-		}
 
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
-		$this->db->set('web_quota', $web_quota);
 		$this->db->set('sub', "1");
 		$this->db->set('sub_active', "1");
 		$query = $this->db->update("users");
@@ -273,6 +276,30 @@ class Adminmodel extends CI_Model
 		$query = $this->db->set('sub', "1");
 		$query = $this->db->set('sub_active', "0");
 		$query = $this->db->update("users");
+		return true;
+	}
+
+	public function updateuser_webquota($user_id, $form_key, $web_quota)
+	{
+		$w = htmlentities($web_quota);
+
+		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
+		$this->db->set('web_quota', $w);
+		$query = $this->db->update("users");
+		return true;
+	}
+
+	public function updateuser_quota($user_id, $form_key, $bought, $used, $balance)
+	{
+		$b = htmlentities($bought);
+		$u = htmlentities($used);
+		$bal = htmlentities($balance);
+
+		$this->db->set('bought',  $b);
+		$this->db->set('used', $u);
+		$this->db->set('bal', $bal);
+		$this->db->where(array('by_user_id' => $user_id, 'by_form_key' => $form_key));
+		$this->db->update("quota");
 		return true;
 	}
 

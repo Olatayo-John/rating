@@ -8,8 +8,8 @@
 						<h6 class="font-weight-bolder text-danger">
 							*CSV file to be imported must only contains emails<br>
 							*CSV file must have header of "Email"
-						</h6>					
-						<input type="file" name="csv_file" id="csv_file" accept=".csv">					
+						</h6>
+						<input type="file" name="csv_file" id="csv_file" accept=".csv">
 					</div>
 					<div class="modal-footer justify-content-between">
 						<button class="btn btn-secondary closebtn" type="button">Close</button>
@@ -88,24 +88,24 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/index.js'); ?>"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(document).on('click','.form-check-input',function() {
-			var val= $(this).val();
+		$(document).on('click', '.form-check-input', function() {
+			var val = $(this).val();
 			$('button.genlinkbtn').val(val);
 			$('button.genlinkbtn').show();
 		});
 
 		$('.genlinkbtn').click(function() {
-			var btnval= $('.genlinkbtn').val();
-			var id= $('.userid').val();
-			var csrfName= $('.csrf_hash').attr('name');
-			var csrfHash= $('.csrf_hash').val();
+			var btnval = $('.genlinkbtn').val();
+			var id = $('.userid').val();
+			var csrfName = $('.csrf_hash').attr('name');
+			var csrfHash = $('.csrf_hash').val();
 			$.ajax({
 				url: "<?php echo base_url('user/get_link'); ?>",
 				method: "post",
 				data: {
-					id:id,
-					btnval:btnval,
-					[csrfName]:csrfHash
+					id: id,
+					btnval: btnval,
+					[csrfName]: csrfHash
 				},
 				dataType: "json",
 				success: function(data) {
@@ -115,106 +115,113 @@
 						$('.subj').val("Rate our Google Website");
 						$('.link_for').val('Google');
 						$(".bdy").load("<?php echo base_url("body.txt"); ?>");
-					}if (btnval == "facebook") {
+					}
+					if (btnval == "facebook") {
 						$('.subj').val("Rate our Facebook Website");
 						$('.link_for').val('Facebook');
 						$(".bdy").load("<?php echo base_url("body.txt"); ?>");
-					}if (btnval == "glassdoor") {
+					}
+					if (btnval == "glassdoor") {
 						$('.subj').val("Rate our Glassdoor Website");
 						$('.link_for').val('Glassdoor');
 						$(".bdy").load("<?php echo base_url("body.txt"); ?>");
-					}if (btnval == "trust_pilot") {
+					}
+					if (btnval == "trust_pilot") {
 						$('.subj').val("Rate our Trust Pilot Website");
 						$('.link_for').val('Trust Pilot');
 						$(".bdy").load("<?php echo base_url("body.txt"); ?>");
-					}if (btnval == "mainweb") {
+					}
+					if (btnval == "mainweb") {
 						$('.subj').val("Rate our Official Website");
 						$('.link_for').val('Official Website');
 						$(".bdy").load("<?php echo base_url("body.txt"); ?>");
 					}
 				},
-				error: function(data){
+				error: function(data) {
 					window.location.reload();
 				}
 			});
 		});
 
 		$('.sendlinkbtn').click(function() {
-			var email= $('.email').val();
-			var subj= $('.subj').val();
-			var body= $('.bdy').val();
+			var email = $('.email').val();
+			var subj = $('.subj').val();
+			var body = $('.bdy').val();
 
 			if (email == "" || email == null) {
-				$('.email').css('border','2px solid red');
+				$('.email').css('border', '2px solid red');
 				return false;
-			}else{
-				$('.email').css('border','0 solid red');
-			}if (subj == "" || subj == null) {
-				$('.subj').css('border','2px solid red');
+			} else {
+				$('.email').css('border', '0 solid red');
+			}
+			if (subj == "" || subj == null) {
+				$('.subj').css('border', '2px solid red');
 				return false;
-			}else{
-				$('.subj').css('border','0 solid red');
-			}if (body == "" || body == null) {
-				$('.body').css('border','2px solid red');
+			} else {
+				$('.subj').css('border', '0 solid red');
+			}
+			if (body == "" || body == null) {
+				$('.body').css('border', '2px solid red');
 				return false;
-			}else{
-				$('.body').css('border','0 solid red');
+			} else {
+				$('.body').css('border', '0 solid red');
 			}
 
 			$.ajax({
 				success: function() {
-					$('.sendlinkbtn').attr('disabled','disabled');
+					$('.sendlinkbtn').attr('disabled', 'disabled');
 					$('.sendlinkbtn').html('Sending...');
-					$('.sendlinkbtn').css('cursor','not-allowed');
+					$('.sendlinkbtn').css('cursor', 'not-allowed');
 					$('.sendlinkbtn').removeClass('btn-success').addClass('btn-danger');
 				}
 			});
 		});
 
-		$('#upload_csv').on('submit',function(e) {
+		$('#upload_csv').on('submit', function(e) {
 			e.preventDefault();
-			var file= $('#csv_file').val();
-			var csrfName= $('.csrf_hash').attr('name');
-			var csrfHash= $('.csrf_hash').val();
+			var file = $('#csv_file').val();
+			var csrfName = $('.csrf_hash').attr('name');
+			var csrfHash = $('.csrf_hash').val();
 
 			if (file == "" || file == null) {
-				$('#csv_file').css('border','2px solid red');
+				$('#csv_file').css('border', '2px solid red');
 				return false;
-			}else{
-				$('#csv_file').css('border','0 solid red');
+			} else {
+				$('#csv_file').css('border', '0 solid red');
 			}
 
 			$.ajax({
 				url: "<?php echo base_url('user/importcsv_email'); ?>",
 				method: "post",
-				data: new FormData(this),[csrfName]:csrfHash,
+				data: new FormData(this),
+				[csrfName]: csrfHash,
 				dataType: "json",
-				contentType:false,
-				cache:false,
-				processData:false,
+				contentType: false,
+				cache: false,
+				processData: false,
 				beforSend: function(data) {
-					$('.importbtn').attr('disabled','disabled');
+					$('.importbtn').attr('disabled', 'disabled');
 					$('.importbtn').html('Importing...');
-					$('.importbtn').css('cursor','not-allowed');
+					$('.importbtn').css('cursor', 'not-allowed');
 					$('.importbtn').removeClass('btn-success').addClass('btn-danger');
 				},
 				success: function(data) {
 					$('.emailmodal').hide();
 					$('#csv_file').val("");
-					for(i=0; i<data.length;i++){
-						$('#email_select').append('<option disabled class="email_options">'+data[i].Email+'</option>');
+					for (i = 0; i < data.length; i++) {
+						$('#email_select').append('<option disabled class="email_options">' + data[i].Email + '</option>');
 					}
 					$('#email').hide();
 					$('.sendlinkbtn').hide();
 					$('.sendmultiplelinkbtn').show();
 					$('#email').val('nomailname@nodomainname.com');
-					$('#email_select').attr('conn','true');
+					$('#email_select').attr('conn', 'true');
 					$('#email_select').show();
 					$('.singlemailsend').show();
-					bseu= "<?php echo base_url('user/send_multiple_link'); ?>";
+					bseu = "<?php echo base_url('user/send_multiple_link'); ?>";
 					$("#gen_link_form").attr('action', bseu);
 				},
-				error: function(data){
+				error: function(data) {
 					alert('Error importing data');
 				}
 			});
@@ -222,64 +229,64 @@
 
 		$('.sendmultiplelinkbtn').click(function(e) {
 			e.preventDefault();
-			var link_for= $('.link_for').val();
-			var email= $('.email').val();
-			var subj= $('.subj').val();
-			var bdy= $('.bdy').val();
-			var csrfName= $('.csrf_hash').attr('name');
-			var csrfHash= $('.csrf_hash').val();
+			var link_for = $('.link_for').val();
+			var email = $('.email').val();
+			var subj = $('.subj').val();
+			var bdy = $('.bdy').val();
+			var csrfName = $('.csrf_hash').attr('name');
+			var csrfHash = $('.csrf_hash').val();
 
 			if (email == "" || email == null) {
-				$('.email').css('border','2px solid red');
+				$('.email').css('border', '2px solid red');
 				return false;
-			}else{
-				$('.email').css('border','0 solid red');
+			} else {
+				$('.email').css('border', '0 solid red');
 			}
 			if (subj == "" || subj == null) {
-				$('.subj').css('border','2px solid red');
+				$('.subj').css('border', '2px solid red');
 				return false;
-			}else{
-				$('.subj').css('border','0 solid red');
+			} else {
+				$('.subj').css('border', '0 solid red');
 			}
 			if (bdy == "" || bdy == null) {
-				$('.bdy').css('border','2px solid red');
+				$('.bdy').css('border', '2px solid red');
 				return false;
-			}else{
-				$('.bdy').css('border','0 solid red');
+			} else {
+				$('.bdy').css('border', '0 solid red');
 			}
 
 			var emaildata = [];
 			$(".email_options").each(function() {
-				var eachopt= $(this).val();
+				var eachopt = $(this).val();
 				emaildata.push(eachopt);
 			});
 
 			$.ajax({
-				url: "<?php echo base_url('user/send_multiple_email'); ?>",
-				method: "post",
-				data: {
-					emaildata:emaildata,
-					subj:subj,
-					bdy:bdy,
-					link_for:link_for,
-					[csrfName]:csrfHash,
-				},
-				beforeSend: function() {
-					$('.sendmultiplelinkbtn').attr('disabled','disabled');
-					$('.sendmultiplelinkbtn').html('Sending...');
-					$('.sendmultiplelinkbtn').css('cursor','not-allowed');
-					$('.sendmultiplelinkbtn').removeClass('btn-success').addClass('btn-danger');
-				},
-				error: function() {
-					$('.sendmultiplelinkbtn').attr('disabled','false');
-					$('.sendmultiplelinkbtn').html('Send');
-					$('.sendmultiplelinkbtn').css('cursor','pointer');
-					$('.sendmultiplelinkbtn').removeClass('btn-danger').addClass('btn-success');
-				}
-			})
-			.done(function() {
-				window.location.reload();
-			});
+					url: "<?php echo base_url('user/send_multiple_email'); ?>",
+					method: "post",
+					data: {
+						emaildata: emaildata,
+						subj: subj,
+						bdy: bdy,
+						link_for: link_for,
+						[csrfName]: csrfHash,
+					},
+					beforeSend: function() {
+						$('.sendmultiplelinkbtn').attr('disabled', 'disabled');
+						$('.sendmultiplelinkbtn').html('Sending...');
+						$('.sendmultiplelinkbtn').css('cursor', 'not-allowed');
+						$('.sendmultiplelinkbtn').removeClass('btn-success').addClass('btn-danger');
+					},
+					error: function() {
+						$('.sendmultiplelinkbtn').attr('disabled', 'false');
+						$('.sendmultiplelinkbtn').html('Send');
+						$('.sendmultiplelinkbtn').css('cursor', 'pointer');
+						$('.sendmultiplelinkbtn').removeClass('btn-danger').addClass('btn-success');
+					}
+				})
+				.done(function() {
+					window.location.reload();
+				});
 		});
 
 	});

@@ -8,7 +8,7 @@ class User extends CI_Controller
 		if ($this->session->userdata('mr_logged_in')) {
 			if ($this->session->userdata('mr_admin') == "1") {
 				redirect('admin');
-			} else {
+			} elseif ($this->session->userdata('mr_admin') == "0") {
 				if ($this->session->userdata('mr_website_form') == "1") {
 					if ($this->session->userdata('mr_sub') == "1") {
 						redirect('profile');
@@ -96,8 +96,11 @@ class User extends CI_Controller
 						redirect('plan');
 						exit();
 					} elseif ($this->session->userdata('mr_sub') == "1") {
-						// redirect('account');
-						redirect('profile');
+						if ($this->session->userdata('mr_admin') == "1") {
+							redirect('admin');
+						} elseif ($this->session->userdata('mr_admin') == "0") {
+							redirect('profile');
+						}
 					}
 				} else {
 					redirect('websites');
@@ -155,11 +158,12 @@ class User extends CI_Controller
 			$this->load->view('templates/footer');
 		} else {
 			$uname = htmlentities($this->input->post('uname'));
+			$uname_form = str_replace(" ", "_", strtolower(substr($uname, 0, 5)));
 			$pwd = $this->input->post('pwd');
 			$email = htmlentities($this->input->post('email'));
 
 			$act_key =  mt_rand(0, 1000000);
-			$form_key =  htmlentities($this->input->post("uname")) . mt_rand(0, 100000);
+			$form_key =  $uname_form . mt_rand(0, 100000);
 			$link = base_url() . "emailverify/" . $form_key;
 
 			$mail_res = $this->send_email_code($email, $uname, $act_key, $link);

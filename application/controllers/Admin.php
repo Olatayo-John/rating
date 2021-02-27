@@ -157,9 +157,9 @@ class Admin extends CI_Controller
 				<td class="">' . $info['mobile'] . '</td>
 				<td class="">' . $info['email'] . '</td>
 				<td class="">';
-				if ($info['sub'] == 0) {
+				if ($info['sub_active'] == 0) {
 					$output .= 'No';
-				} elseif ($info['sub'] == 1) {
+				} elseif ($info['sub_active'] == 1) {
 					$output .= 'Yes';
 				}
 				$output .= '</td>
@@ -239,9 +239,9 @@ class Admin extends CI_Controller
 				<td class="">' . $info['mobile'] . '</td>
 				<td class="">' . $info['email'] . '</td>
 				<td class="">';
-				if ($info['sub'] == 0) {
+				if ($info['sub_active'] == 0) {
 					$output .= 'No';
-				} elseif ($info['sub'] == 1) {
+				} elseif ($info['sub_active'] == 1) {
 					$output .= 'Yes';
 				}
 				$output .= '</td>
@@ -332,9 +332,9 @@ class Admin extends CI_Controller
 				<td class="">' . $info['mobile'] . '</td>
 				<td class="">' . $info['email'] . '</td>
 				<td class="">';
-				if ($info['sub'] == 0) {
+				if ($info['sub_active'] == 0) {
 					$output .= 'No';
-				} elseif ($info['sub'] == 1) {
+				} elseif ($info['sub_active'] == 1) {
 					$output .= 'Yes';
 				}
 				$output .= '</td>
@@ -393,6 +393,7 @@ class Admin extends CI_Controller
 			$data['infos'] = $this->Adminmodel->get_user($_POST['user_id'], $_POST['form_key']);
 			$data['webs'] = $this->Adminmodel->get_user_websites($_POST['user_id'], $_POST['form_key']);
 			$data['pays'] = $this->Adminmodel->get_user_payments($_POST['user_id'], $_POST['form_key']);
+			$data['quota'] = $this->Adminmodel->getuserquota($_POST['user_id'], $_POST['form_key']);
 			$data['token'] = $this->security->get_csrf_hash();
 			echo json_encode($data);
 		}
@@ -581,6 +582,38 @@ class Admin extends CI_Controller
 			} else {
 				$data['res'] = "success";
 				$data['res_msg'] = "User subscription de-activated!";
+			}
+
+			$data['token'] = $this->security->get_csrf_hash();
+			echo json_encode($data);
+		}
+	}
+
+	public function updateuser_quota()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			return false;
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			return false;
+		} else {
+			if ((!is_int(json_decode($_POST['web_quota']))) || (!is_int(json_decode($_POST['used']))) || (!is_int(json_decode($_POST['bought']))) || (!is_int(json_decode($_POST['balance'])))) {
+				$data['res'] = "failed";
+				$data['res_msg'] = "Invalid data type entered";
+			} else {
+				$wres = $this->Adminmodel->updateuser_webquota($_POST['user_id'], $_POST['form_key'], $_POST['web_quota']);
+				$res = $this->Adminmodel->updateuser_quota($_POST['user_id'], $_POST['form_key'], $_POST['bought'], $_POST['used'], $_POST['balance']);
+
+				// $res = true;
+				if ($wres !== true || $res !== true) {
+					$data['res'] = "failed";
+					$data['res_msg'] = "Failed to update quota details!";
+				} else {
+					$data['res'] = "success";
+					$data['res_msg'] = "Quota details updated!";
+				}
 			}
 
 			$data['token'] = $this->security->get_csrf_hash();

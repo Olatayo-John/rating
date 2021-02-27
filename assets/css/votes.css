@@ -25,6 +25,9 @@ div.rt_div{
 hr{
 	border-color: black;
 }
+.clearsearch:hover{
+	color:#dc3545!important;
+}
 input.search_user,.search_ind_votes{
 	border: none;
 	background-color: transparent; 

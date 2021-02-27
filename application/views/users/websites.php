@@ -1,4 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/websites.css'); ?>">
+<div class="mb-3 mt-3 ml-3 mr-3 pt-2 pb-2 bg-light">
+    <h4 class="text-center">WEBSITES</h4>
+</div>
 <div class="mr-3 ml-3 mt-3 mb-5 bg-light" id="content">
     <?php if ($webs->num_rows() < $this->session->userdata("mr_web_quota")) : ?>
         <div class="modal add_web_modal">
@@ -27,8 +30,6 @@
         </div>
     <?php endif; ?>
     <form action="<?php echo base_url('user/addwebsites'); ?>" method="post" class="addweb_form">
-        <h4 class="text-center mt-3 mb-0">WEBSITES</h4>
-        <hr class="mt-2 h_hr">
         <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
         <div class="text-right">
             <?php if ($webs->num_rows() < $this->session->userdata("mr_web_quota")) : ?>

@@ -98,11 +98,11 @@
 				<i class="fas fa-sync-alt"></i>
 			</button>
 		</div>
-
 		<div class="col ml-auto">
 			<div class="d-flex flex-row search_user_div" style="border-bottom: 1px solid #294a63">
 				<span class="" style="border-radius: 0;display:inline-flex; "><i class="fas fa-search"></i></span>
-				<input type="text" name="search_user" id="search_user" class="form-control search_user" placeholder="Search by user..." style="border-radius: 0" autofocus>
+				<input type="text" name="search_user" id="search_user" class="form-control search_user" placeholder="Search by User" style="border-radius: 0" autofocus>
+				<span class="clearsearch" style="border-radius: 0;display:none;margin:auto;"><i class="fas fa-times"></i></span>
 			</div>
 		</div>
 	</div>
@@ -185,11 +185,21 @@
 			var search = $(this).val();
 			if (search != '') {
 				$(".table_pag_div").hide();
+				$(".clearsearch").show();
 				load_data(search);
 			} else {
 				$(".table_pag_div").show();
+				$(".clearsearch").hide();
 				reload_table();
 			}
+		});
+
+		$('.clearsearch').click(function() {
+			$("#search_user").val("");
+
+			reload_table();
+
+			$(this).fadeOut();
 		});
 
 		function reload_table() {

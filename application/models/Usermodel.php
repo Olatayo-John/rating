@@ -147,8 +147,8 @@ class Usermodel extends CI_Model
 	public function addwebsites($webname_arr, $weblink_arr)
 	{
 		$web_count = count($webname_arr);
-		if ($web_count > "10") {
-			$web_count == 9;
+		if ($web_count > $this->session->userdata('mr_web_quota')) {
+			$web_count == $this->session->userdata('mr_web_quota');
 		}
 		for ($i = 0; $i < $web_count; $i++) {
 			$data = array(
@@ -179,9 +179,20 @@ class Usermodel extends CI_Model
 		$this->db->where(array('form_key' => $form_key, 'id' => $user_id));
 		$this->db->update("users");
 
-		$this->session->set_userdata("mr_form_key", "1");
+		$this->session->set_userdata("mr_website_form", "1");
 		return true;
 		exit;
+	}
+
+	public function get_user_websites()
+	{
+		$query = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
 	}
 
 	public function check_user_websites()
@@ -199,7 +210,7 @@ class Usermodel extends CI_Model
 	public function user_new_website()
 	{
 		$res_web = $this->check_user_websites();
-		if ($res_web > "10") {
+		if ($res_web > $this->session->userdata('mr_web_quota')) {
 			return "Maximum quota reached. Contact Admin for more quota";
 			exit;
 		} else {
@@ -253,17 +264,6 @@ class Usermodel extends CI_Model
 		$this->db->where('id', $this->session->userdata('mr_id'));
 		$this->db->update('users', $data);
 		return TRUE;
-	}
-
-	public function get_user_websites()
-	{
-		$query = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
-		if (!$query) {
-			return false;
-			exit();
-		} else {
-			return $query;
-		}
 	}
 
 	public function update_user_websiteform()

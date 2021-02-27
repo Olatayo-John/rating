@@ -12,8 +12,7 @@
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="form-group">
 			<label><span class="text-danger">* </span>Username</label>
-			<input type="text" name="uname" class="form-control uname" value="<?php echo $user_info->uname ?>" placeholder="Pick a Username">
-			<span class="unameerr text-danger" style="display:none">Username already exist</span>
+			<input type="text" name="uname" class="form-control uname" readonly disabled value="<?php echo $user_info->uname ?>" placeholder="Pick a Username" required style="cursor: not-allowed;">
 		</div>
 		<div class="row">
 			<div class="form-group col-md-6">
@@ -27,11 +26,11 @@
 		</div>
 		<div class="form-group">
 			<label><span class="text-danger">* </span>Email</label>
-			<input type="email" name="email" class="form-control email" value="<?php echo $user_info->email ?>" placeholder="example@domain-name.cmom">
+			<input type="email" name="email" class="form-control email" value="<?php echo $user_info->email ?>" placeholder="example@domain-name.com" required>
 		</div>
 		<div class="form-group">
 			<label><span class="text-danger">* </span>Mobile</label>
-			<input type="number" name="mobile" class="form-control mobile" value="<?php echo $user_info->mobile ?>" placeholder="0123456789">
+			<input type="number" name="mobile" class="form-control mobile" value="<?php echo $user_info->mobile ?>" placeholder="0123456789" required>
 			<div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
 		</div>
 		<div class="form-group">
@@ -41,6 +40,7 @@
 			</div>
 			<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' value="<?php echo base_url("wtr/") . $user_info->form_key ?>" readonly>
 		</div>
+		<hr>
 		<div class="form-group text-left">
 			<button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#294a63">
 				<i class="fas fa-save mr-2"></i>Save</button>
@@ -183,21 +183,23 @@
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="form-group">
 			<label><i class="fas fa-key mr-2"></i>Current Password<span class="text-danger"> *</span></label>
-			<input type="text" name="c_pwd" class="form-control c_pwd" placeholder="Your current password">
+			<input type="text" name="c_pwd" class="form-control c_pwd" placeholder="Your current password" required>
 		</div>
 		<div class="form-group">
 			<label><i class="fas fa-lock mr-2"></i>New Password<span class="text-danger"> *</span></label>
-			<input type="password" minlenght="6" name="n_pwd" class="form-control n_pwd" placeholder="Password must be at least 6 characters long">
+			<input type="password" minlenght="6" name="n_pwd" class="form-control n_pwd" placeholder="Password must be at least 6 characters long" required>
 			<span class="text-danger font-weight-bolder n_pwd_err">Password is too short</span>
 		</div>
 		<div class="form-group">
 			<label><i class="fas fa-lock mr-2"></i>Re-type Password<span class="text-danger"> *</span></label>
-			<input type="password" minlenght="6" name="rtn_pwd" class="form-control rtn_pwd" placeholder="Re-type Password">
+			<input type="password" minlenght="6" name="rtn_pwd" class="form-control rtn_pwd" placeholder="Re-type Password" required>
 			<span class="text-danger font-weight-bolder rtn_pwd_err">Passwords do not match</span>
 		</div>
+		<hr>
 		<div class="form-group text-right">
 			<button class="btn btn-danger deact_btn" type="button" user_id="<?php echo $user_info->id ?>"><i class="fas fa-user-alt-slash mr-2"></i>De-activate account?</button>
 		</div>
+		<hr>
 		<div class="form-group text-left">
 			<button class="btn text-light saveact_btn" type="submit saveact_btn" style="background-color:#294a63">
 				<i class="fas fa-save mr-2"></i>Save</button>

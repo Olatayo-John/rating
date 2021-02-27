@@ -76,7 +76,7 @@
 					<div class="tab_div mt-2">
 						<a href="" class="tab_link prof_a"><i class="fas fa-user-alt mr-2"></i>Profile</a>
 						<a href="" class="tab_link web_a"><i class="fas fa-tachometer-alt mr-2"></i>Websites</a>
-						<a href="" class="tab_link pay_a"><i class="fas fa-wallet mr-2"></i>Subscription</a>
+						<a href="" class="tab_link pay_a"><i class="fas fa-wallet mr-2"></i>Quota</a>
 						<a href="" class="tab_link ac_a"><i class="fas fa-user-cog mr-2"></i>Account</a>
 					</div>
 
@@ -125,6 +125,7 @@
 							</div>
 							<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' readonly>
 						</div>
+						<hr>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
 							<div class="spinner-border prof_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
@@ -162,24 +163,43 @@
 
 					<div class="payment_div">
 						<div class="form-group pt-4">
-							<label><span class="text-danger font-weight-bolder">* </span>Current Web Quota<i class="fas fa-question-circle ml-2" title="To update quota, de-activate user subscription"></i></label>
+							<label><span class="text-danger font-weight-bolder">* </span>Current Website Quota<i class="fas fa-question-circle ml-2" title="To update quota, de-activate user subscription"></i></label>
 							<input type="text" name="web_quota" class="form-control web_quota" placeholder="Web Quota">
 							<div class="text-danger font-weight-bolder web_quota_err" style="display: none;"></div>
 
 						</div>
-						<div class="form-group d-flex" style="justify-content: space-between;">
+						<div class="row">
+							<div class="col">
+								<label><span class="text-danger font-weight-bolder">* </span>Quota Bought</label>
+								<input type="text" name="bought" class="form-control bought" required>
+							</div>
+							<div class="col">
+								<label><span class="text-danger font-weight-bolder">* </span>Quota Used</label>
+								<input type="text" name="used" class="form-control used" required>
+							</div>
+							<div class="col">
+								<label><span class="text-danger font-weight-bolder">* </span>Quota Balance</label>
+								<input type="text" name="bal" class="form-control bal" required>
+							</div>
+						</div>
+						<span class="quotaerr text-danger" style="display:blbck"></span>
+						<div class="form-group d-flex pt-4" style="flex-direction: column;">
 							<div>
-								<div class="font-weight-bolder text-danger verifysub_btn mb-2">User subscription is not active</div>
-								<div class="font-weight-bolder text-success unverifysub_btn mb-2">User subscription is active</div>
+								<div class="font-weight-bolder text-danger verifysub_btn">User subscription is not active</div>
+								<div class="font-weight-bolder text-success unverifysub_btn">User subscription is active</div>
 							</div>
 							<div>
-								<button class="btn text-light verifysub_btn" type="button" style='background:#294a63'>Update & Activate subscription?</button>
+								<button class="btn text-light verifysub_btn" type="button" style='background:#294a63'>Activate user subscription?</button>
 								<button class="btn btn-danger unverifysub_btn" type="button">De-activate user subscription?</button>
 							</div>
 						</div>
-
-						<div class="updatebtngrp text-left mb-2 web_btngrp">
+						<hr>
+						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
+							<div class="spinner-border quotaupdate_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
+								<span class="sr-only">Loading...</span>
+							</div>
+							<button type="button" class="btn subbtn_update text-light" style='background:#294a63'>Update</button>
 						</div>
 					</div>
 
@@ -200,6 +220,7 @@
 							<button class="btn btn-danger deacti_act_btn" type="button"><i class="fas fa-user-alt-slash mr-2"></i>De-activate account</button>
 							<button class="btn text-light acti_act_btn" type="button" style='background:#294a63'><i class="fas fa-user-check mr-2"></i>Activate account</button>
 						</div>
+						<hr>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
 							<button class="btn btn-secondary closeupdatebtn bradius">Close</button>
 							<div class="spinner-border acct_update_spinner" style="position:absolute;right:120px;width:20px;height:20px;top:unset;left:unset;display:none;margin-top:5px;">
@@ -228,6 +249,7 @@
 			<div class="d-flex flex-row" style="border-bottom: 1px solid #294a63">
 				<span class="" style="border-radius: 0;display:inline-flex; "><i class="fas fa-search"></i></span>
 				<input type="text" name="search_user" id="search_user" class="form-control search_user" placeholder="Search by any field" style="border-radius: 0" autofocus>
+				<span class="clearsearch" style="border-radius: 0;display:none;margin:auto;"><i class="fas fa-times"></i></span>
 			</div>
 		</div>
 
@@ -296,9 +318,9 @@
 						<td class=""><?php echo $info['mobile'] ?></td>
 						<td class=""><?php echo $info['email'] ?></td>
 						<td class="">
-							<?php if ($info['sub'] == 0) : ?>
+							<?php if ($info['sub_active'] == 0) : ?>
 								No
-							<?php elseif ($info['sub'] == 1) : ?>
+							<?php elseif ($info['sub_active'] == 1) : ?>
 								Yes
 							<?php endif; ?>
 						</td>
@@ -377,11 +399,21 @@
 			var search = $(this).val();
 			if (search != '') {
 				$(".table_pag_div").hide();
+				$(".clearsearch").show();
 				load_data(search);
 			} else {
 				$(".table_pag_div").show();
+				$(".clearsearch").hide();
 				reload_table();
 			}
+		});
+
+		$('.clearsearch').click(function() {
+			$("#search_user").val("");
+
+			reload_table();
+
+			$(this).fadeOut();
 		});
 
 		$(document).on('click', 'i.fa-sort', function() {
@@ -473,23 +505,26 @@
 						$('.web_num_total').html(data.webs.length);
 						for (let index = 0; index < data.webs.length; index++) {
 							// console.log(data.webs[index]);
-							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
+							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-pencil-alt text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
 						}
 						$("button.user_webpdate").show();
 					}
 
 					//data for payments tab
 					$('.web_quota').val(data.infos[0].web_quota);
+					$('.bought').val(data.quota[0].bought);
+					$('.used').val(data.quota[0].used);
+					$('.bal').val(data.quota[0].bal);
 
 					if (data.infos[0].sub_active == "0") {
-						$('.web_quota').removeAttr("readonly");
+						$('.bought,.bal,.used').removeAttr("readonly disabled").css('cursor', 'text');
 						$('.unverifysub_btn').hide();
 						$('.verifysub_btn').show();
 					} else if (data.infos[0].sub_active == "1") {
-						$('.web_quota').attr({
+						$('.bought,.bal,.used').attr({
 							readonly: "true",
-							disabled: "disabled"
-						});
+							disabled: "true"
+						}).css('cursor', 'not-allowed');
 						$('.unverifysub_btn').show();
 						$('.verifysub_btn').hide();
 					}
@@ -1095,6 +1130,9 @@
 			var csrfName = $('.csrf-token').attr('name');
 			var web_quota = $('.web_quota').val();
 			var webcount = $(".web_form_input").length;
+			var bought = $('.bought').val();
+			var balance = $('.bal').val();
+			var used = $(".used").val();
 
 			if (web_quota == "" || web_quota == null) {
 				$('.web_quota').css('border', '2px solid red');
@@ -1116,8 +1154,41 @@
 			} else {
 				$('.web_quota').css('border', '1px solid #294a63');
 			}
+			if (bought == "" || bought == null) {
+				$('.bought').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				return false;
+			} else {
+				$('.bought').css('border', '1px solid #294a63');
+			}
+			if (used == "" || used == null) {
+				$('.used').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				return false;
+			} else {
+				$('.used').css('border', '1px solid #294a63');
+			}
+			if (balance == "" || balance == null) {
+				$('.bal').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				return false;
+			} else {
+				$('.bal').css('border', '1px solid #294a63');
+			}
+			if (bought !== balance) {
+				$('.bought,.bal').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				$(".quotaerr").html("Does not match").show();
+				return false;
+			}
+			if (used > bought || used > balance) {
+				$('.used').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				$(".quotaerr").html("Value can't be greater").show();
+				return false;
+			}
 
-			var con = confirm("Are you sure? This user would be able to collect reviews");
+			var con = confirm("Are you sure you want to perform this action?");
 			if (con == false) {
 				return false;
 			} else if (con == true) {
@@ -1142,9 +1213,12 @@
 							$('.ajax_res_err').html(data.res_msg);
 							$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						} else if (data.res == "success") {
-							$('.web_quota').attr("readonly", "true");
 							$('.ajax_res_succ').html(data.res_msg);
 							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
+							$('.bought,.bal,.used').attr({
+								readonly: "true",
+								disabled: "true",
+							}).css('cursor', 'not-allowed');
 						}
 
 						reload_table();
@@ -1163,7 +1237,7 @@
 			var csrfHash = $('.csrf-token').val();
 			var csrfName = $('.csrf-token').attr('name')
 
-			var con = confirm("Are you sure? This user wount be able to collect reviews");
+			var con = confirm("Are you sure you want to perform this action?");
 			if (con == false) {
 				return false;
 			} else if (con == true) {
@@ -1186,9 +1260,9 @@
 							$('.ajax_res_err').html(data.res_msg);
 							$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
 						} else if (data.res == "success") {
-							$('.web_quota').removeAttr("readonly");
 							$('.ajax_res_succ').html(data.res_msg);
 							$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
+							$('.bought,.bal,.used').removeAttr("readonly disabled").css('cursor', 'text');
 						}
 
 						reload_table();
@@ -1199,6 +1273,116 @@
 					}
 				});
 			}
+		});
+
+		$(document).on('click', 'button.subbtn_update', function() {
+			var user_id = $('.user_id').val();
+			var form_key = $('.user_form_key').val();
+			var csrfHash = $('.csrf-token').val();
+			var csrfName = $('.csrf-token').attr('name');
+			var web_quota = $('.web_quota').val();
+			var webcount = $(".web_form_input").length;
+			var bought = $('.bought').val();
+			var balance = $('.bal').val();
+			var used = $(".used").val();
+
+			if (web_quota == "" || web_quota == null) {
+				$('.web_quota').css('border', '2px solid red');
+				$(".web_quota_err").html("Specify a value, the default quota is 10").show();
+				$(".quotaupdate_spinner").hide();
+				return false;
+			}
+			if (parseInt(web_quota) < 10) {
+				$('.web_quota').css('border', '2px solid red');
+				$(".web_quota_err").html("The default quota should be 10").show();
+				$(".quotaupdate_spinner").hide();
+				return false;
+			}
+			if (parseInt(web_quota) < webcount) {
+				$('.web_quota').css('border', '2px solid red');
+				$(".web_quota_err").html("Number of this user websites(" + webcount + ") cannot be greater than quota(" + web_quota + "). Increase the quota").show();
+				$(".quotaupdate_spinner").hide();
+				return false;
+			} else {
+				$('.web_quota').css('border', '1px solid #294a63');
+			}
+			if (bought == "" || bought == null) {
+				$('.bought').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				return false;
+			} else {
+				$('.bought').css('border', '1px solid #294a63');
+			}
+			if (used == "" || used == null) {
+				$('.used').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				return false;
+			} else {
+				$('.used').css('border', '1px solid #294a63');
+			}
+			if (balance == "" || balance == null) {
+				$('.bal').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				return false;
+			} else {
+				$('.bal').css('border', '1px solid #294a63');
+			}
+			if (bought !== balance) {
+				$('.bought,.bal').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				$(".quotaerr").html("Does not match").show();
+				return false;
+			}
+			if (used > bought || used > balance) {
+				$('.used').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				$(".quotaerr").html("Value can't be greater").show();
+				return false;
+			}
+
+			$.ajax({
+				url: "<?php echo base_url('admin/updateuser_quota'); ?>",
+				method: "post",
+				data: {
+					user_id: user_id,
+					form_key: form_key,
+					web_quota: web_quota,
+					bought: bought,
+					used: used,
+					balance: balance,
+					[csrfName]: csrfHash
+				},
+				dataType: "json",
+				beforeSend: function() {
+					$(".quotaupdate_spinner").fadeIn();
+					$('.subbtn_update').html("Updating...");
+					$('.subbtn_update').attr("disabled", "disabled");
+					$('.subbtn_update').css("cursor", "not-allowed");
+				},
+				success: function(data) {
+					$('.csrf-token').val(data.token);
+
+					if (data.res == "failed") {
+						$('.ajax_res_err').html(data.res_msg);
+						$('.ajax_err_div').fadeIn("slow").delay("5000").fadeOut("slow");
+					} else if (data.res == "success") {
+						$('.ajax_res_succ').html(data.res_msg);
+						$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
+					}
+
+					$(".quotaupdate_spinner").fadeOut();
+					$('.subbtn_update').html("Update");
+					$('.subbtn_update').removeAttr("disabled");
+					$('.subbtn_update').css("cursor", "pointer");
+					$('.subbtn_update').css("background", "#294a63");
+
+					reload_table();
+
+				},
+				error: function(data) {
+					// window.location.reload();
+				}
+			});
 		});
 
 		$('.new_pwd').keyup(function() {

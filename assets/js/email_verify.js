@@ -1,14 +1,4 @@
 $(document).ready(function () {
-	$('.sentcode').keyup(function () {
-		var code = $('.sentcode').val();
-		if (code.length < 7 || code.length > 7) {
-			$('.codeerr').show();
-			return false;
-		} else {
-			$('.codeerr').hide();
-			return true;
-		}
-	});
 
 	$('button.verifycodebtn').click(function () {
 		//e.preventDefault();

@@ -21,9 +21,6 @@ input.form-control:focus{
 	border-color: black;
 	box-shadow: none;
 }
-h4{
-	font-weight: bold;
-}
 a.rsendcodebtn{
 	text-decoration: none;
 }

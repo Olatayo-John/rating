@@ -34,16 +34,6 @@ $(document).ready(function () {
 		$('.emailmodal').hide();
 	});
 
-	$('.singlemailsend').click(function () {
-		$('.email_options').remove();
-		$('#email_select').attr('conn', 'false');
-		$('#email_select').hide();
-		$('#email').val('');
-		$('#email').show();
-		bseu = "<?php echo base_url('user/sendlink'); ?>";
-		$("#gen_link_form").attr('action', bseu);
-	});
-
 	$('button.smsimport').click(function () {
 		var sel_conn = $('#sms_select').attr('conn');
 		if (sel_conn == "true") {
@@ -62,16 +52,6 @@ $(document).ready(function () {
 
 	$('button.smsclosebtn').click(function () {
 		$('.smsmodal').hide();
-	});
-
-	$('.singlsmssend').click(function () {
-		$('.sms_options').remove();
-		$('#sms_select').attr('conn', 'false');
-		$('#sms_select').hide();
-		$('#mobile').val('');
-		$('#mobile').show();
-		bseu = "<?php echo base_url('user/sms_send_link'); ?>";
-		$("#sms_gen_link_form").attr('action', bseu);
 	});
 
 });

@@ -3,9 +3,6 @@
 	<div class="modal addusermodal">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header d-flex justify-content-center mb-0 pb-0">
-					<h5 class="text-dark font-weight-bolder">Enter web details correctly</h5>
-				</div>
 				<form action="<?php echo base_url('admin/add_user'); ?>" method="post" class="mt-0">
 					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf-token">
 					<div class="modal-body">
@@ -87,7 +84,7 @@
 					<div class="profile_div">
 						<div class="form-group">
 							<label><span class="text-danger font-weight-bolder">* </span>Username</label>
-							<input type="text" name="uname" class="form-control uname" placeholder="Username">
+							<input type="text" name="uname" class="form-control uname" placeholder="Username" readonly disabled style="cursor:not-allowed">
 							<span class="unameerr text-danger" style="display:none">Username already exist</span>
 						</div>
 						<div class="row">
@@ -124,7 +121,7 @@
 								<label>Link<i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></label>
 								<div class="linkcopyalert font-weight-bolder" style="display:none;color:#294a63">Copied to your clipboard</div>
 							</div>
-							<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' readonly>
+							<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' readonly disabled style="cursor:not-allowed">
 						</div>
 						<hr>
 						<div class="updatebtngrp d-flex justify-content-between mb-2">
@@ -1176,16 +1173,22 @@
 			} else {
 				$('.bal').css('border', '1px solid #294a63');
 			}
-			if (bought !== balance) {
-				$('.bought,.bal').css('border', '2px solid red');
+			if (parseInt(bought) < parseInt(balance)) {
+				$('.bal').css('border', '2px solid red');
 				$(".quotaupdate_spinner").hide();
-				$(".quotaerr").html("Does not match").show();
+				$(".quotaerr").html("Balnace can't be greater than Bought").show();
 				return false;
 			}
-			if (used > bought || used > balance) {
+			if (parseInt(bought) < parseInt(used)) {
 				$('.used').css('border', '2px solid red');
 				$(".quotaupdate_spinner").hide();
-				$(".quotaerr").html("Value can't be greater").show();
+				$(".quotaerr").html("Used can't be greater than Bought").show();
+				return false;
+			}
+			if ((parseInt(used) + parseInt(balance)) !== parseInt(bought)) {
+				$('.bought,.used,.bal').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				$(".quotaerr").html("Values do not match up").show();
 				return false;
 			}
 
@@ -1328,17 +1331,26 @@
 			} else {
 				$('.bal').css('border', '1px solid #294a63');
 			}
-			if (bought !== balance) {
-				$('.bought,.bal').css('border', '2px solid red');
+			if (parseInt(bought) < parseInt(balance)) {
+				$('.bal').css('border', '2px solid red');
 				$(".quotaupdate_spinner").hide();
-				$(".quotaerr").html("Does not match").show();
+				$(".quotaerr").html("Balnace can't be greater than Bought").show();
 				return false;
 			}
-			if (used > bought || used > balance) {
+			if (parseInt(bought) < parseInt(used)) {
 				$('.used').css('border', '2px solid red');
 				$(".quotaupdate_spinner").hide();
-				$(".quotaerr").html("Value can't be greater").show();
+				$(".quotaerr").html("Used can't be greater than Bought").show();
 				return false;
+			}
+			if ((parseInt(used) + parseInt(balance)) !== parseInt(bought)) {
+				$('.bought,.used,.bal').css('border', '2px solid red');
+				$(".quotaupdate_spinner").hide();
+				$(".quotaerr").html("Values do not match up").show();
+				return false;
+			} else {
+				$(".quotaerr").hide();
+				$('.bought,.used,.bal').css('border', '1px solid #294a63');
 			}
 
 			$.ajax({

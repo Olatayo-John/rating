@@ -1,15 +1,15 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/quota.css'); ?>">
-<!-- <div class="modal emailsmsusermodal">
+<div class="modal alllink_modal">
 	<div class="modal-dialog modal-xl">
 		<div class="modal-content">
 			<div class="mb-2 modal-header">
-				<a href="<?php echo base_url('admin/emailsms_export_csv'); ?>" class="btn emailsms_export_csv col-md-3" style="background: #023E8A;color: #ffff">
+				<a href="<?php echo base_url('admin/emailsms_export_csv'); ?>" class="btn col-md-3" style="background: #294a63;color: #ffff">
 					<i class="fas fa-file-csv mr-2"></i>Export as CSV
 				</a>
 			</div>
 			<div class="modal-body" style="height:400px;overflow:scroll;">
 				<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
-					<tr class="font-weight-bolder" style="background-color: #1B5E20">
+					<tr class="font-weight-bolder text-center" style="background-color: #294a63">
 						<th class="text-light"><span class="icon">
 								Sent To
 							</span></th>
@@ -20,26 +20,34 @@
 								Date
 							</span></th>
 					</tr>
-					<?php foreach ($sent_links as $row) : ?>
-						<tr>
-							<?php if (!$row->mobile) : ?>
-								<td><?php echo $row->email ?></td>
-							<?php endif; ?>
-							<?php if (!$row->email) : ?>
-								<td><?php echo $row->mobile ?></td>
-							<?php endif; ?>
-							<td><?php echo $row->body ?></td>
-							<td class="text-danger font-weight-bolder"><?php echo $row->sent_at ?></td>
+					<?php if ($sent_links->num_rows() <= "0") : ?>
+						<tr class="text-center">
+							<td colspan='6' class="text-dark text-uppercase font-weight-bolder">no data found</td>
 						</tr>
-					<?php endforeach; ?>
+					<?php elseif ($sent_links->num_rows() > "0") : ?>
+						<?php foreach ($sent_links->result() as $row) : ?>
+							<tr>
+								<td>
+									<?php if (!$row->sent_to_email) : ?>
+										<?php echo $row->sent_to_sms ?>
+									<?php else : ?>
+										<?php echo $row->sent_to_email ?>
+									<?php endif; ?>
+								</td>
+								<td><?php echo $row->body ?></td>
+								<td class="text-danger font-weight-bolder"><?php echo $row->sent_at ?></td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
 				</table>
 			</div>
+			<hr>
 			<div class="updatebtngrp text-right mb-2">
-				<button class="btn btn-dark closeemailsmsbtn bradius mr-3">Close</button>
+				<button class="btn btn-dark alllink_modal_close bradius mr-3">Close</button>
 			</div>
 		</div>
 	</div>
-</div> -->
+</div>
 
 <h4 class="text-center font-weight-bolder mt-4 mr-3 ml-3 mb-0 pb-3 pt-3">QUOTA</h4>
 <div class="ls_div mr-3 ml-3">
@@ -106,6 +114,9 @@
 				<h4 class="text-center stared mb-4">Emails Sent</h4>
 			</div>
 		</div>
+		<div class="mr-3 ml-3">
+			<button type="button" class="btn text-light alllinkbtn" style="background:#294a63">View All</button>
+		</div>
 	<?php endif; ?>
 </div>
 
@@ -148,6 +159,14 @@
 					$(this).text(Math.ceil(now));
 				}
 			});
+		});
+
+		$(document).on('click', '.alllinkbtn', function() {
+			$(".alllink_modal").modal("show");
+		});
+
+		$(document).on('click', '.alllink_modal_close', function() {
+			$(".alllink_modal").modal("hide");
 		});
 
 	});

@@ -215,6 +215,30 @@ class Usermodel extends CI_Model
 		}
 	}
 
+	public function check_duplicate_webname($webname)
+	{
+		$data = $this->db->get_where('websites', array('user_id' => $this->session->userdata("mr_id"), 'form_key' => $this->session->userdata("mr_form_key"), 'web_name' => $webname));
+		if (!$data) {
+			return false;
+			exit;
+		} else {
+			return $data->num_rows();
+			exit;
+		}
+	}
+
+	public function check_duplicate_weblink($weblink)
+	{
+		$data = $this->db->get_where('websites', array('user_id' => $this->session->userdata("mr_id"), 'form_key' => $this->session->userdata("mr_form_key"), 'web_link' => $weblink));
+		if (!$data) {
+			return false;
+			exit;
+		} else {
+			return $data->num_rows();
+			exit;
+		}
+	}
+
 	public function user_new_website()
 	{
 		$res_web = $this->check_user_websites();
@@ -404,6 +428,7 @@ class Usermodel extends CI_Model
 
 	public function all_user_sent_links()
 	{
+		$this->db->order_by('id', 'desc');
 		$query = $this->db->get('sent_links');
 		return $query;
 	}
@@ -763,8 +788,30 @@ class Usermodel extends CI_Model
 			$msg = "Sent multiple sms. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
 		} elseif ($type == "mail_err") {
 			$msg = "Mail couldn't be sent. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "sms_err") {
+			$msg = "SMS couldn't be sent. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
 		} elseif ($type == "db_err") {
 			$msg = "Couldn't save to Database. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "quota_expire") {
+			$msg = "Quota Expired. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "quota_limit") {
+			$msg = "Quota too small. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "userscsv") {
+			$msg = "Users CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "votesscsv") {
+			$msg = "Votes CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "feedbackscsv") {
+			$msg = "Feedbacks CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "paymentscsv") {
+			$msg = "Payments CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "logscsv") {
+			$msg = "Logs CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "link_csv") {
+			$msg = "Links CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "logsclear") {
+			$msg = "Logs table cleared. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
+		} elseif ($type == "cnt_us") {
+			$msg = "Message from Contact Us.";
 		}
 
 		$data = array(

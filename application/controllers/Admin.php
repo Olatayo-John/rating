@@ -81,6 +81,7 @@ class Admin extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
+		$this->Usermodel->log_act($type = "userscsv");
 	}
 
 	public function reload_table()
@@ -815,6 +816,7 @@ class Admin extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
+		$this->Usermodel->log_act($type = "votesscsv");
 	}
 
 	public function votes_reload_table()
@@ -1232,6 +1234,7 @@ class Admin extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
+		$this->Usermodel->log_act($type = "paymentscsv");
 	}
 
 	public function payments_search()
@@ -1488,6 +1491,7 @@ class Admin extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
+		$this->Usermodel->log_act($type = "logscsv");
 	}
 
 	public function clear_logs()
@@ -1502,6 +1506,7 @@ class Admin extends CI_Controller
 		}
 
 		$res = $this->Adminmodel->clear_logs();
+		$this->Usermodel->log_act($type = "logsclear");
 
 		if ($res !== true) {
 			$this->session->set_flashdata('invalid', 'Error clearing data');
@@ -1512,23 +1517,48 @@ class Admin extends CI_Controller
 		}
 	}
 
+	public function emailsms_export_csv()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$this->session->set_flashdata('invalid', 'Please login first');
+			redirect('login');
+		}
+		if ($this->session->userdata('mr_admin') == "0") {
+			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			redirect('user');
+		}
+		header("Content-Type: text/csv; charset=utf-8");
+		header("Content-Disposition: attachment; filename=links.csv");
+		$output = fopen("php://output", "w");
+		fputcsv($output, array('ID', 'SMS', 'Email', 'Subject', 'Body', 'User ID', 'Date'));
+		$data = $this->Adminmodel->emailsms_export_csv();
+		foreach ($data as $row) {
+			fputcsv($output, $row);
+		}
+		fclose($output);
+		$this->Usermodel->log_act($type = "link_csv");
+	}
+
 	public function logout()
 	{
+		$this->Usermodel->log_act($type = "logout");
+
 		$this->session->unset_userdata('mr_id');
-		$this->session->unset_userdata('mr_admin');
 		$this->session->unset_userdata('mr_s_admin');
+		$this->session->unset_userdata('mr_admin');
 		$this->session->unset_userdata('mr_uname');
 		$this->session->unset_userdata('mr_email');
 		$this->session->unset_userdata('mr_mobile');
 		$this->session->unset_userdata('mr_active');
 		$this->session->unset_userdata('mr_sub');
+		$this->session->unset_userdata('mr_sub_active');
 		$this->session->unset_userdata('mr_web_quota');
 		$this->session->unset_userdata('mr_website_form');
 		$this->session->unset_userdata('mr_form_key');
 		$this->session->unset_userdata('mr_logged_in');
 		// $this->session->sess_destroy();
 
-		$this->session->set_flashdata('invalid', 'Logged out');
-		redirect('user');
+		$this->session->set_flashdata('valid', 'Logged out');
+		redirect('/');
 	}
 }

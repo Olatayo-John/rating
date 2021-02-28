@@ -7,32 +7,7 @@
 
 <input type="hidden" value="<?php echo $this->session->userdata('rr_form_key'); ?>" class="form_key">
 
-<?php if ($this->session->userdata("mr_sub") == "0") : ?>
-	<div class="container mb-5">
-		<div class="bg-danger error" style="border-radius: 3px">
-			<i class="fas fa-exclamation-circle"></i>
-			<strong>You have no active subscription. Pick a plan to use our services.</strong>
-		</div>
-	</div>
-<?php endif; ?>
-
-<?php if ($this->session->userdata("mr_sub") == "1") : ?>
-	<div class="container mb-5">
-		<div class="bg-success error" style="border-radius: 3px">
-			<div class="d-flex justify-content-between">
-				<div>
-					<i class="fas fa-check-circle"></i>
-					<strong>You have an active subscription.</strong>
-				</div>
-				<div>
-					<a href="<?php echo base_url("user/account"); ?>" class="font-weight-bolder mr-2" style="color:#294a63">Check your quota here</a>
-				</div>
-			</div>
-		</div>
-	</div>
-<?php endif; ?>
-
-<div class="container-fluid row">
+<div class="container-fluid row mt-5">
 	<div class="col-md-3 plan-one">
 		<div class="card">
 			<div class="card-header text-center bg-primary text-light">

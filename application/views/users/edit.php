@@ -12,7 +12,7 @@
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="form-group">
 			<label><span class="text-danger">* </span>Username</label>
-			<input type="text" name="uname" class="form-control uname" readonly disabled value="<?php echo $user_info->uname ?>" placeholder="Pick a Username" required style="cursor: not-allowed;">
+			<input type="text" name="uname" class="form-control uname" readonly disabled value="<?php echo $user_info->uname ?>" placeholder="Pick a Username" required disabled style="cursor: not-allowed;">
 		</div>
 		<div class="row">
 			<div class="form-group col-md-6">
@@ -38,7 +38,7 @@
 				<label>Your Link<i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></label>
 				<div class="linkcopyalert font-weight-bolder" style="display:none;color:#294a63">Copied to your clipboard</div>
 			</div>
-			<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' value="<?php echo base_url("wtr/") . $user_info->form_key ?>" readonly>
+			<input type="text" name="linkshare" class="form-control linkshare" id='linkshare' value="<?php echo base_url("wtr/") . $user_info->form_key ?>" required disabled style="cursor: not-allowed;">
 		</div>
 		<hr>
 		<div class="form-group text-left">
@@ -75,11 +75,11 @@
 						<input type="hidden" class="web_id form-control" name="web_id" value="">
 						<div class="form-group">
 							<label class="font-weight-bolder">Website Name</label>
-							<input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Name of the webiste" required readonly>
+							<input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Name of the webiste" required disabled readonly>
 						</div>
 						<div class="form-group">
 							<label class="mb-0 font-weight-bolder">Website Link</label>
-							<input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Website link" required readonly>
+							<input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Website link" required disabled readonly>
 						</div>
 						<div class="modal_btn_actions d-flex justify-content-between">
 							<button type="button" class="btn btn-secondary close_editweb_modal">Close</button>
@@ -103,11 +103,12 @@
 							<div class="form-group">
 								<label class="mb-0 font-weight-bolder">Website Name</label>
 								<input type="text" name="web_name_new" class="web_name_new form-control" placeholder="Name of the webisite" required>
+								<div class="text-danger font-weight-bolder mt-0 web_name_err"></div>
 							</div>
 							<div class="form-group">
 								<label class="mb-0 font-weight-bolder">Website Link</label>
-								<div class="text-danger font-weight-bolder mt-0 web_link_err"></div>
 								<input type="url" name="web_link_new" class="web_link_new form-control" placeholder="e.g https://domainname.com" required>
+								<div class="text-danger font-weight-bolder mt-0 web_link_err"></div>
 							</div>
 							<div class="modal_btn_actions d-flex justify-content-between">
 								<button type="button" class="btn btn-secondary closewebmodal_btn">Close</button>
@@ -183,6 +184,7 @@
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="form-group">
 			<label><i class="fas fa-key mr-2"></i>Current Password<span class="text-danger"> *</span></label>
+			<input type="password" name="auto-pwd" style="opacity: 0; position: absolute">
 			<input type="text" name="c_pwd" class="form-control c_pwd" placeholder="Your current password" required>
 		</div>
 		<div class="form-group">
@@ -222,6 +224,7 @@
 	$(document).ready(function() {
 		$("[data-toggle]").tooltip()
 
+		//check for duplicate username on keyup function
 		$(".uname").keyup(function() {
 			var uname_val = $(".uname").val();
 			var csrfName = $(".csrf_token").attr("name");
@@ -247,7 +250,79 @@
 					}
 				},
 				error: function(data) {
-					alert('error filtering. Please refresh and try again');
+					window.location.reload();
+				}
+			});
+		});
+
+		$(".web_name_new").keyup(function() {
+			var webname = $(".web_name_new").val();
+			var csrfName = $(".csrf_token").attr("name");
+			var csrfHash = $(".csrf_token").val();
+
+			$.ajax({
+				url: "<?php echo base_url("user/check_duplicate_webname") ?>",
+				method: "post",
+				dataType: "json",
+				data: {
+					[csrfName]: csrfHash,
+					webname: webname
+				},
+				success: function(data) {
+					$(".csrf_token").val(data.token);
+
+					if (data.webdata > 0) {
+						$('.web_name_err').html("Website with this name already exist").show();
+						$(".web_name_new").css('border', '1px solid red');
+						$(".add_web_modal_btn").attr({
+							type: "button",
+							disabled: "disabled",
+							readonly: "readonly"
+						}).css("cursor", "not-allowed");
+					} else {
+						$('.web_name_err').hide();
+						$(".web_name_new").css('border', '1px solid #ced4da');
+						$(".add_web_modal_btn").removeAttr("disabled readonly").attr("type", "submit").css("cursor", "pointer");
+					}
+				},
+				error: function(data) {
+					window.location.reload();
+				}
+			});
+		});
+
+		$(".web_link_new").keyup(function() {
+			var weblink = $(".web_link_new").val();
+			var csrfName = $(".csrf_token").attr("name");
+			var csrfHash = $(".csrf_token").val();
+
+			$.ajax({
+				url: "<?php echo base_url("user/check_duplicate_weblink") ?>",
+				method: "post",
+				dataType: "json",
+				data: {
+					[csrfName]: csrfHash,
+					weblink: weblink
+				},
+				success: function(data) {
+					$(".csrf_token").val(data.token);
+
+					if (data.webdata > 0) {
+						$('.web_link_err').html("Website with this Link already exist").show();
+						$(".web_link_new").css('border', '1px solid red');
+						$(".add_web_modal_btn").attr({
+							type: "button",
+							disabled: "disabled",
+							readonly: "readonly"
+						}).css("cursor", "not-allowed");
+					} else {
+						$('.web_link_err').hide();
+						$(".web_link_new").css('border', '1px solid #ced4da');
+						$(".add_web_modal_btn").removeAttr("disabled readonly").attr("type", "submit").css("cursor", "pointer");
+					}
+				},
+				error: function(data) {
+					window.location.reload();
 				}
 			});
 		});
@@ -342,6 +417,10 @@
 				$('.web_name,.web_link').attr("readonly", "true");
 				$('.add_web_modal').modal("hide");
 			} else {
+				$(".web_link_err,.web_name_err").fadeOut();
+				$(".web_link,.web_name").val("");
+				$('.web_link_new,.web_name_new').css('border', '1px solid #ced4da');
+
 				$('.add_web_modal').modal("show");
 			}
 		});

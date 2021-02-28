@@ -23,7 +23,7 @@
 				<tr class="text-center">
 					<td><?php echo $msg['id'] ?></td>
 					<td><?php echo $msg['name'] ?></td>
-					<td><?php echo $msg['user_mail'] ?></td>
+					<td><a href="mailto:<?php echo $msg['user_mail'] ?>"><?php echo $msg['user_mail'] ?></a></td>
 					<td><?php echo $msg['bdy'] ?></td>
 				</tr>
 			<?php endforeach; ?>

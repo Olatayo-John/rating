@@ -442,6 +442,20 @@ class User extends CI_Controller
 		$this->Usermodel->check_user_websites();
 	}
 
+	public function check_duplicate_webname()
+	{
+		$data['webdata'] = $this->Usermodel->check_duplicate_webname($_POST['webname']);
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	public function check_duplicate_weblink()
+	{
+		$data['webdata'] = $this->Usermodel->check_duplicate_weblink($_POST['weblink']);
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
 	public function user_new_website()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
@@ -590,10 +604,12 @@ class User extends CI_Controller
 			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
-		if ($this->session->userdata('mr_sub') == "0") {
+		if ($this->session->userdata('mr_sub_active') == "0") {
+			$this->session->set_flashdata('invalid', 'You dont have an active subscribtion!');
 			return FALSE;
 			exit();
 		}
+
 		$myfile = fopen("body.txt", "w") or die("Unable to open file!");
 		$txt = "Click the link below, to rate any of my websites\n";
 		fwrite($myfile, $txt);
@@ -678,9 +694,9 @@ class User extends CI_Controller
 			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
-		if ($this->session->userdata('mr_sub') == "0") {
+		if ($this->session->userdata('mr_sub_active') == "0") {
 			$this->session->set_flashdata('invalid', 'You have no active subscription.');
-			redirect('plan');
+			redirect('account');
 		}
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
 		$this->form_validation->set_rules('subj', 'Subject', 'required|trim|html_escape');
@@ -697,9 +713,10 @@ class User extends CI_Controller
 				exit;
 			} else if ($cq_res !== false) {
 				$usermail_expire = $cq_res->email;
+				$this->Usermodel->log_act($type = "quota_expire");
 				$this->quota_send_mail_expire($usermail_expire);
 				$this->session->set_flashdata('invalid', 'Quota has expired');
-				redirect('plan');
+				redirect('account');
 			} else {
 				$email = htmlentities($this->input->post('email'));
 				$subj = htmlentities($this->input->post('subj'));
@@ -721,6 +738,7 @@ class User extends CI_Controller
 						$cq_res = $this->Adminmodel->check_quota_expire();
 						if ($cq_res !== false) {
 							$db_email = $cq_res->email;
+							$this->Usermodel->log_act($type = "quota_expire");
 							$this->quota_send_mail_expire($db_email);
 							$this->session->set_flashdata('valid', 'Link sent successfully');
 							redirect($_SERVER['HTTP_REFERER']);
@@ -781,17 +799,18 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('user');
+			return false;
 		}
-		if ($this->session->userdata('mr_sub') == "0") {
+		if ($this->session->userdata('mr_sub_active') == "0") {
 			$this->session->set_flashdata('invalid', 'You have no active subscription.');
-			redirect('plan');
+			return false;
 		}
 		$cq_res = $this->Usermodel->check_user_quota();
 		if ($cq_res == true) {
+			$this->Usermodel->log_act($type = "quota_expire");
 			$this->send_quota_expire_mail();
-			$this->session->set_flashdata('invalid', 'Your Quota has expired. Please renew to continue using our services.');
-			redirect('plan');
+			$this->session->set_flashdata('invalid', 'Your Quota has expired');
+			redirect('account');
 		} else {
 			$emaildata = $_POST['emaildata'];
 			$subj = $_POST['subj'];
@@ -800,26 +819,32 @@ class User extends CI_Controller
 
 			$qbl_res = $this->Usermodel->user_quota_details();
 			if ($qbl_res->bal < $num) {
-				$this->session->set_flashdata('invalid', 'Number of emails to be sent exceeds your remaining quota point of ' . $qbl_res->bal . ' .');
+				$this->Usermodel->log_act($type = "quota_limit");
+				$this->session->set_flashdata('invalid', 'Number of emails to be sent exceeds your remaining quota point of ' . $qbl_res->bal . '.');
 			} else {
-				$mail_res = $this->send_multiple_link_email($emaildata, $subj, $bdy);
-				if ($mail_res !== true) {
-					$this->session->set_flashdata('invalid', $mail_res);
-				} else {
-					$res = $this->Usermodel->multiplemail_save_info($_POST['emaildata'], $_POST['subj'], $_POST['bdy']);
-					if ($res !== true) {
-						$this->session->set_flashdata('invalid', 'Error saving to DATABASE.');
-					} else {
-						$length = count($emaildata);
-						$cq_res = $this->Usermodel->user_quota_update($length);
-						$this->session->set_flashdata('valid', 'Link sent successfully');
+				// $mail_res = $this->send_multiple_link_email($mail, $subj, $bdy);
+				foreach ($emaildata as $mail) {
+					$mail_res = $this->send_multiple_link_email($mail, $subj, $bdy);
+
+					if ($mail_res !== true) {
+						$this->Usermodel->log_act($type = "mail_err");
+						$this->session->set_flashdata('invalid', $mail_res);
 					}
+				}
+				$res = $this->Usermodel->multiplemail_save_info($_POST['emaildata'], $_POST['subj'], $_POST['bdy']);
+				if ($res !== true) {
+					$this->Usermodel->log_act($type = "db_err");
+					$this->session->set_flashdata('invalid', 'Error saving to DATABASE.');
+				} else {
+					$length = count($emaildata);
+					$cq_res = $this->Usermodel->user_quota_update($length);
+					$this->session->set_flashdata('valid', 'Link sent successfully');
 				}
 			}
 		}
 	}
 
-	public function send_multiple_link_email($emaildata, $subj, $bdy)
+	public function send_multiple_link_email($mail, $subj, $bdy)
 	{
 		$config['protocol']    = 'smtp';
 		$config['smtp_host']    = 'ssl://smtp.gmail.com';
@@ -835,7 +860,7 @@ class User extends CI_Controller
 		$this->email->set_newline("\r\n");
 
 		$this->email->from('jvweedtest@gmail.com', 'Rating');
-		$this->email->to(implode(",", $emaildata));
+		$this->email->to($mail);
 		$this->email->subject($subj);
 		$this->email->message($bdy);
 
@@ -852,9 +877,9 @@ class User extends CI_Controller
 			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
-		if ($this->session->userdata('mr_sub') == "0") {
+		if ($this->session->userdata('mr_sub_active') == "0") {
 			$this->session->set_flashdata('invalid', 'You have no active subscription.');
-			redirect('plan');
+			redirect('account');
 		}
 		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
 		$this->form_validation->set_rules('smsbdy', 'Body', 'required|trim|html_escape');
@@ -868,9 +893,10 @@ class User extends CI_Controller
 			if ($cq_res !== false) {
 				$db_email = $cq_res->email;
 				$usermail_expire = $cq_res->email;
+				$this->Usermodel->log_act($type = "quota_expire");
 				$this->quota_send_mail_expire($usermail_expire);
 				$this->session->set_flashdata('invalid', 'Quota has expired');
-				redirect('plan');
+				redirect('account');
 			} else {
 				$mobile = $this->input->post('mobile');
 				$bdy = $this->input->post('smsbdy');
@@ -882,12 +908,14 @@ class User extends CI_Controller
 				$result = curl_exec($req);
 
 				if ($result == false) {
+					// $this->Usermodel->log_act($type = "sms_err");
 					$this->session->set_flashdata('invalid', 'Error sending SMS');
 					redirect($_SERVER["HTTP_REFERER"]);
 					exit;
 				} else {
 					$res = $this->Usermodel->sms_save_info();
 					if ($res !== true) {
+						$this->Usermodel->log_act($type = "db_err");
 						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
 						redirect($_SERVER["HTTP_REFERER"]);
 						exit;
@@ -895,6 +923,7 @@ class User extends CI_Controller
 						$cq_res = $this->Adminmodel->check_quota_expire();
 						if ($cq_res !== false) {
 							$db_email = $cq_res->email;
+							$this->Usermodel->log_act($type = "quota_expire");
 							$this->quota_send_mail_expire($db_email);
 							$this->session->set_flashdata('valid', 'SMS sent successfully');
 							redirect($_SERVER["HTTP_REFERER"]);
@@ -929,22 +958,24 @@ class User extends CI_Controller
 			$this->session->set_flashdata('invalid', 'Please login first');
 			redirect('user');
 		}
-		if ($this->session->userdata('mr_sub') == "0") {
+		if ($this->session->userdata('mr_sub_active') == "0") {
 			$this->session->set_flashdata('invalid', 'You have no active subscription.');
-			redirect('plan');
+			redirect('account');
 		}
 		$cq_res = $this->Adminmodel->check_quota_expire();
 		if ($cq_res !== false) {
-			$db_email = $cq_res->email;
+			$this->Usermodel->log_act($type = "quota_expire");
 			$this->send_quota_expire_mail();
 			$this->session->set_flashdata('invalid', 'Your Quota has expired. Please renew to continue using our services.');
-			redirect('plan');
+			redirect('account');
 		} else {
 			$mobiledata = $_POST['mobiledata'];
 			$smsbdy = $_POST['smsbdy'];
 			$num = count($mobiledata);
+
 			$qbl_res = $this->Usermodel->user_quota_details();
 			if ($qbl_res->bal < $num) {
+				$this->Usermodel->log_act($type = "quota_limit");
 				$this->session->set_flashdata('invalid', 'Number of sms to be sent exceeds your remaining quota point of ' . $qbl_res->bal . ' .');
 			} else {
 				$url = "http://onextelbulksms.in/shn/api/pushsms.php?usr=621665&key=010BrbJ20v1c2eCc8LGih6RlTIGqKN&sndr=KARUNJ&ph=" . implode(",", $mobiledata) . "&text=";
@@ -954,14 +985,17 @@ class User extends CI_Controller
 				$result = curl_exec($req);
 
 				if ($result === false) {
+					// $this->Usermodel->log_act($type = "sms_err");
 					$this->session->set_flashdata('invalid', 'Error sending SMS');
 				} else {
 					$res = $this->Usermodel->multiplsms_save_info($_POST['mobiledata'], $_POST['smsbdy']);
 					if ($res !== true) {
+						$this->Usermodel->log_act($type = "db_err");
 						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
 					} else {
 						$cq_res = $this->Adminmodel->check_quota_expire();
 						if ($cq_res !== false) {
+							$this->Usermodel->log_act($type = "quota_expire");
 							$usermail_expire = $cq_res->email;
 							$this->quota_send_mail_expire($usermail_expire);
 							$this->session->set_flashdata('valid', 'SMS sent successfully');
@@ -1014,13 +1048,16 @@ class User extends CI_Controller
 			$this->session->set_flashdata('loginfirst', 'Please login first');
 			redirect('user');
 		}
-		$data['user'] = $this->Usermodel->user_total_ratings();
+
 		$data['balance'] = $this->Usermodel->user_total_quota();
-		$data['user_web'] = $this->Usermodel->get_user_websites();
+
+		$data['user'] = $this->Usermodel->user_total_ratings();
 
 		$data['sent_links'] = $this->Usermodel->all_user_sent_links();
 		$data['sent_links_sms'] = $this->Usermodel->all_user_sent_links_sms();
 		$data['sent_links_email'] = $this->Usermodel->all_user_sent_links_email();
+
+		$data['user_web'] = $this->Usermodel->get_user_websites();
 
 		$data['get_total_ratings'] = $this->Adminmodel->get_total_ratings();
 		$data['get_total_official'] = $this->Adminmodel->get_total_official();
@@ -1091,11 +1128,11 @@ class User extends CI_Controller
 	public function rating_store()
 	{
 		$cq_res = $this->Usermodel->check_quota_expire($_POST['form_key']);
-		// $cq_res = false;
+		// $cq_res = true;
 		if ($cq_res == true) {
 			//$this->send_quota_expire_mail();
 			$data['res'] = "failed";
-			$data['res_msg'] = "User quota expired. <a href='" . base_url("user/notifyuser_email/") . "' class='text-info'>Notify User!</a>";
+			$data['res_msg'] = "User quota expired. <a href='" . base_url("user/notifyuser_email/" . $_POST['form_key'] . "") . "' class='text-info'>Notify User?</a>";
 		} else {
 			$res = $this->Usermodel->rating_store($_POST['starv'], $_POST['name'], $_POST['mobile'], $_POST['form_key'], $_POST['for_link']);
 			if ($res) {
@@ -1115,13 +1152,12 @@ class User extends CI_Controller
 	public function notifyuser_email($form_key)
 	{
 		$data = $this->Usermodel->get_user_email($form_key);
-		// print_r($data);
+
 		$uemail = $data->email;
 		$uname = $data->uname;
 
 		$res = $this->notifyuser_sendemail($uemail, $uname);
 		return true;
-		//$res= ;
 	}
 
 	public function notifyuser_sendemail($uemail, $uname)
@@ -1186,13 +1222,16 @@ class User extends CI_Controller
 				$name = htmlentities($this->input->post('name'));
 				$user_mail = htmlentities($this->input->post('email'));
 				$bdy = htmlentities($this->input->post('msg'));
+
 				// $mail_res = $this->support_mail($name, $user_mail, $bdy);
 				$mail_res = true;
+
 				if ($mail_res !== true) {
 					$this->session->set_flashdata('invalid', 'Error sending your message');
 					redirect($_SERVER['HTTP_REFERER']);
 				} else {
 					$res = $this->Usermodel->contact();
+					$this->Usermodel->log_act($type = "cnt_us");
 					$this->session->set_flashdata('valid', 'Message sent. We will get back to you as soon as possible');
 					redirect($_SERVER['HTTP_REFERER']);
 				}
@@ -1272,5 +1311,6 @@ class User extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
+		$this->Usermodel->log_act($type = "feedbackscsv");
 	}
 }

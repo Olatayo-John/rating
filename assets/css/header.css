@@ -20,7 +20,9 @@ button.btn{
 input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
 	border-color: #294a63;
 	box-shadow: none;
-	background-color: white; 
+}
+input.search_user:focus{
+    background-color: transparent;
 }
 div.spinnerdiv{
 	top: 0;

@@ -35,6 +35,15 @@
 		<button class="btn btn-outline-dark menubtn mr-auto" onclick="opennav()">&#9776;</button>
 
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>
+			<?php if ($this->session->userdata('mr_sub_active') == "0") : ?>
+				<div class="text-danger mr-3">
+					<strong><i class="fas fa-exclamation-circle text-danger mr-1"></i>You're subscription is inactive</strong>
+				</div>
+			<?php elseif ($this->session->userdata('mr_sub_active') == "1") : ?>
+				<div class="text-success mr-3">
+					<strong><i class="fas fa-check text-success mr-1"></i>You're subscription is active</strong>
+				</div>
+			<?php endif; ?>
 			<div class="navbar-brand text-uppercase font-weight-bolder" style="font-size: 1.1rem;">
 				<a href="<?php echo base_url('profile') ?>" style="color:#294a63">
 					<span>

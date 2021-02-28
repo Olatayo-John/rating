@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Rate extends Ci_Controller
+class Rate extends CI_Controller
 {
 	public function index()
 	{
@@ -18,7 +18,7 @@ class Rate extends Ci_Controller
 				redirect("user/wtr/" . $k);
 			} else if ($res == true) {
 				$data['active'] = $this->Adminmodel->is_user_active($k);
-				if ($data['active']->active === "0" || $data['active']->sub === "0") {
+				if ($data['active']->active === "0" || $data['active']->sub_active === "0") {
 					$this->session->set_flashdata("invalid", "User account is inactive or has no subscription");
 					redirect("user/wtr/" . $k);
 				} else {

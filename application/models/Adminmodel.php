@@ -633,4 +633,12 @@ class Adminmodel extends CI_Model
 		$this->session->set_userdata('mr_sub', '0');
 		return true;
 	}
+
+	public function emailsms_export_csv()
+	{
+		$this->db->order_by('id', 'desc');
+		$this->db->select('id,sent_to_sms,sent_to_email,subj,body,user_id,sent_at');
+		$query = $this->db->get('sent_links');
+		return $query->result_array();
+	}
 }

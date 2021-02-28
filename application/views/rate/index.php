@@ -124,7 +124,7 @@
 				$('.name').css('border', '2px solid red');
 				return false;
 			} else {
-				$('.name').css('border', '2px solid green');
+				$('.name').css('border', '1px solid #294a63');
 			}
 			if (mobile == "" || mobile == null) {
 				$('.mobile').css('border', '2px solid red');
@@ -136,7 +136,7 @@
 				return false;
 			} else {
 				$('.e_mobile').hide();
-				$('.mobile').css('border', '2px solid green');
+				$('.mobile').css('border', '1px solid #294a63');
 			}
 
 			$.ajax({
@@ -174,7 +174,7 @@
 					}
 				},
 				error: function() {
-					// alert('Please refresh the page');
+					alert('Error saving your feedbacks. Please refresh the page');
 					window.location.reload();
 				}
 			});

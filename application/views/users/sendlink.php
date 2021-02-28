@@ -56,7 +56,7 @@
 				<i class="fas fa-file-csv mr-2"></i>Download sample CSV</a>
 		</div>
 		<div class="form-group">
-			<label>E-mail</label>
+			<label class="labelemail">E-mail</label>
 			<input type="email" name="email" class="form-control email" placeholder="example@domain.com" id="email">
 			<select class="form-control email_select" name="email_select" id="email_select" style="display: none;" readonly conn="false">
 				<option></option>
@@ -88,7 +88,7 @@
 				<i class="fas fa-file-csv mr-2"></i>Download sample csv</a>
 		</div>
 		<div class=" form-group">
-			<label>Phonenumber</label>
+			<label class="phonelabel">Phonenumber</label>
 			<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile">
 			<span class="e_mobile text-danger font-weight-bolder" style="display: none;">Invalid mobile length</span>
 			<select class="form-control sms_select" name="sms_select" id="sms_select" style="display: none;" readonly conn="false">
@@ -113,45 +113,33 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/sendlink.js'); ?>"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		var btnval = $('.genlinkbtn').val();
 		var id = $('.userid').val();
 		var csrfName = $('.csrf_hash').attr('name');
 		var csrfHash = $('.csrf_hash').val();
+
 		$.ajax({
 			url: "<?php echo base_url('user/getlink'); ?>",
 			method: "post",
 			data: {
 				id: id,
-				btnval: btnval,
 				[csrfName]: csrfHash
 			},
 			dataType: "json",
 			success: function(data) {
 				$('.csrf_hash').val(data.token);
+
 				$('.subj').val("Rating");
+
 				$(".bdy").load("<?php echo base_url("body.txt"); ?>");
 				$(".smsbdy").load("<?php echo base_url("body.txt"); ?>");
+
 				$('.gen_link_form').show();
-				$('.sndasbtngrp').show();
-				$('.genlinkbtn').attr('disabled');
-				$('.genlinkbtn').html('Generated');
-				$('.genlinkbtn').css('cursor', 'pointer');
-				$('.genlinkbtn').removeClass('btn-danger').addClass('btn-success');
 			},
 			error: function(data) {
-				var admin_role = "<?php echo $this->session->userdata('mr_admin'); ?>";
-				if (admin_role == "1") {
-					var protocol = window.location.protocol;
-					var url_redirect = window.location.hostname + "/admin/pick_plan";
-					var new_url = protocol + "//" + url_redirect;
-					window.location.assign(new_url);
-				} else if (admin_role == "0") {
-					$('div.sndasbtngrp, div.allform').hide();
-					var protocol = window.location.protocol;
-					var url_redirect = window.location.hostname + "/user/account";
-					var new_url = protocol + "//" + url_redirect;
-					window.location.assign(new_url);
-				}
+				var protocol = window.location.protocol;
+				var url_redirect = window.location.hostname + "/rating/account";
+				var new_url = protocol + "//" + url_redirect;
+				window.location.assign(new_url);
 			}
 		})
 
@@ -164,13 +152,19 @@
 				$('.email').css('border', '2px solid red');
 				return false;
 			} else {
-				$('.email').css('border', '0 solid red');
+				$('.email').css('border', '2px solid #ced4da');
 			}
-			if (body == "" || body == null) {
-				$('.body').css('border', '2px solid red');
+			if (sbj == "" || sbj == null) {
+				$('.subj').css('border', '2px solid red');
 				return false;
 			} else {
-				$('.body').css('border', '0 solid red');
+				$('.subj').css('border', '2px solid #ced4da');
+			}
+			if (body == "" || body == null) {
+				$('.bdy').css('border', '2px solid red');
+				return false;
+			} else {
+				$('.bdy').css('border', '2px solid #ced4da');
 			}
 
 			$.ajax({
@@ -180,6 +174,19 @@
 					$('.sendlinkbtn').css('cursor', 'not-allowed');
 				}
 			});
+		});
+
+		$('.singlemailsend').click(function() {
+			$('.email_options').remove();
+			$('#email_select').attr('conn', 'false');
+			$('#email_select').hide();
+
+			$('.labelemail').html('E-mail');
+			$('#email').val('');
+			$('#email').show();
+
+			bseu = "<?php echo base_url('user/sendlink'); ?>";
+			$("#gen_link_form").attr('action', bseu);
 		});
 
 		$('#upload_csv').on('submit', function(e) {
@@ -192,7 +199,7 @@
 				$('#csv_file').css('border', '2px solid red');
 				return false;
 			} else {
-				$('#csv_file').css('border', '0 solid red');
+				$('#csv_file').css('border', '2px solid #ced4da');
 			}
 
 			$.ajax({
@@ -208,7 +215,6 @@
 					$('.importbtn').attr('disabled', 'disabled');
 					$('.importbtn').html('Importing...');
 					$('.importbtn').css('cursor', 'not-allowed');
-					$('.importbtn').removeClass('btn-success').addClass('btn-danger');
 				},
 				success: function(data) {
 					$('.emailmodal').hide();
@@ -218,11 +224,15 @@
 					}
 					$('#email').hide();
 					$('#email').val('nomailname@nodomainname.com');
+					$('.labelemail').html('Emails');
+
 					$('.sendlinkbtn').hide();
 					$('.sendmultiplelinkbtn').show();
+
 					$('#email_select').attr('conn', 'true');
 					$('#email_select').show();
 					$('.singlemailsend').show();
+
 					bseu = "<?php echo base_url('user/send_multiple_email'); ?>";
 					$("#gen_link_form").attr('action', bseu);
 				},
@@ -245,19 +255,19 @@
 				$('.email').css('border', '2px solid red');
 				return false;
 			} else {
-				$('.email').css('border', '0 solid red');
+				$('.email').css('border', '2px solid #ced4da');
 			}
 			if (subj == "" || subj == null) {
 				$('.subj').css('border', '2px solid red');
 				return false;
 			} else {
-				$('.subj').css('border', '0 solid red');
+				$('.subj').css('border', '2px solid #ced4da');
 			}
 			if (bdy == "" || bdy == null) {
 				$('.bdy').css('border', '2px solid red');
 				return false;
 			} else {
-				$('.bdy').css('border', '0 solid red');
+				$('.bdy').css('border', '2px solid #ced4da');
 			}
 
 			var emaildata = [];
@@ -291,6 +301,19 @@
 				});
 		});
 
+		$('.singlsmssend').click(function() {
+			$('.sms_options').remove();
+			$('#sms_select').attr('conn', 'false');
+			$('#sms_select').hide();
+
+			$('#mobile').val('');
+			$('#mobile').show();
+			$(".phonelabel").html("Phonenumber");
+
+			bseu = "<?php echo base_url('user/sms_send_link'); ?>";
+			$("#sms_gen_link_form").attr('action', bseu);
+		});
+
 		$('.smssendlinkbtn').click(function() {
 			var mobile = $('.mobile').val();
 			var smsbdy = $('.smsbdy').val();
@@ -304,14 +327,14 @@
 				$('.e_mobile').show();
 				return false;
 			} else {
-				$('.mobile').css('border', '0 solid red');
+				$('.mobile').css('border', '2px solid #ced4da');
 				$('.e_mobile').hide();
 			}
 			if (smsbdy == "" || smsbdy == null) {
 				$('.smsbdy').css('border', '2px solid red');
 				return false;
 			} else {
-				$('.smsbdy').css('border', '0 solid red');
+				$('.smsbdy').css('border', '2px solid #ced4da');
 			}
 
 			$.ajax({
@@ -333,7 +356,7 @@
 				$('#sms_csv_file').css('border', '2px solid red');
 				return false;
 			} else {
-				$('#sms_csv_file').css('border', '0 solid red');
+				$('#sms_csv_file').css('border', '2px solid #ced4da');
 			}
 
 			$.ajax({
@@ -353,8 +376,11 @@
 				},
 				success: function(data) {
 					$('#mobile').val('5555555555');
-					$('.smsmodal').hide();
+					$(".phonelabel").html("Phonenumbers");
 					$('#sms_csv_file').val("");
+
+					$('.smsmodal').hide();
+
 					for (i = 0; i < data.length; i++) {
 						$('#sms_select').append('<option disabled class="sms_options">+91' + data[i].Phonenumber + '</option>');
 					}
@@ -365,7 +391,7 @@
 					$('#sms_select').show();
 					$('.singlsmssend').show();
 					bseu = "<?php echo base_url('user/multiple_sms_send_link'); ?>";
-					$("#gen_link_form").attr('action', bseu);
+					$("#sms_gen_link_form").attr('action', bseu);
 				},
 				error: function(data) {
 					alert('Error importing data');
@@ -390,14 +416,14 @@
 				$('.e_mobile').show();
 				return false;
 			} else {
-				$('.mobile').css('border', '0 solid red');
+				$('.mobile').css('border', '2px solid #ced4da');
 				$('.e_mobile').hide();
 			}
 			if (smsbdy == "" || smsbdy == null) {
 				$('.smsbdy').css('border', '2px solid red');
 				return false;
 			} else {
-				$('.smsbdy').css('border', '0 solid red');
+				$('.smsbdy').css('border', '2px solid #ced4da');
 			}
 
 			var mobiledata = [];

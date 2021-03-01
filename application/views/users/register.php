@@ -50,7 +50,7 @@
 
 		<div class="btngrp bg-light pt-4 pb-4 mb-5 mr-3 ml-3">
 			<button class="btn text-light registerbtn" type="submit" style="background:#294a63">Register</button>
-			<a href="<?php echo base_url('user/login'); ?>" class="loginbtn text-info" style="colosr:#294a63">
+			<a href="<?php echo base_url('login'); ?>" class="loginbtn text-info" style="colosr:#294a63">
 				Already a user? <i class="far fa-arrow-alt-circle-right"></i></a>
 		</div>
 	</form>

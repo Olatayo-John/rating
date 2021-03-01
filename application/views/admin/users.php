@@ -9,13 +9,14 @@
 						<div class="form-group mt-3">
 							<label>Website Name</label>
 							<input type="text" name="web_name_add" class="web_name_add form-control" placeholder="Name of the webiste" required>
+							<div class="text-danger weblinkadd_err font-weight-bolder"></div>
 						</div>
 						<div class="form-group">
 							<label class="mb-0">Website Link</label>
+							<input type="url" name="web_link_add" class="web_link_add form-control" placeholder="https://domainname.com" required>
 							<div class="addweberr text-left" id="weberr" style="display:all">
 								<span class="text-danger font-weight-bolder addweberr_span"></span>
 							</div>
-							<input type="url" name="web_link_add" class="web_link_add form-control" placeholder="https://domainname.com" required>
 						</div>
 						<div class="updatebtngrp d-flex justify-content-between mb-2 web_btngrp">
 							<button class="btn btn-secondary close_add_web_btn bradius" type="button">Close</button>
@@ -503,7 +504,7 @@
 						$('.web_num_total').html(data.webs.length);
 						for (let index = 0; index < data.webs.length; index++) {
 							// console.log(data.webs[index]);
-							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-pencil-alt text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
+							$("div.website_form_div").append('<div class="row ' + data.webs[index].id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-pencil-alt text-success edit_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.webs[index].id + '" user_id="' + data.webs[index].user_id + '" form_key="' + data.webs[index].form_key + '" web_name="' + data.webs[index].web_name + '" web_link="' + data.webs[index].web_link + '"></i></div></div><div class="col"><div class="form-group web_form_group"><label class="web_form_label text-uppercase mb-0" web_id= "' + data.webs[index].id + '">' + data.webs[index].web_name + '</label><input readonly type="url" name="' + data.webs[index].web_name + '" class="form-control web_form_input ' + data.webs[index].web_name + '" web_id="' + data.webs[index].id + '" placeholder="https://domain-name.com" value="' + data.webs[index].web_link + '" required></div></div></div>');
 						}
 						$("button.user_webpdate").show();
 					}
@@ -627,6 +628,88 @@
 			}
 		});
 
+		$(".web_name_add").keyup(function() {
+			var csrfName = $(".csrf-token").attr("name");
+			var csrfHash = $(".csrf-token").val();
+			var user_id = $('.web_addbtn').attr("userid");
+			var form_key = $('.web_addbtn').attr("userformkey");
+			var web_name_add = $('.web_name_add').val();
+
+			$.ajax({
+				url: "<?php echo base_url("user/checkduplicatewebname") ?>",
+				method: "post",
+				dataType: "json",
+				data: {
+					[csrfName]: csrfHash,
+					form_key: form_key,
+					user_id: user_id,
+					web_name_add: web_name_add
+				},
+				success: function(data) {
+					$(".csrf-token").val(data.token);
+
+					if (data.webdata > 0) {
+						$('.weblinkadd_err').html("Website with this name already exist").show();
+						$(".web_name_add").css('border', '1px solid red');
+						$(".web_addbtn").attr({
+							type: "button",
+							disabled: "disabled",
+							readonly: "readonly"
+						}).css("cursor", "not-allowed");
+					} else {
+						$('.weblinkadd_err').hide();
+						$(".web_name_add").css('border', '1px solid #ced4da');
+						$(".web_addbtn").removeAttr("disabled readonly").attr("type", "submit").css("cursor", "pointer");
+					}
+				},
+				error: function(data) {
+					window.location.reload();
+				}
+			});
+		});
+
+		$(".web_link_add").keyup(function() {
+			var csrfName = $(".csrf-token").attr("name");
+			var csrfHash = $(".csrf-token").val();
+			var user_id = $('.web_addbtn').attr("userid");
+			var form_key = $('.web_addbtn').attr("userformkey");
+			var web_link_add = $('.web_link_add').val();
+
+			$.ajax({
+				url: "<?php echo base_url("user/checkduplicateweblink") ?>",
+				method: "post",
+				dataType: "json",
+				data: {
+					[csrfName]: csrfHash,
+					form_key: form_key,
+					user_id: user_id,
+					web_link_add: web_link_add
+				},
+				success: function(data) {
+					$(".csrf-token").val(data.token);
+
+					if (data.webdata > 0) {
+						$(".addweberr").show();
+						$('.addweberr_span').html("Website with this Link already exist").show();
+						$(".web_link_add").css('border', '1px solid red');
+						$(".web_addbtn").attr({
+							type: "button",
+							disabled: "disabled",
+							readonly: "readonly"
+						}).css("cursor", "not-allowed");
+					} else {
+						$(".addweberr").show();
+						$('.web_link_err').hide();
+						$(".web_link_add").css('border', '1px solid #ced4da');
+						$(".web_addbtn").removeAttr("disabled readonly").attr("type", "submit").css("cursor", "pointer");
+					}
+				},
+				error: function(data) {
+					window.location.reload();
+				}
+			});
+		});
+
 		$(document).on('click', '.web_addbtn', function(e) {
 			e.preventDefault();
 			var user_id = $(this).attr("userid");
@@ -697,7 +780,7 @@
 						$('.ajax_res_succ').html(data.res_msg);
 						$('.ajax_succ_div').fadeIn("slow").delay("5000").fadeOut("slow");
 
-						$("div.website_form_div").append('<div class="row ' + data.insert_id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.insert_id + '" user_id="' + user_id + '" form_key="' + form_key + '" web_name="' + web_name_add + '" web_link="' + web_link_add + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.insert_id + '" user_id="' + user_id + '" form_key="' + form_key + '" web_name="' + web_name_add + '"></i></div></div><div class="col"><div class="form-group web_form_group"><span class="text-danger">* </span><label class="web_form_label text-uppercase mb-0" web_id= "' + data.insert_id + '">' + web_name_add + '</label><input readonly type="url" name="' + web_name_add + '" class="form-control web_form_input ' + web_name_add + '" web_id="' + data.insert_id + '" placeholder="https://domain-name.com" value="' + web_link_add + '" required></div></div></div>');
+						$("div.website_form_div").append('<div class="row ' + data.insert_id + '"><div class="col-md-1 action_web_div" style="display:none;margin:auto"><div class="d-flex" style="display:none"><i style="font-size:16px" class="fas fa-edit text-success edit_web_btn" web_id="' + data.insert_id + '" user_id="' + user_id + '" form_key="' + form_key + '" web_name="' + web_name_add + '" web_link="' + web_link_add + '"></i><i style="font-size:16px" class ="fas fa-minus-circle text-danger del_web_btn" web_id="' + data.insert_id + '" user_id="' + user_id + '" form_key="' + form_key + '" web_name="' + web_name_add + '"></i></div></div><div class="col"><div class="form-group web_form_group"><label class="web_form_label text-uppercase mb-0" web_id= "' + data.insert_id + '">' + web_name_add + '</label><input readonly type="url" name="' + web_name_add + '" class="form-control web_form_input ' + web_name_add + '" web_id="' + data.insert_id + '" placeholder="https://domain-name.com" value="' + web_link_add + '" required></div></div></div>');
 
 						$("div.action_div").show();
 
@@ -1406,8 +1489,9 @@
 				$(".user_accupdate").hide();
 				return false;
 			}
-			if (new_pwd.length < 7) {
+			if (new_pwd.length < 6) {
 				$('.new_pwd').css('border', '2px solid red');
+				$('.new_pwderr').removeClass('text-success').addClass('text-danger');
 				$('.new_pwderr').show();
 				$(".user_accupdate").hide();
 				return false;
@@ -1433,7 +1517,7 @@
 				$(".acct_update_spinner").hide();
 				return false;
 			}
-			if (new_pwd.length < 7) {
+			if (new_pwd.length < 6) {
 				$('.new_pwd').css('border', '2px solid red');
 				$('.new_pwderr').show();
 				$(".acct_update_spinner").hide();
@@ -1467,6 +1551,10 @@
 					$('.user_accupdate').css("cursor", "pointer");
 					$('.user_accupdate').css("background", "#294a63");
 
+					$('.new_pwderr').hide();
+					$('.new_pwd').val("");
+					$('.new_pwd').css('border', '1px solid #294a63');
+
 					$('.csrf-token').val(data.token);
 
 					if (data.res == "failed") {
@@ -1480,7 +1568,7 @@
 					}
 				},
 				error: function(data) {
-					alert("Error updating user profile!");
+					alert("Error updating user profile!. Please refresh");
 					// window.location.reload();
 				}
 			});

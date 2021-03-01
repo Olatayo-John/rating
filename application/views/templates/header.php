@@ -109,21 +109,28 @@
 	</nav>
 
 	<div class="container">
+		<!--testing div-->
+		<!--   <div class="alert alert-danger mt-2">-->
+		<!--	<button class="close" data-dismiss="alert"><i class="far fa-times-circle"></i></button>-->
+		<!--	<i class="fas fa-exclamation-circle text-danger"></i>-->
+		<!--	<strong>Test notification</strong>-->
+		<!--</div>-->
 		<!-- ajax-failed -->
-		<div class="alert-danger ajax_alert_div ajax_err_div" style="padding:8px;display:none;z-index: 9999;">
+
+		<div class="alert-danger ajax_alert_div ajax_err_div mt-2" style="padding:8px;display:none;z-index: 9999;">
 			<button class="ajax_err_div_close close" data-dismiss="ajax_err_div"><i class="far fa-times-circle"></i></button>
 			<i class="fas fa-exclamation-circle text-danger"></i>
 			<strong class="ajax_res_err text-dark"></strong>
 		</div>
 		<!-- ajax-success -->
-		<div class="alert-success ajax_alert_div ajax_succ_div" style="padding:8px;display:none;z-index: 9999;">
+		<div class="alert-success ajax_alert_div ajax_succ_div mt-2" style="padding:8px;display:none;z-index: 9999;">
 			<button class="ajax_succ_div_close close" data-dismiss="ajax_succ_div"><i class="far fa-times-circle"></i></button>
 			<i class="fas fa-bell text-success"></i>
 			<strong class="ajax_res_succ text-dark"></strong>
 		</div>
 		<!-- success-function -->
 		<?php if ($this->session->flashdata('valid')) : ?>
-			<div class="alert alert-success">
+			<div class="alert alert-success mt-2">
 				<button class="close" data-dismiss="alert"><i class="far fa-times-circle"></i></button>
 				<i class="fas fa-bell"></i>
 				<strong><?php echo $this->session->flashdata('valid') ?></strong>
@@ -131,7 +138,7 @@
 		<?php endif; ?>
 		<!-- failed-function -->
 		<?php if ($this->session->flashdata('invalid')) : ?>
-			<div class="alert alert-danger">
+			<div class="alert alert-danger mt-2">
 				<button class="close" data-dismiss="alert"><i class="far fa-times-circle"></i></button>
 				<i class="fas fa-exclamation-circle text-danger"></i>
 				<strong><?php echo $this->session->flashdata('invalid') ?></strong>
@@ -139,21 +146,21 @@
 		<?php endif; ?>
 		<!-- access-denied -->
 		<?php if ($this->session->flashdata('acces_denied')) : ?>
-			<div class="alert alert-danger">
+			<div class="alert alert-danger mt-2">
 				<button class="close" data-dismiss="alert"><i class="far fa-times-circle"></i></button>
 				<i class="fas fa-ban"></i>
 				<strong><?php echo $this->session->flashdata('acces_denied') ?></strong>
 			</div>
 		<?php endif; ?>
 		<?php if (form_error('subj') || form_error('body') || form_error('uname') || form_error('pwd') || form_error('sentcode')) : ?>
-			<div class="alert alert-danger">
+			<div class="alert alert-danger mt-2">
 				<button class="close" data-dismiss="alert"><i class="far fa-times-circle"></i></button>
 				<i class="fas fa-exclamation-circle"></i>
 				<strong>Please fill the required fields</strong>
 			</div>
 		<?php endif; ?>
 		<?php if (form_error('email')) : ?>
-			<div class="alert alert-danger">
+			<div class="alert alert-danger mt-2">
 				<button class="close" data-dismiss="alert"><i class="far fa-times-circle"></i></button>
 				<strong><?php echo form_error('email') ?></strong>
 			</div>

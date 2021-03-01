@@ -14,7 +14,7 @@
 			</div>
 			<div class="btngrp">
 				<button class="btn btn-dark loginbtn" type="submit">Login</button>
-				<a href="<?php echo base_url('user/register'); ?>" class="signupbtn">
+				<a href="<?php echo base_url('register'); ?>" class="signupbtn">
 					<i class="fas fa-user-plus mr-2"></i>Sign up
 				</a>
 			</div>

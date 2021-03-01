@@ -81,7 +81,7 @@ class Admin extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
-		$this->Usermodel->log_act($type = "userscsv");
+		$this->Logmodel->log_act($type = "userscsv");
 	}
 
 	public function reload_table()
@@ -816,7 +816,7 @@ class Admin extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
-		$this->Usermodel->log_act($type = "votesscsv");
+		$this->Logmodel->log_act($type = "votesscsv");
 	}
 
 	public function votes_reload_table()
@@ -1234,7 +1234,7 @@ class Admin extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
-		$this->Usermodel->log_act($type = "paymentscsv");
+		$this->Logmodel->log_act($type = "paymentscsv");
 	}
 
 	public function payments_search()
@@ -1491,7 +1491,7 @@ class Admin extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
-		$this->Usermodel->log_act($type = "logscsv");
+		$this->Logmodel->log_act($type = "logscsv");
 	}
 
 	public function clear_logs()
@@ -1506,7 +1506,7 @@ class Admin extends CI_Controller
 		}
 
 		$res = $this->Adminmodel->clear_logs();
-		$this->Usermodel->log_act($type = "logsclear");
+		$this->Logmodel->log_act($type = "logsclear");
 
 		if ($res !== true) {
 			$this->session->set_flashdata('invalid', 'Error clearing data');
@@ -1536,12 +1536,12 @@ class Admin extends CI_Controller
 			fputcsv($output, $row);
 		}
 		fclose($output);
-		$this->Usermodel->log_act($type = "link_csv");
+		$this->Logmodel->log_act($type = "link_csv");
 	}
 
 	public function logout()
 	{
-		$this->Usermodel->log_act($type = "logout");
+		$this->Logmodel->log_act($type = "logout");
 
 		$this->session->unset_userdata('mr_id');
 		$this->session->unset_userdata('mr_s_admin');

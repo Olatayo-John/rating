@@ -239,6 +239,30 @@ class Usermodel extends CI_Model
 		}
 	}
 
+	public function checkduplicatewebname($form_key, $user_id, $web_name_add)
+	{
+		$data = $this->db->get_where('websites', array('user_id' => $user_id, 'form_key' => $form_key, 'web_name' => $web_name_add));
+		if (!$data) {
+			return false;
+			exit;
+		} else {
+			return $data->num_rows();
+			exit;
+		}
+	}
+
+	public function checkduplicateweblink($form_key, $user_id, $web_link_add)
+	{
+		$data = $this->db->get_where('websites', array('user_id' => $user_id, 'form_key' => $form_key, 'web_link' => $web_link_add));
+		if (!$data) {
+			return false;
+			exit;
+		} else {
+			return $data->num_rows();
+			exit;
+		}
+	}
+
 	public function user_new_website()
 	{
 		$res_web = $this->check_user_websites();
@@ -287,7 +311,7 @@ class Usermodel extends CI_Model
 	public function personal_edit()
 	{
 		$data = array(
-			'uname' => htmlentities($this->input->post('uname')),
+			// 'uname' => htmlentities($this->input->post('uname')),
 			'fname' => htmlentities($this->input->post('fname')),
 			'lname' => htmlentities($this->input->post('lname')),
 			'email' => htmlentities($this->input->post('email')),
@@ -512,7 +536,7 @@ class Usermodel extends CI_Model
 		$length = '1';
 		$this->userdetails_email_update($num);
 		$this->user_quota_update($length);
-		$this->log_act($type = "smail_sent");
+		$this->Logmodel->log_act($type = "smail_sent");
 		return true;
 	}
 
@@ -535,7 +559,7 @@ class Usermodel extends CI_Model
 		$this->db->insert('sent_links', $data);
 		$num = count($emaildata);
 		$this->userdetails_email_update($num);
-		$this->log_act($type = "mmail_sent");
+		$this->Logmodel->log_act($type = "mmail_sent");
 		return true;
 	}
 
@@ -551,7 +575,7 @@ class Usermodel extends CI_Model
 		$length = '1';
 		$this->userdetails_sms_update($num);
 		$this->user_quota_update($length);
-		$this->log_act($type = "ssms_sent");
+		$this->Logmodel->log_act($type = "ssms_sent");
 		return true;
 	}
 
@@ -573,7 +597,7 @@ class Usermodel extends CI_Model
 		$num = count($mobiledata);
 		$this->db->insert('sent_links', $data);
 		$this->userdetails_sms_update($num);
-		$this->log_act($type = "ssms_sent");
+		$this->Logmodel->log_act($type = "ssms_sent");
 		return true;
 	}
 
@@ -754,6 +778,7 @@ class Usermodel extends CI_Model
 
 	public function get_feedbacks()
 	{
+		$this->db->order_by('id', 'desc');
 		$query = $this->db->get('contact');
 		return $query;
 	}
@@ -764,61 +789,5 @@ class Usermodel extends CI_Model
 		$this->db->select('id,name,user_mail,bdy');
 		$query = $this->db->get('contact');
 		return $query->result_array();
-	}
-
-	public function log_act($type)
-	{
-		if ($type == "logout") {
-			$msg = "Logged Out. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "login") {
-			$msg = "Logged In. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "login_false") {
-			$msg = "Failed Login Attempt- Wrong Username/Password. [Name: " . $this->input->post('uname') . "]";
-		} elseif ($type == "inactive_access") {
-			$msg = "Failed Login Attempt- Inactive Access. [Name: " . $this->input->post('uname') . "]";
-		} elseif ($type == "inactive") {
-			$msg = "Failed Login Attempt- Inactive Account. [Name: " . $this->input->post('uname') . "]";
-		} elseif ($type == "smail_sent") {
-			$msg = "Sent single mail. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "mmail_sent") {
-			$msg = "Sent multiple mails. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "ssms_sent") {
-			$msg = "Sent single sms. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "msms_sent") {
-			$msg = "Sent multiple sms. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "mail_err") {
-			$msg = "Mail couldn't be sent. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "sms_err") {
-			$msg = "SMS couldn't be sent. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "db_err") {
-			$msg = "Couldn't save to Database. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "quota_expire") {
-			$msg = "Quota Expired. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "quota_limit") {
-			$msg = "Quota too small. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "userscsv") {
-			$msg = "Users CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "votesscsv") {
-			$msg = "Votes CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "feedbackscsv") {
-			$msg = "Feedbacks CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "paymentscsv") {
-			$msg = "Payments CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "logscsv") {
-			$msg = "Logs CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "link_csv") {
-			$msg = "Links CSV Exported. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "logsclear") {
-			$msg = "Logs table cleared. [ID: " . $this->session->userdata('mr_id') . ", Name: " . $this->session->userdata('mr_uname') . "]";
-		} elseif ($type == "cnt_us") {
-			$msg = "Message from Contact Us.";
-		}
-
-		$data = array(
-			'msg' => $msg,
-			'act_time' => date(DATE_COOKIE),
-		);
-		$this->db->insert("activity", $data);
-		return true;
 	}
 }

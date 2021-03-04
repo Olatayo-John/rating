@@ -368,9 +368,11 @@ class Admin extends CI_Controller
 			$res = $this->Adminmodel->delete_user($_POST['user_id'], $_POST['form_key']);
 			// $res = false;
 			if ($res !== true) {
+				$this->Logmodel->log_act($type = "admin_deleteuser");
 				$data['res'] = "failed";
 				$data['res_msg'] = "Unable to delete user!";
 			} else {
+				$this->Logmodel->log_act($type = "admin_deleteusererr");
 				$data['res'] = "success";
 				$data['res_msg'] = "User deleted!";
 			}
@@ -413,9 +415,11 @@ class Admin extends CI_Controller
 		$res = $this->Adminmodel->user_profupdate($_POST['user_id'], $_POST['form_key'], $_POST['uname'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile']);
 		// $res = false;
 		if ($res !== true) {
+			$this->Logmodel->log_act($type = "admin_upuerr");
 			$data['res'] = "failed";
 			$data['res_msg'] = "Error updating user details!";
 		} else {
+			$this->Logmodel->log_act($type = "admin_upu");
 			$data['res'] = "success";
 			$data['res_msg'] = "User profile updated!";
 		}
@@ -437,9 +441,11 @@ class Admin extends CI_Controller
 		$res = $this->Adminmodel->user_webupdate($_POST['id'], $_POST['user_id'], $_POST['form_key'], $_POST['web_name_edit'], $_POST['web_link_edit']);
 		// $res = false;
 		if ($res !== true) {
+			$this->Logmodel->log_act($type = "admin_uwuerr");
 			$data['res'] = "failed";
 			$data['res_msg'] = "Error updating website!";
 		} else {
+			$this->Logmodel->log_act($type = "admin_uwu");
 			$data['res'] = "success";
 			$data['res_msg'] = "Website updated!";
 		}

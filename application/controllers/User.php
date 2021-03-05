@@ -761,6 +761,7 @@ class User extends CI_Controller
 					redirect($_SERVER['HTTP_REFERER']);
 					exit;
 				} else {
+					$this->Logmodel->log_act($type = "smail_sent");
 					$res = $this->Usermodel->save_info();
 					if ($res !== true) {
 						$this->Logmodel->log_act($type = "db_err");
@@ -855,7 +856,6 @@ class User extends CI_Controller
 				$this->Logmodel->log_act($type = "quota_limit");
 				$this->session->set_flashdata('invalid', 'Number of emails to be sent exceeds your remaining quota point of ' . $qbl_res->bal . '.');
 			} else {
-				// $mail_res = $this->send_multiple_link_email($mail, $subj, $bdy);
 				foreach ($emaildata as $mail) {
 					$mail_res = $this->send_multiple_link_email($mail, $subj, $bdy);
 
@@ -864,6 +864,7 @@ class User extends CI_Controller
 						$this->session->set_flashdata('invalid', $mail_res);
 					}
 				}
+				$this->Logmodel->log_act($type = "mmail_sent");
 				$res = $this->Usermodel->multiplemail_save_info($_POST['emaildata'], $_POST['subj'], $_POST['bdy']);
 				if ($res !== true) {
 					$this->Logmodel->log_act($type = "db_err");
@@ -940,12 +941,13 @@ class User extends CI_Controller
 				curl_setopt($req, CURLOPT_URL, $complete_url);
 				$result = curl_exec($req);
 
-				if ($result == false) {
-					// $this->Logmodel->log_act($type = "sms_err");
+				if (strpos(json_encode($result, true), '100') == false) {
+					$this->Logmodel->log_act($type = "sms_err");
 					$this->session->set_flashdata('invalid', 'Error sending SMS');
 					redirect($_SERVER["HTTP_REFERER"]);
 					exit;
 				} else {
+					$this->Logmodel->log_act($type = "ssms_sent");
 					$res = $this->Usermodel->sms_save_info();
 					if ($res !== true) {
 						$this->Logmodel->log_act($type = "db_err");
@@ -1017,10 +1019,11 @@ class User extends CI_Controller
 				curl_setopt($req, CURLOPT_URL, $complete_url);
 				$result = curl_exec($req);
 
-				if ($result === false) {
-					// $this->Logmodel->log_act($type = "sms_err");
+				if (strpos(json_encode($result, true), '100') == false) {
+					$this->Logmodel->log_act($type = "sms_err");
 					$this->session->set_flashdata('invalid', 'Error sending SMS');
 				} else {
+					$this->Logmodel->log_act($type = "msms_sent");
 					$res = $this->Usermodel->multiplsms_save_info($_POST['mobiledata'], $_POST['smsbdy']);
 					if ($res !== true) {
 						$this->Logmodel->log_act($type = "db_err");
@@ -1162,9 +1165,9 @@ class User extends CI_Controller
 	public function rating_store()
 	{
 		$cq_res = $this->Usermodel->check_quota_expire($_POST['form_key']);
-		// $cq_res = true;
 		if ($cq_res == true) {
 			//$this->send_quota_expire_mail();
+			$this->Logmodel->log_act($type = "quota_expire");
 			$data['res'] = "failed";
 			$data['res_msg'] = "User quota expired. <a href='" . base_url("user/notifyuser_email/" . $_POST['form_key'] . "") . "' class='text-info'>Notify User?</a>";
 		} else {
@@ -1260,10 +1263,11 @@ class User extends CI_Controller
 				$user_mail = htmlentities($this->input->post('email'));
 				$bdy = htmlentities($this->input->post('msg'));
 
-				// $mail_res = $this->support_mail($name, $user_mail, $bdy);
-				$mail_res = true;
+				$mail_res = $this->support_mail($name, $user_mail, $bdy);
+				// $mail_res = true;
 
 				if ($mail_res !== true) {
+					$this->Logmodel->log_act($type = "mail_err");
 					$this->session->set_flashdata('invalid', 'Error sending your message');
 					redirect($_SERVER['HTTP_REFERER']);
 				} else {

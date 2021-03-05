@@ -536,7 +536,6 @@ class Usermodel extends CI_Model
 		$length = '1';
 		$this->userdetails_email_update($num);
 		$this->user_quota_update($length);
-		$this->Logmodel->log_act($type = "smail_sent");
 		return true;
 	}
 
@@ -559,7 +558,6 @@ class Usermodel extends CI_Model
 		$this->db->insert('sent_links', $data);
 		$num = count($emaildata);
 		$this->userdetails_email_update($num);
-		$this->Logmodel->log_act($type = "mmail_sent");
 		return true;
 	}
 
@@ -575,7 +573,6 @@ class Usermodel extends CI_Model
 		$length = '1';
 		$this->userdetails_sms_update($num);
 		$this->user_quota_update($length);
-		$this->Logmodel->log_act($type = "ssms_sent");
 		return true;
 	}
 
@@ -597,7 +594,6 @@ class Usermodel extends CI_Model
 		$num = count($mobiledata);
 		$this->db->insert('sent_links', $data);
 		$this->userdetails_sms_update($num);
-		$this->Logmodel->log_act($type = "ssms_sent");
 		return true;
 	}
 

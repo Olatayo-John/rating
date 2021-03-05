@@ -368,11 +368,11 @@ class Admin extends CI_Controller
 			$res = $this->Adminmodel->delete_user($_POST['user_id'], $_POST['form_key']);
 			// $res = false;
 			if ($res !== true) {
-				$this->Logmodel->log_act($type = "admin_deleteuser");
+				$this->Logmodel->log_act($type = "admin_deleteusererr");
 				$data['res'] = "failed";
 				$data['res_msg'] = "Unable to delete user!";
 			} else {
-				$this->Logmodel->log_act($type = "admin_deleteusererr");
+				$this->Logmodel->log_act($type = "admin_deleteuser");
 				$data['res'] = "success";
 				$data['res_msg'] = "User deleted!";
 			}
@@ -463,9 +463,11 @@ class Admin extends CI_Controller
 		$res = $this->Adminmodel->add_website($_POST['user_id'], $_POST['form_key'], $_POST['active'], $_POST['web_name_add'], $_POST['web_link_add']);
 		// $res = true;
 		if (!$res) {
+			$this->Logmodel->log_act($type = "admin_addwuerr");
 			$data['res'] = "failed";
 			$data['res_msg'] = "Failed to add website!";
 		} else {
+			$this->Logmodel->log_act($type = "admin_addw");
 			$data['res'] = "success";
 			$data['insert_id'] = $res;
 			$data['res_msg'] = "Website added!";
@@ -488,9 +490,11 @@ class Admin extends CI_Controller
 		$res = $this->Adminmodel->delete_user_web($_POST['web_id'], $_POST['user_id'], $_POST['form_key'], $_POST['web_name'], $_POST['web_link']);
 		// $res = false;
 		if ($res !== true) {
+			$this->Logmodel->log_act($type = "admin_delwerr");
 			$data['res'] = "failed";
 			$data['res_msg'] = "Error deleting website data!";
 		} else {
+			$this->Logmodel->log_act($type = "admin_delw");
 			$data['res'] = "success";
 			$data['res_msg'] = "Website data deleted!";
 		}
@@ -512,9 +516,11 @@ class Admin extends CI_Controller
 		$res = $this->Adminmodel->deactivateuser($_POST['user_id'], $_POST['user_form_key']);
 		// $res = false;
 		if ($res !== true) {
+			$this->Logmodel->log_act($type = "admin_deauerr");
 			$data['res'] = "failed";
 			$data['res_msg'] = "Failed to de-activate user account!!";
 		} else {
+			$this->Logmodel->log_act($type = "admin_deau");
 			$data['res'] = "success";
 			$data['res_msg'] = "User account de-activated!";
 		}
@@ -536,9 +542,11 @@ class Admin extends CI_Controller
 		$res = $this->Adminmodel->activateuser($_POST['user_id'], $_POST['user_form_key']);
 		// $res = false;
 		if ($res !== true) {
+			$this->Logmodel->log_act($type = "admin_auerr");
 			$data['res'] = "failed";
 			$data['res_msg'] = "Failed to activate user account!!";
 		} else {
+			$this->Logmodel->log_act($type = "admin_au");
 			$data['res'] = "success";
 			$data['res_msg'] = "User account activated!";
 		}
@@ -559,9 +567,11 @@ class Admin extends CI_Controller
 			$res = $this->Adminmodel->verify_user_sub($_POST['user_id'], $_POST['form_key'], $_POST['web_quota']);
 			// $res = false;
 			if ($res !== true) {
+				$this->Logmodel->log_act($type = "admin_vusuberr");
 				$data['res'] = "failed";
 				$data['res_msg'] = "Unable to activate user subscription!";
 			} else {
+				$this->Logmodel->log_act($type = "admin_vusub");
 				$data['res'] = "success";
 				$data['res_msg'] = "User subscription activated";
 			}
@@ -584,9 +594,11 @@ class Admin extends CI_Controller
 			$res = $this->Adminmodel->unverify_user_sub($_POST['user_id'], $_POST['form_key']);
 			// $res = false;
 			if ($res !== true) {
+				$this->Logmodel->log_act($type = "admin_unvusuberr");
 				$data['res'] = "failed";
 				$data['res_msg'] = "Unable to de-activate user subscription!";
 			} else {
+				$this->Logmodel->log_act($type = "admin_unvusub");
 				$data['res'] = "success";
 				$data['res_msg'] = "User subscription de-activated!";
 			}
@@ -615,9 +627,11 @@ class Admin extends CI_Controller
 
 				// $res = true;
 				if ($wres !== true || $res !== true) {
+					$this->Logmodel->log_act($type = "admin_uuqerr");
 					$data['res'] = "failed";
 					$data['res_msg'] = "Failed to update quota details!";
 				} else {
+					$this->Logmodel->log_act($type = "admin_uuq");
 					$data['res'] = "success";
 					$data['res_msg'] = "Quota details updated!";
 				}
@@ -652,9 +666,11 @@ class Admin extends CI_Controller
 			$res = $this->send_email_code($uname, $randpwd, $email, $login_link);
 			// $res = true;
 			if ($res !== true) {
+				$this->Logmodel->log_act($type = "admin_upassuerr");
 				$data['res'] = "failed";
 				$data['res_msg'] = $res;
 			} else {
+				$this->Logmodel->log_act($type = "admin_upassu");
 				$data['res'] = "success";
 				$data['res_msg'] = "User credentials updated and sent!";
 			}

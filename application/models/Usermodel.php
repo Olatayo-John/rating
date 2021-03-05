@@ -665,7 +665,7 @@ class Usermodel extends CI_Model
 		$this->userweb_update($form_key, $for_link, $starv);
 		$this->user_details_save_rating($starv, $form_key);
 		$this->rating_quota_update($form_key);
-		$data = $this->get_user_weblink($form_key);
+		$data = $this->get_user_weblink($form_key, $for_link);
 		return $data;
 	}
 
@@ -747,9 +747,9 @@ class Usermodel extends CI_Model
 		return true;
 	}
 
-	public function get_user_weblink($form_key)
+	public function get_user_weblink($form_key, $for_link)
 	{
-		$this->db->where('form_key', $form_key);
+		$this->db->where(array('web_name' => $for_link, 'form_key' => $form_key));
 		$query = $this->db->get('websites')->row();
 		return $query;
 	}

@@ -4,6 +4,7 @@
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token">
 	<input type="hidden" class="form_key" name="form_key" value="<?php echo $_GET['k'] ?>">
 	<input type="hidden" class="for_link" name="for_link" value="<?php echo $_GET['w'] ?>">
+	<input type="hidden" class="b_url" name="b_url" value="<?php echo base_url() ?>">
 
 	<h4 class="comp text-uppercase" style="margin-top: 60px;"><?php echo $_GET['w'] ?></h4>
 	<div class="stars">
@@ -158,9 +159,6 @@
 				success: function(data) {
 					$('.csrf_token').val(data.token);
 
-					// $('.submitmodalbtn,.submitbtn').removeAttr("disabled");
-					$('.submitmodalbtn').hide();
-
 					if (data.res === "failed") {
 						$(".res_spinner,.ajax_succ_div").fadeOut();
 						$('.ajax_res_err').html(data.res_msg);
@@ -170,7 +168,12 @@
 						$('.ajax_res_succ').html(data.res_msg);
 						$('.ajax_succ_div').fadeIn();
 
-						window.location.assign(data.web_link);
+						if (data.web_link == "" || data.web_link == null) {
+							$('.submitmodalbtn').hide();
+							window.location.assign($(".b_url").val());
+						} else {
+							window.location.assign(data.web_link);
+						}
 					}
 				},
 				error: function() {

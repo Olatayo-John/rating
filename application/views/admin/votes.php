@@ -17,7 +17,6 @@
 					<div class="userweb_div_cal mb-4 mt-3 row col-md-12" style="margin: auto;padding:0;">
 
 					</div>
-					<hr>
 					<div class="mb-2 d-flex flex-row col-md-12">
 						<a href="" class="btn text-light indiv_votes_export_csv col-md-3" style="background:#294a63">
 							<i class="fas fa-file-csv mr-2"></i>CSV Export

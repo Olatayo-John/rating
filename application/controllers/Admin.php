@@ -17,6 +17,7 @@ class Admin extends CI_Controller
 				redirect('share');
 			}
 		} else {
+			//ome commented
 			$data['title'] = "login";
 			$this->load->view('templates/header', $data);
 			$this->load->view('users/login');

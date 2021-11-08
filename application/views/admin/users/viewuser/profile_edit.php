@@ -26,12 +26,10 @@
             <label>Username</label>
             <input type="text" name="uname" class="form-control uname" readonly disabled required disabled style="cursor: not-allowed;">
         </div>
-        <?php if ($this->session->userdata('mr_admin') === "1") : ?>
-            <div class="form-group col-md-6">
-                <label>Company</label>
-                <input type="text" name="cmpy" class="form-control cmpy" readonly disabled required disabled style="cursor: not-allowed;">
-            </div>
-        <?php endif; ?>
+        <div class="form-group col-md-6 cmpydiv" style="display:none">
+            <label>Company</label>
+            <input type="text" name="cmpy" class="form-control cmpy" readonly disabled required disabled style="cursor: not-allowed;">
+        </div>
     </div>
     <div class="form-group">
         <div class="d-flex" style="justify-content:space-between">

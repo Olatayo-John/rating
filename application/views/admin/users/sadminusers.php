@@ -83,7 +83,7 @@
 					<td><a href="mailto:<?php echo $user->email ?>"><?php echo $user->email ?></a></td>
 					<td><?php echo $user->mobile ?></td>
 					<td><?php echo $user->cmpy ?></td>
-					<td><?php echo ($user->active === '0') ? '<i title="Account not verified" class="fas fa-circle text-warning acti"></i>' : ($user->active === '1' ? '<i class="fas fa-circle text-success acti"></i>' : ($user->active === '2' ? '<i class="fas fa-circle text-danger acti"></i>' : "undefined")) ?></td>
+					<td><?php echo ($user->active === '0') ? '<i title="Account not verified" class="fas fa-circle text-warning acti"></i>' : ($user->active === '1' ? '<i title="Account active" class="fas fa-circle text-success acti"></i>' : ($user->active === '2' ? '<i title="Account not activate" class="fas fa-circle text-danger acti"></i>' : "undefined")) ?></td>
 				</tr>
 			<?php endforeach; ?>
 		</tbody>
@@ -109,7 +109,6 @@
 			var form_key = $(this).attr("formkey");
 			var iscmpy = $(this).attr("iscmpy");
 			var cmpyid = $(this).attr("cmpyid");
-			var adminsub = "<?php echo $this->session->userdata("mr_sub"); ?>";
 
 			$.ajax({
 				url: "<?php echo base_url("viewuser"); ?>",
@@ -145,7 +144,13 @@
 					$(".email").val(res.uinfos.email);
 					$(".mobile").val(res.uinfos.mobile);
 					$(".uname").val(res.uinfos.uname);
-					$(".cmpy").val(res.uinfos.cmpy);
+					if(res.uinfos.iscmpy === "1"){
+						$(".cmpydiv").show();
+						$(".cmpy").val(res.uinfos.cmpy);
+					}else{
+						$(".cmpydiv").hide();
+						$(".cmpy").val("");
+					}
 					var seg = $(".linkshare").attr("data-host");
 					$(".linkshare").val(seg + res.uinfos.form_key);
 
@@ -193,14 +198,12 @@
 						$(".deact_btn").hide();
 					}
 
-					if (parseInt(adminsub) === 0 && res.uinfos.sub == "0") {
+					if (res.uinfos.sub == "0") {
 						$(".subact_btn").show();
 						$(".subdeact_btn").hide();
-					} else if (parseInt(adminsub) === 0 && res.uinfos.sub == "1") {
+					} else if (res.uinfos.sub == "1") {
 						$(".subact_btn").hide();
 						$(".subdeact_btn").show();
-					} else if (parseInt(adminsub) === 0) {
-						// $(".subact_btn,.subdeact_btn").hide();
 					}
 
 					$(".deact_btn,.act_btn,.updatepwdbtn,.subdeact_btn,.subact_btn,.save_pinfo_btn").attr('user_id', res.uinfos.id);

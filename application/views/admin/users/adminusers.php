@@ -83,7 +83,7 @@
 					<td><?php echo $user->total_ratings + $user->total_email + $user->total_sms ?></td>
 					<td><?php echo $user->total_email ?></td>
 					<td><?php echo $user->total_sms ?></td>
-					<td><?php echo ($user->active === '0') ? '<i class="fas fa-circle text-warning acti" uact="' . $user->active . '" uid="' . $user->uid . '" uformkey="' . $user->form_key . '"></i>' : ($user->active === '1' ? '<i class="fas fa-circle text-success acti" uact="' . $user->active . '" uid="' . $user->uid . '" uformkey="' . $user->form_key . '"></i>' : ($user->active === '2' ? '<i class="fas fa-circle text-danger acti" uact="' . $user->active . '" uid="' . $user->uid . '" uformkey="' . $user->form_key . '"></i>' : "undefined")) ?></td>
+					<td><?php echo ($user->active === '0') ? '<i title="Account not verified" class="fas fa-circle text-warning acti" uact="' . $user->active . '" uid="' . $user->uid . '" uformkey="' . $user->form_key . '"></i>' : ($user->active === '1' ? '<i title="Account activate" class="fas fa-circle text-success acti" uact="' . $user->active . '" uid="' . $user->uid . '" uformkey="' . $user->form_key . '"></i>' : ($user->active === '2' ? '<i title="Account not activate" class="fas fa-circle text-danger acti" uact="' . $user->active . '" uid="' . $user->uid . '" uformkey="' . $user->form_key . '"></i>' : "undefined")) ?></td>
 				</tr>
 			<?php endforeach; ?>
 		</tbody>

@@ -156,6 +156,7 @@ class Admin extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
+	//disabled
 	public function change_userstatus()
 	{
 
@@ -177,6 +178,7 @@ class Admin extends CI_Controller
 		echo json_encode($data);
 	}
 
+	//disabled
 	public function admin_deleteuser()
 	{
 		if ($this->is_admin() === false) return false;
@@ -200,7 +202,7 @@ class Admin extends CI_Controller
 
 	public function admin_viewuser()
 	{
-		if ($this->is_admin() === false) return false;
+		if ($this->is_bothadmin() === false) return false;
 
 		$data['uinfos'] = $this->Adminmodel->get_userinfo($_POST['user_id'], $_POST['form_key']);
 		$data['udetails'] = $this->Adminmodel->get_userdetails($_POST['user_id'], $_POST['form_key']);
@@ -368,7 +370,7 @@ class Admin extends CI_Controller
 
 		if (!$this->form_validation->run()) {
 			$this->load->view('templates/header', $data);
-			$this->load->view('admin/users/adduser_cmpy');
+			$this->load->view('admin/users/adduser_sadmin');
 			$this->load->view('templates/footer');
 		} else {
 			$fullname = htmlentities($this->input->post('fname')) . " " . htmlentities($this->input->post('lname'));

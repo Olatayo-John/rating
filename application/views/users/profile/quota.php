@@ -3,8 +3,8 @@
 </div>
 
 <?php if ($this->session->userdata("mr_admin") === "1") : ?>
-    <p style="color:#a71d2a" class="pl-3">
-        Except Userspace, all services applies to you & all users under <a href="<?php echo base_url('users') ?>" style="color:#294a63;font-weight:bold;"><?php echo $this->session->userdata("mr_cmpy"); ?></a>
+    <p style="color:#a71d2a" class="pl-3 pb-4">
+        Except <strong style="color:#294a63">Userspace,</strong> all other services applies to you & all users under <a href="<?php echo base_url('users') ?>" style="color:#294a63;font-weight:bold;"><?php echo $this->session->userdata("mr_cmpy"); ?></a>
     </p>
 <?php endif; ?>
 <div class="row col-md-12 m-0 p-0 pb-5">
@@ -58,7 +58,7 @@
 </div> -->
 
 <div class="row col-md-12 m-0 p-0 pb-5">
-    <div class="col-lg-6 col-xs-6 col-md-6 total-column">
+    <div class="col-lg-4 col-xs-4 col-md-4 total-column">
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total">
@@ -68,13 +68,23 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6 col-xs-6 col-md-6 total-column">
+    <div class="col-lg-4 col-xs-4 col-md-4 total-column">
+        <div class="panel_s">
+            <div class="panel-body">
+                <h3 class="_total" style="<?php echo ($quota->webspace_left == "0")?"opacity: .5;":"" ?>">
+                    <?php echo $quota->webspace_left ?>
+                </h3>
+                <span>Left</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-xs-4 col-md-4 total-column">
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total">
                     <?php echo ($quota->webspace - $quota->webspace_left) ?>
                 </h3>
-                <span style="color:#a71d2a">Webspace Used</span>
+                <span style="color:#a71d2a">Used</span>
             </div>
         </div>
     </div>
@@ -82,7 +92,7 @@
 
 <?php if ($this->session->userdata("mr_admin") === "1") : ?>
     <div class="row col-md-12 m-0 p-0 pb-5">
-        <div class="col-lg-6 col-xs-6 col-md-6 total-column">
+        <div class="col-lg-4 col-xs-4 col-md-4 total-column">
             <div class="panel_s">
                 <div class="panel-body">
                     <h3 class="_total">
@@ -92,13 +102,23 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-xs-6 col-md-6 total-column">
+        <div class="col-lg-4 col-xs-4 col-md-4 total-column">
+            <div class="panel_s">
+                <div class="panel-body">
+                    <h3 class="_total" style="<?php echo ($quota->userspace_left == "0")?"opacity: .5;":"" ?>">
+                        <?php echo $quota->userspace_left ?>
+                    </h3>
+                    <span>Left</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-xs-4 col-md-4 total-column">
             <div class="panel_s">
                 <div class="panel-body">
                     <h3 class="_total">
                         <?php echo ($quota->userspace - $quota->userspace_left) ?>
                     </h3>
-                    <span style="color:#a71d2a">Userspace Used</span>
+                    <span style="color:#a71d2a">Used</span>
                 </div>
             </div>
         </div>
@@ -121,13 +141,6 @@
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia ratione dolorum velit blanditiis, ad aspernatur, accusantium explicabo maxime adipisci soluta ea perferendis maiores laborum consectetur ex.</p>
 
                 <label for="Used" class="font-weight-bolder">Used</label>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia ratione dolorum velit blanditiis, ad aspernatur, accusantium explicabo maxime adipisci soluta ea perferendis maiores laborum consectetur ex.</p>
-
-                <label for="Ratings" class="font-weight-bolder">Ratings</label>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia ratione dolorum velit blanditiis, ad aspernatur, accusantium explicabo maxime adipisci soluta ea perferendis maiores laborum consectetur ex. Ab minus ex eaque non tempora dicta odit dignissimos fugit harum eos magnam dolor vel, nostrum, quis quibusdam autem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia ratione dolorum velit blanditiis, ad aspernatur, accusantium explicabo maxime adipisci soluta ea perferendis maiores laborum consectetur ex.</p>
-                </p>
-
-                <label for="Links" class="font-weight-bolder">Links</label>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia ratione dolorum velit blanditiis, ad aspernatur, accusantium explicabo maxime adipisci soluta ea perferendis maiores laborum consectetur ex.</p>
 
                 <label for="Webspace" class="font-weight-bolder">Webspace</label>

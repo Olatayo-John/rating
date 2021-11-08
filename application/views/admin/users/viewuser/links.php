@@ -1,4 +1,4 @@
-<div class="row col-md-12 mb-3">
+<div class="row col-md-12 mb-3 p-0">
     <div class="col-lg-4 col-xs-12 col-md-12 total-column">
         <div class="panel_s">
             <div class="panel-body">

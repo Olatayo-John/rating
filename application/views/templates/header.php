@@ -125,7 +125,7 @@
 						</a>
 					</li>
 				<?php endif; ?>
-				
+
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
 					<li class="nav-item">
 						<a href="<?php echo base_url('payments') ?>" class="nav-link" style="<?php echo ($url == 'payments') ? 'background:white;color:#294a63' : '' ?>">

@@ -12,7 +12,7 @@
     <div class="form-group text-right">
         <i class="far fa-eye mr-2"></i>
         <i class="fas fa-eye-slash mr-2"></i>
-        <button class="btn text-light genpwdbtn bg-danger" type="button" name="genpwdbtn">
+        <button class="btn text-light genpwdbtn" style="background-color:#294a63" type="button" name="genpwdbtn">
             <i class="fas fa-lock mr-2"></i>Generate Password</button>
     </div>
     <div class="form-group font-weight-bolder text-left d-flex">

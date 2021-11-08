@@ -1,5 +1,3 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/payments.css'); ?>">
-
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token form-control">
 
 <div class="bg-light mt-3 ml-3 mr-3 pt-3 pb-3">

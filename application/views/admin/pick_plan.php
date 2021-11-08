@@ -1,5 +1,3 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/pick_plan.css'); ?>">
-
 <form method="post" name="renew_plan_form" class="renew_plan_form" action="<?php echo base_url('admin/save_plan'); ?>" target>
 	<input type="hidden" name="plan_amount" class="plan_amount">
 	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token">
@@ -164,7 +162,6 @@
 </div>
 
 
-<script type="text/javascript" src="<?php echo base_url('assets/js/pick_plan.js'); ?>"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('.renewplanbtn').click(function() {

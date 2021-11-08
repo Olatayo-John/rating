@@ -34,7 +34,7 @@
 </div>
 <hr>
 <div class="text-right">
-    <button class="btn text-light updatepwdbtn" type="button" user_id="" user_email="" name="updatepwdbtn" style="background-color:#294a63">Update User Password</button>
+    <button class="btn text-light updatepwdbtn" type="button" user_id="" user_email="" user_name="" name="updatepwdbtn" style="background-color:#294a63">Update User Password</button>
 </div>
 
 
@@ -52,7 +52,7 @@
                 var form_key = $(this).attr("form_key");
 
                 $.ajax({
-                    url: "<?php echo base_url('deactivate-account'); ?>",
+                    url: "<?php echo base_url('account-deactivate'); ?>",
                     method: "post",
                     dataType: "json",
                     data: {
@@ -219,6 +219,8 @@
             var rspwd = $('.rspwd').val();
             var user_id = $(this).attr('user_id');
             var user_email = $(this).attr('user_email');
+            var user_name = $(this).attr('user_name');
+            var logincred = $(".logincred").is(':checked');
 
             if (rspwd == "" || rspwd == null) {
                 $('.rspwd').css('border', '1px solid red');
@@ -233,34 +235,38 @@
                 $('.rspwd').css('border', '1px solid #ced4da');
             }
 
-            console.log(rspwd);
-            console.log(user_id);
-            console.log(user_email);
-
             $.ajax({
                 url: "<?php echo base_url('updateuserpwd'); ?>",
                 method: "post",
                 data: {
                     user_id: user_id,
+                    user_email: user_email,
+                    user_name: user_name,
                     rspwd: rspwd,
+                    logincred: logincred,
                     [csrfName]: csrfHash
                 },
+                beforeSend: function() {
+                    $('.updatepwdbtn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
+                },
                 dataType: "json",
-                success: function(data) {
-                    if (data.status === false) {
+                success: function(res) {
+                    if (res.status === false) {
                         $(".ajax_succ_div,.ajax_err_div").hide();
-                        $(".ajax_res_err").text(data.msg);
+                        $(".ajax_res_err").text(res.msg);
                         $(".ajax_err_div").fadeIn().delay("6000").fadeOut();
 
-                        $(".sendcodebtn").html("Send Verfication Code");
-
-                    } else if (data.status === true) {
+                    } else if (res.status === true) {
                         $(".ajax_err_div,ajax_succ_div").hide();
-                        $(".ajax_res_succ").text(data.msg);
+                        $(".ajax_res_succ").text(res.msg);
                         $(".ajax_succ_div").fadeIn().delay("6000").fadeOut();
+
+                        $('.rspwd').val("");
+                        $('i.fa-eye,i.fa-eye-slash').hide();
                     }
 
-                    $('.csrf_token').val(data.token);
+                    $('.updatepwdbtn').removeAttr('disabled').html('Update User Password').css('cursor', 'pointer');
+                    $('.csrf_token').val(res.token);
                 }
             });
         });

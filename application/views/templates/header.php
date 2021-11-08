@@ -86,15 +86,7 @@
 					</li>
 				<?php endif; ?>
 
-				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
-					<li class="nav-item">
-						<a href="<?php echo base_url('votes') ?>" class="nav-link" style="<?php echo ($url == 'votes') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-poll" style="<?php echo ($url == 'votes') ? 'color:#294a63' : 'color:#fff' ?>"></i>Reviews
-						</a>
-					</li>
-				<?php endif; ?>
-
-				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_admin') == "1") : ?>
+				<?php if ($this->session->userdata('mr_logged_in') && ($this->session->userdata('mr_sadmin') == "1" ||$this->session->userdata('mr_admin') == "1")) : ?>
 					<li class="nav-item">
 						<a href="<?php echo base_url('users') ?>" class="nav-link" style="<?php echo ($url == 'users') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-users" style="<?php echo ($url == 'users') ? 'color:#294a63' : 'color:#fff' ?>"></i>Manage Users

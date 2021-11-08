@@ -90,13 +90,6 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function get_allusers($limit = false, $offset = false)
-	{
-		$this->db->select("id,sadmin,admin,iscmpy,cmpyid,cmpy,uname,fname,lname,email,mobile,active,website_form,sub,form_key");
-		$query = $this->db->get_where('users', array('cmpyid' => $this->session->userdata("mr_id"), 'iscmpy' => '1', 'cmpy' => $this->session->userdata("mr_cmpy")));
-		return $query;
-	}
-
 	public function admin_deleteuser($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
@@ -270,96 +263,24 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function user_accupdate($user_id, $form_key, $new_pwd)
+	public function admin_updateuserpwd($user_id, $rspwd)
 	{
-		$this->db->set('password', password_hash($new_pwd, PASSWORD_DEFAULT));
-		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
+		$this->db->set('password', password_hash($rspwd, PASSWORD_DEFAULT));
+		$this->db->where('id',$user_id);
 		$this->db->update("users");
 		return true;
 	}
 
-	public function get_user_votes($limit = false, $offset = false)
+	public function get_allusers($limit = false, $offset = false)
 	{
-		$this->db->limit($limit, $offset);
-
-		$query = $this->db->get('user_details');
-
-		// $this->db->select('user_details.*,websites.id as web_id ,websites.web_name as web_name,websites.web_link as web_link');
-		// $this->db->from('user_details');
-		// $this->db->join('websites', 'user_details.form_key=websites.form_key', 'inner');
-		// $query = $this->db->get();
-
-		return $query;
+		$this->db->select("u.id as uid,u.cmpy,u.iscmpy,u.cmpyid,u.uname,u.fname,u.lname,u.email,u.mobile,u.active,u.form_key");
+		$this->db->from('users u');
+		$this->db->where('sadmin','0');
+		// $this->db->join('user_details ud', 'u.form_key=ud.form_key', 'inner');
+		$userinfo = $this->db->get();
+		return $userinfo;
 	}
 
-	public function get_total_ratings()
-	{
-		$query = $this->db->get('all_ratings');
-		return $query;
-	}
-	public function get_total_official()
-	{
-		$this->db->where('web_name', 'official');
-		$query = $this->db->get('all_ratings');
-		return $query;
-	}
-	public function get_total_google()
-	{
-		$this->db->where('web_name', 'google');
-		$query = $this->db->get('all_ratings');
-		return $query;
-	}
-	public function get_total_facebook()
-	{
-		$this->db->where('web_name', 'facebook');
-		$query = $this->db->get('all_ratings');
-		return $query;
-	}
-	public function get_total_tp()
-	{
-		$this->db->where('web_name', 'trust pilot');
-		$query = $this->db->get('all_ratings');
-		return $query;
-	}
-	public function get_total_gd()
-	{
-		$this->db->where('web_name', 'glassdoor');
-		$query = $this->db->get('all_ratings');
-		return $query;
-	}
-	public function get_total_other()
-	{
-		$webs = array("official", "google", "facebook", "trust pilot", "glassdoor");
-		$this->db->where_not_in('web_name', $webs);
-		$query = $this->db->get('all_ratings');
-		return $query;
-	}
-
-	public function votes_export_csv()
-	{
-		$this->db->order_by('id', 'desc');
-		$this->db->select('id,uname,total_ratings,total_sms,total_email');
-		$query = $this->db->get('user_details');
-		return $query->result_array();
-	}
-
-	public function votes_filter_param($param, $type)
-	{
-		$this->db->order_by($param, $type);
-		$query = $this->db->get('user_details');
-		return $query;
-	}
-
-	public function votes_search_user($query)
-	{
-		$this->db->select('*');
-		$this->db->from('user_details');
-		if ($query != '') {
-			$this->db->like('uname', $query);
-		}
-		$this->db->order_by('id', 'DESC');
-		return $this->db->get();
-	}
 
 	public function get_ratings($key)
 	{
@@ -427,30 +348,6 @@ class Adminmodel extends CI_Model
 		}
 	}
 
-	public function indiv_votes_export_csv($key)
-	{
-		$this->db->order_by('id', 'desc');
-		$this->db->select('id,name,mobile,star,web_name,user_ip,rated_at');
-		$query = $this->db->get_where('all_ratings', array('form_key' => $key));
-		return $query->result_array();
-	}
-
-	public function search_ind_votes($query, $key)
-	{
-		if ($query !== '') {
-			//  = $this->db->get_where('all_ratings',);
-			$this->db->like('name', $query);
-			$this->db->or_like('web_name', $query);
-			$this->db->or_like('user_ip', $query);
-			$query_search = $this->db->get_where('all_ratings', array('form_key' => $key));
-			if ($query_search->num_rows() > 0) {
-				return $query_search;
-			} else {
-				return false;
-			}
-			//return $this->db->last_query();
-		}
-	}
 
 	public function save_payment($userData)
 	{

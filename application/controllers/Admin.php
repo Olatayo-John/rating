@@ -17,7 +17,6 @@ class Admin extends CI_Controller
 				redirect('share');
 			}
 		} else {
-			//ome commented
 			$data['title'] = "login";
 			$this->load->view('templates/header', $data);
 			$this->load->view('users/login');
@@ -74,7 +73,7 @@ class Admin extends CI_Controller
 
 
 
-	public function adduser()
+	public function adduser_cmpy()
 	{
 		$data['title'] = "add user";
 		$data['adminusers'] = $this->Adminmodel->get_adminusers();
@@ -95,7 +94,7 @@ class Admin extends CI_Controller
 
 		if (!$this->form_validation->run()) {
 			$this->load->view('templates/header', $data);
-			$this->load->view('admin/users/adduser');
+			$this->load->view('admin/users/adduser_cmpy');
 			$this->load->view('templates/footer');
 		} else {
 			$fullname = htmlentities($this->input->post('fname')) . " " . htmlentities($this->input->post('lname'));
@@ -151,7 +150,7 @@ class Admin extends CI_Controller
 		$data['adminusers'] = $this->Adminmodel->get_adminusers();
 		$data['allusers'] = $this->Adminmodel->get_allusers();
 
-		// print_r($data['adminusers']);die;
+		// print_r($data['allusers']);die;
 		$this->load->view('templates/header', $data);
 		$this->load->view('admin/users', $data);
 		$this->load->view('templates/footer');
@@ -234,7 +233,6 @@ class Admin extends CI_Controller
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
 	}
-
 
 	function admin_deactivateaccount()
 	{
@@ -320,544 +318,103 @@ class Admin extends CI_Controller
 		echo json_encode($data);
 	}
 
-	public function updateuser_quota()
+	function admin_updateuserpwd()
 	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			return false;
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			return false;
-		} else {
-			if ((!is_int(json_decode($_POST['web_quota']))) || (!is_int(json_decode($_POST['used']))) || (!is_int(json_decode($_POST['bought']))) || (!is_int(json_decode($_POST['balance'])))) {
-				$data['res'] = "failed";
-				$data['res_msg'] = "Invalid data type entered";
-			} else {
-				$wres = $this->Adminmodel->updateuser_webquota($_POST['user_id'], $_POST['form_key'], $_POST['web_quota']);
-				$res = $this->Adminmodel->updateuser_quota($_POST['user_id'], $_POST['form_key'], $_POST['bought'], $_POST['used'], $_POST['balance']);
+		if ($this->is_admin() === false) return false;
 
+		if ($_POST['logincred'] === "true") {
+			$this->load->library('emailconfig');
+			$mail_res = $this->emailconfig->resetpassword($_POST['user_email'], $_POST['rspwd'],$_POST['user_name']);
+			// $mail_res = true;
+
+			if ($mail_res == true) {
+				$res = $this->Adminmodel->admin_updateuserpwd($_POST['user_id'], $_POST['rspwd']);
 				// $res = true;
-				if ($wres !== true || $res !== true) {
-					$this->Logmodel->log_act($type = "admin_uuqerr");
-					$data['res'] = "failed";
-					$data['res_msg'] = "Failed to update quota details!";
+				if ($res !== true) {
+					$this->Logmodel->log_act($type = "admin_upassuerr");
+					$data['status'] = false;
+					$data['msg'] = "Error updating user password";
 				} else {
-					$this->Logmodel->log_act($type = "admin_uuq");
-					$data['res'] = "success";
-					$data['res_msg'] = "Quota details updated!";
+					$this->Logmodel->log_act($type = "admin_upassu");
+					$data['status'] = true;
+					$data['msg'] = "User password updated";
 				}
-			}
-
-			$data['token'] = $this->security->get_csrf_hash();
-			echo json_encode($data);
-		}
-	}
-
-	function user_accupdate()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			return false;
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			return false;
-		}
-		$res = $this->Adminmodel->user_accupdate($_POST['user_id'], $_POST['form_key'], $_POST['new_pwd']);
-		// $res = false;
-		if ($res !== true) {
-			$data['res'] = "failed";
-			$data['res_msg'] = 'Error changing user password!';
-		} else {
-			$uname = $_POST['uname'];
-			$randpwd = $_POST['new_pwd'];
-			$email = $_POST['email'];
-			$login_link = base_url();
-
-			$res = $this->send_email_code($uname, $randpwd, $email, $login_link);
-			// $res = true;
-			if ($res !== true) {
-				$this->Logmodel->log_act($type = "admin_upassuerr");
-				$data['res'] = "failed";
-				$data['res_msg'] = $res;
 			} else {
-				$this->Logmodel->log_act($type = "admin_upassu");
-				$data['res'] = "success";
-				$data['res_msg'] = "User credentials updated and sent!";
+				$this->Logmodel->log_act($type = "mail_err");
+				$data['status'] = false;
+				$data['msg'] = "Error sending mail";
 			}
+		} else {
+			$data['status'] = false;
+			$data['msg'] = "Please check the box";
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
 	}
 
-	//commented for now
-	/* public function add_user()
+	public function adduser_sadmin()
 	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		}
-		$this->form_validation->set_rules('full_name', 'Full Name', 'required|trim|html_escape');
-		$this->form_validation->set_rules('email', 'E-mail', 'trim|valid_email|html_escape');
-		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
-		$this->form_validation->set_rules('eid', 'Employee ID', 'trim|html_escape');
-		$this->form_validation->set_rules('dept', 'Department', 'trim|html_escape');
+		$data['title'] = "new user";
 
-		if ($this->form_validation->run() === FALSE) {
-			$data['details'] = $this->Adminmodel->get_user_details();
-			$this->load->view('templates/header');
-			$this->load->view('admin/index', $data);
+		$this->is_sadmin() === false ? redirect('users') : '';
+
+		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
+		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
+		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
+		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
+		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape|is_unique[users.uname]', array('is_unique' => 'This username is taken'));
+		$this->form_validation->set_rules('pwd', 'Password', 'required|trim|html_escape');
+
+		if (!$this->form_validation->run()) {
+			$this->load->view('templates/header', $data);
+			$this->load->view('admin/users/adduser_cmpy');
 			$this->load->view('templates/footer');
 		} else {
-			$rand =  mt_rand(0, 10000000);
-			$randpwd =  mt_rand(0, 10000000);
-			$form_key = md5($rand);
-			$pwd = password_hash($randpwd, PASSWORD_DEFAULT);
-			//$res= $this->Usermodel->register($form_key,$pwd);
-			$res = true;
-			if ($res !== TRUE) {
-				$this->session->set_flashdata('invalid', 'Registration Failed');
-				redirect('register');
+			$fullname = htmlentities($this->input->post('fname')) . " " . htmlentities($this->input->post('lname'));
+			$uname = htmlentities($this->input->post('uname'));
+			$uname_form = str_replace([" ", ".", ",", "?", "&"], "_", strtolower(substr($uname, 0, 5)));
+			$form_key =  $uname_form . mt_rand(0, 100000);
+
+			$email = htmlentities($this->input->post('email'));
+			if (isset($fullname) && !empty($fullname) && $fullname !== "") {
+				$fulln = $fullname;
+			} else {
+				$fulln = $uname;
+			}
+			$cmpy = $this->session->userdata("mr_cmpy");
+			$act_key =  mt_rand(0, 1000000);
+			$link = base_url() . "emailverify/" . $form_key;
+			$pwd = htmlentities($this->input->post('pwd'));
+
+			$mail_res = true;
+			if (isset($_POST['logincred'])) {
+				$this->load->library('emailconfig');
+				$mail_res = $this->emailconfig->new_companyuser($email, $fulln, $cmpy, $act_key, $link, $uname, $pwd);
+			}
+
+			if ($mail_res !== TRUE) {
+				$this->Logmodel->log_act($type = "mail_err");
+				$this->session->set_flashdata('invalid', $mail_res);
+				redirect('adduser');
 				exit();
 			} else {
-				if (isset($_POST['mail_chkbox']) && isset($_POST['mobile_chkbox'])) {
-					$fname = $this->input->post('full_name');
-					$email = $this->input->post('email');
-					$link = base_url() . "rate/" . $form_key;
-					$mobile = $this->input->post('mobile');
-					$login_link = base_url();
-					$res = $this->send_email_code($fname, $randpwd, $email, $link, $login_link);
-					$this->session->set_flashdata('valid', 'User added. Login credentials sent to user e-mail and mobile');
-					redirect($_SERVER['HTTP_REFERER']);;
-				} elseif (isset($_POST['mail_chkbox'])) {
-					$fname = $this->input->post('full_name');
-					$email = $this->input->post('email');
-					$link = base_url() . "rate/" . $form_key;
-					$mobile = $this->input->post('mobile');
-					$login_link = base_url();
-					$res = $this->send_email_code($fname, $randpwd, $email, $link, $login_link);
-					$this->session->set_flashdata('valid', 'User added. Login credentials sent to user e-mail');
-					redirect($_SERVER['HTTP_REFERER']);
-				} elseif (isset($_POST['mobile_chkbox'])) {
-					require __DIR__ . '/twilosms.php';
-					$this->session->set_flashdata('valid', 'User added. Login credentials sent to user mobile');
-					redirect($_SERVER['HTTP_REFERER']);
+				$db_res = $this->Adminmodel->adduser($act_key, $form_key);
+				if ($db_res !== TRUE) {
+					$this->Logmodel->log_act($type = "db_err");
+					$this->session->set_flashdata('invalid', 'Error saving user details. Please try again');
+					redirect('adduser');
+					exit();
+				} else {
+					$this->Logmodel->log_act($type = "newuser");
+					$this->session->set_flashdata('valid', 'User created.');
+					redirect('users');
+					exit();
 				}
 			}
 		}
-	} */
-
-	public function send_email_code($uname, $randpwd, $email, $login_link)
-	{
-		$config['protocol']    = 'smtp';
-		$config['smtp_host']    = 'ssl://smtp.gmail.com';
-		$config['smtp_port']    = '465';
-		$config['smtp_timeout'] = '7';
-		$config['smtp_user']    = 'jvweedtest@gmail.com';
-		$config['smtp_pass']    = 'Jvweedtest9!';
-		$config['charset']    = 'iso-8859-1';
-		$config['mailtype'] = 'text';
-		$config['validation'] = TRUE;
-
-		$this->load->library('email', $config);
-		$this->email->set_newline("\r\n");
-
-		$body = "Hello " . $uname . "\n\nBelow are your login credentails:\nUsername: " . $uname . "\nPassword: " . $randpwd . "\n\nYou can login here " . $login_link . "\n\nIf you have any questions, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
-
-		$this->email->from('jvweedtest@gmail.com', 'Rating');
-		$this->email->to($email);
-		$this->email->subject("Login Credentials");
-		$this->email->message($body);
-
-		if ($this->email->send()) {
-			return true;
-		} else {
-			return $this->email->print_debugger();
-		}
 	}
 
-	public function votes($offset = 0)
-	{
-		$data['title'] = "reviews";
-
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		}
-		$config['base_url'] = base_url() . "admin/votes/";
-		$config['total_rows'] = $this->db->count_all('user_details');
-		$config['per_page'] = 10;
-		$config["uri_segment"] = 3;
-		$config['attributes'] = array('class' => 'page-link');
-		$config['full_tag_open'] = '<ul class="pagination">';
-		$config['full_tag_close'] = '</ul>';
-		$config['prev_link'] = 'Previous';
-		$config['prev_tag_open'] = '<li class="page-item">';
-		$config['prev_tag_close'] = '</li>';
-		$config['next_link'] = 'Next';
-		$config['next_tag_open'] = '<li class="page-item">';
-		$config['next_tag_close'] = '</li>';
-		$config['cur_tag_open'] = '<li class="active"><a href="#" class="page-link">';
-		$config['cur_tag_close'] = '</a></li>';
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';
-
-		$this->pagination->initialize($config);
-		$data['links'] = $this->pagination->create_links();
-
-		$data['details'] = $this->Adminmodel->get_user_votes($config["per_page"], $offset);
-		$data['get_total_ratings'] = $this->Adminmodel->get_total_ratings();
-		$data['get_total_official'] = $this->Adminmodel->get_total_official();
-		$data['get_total_google'] = $this->Adminmodel->get_total_google();
-		$data['get_total_facebook'] = $this->Adminmodel->get_total_facebook();
-		$data['get_total_gd'] = $this->Adminmodel->get_total_gd();
-		$data['get_total_tp'] = $this->Adminmodel->get_total_tp();
-		$data['get_total_other'] = $this->Adminmodel->get_total_other();
-
-		// print_r($data['details']->result_array());
-		// die;
-		$this->load->view('templates/header', $data);
-		$this->load->view('admin/votes', $data);
-		$this->load->view('templates/footer');
-	}
-
-	public function votes_export_csv()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user');
-		}
-		header("Content-Type: text/csv; charset=utf-8");
-		header("Content-Disposition: attachment; filename=users.csv");
-		$output = fopen("php://output", "w");
-		fputcsv($output, array('ID', 'User', 'Total Reviews', 'SMS Sent', 'Email Sent'));
-		$data = $this->Adminmodel->votes_export_csv();
-		foreach ($data as $row) {
-			fputcsv($output, $row);
-		}
-		fclose($output);
-		$this->Logmodel->log_act($type = "votesscsv");
-	}
-
-	public function votes_reload_table()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		}
-		$config['per_page'] = 10;
-		$offset = 0;
-		$output = "";
-
-		$data = $this->Adminmodel->get_user_votes($config["per_page"], $offset);
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;">
-		<th>
-		<div class="inh">
-		<i class="fas fa-sort" name="uname" type="desc"></i>
-		<span>User</span>
-		</div>
-		</th>
-		<th>
-		<div class="tr">
-		<i class="fas fa-sort" name="total_ratings" type="desc"></i>
-		<span>Reviews</span>
-		</div class="icon">
-		</th>
-		<th>
-		<div class="inh">
-		<i class="fas fa-sort" name="total_sms" type="desc"></i>
-		<span>SMS</span>
-		</div class="icon">
-		</th>
-		<th>
-		<div class="inh">
-		<i class="fas fa-sort" name="total_email" type="desc"></i>
-		<span>Email</span>
-		</div class="icon">
-		</th>
-		<th>
-		<div class="tr">
-		<i class="fas fa-sort" name="form_key" type="desc"></i>
-		<span>User Link</span>
-		</div>
-		</th>
-		<th class="text-danger text-center font-weight-bolder">
-		Reviews
-		</th>
-		</tr>';
-		if ($data->num_rows() == 0) {
-			$output .= '<tr class="text-dark">
-			<td colspan="6" class="font-weight-bolder text-dark text-center">NO DATA FOUND</td>
-			</tr>';
-		} else {
-			foreach ($data->result_array() as $info) {
-				$output .= '<tr class="text-dark text-center">
-				<td class="">' . $info["uname"] . '</td>
-				<td class="tv">' . $info["total_ratings"] . '</td>
-				<td class="tv">' . $info["total_sms"] . '</td>
-				<td class="tv">' . $info["total_email"] . '</td>
-				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
-				<td class="font-weight-bolder">
-				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#294a63">
-				<i class="fas fa-poll text-light"></i></button>
-				</td>
-				</tr>';
-			}
-		}
-		echo $output;
-	}
-
-	public function votes_filter_param()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		}
-		$data = $this->Adminmodel->votes_filter_param($_POST['param'], $_POST['type']);
-		$output = "";
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;">
-		<th>
-		<div class="inh">
-		<i class="fas fa-sort" name="uname" type="desc"></i>
-		<span>User</span>
-		</div>
-		</th>
-		<th>
-		<div class="tr">
-		<i class="fas fa-sort" name="total_ratings" type="desc"></i>
-		<span>Reviews</span>
-		</div class="icon">
-		</th>
-		<th>
-		<div class="inh">
-		<i class="fas fa-sort" name="total_sms" type="desc"></i>
-		<span>SMS</span>
-		</div class="icon">
-		</th>
-		<th>
-		<div class="inh">
-		<i class="fas fa-sort" name="total_email" type="desc"></i>
-		<span>Email</span>
-		</div class="icon">
-		</th>
-		<th>
-		<div class="tr">
-		<i class="fas fa-sort" name="form_key" type="desc"></i>
-		<span>User Link</span>
-		</div>
-		</th>
-		<th class="text-danger text-center font-weight-bolder">
-		Reviews
-		</th>
-		</tr>';
-		if ($data->num_rows() == 0) {
-			$output .= '<tr class="text-light">
-			<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
-			</tr>';
-		} else {
-			foreach ($data->result_array() as $info) {
-				$output .= '<tr class="text-dark text-center">
-				<td class="">' . $info["uname"] . '</td>
-				<td class="tv">' . $info["total_ratings"] . '</td>
-				<td class="tv">' . $info["total_sms"] . '</td>
-				<td class="tv">' . $info["total_email"] . '</td>
-				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
-				<td class="font-weight-bolder">
-				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#294a63">
-				<i class="fas fa-poll text-light"></i></button>
-				</td>
-				</tr>';
-			}
-		}
-		echo $output;
-	}
-
-	public function votes_search_user()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		}
-		$output = '';
-		$query = '';
-		if ($this->input->post('query')) {
-			$query = $this->input->post('query');
-		}
-		$data = $this->Adminmodel->votes_search_user($query);
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;">
-		<th>
-		<div class="inh">
-		<span>User</span>
-		</div>
-		</th>
-		<th>
-		<div class="tr">
-		<span>Reviews</span>
-		</div class="icon">
-		</th>
-		<th>
-		<div class="inh">
-		<span>SMS</span>
-		</div class="icon">
-		</th>
-		<th>
-		<div class="inh">
-		<span>Email</span>
-		</div class="icon">
-		</th>
-		<th>
-		<div class="tr">
-		<span>User Link</span>
-		</div>
-		</th>
-		<th class="text-danger text-center font-weight-bolder">
-		Reviews
-		</th>
-		</tr>';
-		if ($data->num_rows() == 0) {
-			$output .= '<tr class="text-light">
-			<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
-			</tr>';
-		} else {
-			foreach ($data->result_array() as $info) {
-				$output .= '<tr class="text-dark text-center">
-				<td class="">' . $info["uname"] . '</td>
-				<td class="tv">' . $info["total_ratings"] . '</td>
-				<td class="tv">' . $info["total_sms"] . '</td>
-				<td class="tv">' . $info["total_email"] . '</td>
-				<td class="text-lowercase">' . base_url() . 'wtr/' . $info['form_key'] . '</td>
-				<td class="font-weight-bolder">
-				<button class="btn text-light vv_btn" form_key="' . $info['form_key'] . '" style="background:#294a63">
-				<i class="fas fa-poll text-light"></i></button>
-				</td>
-				</tr>';
-			}
-		}
-		echo $output;
-	}
-
-	public function votes_get_user()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		} else {
-			$data['users'] = $this->Adminmodel->get_ratings($_POST['key']);
-			$data['user_webs'] = $this->Adminmodel->getuserwebsites($_POST['key']);
-			// $data['user_other_web'] = $this->Adminmodel->getuserotherwebsites($_POST['key']);
-			$data['user_web_total'] = $this->Adminmodel->user_web_total($_POST['key']);
-			$data['token'] = $this->security->get_csrf_hash();
-			echo json_encode($data);
-		}
-	}
-
-	public function indiv_votes_export_csv($key)
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		}
-		header("Content-Type: text/csv; charset=utf-8");
-		header("Content-Disposition: attachment; filename=user_votes.csv");
-		$output = fopen("php://output", "w");
-		fputcsv($output, array('ID', 'Name', 'Mobile', 'Star', 'Website', 'IP', 'Date'));
-		$data = $this->Adminmodel->indiv_votes_export_csv($key);
-		foreach ($data as $row) {
-			fputcsv($output, $row);
-		}
-		fclose($output);
-	}
-
-	public function search_ind_votes()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		}
-		$output = '';
-		$query = '';
-		if ($this->input->post('query')) {
-			$query = $this->input->post('query');
-		}
-		$data = $this->Adminmodel->search_ind_votes($query, $_POST['key']);
-		// echo json_encode($data);
-		$output .= '<table class="table table-bordered table-center table-hover tableuserreview" id="tableuserreview">
-					<tr class="font-weight-bolder text-light text-center" style="background:#294a63;">
-					<th><span class="icon">
-					Name
-					</span></th>
-					<th><span>
-					Mobile
-					</span class="icon"></th>
-					<th><span>
-					Star
-					</span></th>
-					<th><span>
-					Website
-					</span class="icon"></th>
-					<th><span>
-					IP
-					</span></th>
-					<th class="text-danger"><span>
-					Date
-					</span></th>
-					</tr>';
-		if ($data == false) {
-			$output .= '<tr class="text-dark truserreview">
-			<td colspan="6" class="font-weight-bolder text-dark text-center">No data found</td>
-			</tr>';
-		} else {
-			foreach ($data->result_array() as $info) {
-				$output .= '<tr class="text-dark text-center truserreview">
-				<td class=" text-lowercase">' . $info["name"] . '</td>
-				<td class="">' . $info["mobile"] . '</td>
-				<td class="">' . $info["star"] . '</td>
-				<td class="">' . $info["web_name"] . '</td>
-				<td class="">' . $info["user_ip"] . '</td>
-				<td class="ftext-danger">' . $info["rated_at"] . '</td>
-				</tr>';
-			}
-		}
-		echo $output;
-	}
 
 	public function payments()
 	{
@@ -876,170 +433,6 @@ class Admin extends CI_Controller
 		$this->load->view('templates/header', $data);
 		$this->load->view('admin/payments');
 		$this->load->view('templates/footer');
-	}
-
-	public function reload_table_payments()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_sadmin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		}
-		$output = '';
-		$query = '';
-		if ($this->input->post('query')) {
-			$query = $this->input->post('query');
-		}
-		$data = $this->Adminmodel->get_all_payments($query);
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;white-space: nowrap;">
-						<th><span class="icon">
-						Merchant ID
-						</span></th>
-						<th><span>
-						Transaction ID
-						</span class="icon"></th>
-						<th><span>
-						Order ID
-						</span></th>
-						<th><span>
-						Payment Mode
-						</span></th>
-						<th><span>
-						Gateway Mode
-						</span></th>
-						<th><span>
-						Bank Name
-						</span></th>
-						<th><span>
-						Bank ID
-						</span></th>
-						<th><span>
-						Amount
-						</span class="icon"></th>
-						<th><span>
-						Status
-						</span></th>
-						<th class="text-danger"><span>
-						Date
-						</span></th>
-						</tr>';
-		if ($data->num_rows() == 0) {
-			$output .= '<tr class="text-light">
-			<td colspan="10" class="font-weight-bolder text-dark text-center">No data found</td>
-			</tr>';
-		} else {
-			foreach ($data->result_array() as $info) {
-				$output .= ' <tr class="text-center">
-				<td>' . $info["m_id"] . '</td>
-				<td>' . $info["txn_id"] . '</td>
-				<td>' . $info["order_id"] . '</td>
-				<td>' . $info["payment_mode"] . '</td>
-				<td>' . $info["gateway_name"] . '</td>
-				<td>' . $info["bank_name"] . '</td>
-				<td>' . $info["bank_txn_id"] . '</td>
-				<td><i class="fas fa-rupee-sign"></i>' . $info["paid_amt"] . '</td>
-				<td>' . $info["status"] . '</td>
-				<td>' . $info["paid_at"] . '</td>
-				</tr>';
-			}
-		}
-		echo $output;
-	}
-
-	public function payments_export_csv()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_sadmin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('user');
-		}
-		header("Content-Type: text/csv; charset=utf-8");
-		header("Content-Disposition: attachment; filename=payments.csv");
-		$output = fopen("php://output", "w");
-		fputcsv($output, array('ID', 'User ID', 'Merchant ID', 'Transaction ID', 'Order ID', 'Currency', 'Amount', 'Payment Mode', 'Gateway Mode', 'Bank Transaction ID', 'Bank Name', 'Status', 'Date'));
-		$data = $this->Adminmodel->payments_export_csv();
-		foreach ($data as $row) {
-			fputcsv($output, $row);
-		}
-		fclose($output);
-		$this->Logmodel->log_act($type = "paymentscsv");
-	}
-
-	public function payments_search()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('login');
-		}
-		if ($this->session->userdata('mr_sadmin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
-			redirect('login');
-		}
-		$output = '';
-		$query = '';
-		if ($this->input->post('query')) {
-			$query = $this->input->post('query');
-		}
-		$data = $this->Adminmodel->payments_search($query);
-		$output .= '<tr class="font-weight-bolder text-light text-center" style="background:#294a63;white-space: nowrap;">
-						<th><span class="icon">
-						Merchant ID
-						</span></th>
-						<th><span>
-						Transaction ID
-						</span class="icon"></th>
-						<th><span>
-						Order ID
-						</span></th>
-						<th><span>
-						Payment Mode
-						</span></th>
-						<th><span>
-						Gateway Mode
-						</span></th>
-						<th><span>
-						Bank Name
-						</span></th>
-						<th><span>
-						Bank ID
-						</span></th>
-						<th><span>
-						Amount
-						</span class="icon"></th>
-						<th><span>
-						Status
-						</span></th>
-						<th class="text-danger"><span>
-						Date
-						</span></th>
-						</tr>';
-		if ($data->num_rows() == 0) {
-			$output .= '<tr class="text-light">
-			<td colspan="10" class="font-weight-bolder text-dark text-center">No data found</td>
-			</tr>';
-		} else {
-			foreach ($data->result_array() as $info) {
-				$output .= ' <tr class="text-center">
-				<td>' . $info["m_id"] . '</td>
-				<td>' . $info["txn_id"] . '</td>
-				<td>' . $info["order_id"] . '</td>
-				<td>' . $info["payment_mode"] . '</td>
-				<td>' . $info["gateway_name"] . '</td>
-				<td>' . $info["bank_name"] . '</td>
-				<td>' . $info["bank_txn_id"] . '</td>
-				<td><i class="fas fa-rupee-sign"></i>' . $info["paid_amt"] . '</td>
-				<td>' . $info["status"] . '</td>
-				<td>' . $info["paid_at"] . '</td>
-				</tr>';
-			}
-		}
-		echo $output;
 	}
 
 	public function pick_plan()

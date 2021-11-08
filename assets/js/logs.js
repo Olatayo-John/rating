@@ -1,5 +1,5 @@
 $(document).ready(function () {
-
+//
 	$(document).on('click', '.rr_i', function () {
 		var inview = $(this).attr("inview");
 		if (inview === "hidden") {

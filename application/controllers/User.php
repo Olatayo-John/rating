@@ -621,16 +621,26 @@ class User extends CI_Controller
 		$newpwd = $_POST['newpwd'];
 		$userid = $_POST['userid'];
 
-		$res = $this->Usermodel->changepassword($userid, $newpwd);
+		$this->load->library('emailconfig');
+		$eres = $this->emailconfig->resetpassword($userid, $newpwd, $user_name = $this->session->userdata('mr_uname'));
 
-		if ($res === false) {
-			$this->Logmodel->log_act($type = "userpwderr");
-			$data['status'] = false;
-			$data['msg'] = "Failed to update password.";
+		if ($eres == true) {
+
+			$res = $this->Usermodel->changepassword($userid, $newpwd);
+
+			if ($res === false) {
+				$this->Logmodel->log_act($type = "userpwderr");
+				$data['status'] = false;
+				$data['msg'] = "Failed to update password.";
+			} else {
+				$this->Logmodel->log_act($type = "userpwd");
+				$data['status'] = true;
+				$data['msg'] = "Password updated!";
+			}
 		} else {
-			$this->Logmodel->log_act($type = "userpwd");
-			$data['status'] = true;
-			$data['msg'] = "Password updated!";
+			$this->Logmodel->log_act($type = "mail_err");
+			$data['status'] = false;
+			$data['msg'] = "Error sending email";
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();

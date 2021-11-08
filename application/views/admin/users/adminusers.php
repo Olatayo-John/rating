@@ -51,7 +51,7 @@
 	<?php if ($adminusers->num_rows() < $this->session->userdata("mr_userspace")) : ?>
 		<div>
 			<a href="<?php echo base_url('adduser'); ?>" class="btn text-light" style="background:#294a63;">
-				<i class="fas fa-user-plus pr-2"></i>New User
+				<i class="fas fa-user-plus pr-2"></i>Add User
 			</a>
 		</div>
 	<?php endif; ?>
@@ -59,7 +59,7 @@
 
 <?php if ($adminusers->num_rows() <= 0) : ?>
 	<div style="text-align: center;font-weight: bold;text-transform: uppercase;color:#294a63">
-		<p>You have no user in you company(<?php echo $this->session->userdata("mr_cmpy") ?>)</p>
+		<p>You have no user in your company(<?php echo $this->session->userdata("mr_cmpy") ?>)</p>
 	</div>
 <?php else : ?>
 	<table id="sadmintable" data-toggle="table" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-detail-view="true" data-detail-formatter="detailFormatter" data-pagination="true" data-show-print="true">
@@ -97,9 +97,15 @@
 	var csrfHash = $('.csrf-token').val();
 
 
+	// function detailFormatter(index, row) {
+	// 	var html = []
+	// 	html.push('<div><a href="" id="' + row._id + '" formkey="' + row._data.formkey + '" iscmpy="' + row._data.iscmpy + '" cmpyid="' + row._data.cmpyid + '" class="vuser pr-1" style="color:#294a63">View</a><a href="" id="' + row._id + '" formkey="' + row._data.formkey + '" class="duser text-danger">Delete</a></div>');
+	// 	return html.join('');
+	// }
+
 	function detailFormatter(index, row) {
 		var html = []
-		html.push('<div><a href="" id="' + row._id + '" formkey="' + row._data.formkey + '" iscmpy="' + row._data.iscmpy + '" cmpyid="' + row._data.cmpyid + '" class="vuser pr-1" style="color:#294a63">View</a><a href="" id="' + row._id + '" formkey="' + row._data.formkey + '" class="duser text-danger">Delete</a></div>');
+		html.push('<div><a href="" id="' + row._id + '" formkey="' + row._data.formkey + '" iscmpy="' + row._data.iscmpy + '" cmpyid="' + row._data.cmpyid + '" class="vuser pr-1" style="color:#294a63">View</a></div>');
 		return html.join('');
 	}
 
@@ -210,6 +216,7 @@
 					$(".deact_btn,.act_btn,.updatepwdbtn,.subdeact_btn,.subact_btn,.save_pinfo_btn").attr('user_id', res.uinfos.id);
 					$(".save_pinfo_btn,.subdeact_btn,.subact_btn,.deact_btn,.act_btn").attr('form_key', res.uinfos.form_key);
 					$(".updatepwdbtn").attr('user_email', res.uinfos.email);
+					$(".updatepwdbtn").attr('user_name', res.uinfos.uname);
 
 
 					$(".vusermodal").modal("show");
@@ -227,7 +234,7 @@
 			e.preventDefault();
 			var uid = $(this).attr("id");
 			var formkey = $(this).attr("formkey");
-			var con = confirm("Are you sure you want to delete this user along with its data? Quota used by this user will not be refunded");
+			var con = confirm("Are you sure you want to delete this user along with its data? Quota used by this user cannot be refunded");
 			if (con === false) {
 				return false;
 			} else {
@@ -258,6 +265,7 @@
 			}
 		});
 
+		//disabled
 		$(document).on('click', '.acti_', function(e) {
 			var uact = $(this).attr("uact");
 			var uid = $(this).attr("uid");

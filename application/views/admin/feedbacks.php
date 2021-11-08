@@ -1,11 +1,11 @@
-<div class="bg-white p-2" style="margin-top: 74px;">
-	<div class="text-right">
-		<?php if ($feedbacks->num_rows() > 0) : ?>
+<div style="margin-top: 74px;">
+	<?php if ($feedbacks->num_rows() > 0) : ?>
+		<div class="bg-white p-2 text-right">
 			<a href="<?php echo base_url('clearfeedbacks'); ?>" class="btn btn-danger clear_feedbacks">
 				<i class="fas fa-trash-alt mr-2"></i>Clear all Contacts
 			</a>
-		<?php endif; ?>
-	</div>
+		</div>
+	<?php endif; ?>
 </div>
 
 <div class="bg-white p-3 mt-3">

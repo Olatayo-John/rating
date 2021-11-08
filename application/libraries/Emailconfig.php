@@ -168,4 +168,20 @@ class Emailconfig
             return $this->CI->email->print_debugger();
         }
     }
+
+    public function resetpassword($user_email, $rspwd,$user_name)
+    {
+        $body = "Hello ".$user_name.", Your new password is " . $rspwd . "\n\nSend us an email at info@nktech.in for any queries.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+
+        $this->CI->email->from('jvweedtest@gmail.com', 'Rating');
+        $this->CI->email->to($user_email);
+        $this->CI->email->subject("Password Reset");
+        $this->CI->email->message($body);
+
+        if ($this->CI->email->send()) {
+            return true;
+        } else {
+            return $this->CI->email->print_debugger();
+        }
+    }
 }

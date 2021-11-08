@@ -63,9 +63,27 @@ $route['verifyemail/(:any)'] = 'user/emailverify/$1';
 $route['websites'] = 'user/websites';
 $route['addwebsites'] = 'user/addwebsites';
 
-//votes
-$route['votes'] = 'admin/votes';
-$route['admin/votes/(:any)'] = 'admin/votes/$1';
+
+//users
+$route['users'] = 'admin/users';
+
+//users-sadmin
+$route['newuser'] = 'admin/adduser_sadmin';
+
+
+//users-cmpy
+$route['adduser'] = 'admin/adduser_cmpy';
+$route['userstatus'] = 'admin/change_userstatus';
+$route['deleteuser'] = 'admin/admin_deleteuser';
+$route['viewuser'] = 'admin/admin_viewuser';
+$route['updateuserprofile'] = 'admin/admin_updateuserprofile';
+$route['updateuserpwd'] = 'admin/admin_updateuserpwd';
+$route['account-deactivate'] = 'admin/admin_deactivateaccount';
+$route['activate-account'] = 'admin/admin_activateaccount';
+$route['deactivate-sub'] = 'admin/admin_deactivatesub';
+$route['activate-sub'] = 'admin/admin_activatesub';
+
+$route['admin/users/(:any)'] = 'admin/users/$1';
 
 
 $route['account'] = 'user/account';
@@ -81,22 +99,6 @@ $route['resetpassword_vcode'] = 'user/resetpassword_vcode';
 $route['verify'] = 'user/verifyvcode';
 $route['passwordreset'] = 'user/changepassword';
 $route['deactivate-account'] = 'user/deact_account';
-
-
-//users
-$route['users'] = 'admin/users';
-$route['adduser'] = 'admin/adduser';
-$route['userstatus'] = 'admin/change_userstatus';
-$route['deleteuser'] = 'admin/admin_deleteuser';
-$route['viewuser'] = 'admin/admin_viewuser';
-$route['updateuserprofile'] = 'admin/admin_updateuserprofile';
-$route['updateuserpwd'] = 'admin/admin_updateuserpwd';
-$route['deactivate-account'] = 'admin/admin_deactivateaccount';
-$route['activate-account'] = 'admin/admin_activateaccount';
-$route['deactivate-sub'] = 'admin/admin_deactivatesub';
-$route['activate-sub'] = 'admin/admin_activatesub';
-
-$route['admin/users/(:any)'] = 'admin/users/$1';
 
 
 //rate

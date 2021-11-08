@@ -112,15 +112,17 @@
                         $(".ajax_err_div,ajax_succ_div").hide();
                         $(".ajax_res_succ").text(res.msg);
                         $(".ajax_succ_div").fadeIn().delay("6000").fadeOut();
+
+                        $(".updatepwdbtn").attr('user_email', email);
                     }
 
                     // $(function() {
-					// 	var data = res.refdata;
-					// 	$('#sadmintable').bootstrapTable({
-					// 		data: data
-					// 	});
+                    // 	var data = res.refdata;
+                    // 	$('#sadmintable').bootstrapTable({
+                    // 		data: data
+                    // 	});
 
-					// });
+                    // });
 
                     $('.csrf-token').val(res.token);
                 }

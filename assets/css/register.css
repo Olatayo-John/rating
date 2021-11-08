@@ -1,0 +1,79 @@
+label,.fa-eye,.fa-eye-slash,.fa-question-circle,.fas-question-circle{
+	color: #294a63;
+}
+.form-group label{
+	font-weight: bold;
+}
+.fa-question-circle,.fas-question-circle{
+	color: #294a63;
+	cursor: pointer;
+}
+i.fa-eye,i.fa-eye-slash{
+	display: none;
+	cursor: pointer;
+}
+.genpwdbtn{
+	background:#294a63;
+}
+
+hr.sub{
+	margin: auto 0;
+	margin-bottom: 30px;
+	border-bottom: 3px solid #294a63;
+	width: 100px;
+}
+.plantype label{
+	color:#fff;
+	margin: 0;
+	text-transform: uppercase;
+	display: none;
+}
+.planamt{
+    border-radius: 50%;
+    padding: 16px;
+    margin: 0 auto;
+    background: #294a63;
+	color:#fff;
+}
+.plantype,.card-footer button{
+	background:#294a63;
+	color:#fff;
+}
+.card-body p,ol{
+	margin: 0;
+}
+
+.cmpydiv,li.us{
+	display: none;
+}
+
+div.btngrp{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-top: 25px;
+}
+button.registerbtn{
+	border-radius: 0;
+	margin-right: auto;
+}
+a.loginbtn{
+	margin-top: 5px;
+	/* text-align: center; */
+	color: #8BC34A;
+	text-decoration: none;
+	font-weight: bold;
+}
+@media only screen and (max-width: 500px) {
+	div.btngrp{
+		display: flex;
+		flex-direction: column;
+	}
+	button.registerbtn{
+		margin: 0;
+	}
+	a.loginbtn{
+		text-align: center;
+		margin-top: 5px;
+	}
+}

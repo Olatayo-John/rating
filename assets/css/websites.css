@@ -1,0 +1,28 @@
+.addweb_form{
+	padding: 20px;
+}
+label{
+	color: #294a63;
+	font-weight: bold;
+}
+hr.h_hr{
+	border:1px solid #294a63;
+	width: 70px;
+}
+div.instruction_div div{
+    font-weight: bolder;
+}
+span.web_num{
+    color: #294a63;
+}
+.remove_web_i{
+    cursor: pointer;
+    font-weight: bolder;
+    font-size: 15px;
+}
+button.add_allwebbtn{
+	border-radius: 0;
+	margin: auto;
+}
+@media only screen and (max-width: 500px) {
+}

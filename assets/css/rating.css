@@ -1,0 +1,49 @@
+button.btn{
+	border-radius: 0;
+}
+input.form-control:focus,textarea.form-control:focus{
+	border-color: #294a63;
+	box-shadow: none;
+}
+div.r_container{
+	padding: 20px;
+	/* margin: 50px auto; */
+	height: 550px;
+	background-color: #fff
+}
+h4.comp{
+	font-weight: bolder;
+	text-align: center;
+	margin: 20px 0;
+}
+div.stars{
+	/*border: 2px solid red;*/
+	text-align: center;
+	margin: 50px 0;
+}
+div.stars i{
+	/*border: 2px solid green;*/
+	font-size: 40px;
+}
+div.i_div i.far, div.i_div i.fas{
+	font-size: 55px;
+}
+div.stars i.fas{
+	color: #E65100
+}
+div.onestar,div.twostar,div.threestar,div.fourstar,div.fivestar{
+	/*border: 2px solid red;*/
+	text-align: center;
+	display: none;
+}
+div.submit{
+	text-align: center;
+	display: none;
+	margin-top: 50px;
+}
+label{
+	font-weight: bolder;
+}
+span.err{
+	display: none;
+}

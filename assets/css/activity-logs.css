@@ -1,0 +1,22 @@
+label{
+	color: #294a63;
+}
+button:focus{
+	outline: none;
+}
+input.form-control:focus,select.form-control:focus,textarea.form-control:focus{
+	border-color: #294a63;
+	box-shadow: none;
+}
+.payment_table_div{
+	background:white;
+}
+input.search_payment{
+	border: none;
+	background-color: transparent; 
+}
+i.fas{
+	cursor: pointer;
+	margin: auto;
+	position: 0;
+}

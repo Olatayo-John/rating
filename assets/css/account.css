@@ -1,0 +1,206 @@
+label{
+	color: #294a63;
+}
+.set_wrapper{
+	margin: 74px 0 0 0;
+}
+
+/* side nav_links */
+.tab_div{
+	display: flex;
+	flex-direction: column;
+	background-color: #294a63;
+}
+.tab_div a.prof_a{
+	color: #fff;
+	font-weight: bold;
+}
+.tab_link{
+	color: #fff;
+	padding:10px 0;
+}
+.tab_link:hover{
+	text-decoration: none;
+	color: #fff;
+}
+.info_div{
+	background:white;
+}
+div.web_div,div.course_div,div.ac_div,div.addweb_div,div.rp_div,div.qu_div{
+	display: none;
+}
+
+/* common tab css */
+h4{
+	margin-bottom: 0 !important;
+}
+hr.p_i{
+	margin: auto 0;
+	margin-bottom: 30px;
+	border-bottom: 3px solid #294a63;
+	width: 180px;
+}
+hr.web{
+	margin: auto 0;
+	margin-bottom: 30px;
+	border-bottom: 3px solid #294a63;
+	width: 70px;
+}
+hr.rating{
+	margin: auto 0;
+	margin-bottom: 8px;
+	border-bottom: 3px solid #294a63;
+	width: 45px;
+}
+hr.preset{
+	margin: auto 0;
+	margin-bottom: 30px;
+	border-bottom: 3px solid #294a63;
+	width: 130px;
+}
+hr.account{
+	margin: auto 0;
+	margin-bottom: 30px;
+	border-bottom: 3px solid #294a63;
+	width: 60px;
+}
+.web_input{
+	border: none;
+	background: transparent !important;
+	outline: none;
+	border-bottom: 2px solid black;
+	border-radius: 0;
+}
+button.btn-dark,button.status_web_btn{
+	padding: 0px;
+	width: 70px;
+	border-radius: 0;
+	outline: none;
+}
+.mobileerr,.n_pwd_err,.rtn_pwd_err{
+	display: none;
+}
+label i.fas,.tab_link i.fas{
+	color: #294a63;
+}
+.help_i{
+	color: #294a63;
+	cursor: pointer;
+}
+
+
+/* website */
+.eachwebinfo{
+	padding: 0 !important;
+	overflow: hidden;
+}
+.web_stati{
+	color:#294a63;
+}
+.webnamelabel{
+	font-weight: bold;
+}
+.dacbtn,.acbtn{
+	width:87px;
+}
+
+
+/* .plandiv,.linksdiv,.ratingdiv{
+	text-align: center;
+	color:#294a63;
+	font-weight: bolder;
+}
+.bought,.used,.balance,.emails,.sms,.estotal{
+	padding: 10px 0;
+	box-shadow:-10px 10px 10px #294a63;
+}
+.ratrec{
+	padding: 20px 0 10px 0;
+	box-shadow:-10px 10px 10px #294a63;
+}
+.boughtnum,.usednum,.balancenum,.emailsnum,.smsnum,.estotalnum,.ratrecnum{
+	font-size:22px;
+}
+.boughtlabel,.usedlabel,.balancelabel,.emailslabel,.smslabel,.estotallabel,.ratreclabel{
+	word-break: break-all;
+	padding: 0 15px 0 5px;
+}
+.bought hr,.used hr,.balance hr,.emails hr,.sms hr,.estotal hr,.ratrec hr{
+	margin: 5px auto;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+    width: 60px;
+} */
+
+.doc{
+	color:#294a63;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+
+.total-column {
+    word-break: break-all;
+    text-align: center;
+}
+.panel_s {
+	margin-bottom: 0 !important;
+    border: none;
+    -webkit-box-shadow: 0 1px 15px 1px rgb(90 90 90 / 8%);
+    box-shadow: 0 1px 15px 1px rgb(90 90 90 / 8%);
+}
+.panel-body {
+    background: #f9fafc;
+    padding: 10px 5px;
+	border: 1px solid #dce1ef;
+	color:#294a63;
+}
+h3._total {
+    font-weight: 400;
+    margin: 0;
+    font-size: 20px;
+}
+.total-column span {
+	/* font-weight: bold; */
+    word-break: break-word;
+}
+
+
+
+/* reser pwd */
+.rsendcodebtndiv{
+	visibility: hidden;
+}
+.vcodediv,.vcodebtndiv,.fp_pwddiv,.fp_newpwdbtndiv,.fp_passerr,.vcodeerr{
+	display: none;
+}
+
+
+
+@media only screen and (max-width: 460px) {
+	div.btn_wrapper_div{
+		display: flex !important;
+		flex-direction: column !important;
+	}
+	div.btn_wrapper_div div:nth-child(1) {
+		height: 25px;
+	}
+}
+@media only screen and (max-width: 767px) {
+	.info_div{
+		margin-top: 30px;
+		margin-left: 0;
+	}
+}
+@media only screen and (max-width: 767px) {
+	.websites_foreach_div,.websites_foreach_div_header{
+		display: grid !important;
+		grid-template-columns: auto auto auto !important;
+		margin: 0;
+		padding: 0;
+	}
+	.websites_foreach_div_header div{
+		padding: 0;
+		text-align: left !important
+	}
+}

@@ -1,0 +1,20 @@
+body{
+	background: #294a63;
+}
+.wrapper_div{
+	background-color: white;
+}
+i.fab{
+	font-size: 15px;
+}
+a.btn{
+	border-radius: 0;
+}
+a.wbratebtn{
+	background:#294a63;
+	width: 80%;
+}
+a.wbratebtn:hover{
+	transition: .9s;
+	transform: scale(1.1);
+}

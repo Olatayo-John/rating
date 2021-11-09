@@ -64,6 +64,16 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
+	public function get_admininfo($limit = false, $offset = false)
+	{
+		$this->db->select("u.id as uid,u.iscmpy,u.cmpyid,u.uname,u.fname,u.lname,u.email,u.mobile,u.active,u.form_key,ud.id as udid,ud.total_ratings,ud.total_sms,ud.total_email,ud.total_one,ud.total_two,ud.total_three,ud.total_four,ud.total_five");
+		$this->db->from('users u');
+		$this->db->where(array('u.form_key' => $this->session->userdata("mr_form_key")));
+		$this->db->join('user_details ud', 'u.form_key=ud.form_key', 'inner');
+		$userinfo = $this->db->get()->row();
+		return $userinfo;
+	}
+
 	public function get_adminusers($limit = false, $offset = false)
 	{
 		$this->db->select("u.id as uid,u.iscmpy,u.cmpyid,u.uname,u.fname,u.lname,u.email,u.mobile,u.active,u.form_key,ud.id as udid,ud.total_ratings,ud.total_sms,ud.total_email,ud.total_one,ud.total_two,ud.total_three,ud.total_four,ud.total_five");

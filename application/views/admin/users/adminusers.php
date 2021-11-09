@@ -46,7 +46,7 @@
 
 <div class="d-flex pb-4" style="justify-content:space-between;">
 	<div style="font-weight: bold;text-transform: uppercase;color:#294a63">
-		<h4><?php echo $this->session->userdata("mr_cmpy") ?> Users</h4>
+		<h4><?php echo $this->session->userdata("mr_cmpy") ?></h4>
 	</div>
 	<?php if ($adminusers->num_rows() < $this->session->userdata("mr_userspace")) : ?>
 		<div>
@@ -57,6 +57,7 @@
 	<?php endif; ?>
 </div>
 
+
 <?php if ($adminusers->num_rows() <= 0) : ?>
 	<div style="text-align: center;font-weight: bold;text-transform: uppercase;color:#294a63">
 		<p>You have no user in your company(<?php echo $this->session->userdata("mr_cmpy") ?>)</p>
@@ -65,22 +66,46 @@
 	<table id="sadmintable" data-toggle="table" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-detail-view="true" data-detail-formatter="detailFormatter" data-pagination="true" data-show-print="true">
 		<thead class="text-light" style="background:#294a63">
 			<tr>
-				<th data-field="name" data-sortable="true">Full Name</th>
+				<th data-field="name" data-sortable="true">Full Name / Username</th>
 				<th data-field="email" data-sortable="true">Email</th>
 				<th data-field="mobile" data-sortable="true">Mobile</th>
-				<th data-field="quota" data-sortable="true" data-visible="false">Quota Used</th>
-				<th data-field="emails" data-sortable="true">Emails</th>
-				<th data-field="ms" data-sortable="true">SMS</th>
+				<th data-field="quota" data-sortable="true">Quota Used</th>
+				<th data-field="tr" data-sortable="true" data-visible="false">Ratings</th>
+				<th data-field="emails" data-sortable="true" data-visible="false">Emails</th>
+				<th data-field="ms" data-sortable="true" data-visible="false">SMS</th>
 				<th data-field="active" data-sortable="true">Active</th>
 			</tr>
 		</thead>
 		<tbody>
+			<tr>
+				<td>
+					<?php if (!empty($admininfo->lname) || !empty($admininfo->lname)) : ?>
+						<?php echo $admininfo->fname . " " . $admininfo->lname ?>
+					<?php else : ?>
+						<?php echo $admininfo->uname ?>
+					<?php endif; ?> (ADMIN)
+				</td>
+				<td><a href="mailto:<?php echo $admininfo->email ?>"><?php echo $admininfo->email ?></a></td>
+				<td><?php echo $admininfo->mobile ?></td>
+				<td class="font-weight-bolder"><?php echo $admininfo->total_ratings + $admininfo->total_email + $admininfo->total_sms ?></td>
+				<td><?php echo $admininfo->total_ratings ?></td>
+				<td><?php echo $admininfo->total_email ?></td>
+				<td><?php echo $admininfo->total_sms ?></td>
+				<td><i class="fas fa-circle text-success"></i></td>
+			</tr>
 			<?php foreach ($adminusers->result() as $user) : ?>
 				<tr id="<?php echo $user->uid ?>" data-formkey="<?php echo $user->form_key ?>" data-iscmpy="<?php echo $user->iscmpy ?>" data-cmpyid="<?php echo $user->cmpyid ?>" class="classroone">
-					<td><?php echo $user->fname . " " . $user->lname ?></td>
+					<td>
+						<?php if (!empty($user->fname) || !empty($user->lname)) : ?>
+							<?php echo $user->fname . " " . $user->lname ?>
+						<?php else : ?>
+							<?php echo $user->uname ?>
+						<?php endif; ?>
+					</td>
 					<td><a href="mailto:<?php echo $user->email ?>"><?php echo $user->email ?></a></td>
 					<td><?php echo $user->mobile ?></td>
-					<td><?php echo $user->total_ratings + $user->total_email + $user->total_sms ?></td>
+					<td class="font-weight-bolder"><?php echo $user->total_ratings + $user->total_email + $user->total_sms ?></td>
+					<td><?php echo $user->total_ratings ?></td>
 					<td><?php echo $user->total_email ?></td>
 					<td><?php echo $user->total_sms ?></td>
 					<td><?php echo ($user->active === '0') ? '<i title="Account not verified" class="fas fa-circle text-warning acti" uact="' . $user->active . '" uid="' . $user->uid . '" uformkey="' . $user->form_key . '"></i>' : ($user->active === '1' ? '<i title="Account activate" class="fas fa-circle text-success acti" uact="' . $user->active . '" uid="' . $user->uid . '" uformkey="' . $user->form_key . '"></i>' : ($user->active === '2' ? '<i title="Account not activate" class="fas fa-circle text-danger acti" uact="' . $user->active . '" uid="' . $user->uid . '" uformkey="' . $user->form_key . '"></i>' : "undefined")) ?></td>
@@ -121,109 +146,114 @@
 			var cmpyid = $(this).attr("cmpyid");
 			var adminsub = "<?php echo $this->session->userdata("mr_sub"); ?>";
 
-			$.ajax({
-				url: "<?php echo base_url("viewuser"); ?>",
-				method: "post",
-				dataType: "json",
-				data: {
-					[csrfName]: csrfHash,
-					user_id: user_id,
-					form_key: form_key,
-					iscmpy: iscmpy,
-					cmpyid: cmpyid,
-				},
-				error: function(res) {
-					window.location.reload();
-				},
-				success: function(res) {
-					//depopulate field
+			if (user_id == 'undefined' || form_key == 'undefined') {
+				var vvv = "<?php echo base_url('/logs') ?>";
+				window.location.assign(vvv);
+			} else {
+				$.ajax({
+					url: "<?php echo base_url("viewuser"); ?>",
+					method: "post",
+					dataType: "json",
+					data: {
+						[csrfName]: csrfHash,
+						user_id: user_id,
+						form_key: form_key,
+						iscmpy: iscmpy,
+						cmpyid: cmpyid,
+					},
+					error: function(res) {
+						window.location.reload();
+					},
+					success: function(res) {
+						//depopulate field
 
-					$('.rspwd').val("");
-					$('.rspwd,.email,.mobile').css('border', '1px solid #ced4da');
-					$('.pwderr,i.fa-eye,i.fa-eye-slash').hide("");
+						$('.rspwd').val("");
+						$('.rspwd,.email,.mobile').css('border', '1px solid #ced4da');
+						$('.pwderr,i.fa-eye,i.fa-eye-slash').hide("");
 
-					$('#webtable,#lstable,#rrtable').bootstrapTable('destroy');
+						$('#webtable,#lstable,#rrtable').bootstrapTable('destroy');
 
-					$('div.prof_div').show();
-					$('div.web_div,div.ls_div,div.rr_div,div.ac_div').hide();
-					$('.tab_link').css('font-weight', 'initial');
-					$("a.prof_a").css('font-weight', 'bold');
+						$('div.prof_div').show();
+						$('div.web_div,div.ls_div,div.rr_div,div.ac_div').hide();
+						$('.tab_link').css('font-weight', 'initial');
+						$("a.prof_a").css('font-weight', 'bold');
 
-					//populate profile
-					$(".fname").val(res.uinfos.fname);
-					$(".lname").val(res.uinfos.lname);
-					$(".email").val(res.uinfos.email);
-					$(".mobile").val(res.uinfos.mobile);
-					$(".uname").val(res.uinfos.uname);
-					$(".cmpy").val(res.uinfos.cmpy);
-					var seg = $(".linkshare").attr("data-host");
-					$(".linkshare").val(seg + res.uinfos.form_key);
+						//populate profile
+						$(".fname").val(res.uinfos.fname);
+						$(".lname").val(res.uinfos.lname);
+						$(".email").val(res.uinfos.email);
+						$(".mobile").val(res.uinfos.mobile);
+						$(".uname").val(res.uinfos.uname);
+						$(".cmpy").val(res.uinfos.cmpy);
+						var seg = $(".linkshare").attr("data-host");
+						$(".linkshare").val(seg + res.uinfos.form_key);
 
-					//populate web
-					$(".webt").text(res.uwebs.length);
-					$(function() {
-						var data = res.uwebs;
-						$('#webtable').bootstrapTable({
-							data: data
+						//populate web
+						$(".webt").text(res.uwebs.length);
+						$(function() {
+							var data = res.uwebs;
+							$('#webtable').bootstrapTable({
+								data: data
+							});
+
 						});
 
-					});
+						//populate profileratings
+						$(".rrt").text(res.uratings.length);
+						$(function() {
+							var data = res.uratings;
+							$('#rrtable').bootstrapTable({
+								data: data
+							});
 
-					//populate profileratings
-					$(".rrt").text(res.uratings.length);
-					$(function() {
-						var data = res.uratings;
-						$('#rrtable').bootstrapTable({
-							data: data
 						});
 
-					});
+						//populate linkssent
+						$(".lst").text(parseInt(res.udetails.total_email) + parseInt(res.udetails.total_sms));
+						$(".emailt").text(res.udetails.total_email);
+						$(".smst").text(res.udetails.total_sms);
+						$(function() {
+							var data = res.ulinks;
+							$('#lstable').bootstrapTable({
+								data: data
+							});
 
-					//populate linkssent
-					$(".lst").text(res.ulinks.length);
-					$(".emailt").text(res.udetails.total_email);
-					$(".smst").text(res.udetails.total_sms);
-					$(function() {
-						var data = res.ulinks;
-						$('#lstable').bootstrapTable({
-							data: data
 						});
 
-					});
+						//populate account
+						if (res.uinfos.active == "0") {
+							$(".act_btn").show();
+							$(".deact_btn").hide();
+						} else if (res.uinfos.active == "1") {
+							$(".act_btn").hide();
+							$(".deact_btn").show();
+						} else if (res.uinfos.active == "2") {
+							$(".act_btn").show();
+							$(".deact_btn").hide();
+						}
 
-					//populate account
-					if (res.uinfos.active == "0") {
-						$(".act_btn").show();
-						$(".deact_btn").hide();
-					} else if (res.uinfos.active == "1") {
-						$(".act_btn").hide();
-						$(".deact_btn").show();
-					} else if (res.uinfos.active == "2") {
-						$(".act_btn").show();
-						$(".deact_btn").hide();
+						if (parseInt(adminsub) === 0 && res.uinfos.sub == "0") {
+							$(".subact_btn").show();
+							$(".subdeact_btn").hide();
+						} else if (parseInt(adminsub) === 0 && res.uinfos.sub == "1") {
+							$(".subact_btn").hide();
+							$(".subdeact_btn").show();
+						} else if (parseInt(adminsub) === 0) {
+							// $(".subact_btn,.subdeact_btn").hide();
+						}
+
+						$(".deact_btn,.act_btn,.updatepwdbtn,.subdeact_btn,.subact_btn,.save_pinfo_btn").attr('user_id', res.uinfos.id);
+						$(".save_pinfo_btn,.subdeact_btn,.subact_btn,.deact_btn,.act_btn").attr('form_key', res.uinfos.form_key);
+						$(".updatepwdbtn").attr('user_email', res.uinfos.email);
+						$(".updatepwdbtn").attr('user_name', res.uinfos.uname);
+
+
+						$(".vusermodal").modal("show");
+
+						$('.csrf-token').val(res.token);
 					}
-
-					if (parseInt(adminsub) === 0 && res.uinfos.sub == "0") {
-						$(".subact_btn").show();
-						$(".subdeact_btn").hide();
-					} else if (parseInt(adminsub) === 0 && res.uinfos.sub == "1") {
-						$(".subact_btn").hide();
-						$(".subdeact_btn").show();
-					} else if (parseInt(adminsub) === 0) {
-						// $(".subact_btn,.subdeact_btn").hide();
-					}
-
-					$(".deact_btn,.act_btn,.updatepwdbtn,.subdeact_btn,.subact_btn,.save_pinfo_btn").attr('user_id', res.uinfos.id);
-					$(".save_pinfo_btn,.subdeact_btn,.subact_btn,.deact_btn,.act_btn").attr('form_key', res.uinfos.form_key);
-					$(".updatepwdbtn").attr('user_email', res.uinfos.email);
-					$(".updatepwdbtn").attr('user_name', res.uinfos.uname);
-
-
-					$(".vusermodal").modal("show");
-
-					$('.csrf-token').val(res.token);
-				}
-			});
+				});
+			}
 		});
 
 		$(document).on('click', '.closevuserbtn', function() {

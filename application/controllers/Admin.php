@@ -147,10 +147,11 @@ class Admin extends CI_Controller
 
 		$this->is_bothadmin() === false ? redirect('share') : '';
 
+		$data['admininfo'] = $this->Adminmodel->get_admininfo();
 		$data['adminusers'] = $this->Adminmodel->get_adminusers();
 		$data['allusers'] = $this->Adminmodel->get_allusers();
 
-		// print_r($data['allusers']);die;
+		// print_r($data['admininfo']);die;
 		$this->load->view('templates/header', $data);
 		$this->load->view('admin/users', $data);
 		$this->load->view('templates/footer');

@@ -63,7 +63,7 @@
 	<table id="sadmintable" data-toggle="table" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-detail-view="true" data-detail-formatter="detailFormatter" data-pagination="true" data-show-print="true">
 		<thead class="text-light" style="background:#294a63">
 			<tr>
-				<th data-field="name" data-sortable="true">Full Name/Username</th>
+				<th data-field="name" data-sortable="true">Full Name / Username</th>
 				<th data-field="email" data-sortable="true">Email</th>
 				<th data-field="mobile" data-sortable="true">Mobile</th>
 				<th data-field="cmpy" data-sortable="true">Company</th>

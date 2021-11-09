@@ -26,7 +26,7 @@
             <label>Username</label>
             <input type="text" name="uname" class="form-control uname" readonly disabled value="<?php echo $user_info->uname ?>" required disabled style="cursor: not-allowed;">
         </div>
-        <?php if ($this->session->userdata('mr_admin') === "1") : ?>
+        <?php if ($this->session->userdata('mr_iscmpy') === "1") : ?>
             <div class="form-group col-md-6">
                 <label>Company</label>
                 <input type="text" name="uname" class="form-control uname" readonly disabled value="<?php echo $user_info->cmpy ?>" required disabled style="cursor: not-allowed;">

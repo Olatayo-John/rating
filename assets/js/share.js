@@ -5,9 +5,9 @@ $(document).ready(function () {
 
 	if (curlhash == "" || curlhash == null || curlhash == undefined) {
 		$('.tab_link').css('border-bottom', 'none');
-		$('a#email').css('border-bottom', '2px solid #294a63');
+		$('a#as-email').css('border-bottom', '2px solid #294a63');
 		$('.genform').hide();
-		$('form.email').show();
+		$('form.as-email').show();
 	}else{
 		$('.tab_link').css('border-bottom', 'none');
 		$('a#'+curlh+'').css('border-bottom', '2px solid #294a63');
@@ -20,7 +20,7 @@ $(document).ready(function () {
 		$('.tab_link').css('border-bottom', 'none');
 		$(this).css('border-bottom', '2px solid #294a63');
 		$('.genform').hide();
-		$('form.email').show();
+		$('form.as-email').show();
 	});
 
 	$('a.sms_a').click(function (e) {
@@ -28,7 +28,7 @@ $(document).ready(function () {
 		$('.tab_link').css('border-bottom', 'none');
 		$(this).css('border-bottom', '2px solid #294a63');
 		$('.genform').hide();
-		$('form.sms').show();
+		$('form.as-sms').show();
 	});
 
 	$('button.closebtn').click(function () {

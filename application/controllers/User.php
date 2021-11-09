@@ -834,7 +834,7 @@ class User extends CI_Controller
 		$cq_res = $this->Usermodel->is_userquotaexpired();
 		if ($cq_res === "not_Found") {
 			return false;
-		} else if ($this->session->userdata('mr_sub') == '1') {
+		} else if ($this->session->userdata('mr_sub') == '0') {
 			if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 				$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
 			} else {
@@ -920,7 +920,7 @@ class User extends CI_Controller
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
 				$this->session->set_flashdata('invalid', $sessmsg);
-				redirect('share#sms');
+				redirect('share#as-sms');
 			} else if ($cq_res !== false) {
 				$usermail_expire = $cq_res->email;
 				$this->Logmodel->log_act($type = "quota_expire");
@@ -929,7 +929,7 @@ class User extends CI_Controller
 				$this->emailconfig->quota_send_mail_expire($usermail_expire);
 
 				$this->session->set_flashdata('invalid', 'Quota has expired');
-				redirect($_SERVER['HTTP_REFERER']);
+				redirect('share#as-sms');
 			} else if ($cq_res === false) {
 				$mobile = $this->input->post('mobile');
 				$bdy = $this->input->post('smsbdy');
@@ -943,7 +943,7 @@ class User extends CI_Controller
 				if (strpos(json_encode($result, true), '100') == false) {
 					$this->Logmodel->log_act($type = "sms_err");
 					$this->session->set_flashdata('invalid', 'Error sending SMS');
-					redirect($_SERVER["HTTP_REFERER"]);
+					redirect('share#as-sms');
 					exit;
 				} else {
 					$this->Logmodel->log_act($type = "ssms_sent");
@@ -951,11 +951,11 @@ class User extends CI_Controller
 					if ($res !== true) {
 						$this->Logmodel->log_act($type = "db_err");
 						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
-						redirect($_SERVER["HTTP_REFERER"]);
+						redirect('share#as-sms');
 						exit;
 					} else {
 						$this->session->set_flashdata('valid', 'SMS sent successfully');
-						redirect($_SERVER["HTTP_REFERER"]);
+						redirect('share#as-sms');
 					}
 				}
 				curl_close($req);
@@ -1026,5 +1026,13 @@ class User extends CI_Controller
 				curl_close($req);
 			}
 		}
+	}
+
+	public function fof(){
+		$data['title'] = "404 | Page Not Found";
+
+		$this->load->view('templates/header',$data);
+		$this->load->view('templates/fof');
+		$this->load->view('templates/footer');
 	}
 }

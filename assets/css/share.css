@@ -11,13 +11,9 @@
 }
 .tab_link:hover{
 	text-decoration: none;
-	/* color: black; */
 }
-form.gen_link_form{
-	/* display: all; */
-}
-form.sms_gen_link_form{
-	/* display: none; */
+a.tab_link:hover{
+	color:#294a63 !important;
 }
 label{
 	font-weight: bolder;

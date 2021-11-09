@@ -136,5 +136,6 @@ $route['clearlogs'] = 'admin/clearlogs';
 $route['logout'] = 'user/logout';
 
 
-$route['404_override'] = 'user/fof_error';
+// $route['404_override'] = '';
+$route['404_override'] = 'user/fof';
 $route['translate_uri_dashes'] = FALSE;

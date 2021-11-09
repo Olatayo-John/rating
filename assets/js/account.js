@@ -1,43 +1,73 @@
 $(document).ready(function () {
 
-	$(document).on('click', 'a.prof_a', function (e) {
-		e.preventDefault();
-		$('div.web_div,div.qu_div,div.ac_div,div.rp_div').hide();
+	var curlhash = window.location.hash;
+	var curlh = window.location.hash.substring(1);
+
+	if (curlhash == "" || curlhash == null || curlhash == undefined) {
+		$('div.info_inner').hide();
+		$('.tab_link').css('font-weight', 'initial');
+		$('a#profile').css('font-weight', 'bold');
+		$('div#profile').show();
+	}else{
+		$('div.info_inner').hide();
+		$('.tab_link').css('font-weight', 'initial');
+		$('a#'+curlh+'').css('font-weight', 'bold');
+		$('div#'+curlh+'').show();
+	}
+
+
+	$(document).on('click', 'a#profile', function (e) {
+		// e.preventDefault();
+		$('div.info_inner').hide();
 		$('.tab_link').css('font-weight', 'initial');
 		$(this).css('font-weight', 'bold');
-		$('div.prof_div').show();
+		$('div#profile').show();
 	});
 
-	$(document).on('click', 'a.web_a', function (e) {
-		e.preventDefault();
-		$('div.prof_div,div.qu_div,div.ac_div,div.rp_div').hide();
+	$(document).on('click', 'a#websites', function (e) {
+		// e.preventDefault();
+		$('div.info_inner').hide();
 		$('.tab_link').css('font-weight', 'initial');
 		$(this).css('font-weight', 'bold');
-		$('div.web_div').show();
+		$('div#websites').show();
 	});
 
-	$(document).on('click', 'a.qu_a', function (e) {
-		e.preventDefault();
-		$('div.prof_div,div.ac_div,div.web_div,div.rp_div').hide();
+	$(document).on('click', 'a#plan', function (e) {
+		// e.preventDefault();
+		$('div.info_inner').hide();
 		$('.tab_link').css('font-weight', 'initial');
 		$(this).css('font-weight', 'bold');
-		$('div.qu_div').show();
+		$('div#plan').show();
 	});
 
-	$(document).on('click', 'a.rp_a', function (e) {
-		e.preventDefault();
-		$('div.prof_div,div.qu_div, div.web_div, div.ac_div').hide();
+	$(document).on('click', 'a#resetPassword', function (e) {
+		// e.preventDefault();
+		$('div.info_inner').hide();
 		$('.tab_link').css('font-weight', 'initial');
 		$(this).css('font-weight', 'bold');
-		$('div.rp_div').show();
+		$('div#resetPassword').show();
 	});
 
-	$(document).on('click', 'a.ac_a', function (e) {
-		e.preventDefault();
-		$('div.prof_div,div.qu_div, div.web_div,div.rp_div').hide();
+	$(document).on('click', 'a#account', function (e) {
+		// e.preventDefault();
+		$('div.info_inner').hide();
 		$('.tab_link').css('font-weight', 'initial');
 		$(this).css('font-weight', 'bold');
-		$('div.ac_div').show();
+		$('div#account').show();
+	});
+
+	$("button.genpwdbtn").click(function () {
+
+		var length = 10;
+		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		var val = "";
+
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			val += charset.charAt(Math.floor(Math.random() * n));
+		}
+
+		$('.genptext').show();
+		$('.genptext,.n_pwd,.rtn_pwd').val(val);
 	});
 
 });

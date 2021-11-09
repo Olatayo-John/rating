@@ -2,34 +2,42 @@
 
 <div class="row set_wrapper">
 	<div class="tab_div col-md-2">
-		<a href="" class="tab_link prof_a">Profile</a>
-		<a href="" class="tab_link web_a">Websites</a>
-		<?php if(!$this->session->userdata("mr_cmpyid")) :?><a href="" class="tab_link qu_a">Plan</a><?php endif;?>
-		<a href="" class="tab_link rp_a">Reset Password</a>
-		<a href="" class="tab_link ac_a text-danger font-weight-bolder">De-activate Account</a>
+		<a href="#profile" class="tab_link" id="profile">Profile</a>
+		<a href="#websites" class="tab_link" id="websites">Websites</a>
+		<?php if (!$this->session->userdata("mr_cmpyid")) : ?>
+			<a href="#plan" class="tab_link" id="plan">Plan</a>
+		<?php endif; ?>
+		<a href="#resetPassword" class="tab_link" id="resetPassword">Reset Password</a>
+		<?php if ($this->session->userdata("mr_sadmin") === "0") : ?>
+			<a href="#account" class="tab_link text-danger font-weight-bolder" id="account">De-activate Account</a>
+		<?php endif; ?>
 	</div>
+
+
 	<div class="info_div col-md-10 p-3">
-		<div class="prof_div">
+		<div class="info_inner" id="profile">
 			<?php include("profile/profile_edit.php") ?>
 		</div>
 
-		<div class="web_div pb-5">
+		<div class="info_inner pb-5" id="websites">
 			<?php include("profile/websites.php") ?>
 		</div>
-		
-		<?php if(!$this->session->userdata("mr_cmpyid")) :?>
-		<div class="qu_div pb-5">
-			<?php include("profile/quota.php") ?>
-		</div>
-		<?php endif;?>
 
-		<div class="rp_div">
+		<?php if (!$this->session->userdata("mr_cmpyid")) : ?>
+			<div class="info_inner pb-5" id="plan">
+				<?php include("profile/quota.php") ?>
+			</div>
+		<?php endif; ?>
+
+		<div class="info_inner" id="resetPassword">
 			<?php include("profile/password_reset.php") ?>
 		</div>
 
-		<div class="ac_div">
-			<?php include("profile/account.php") ?>
-		</div>
+		<?php if ($this->session->userdata("mr_sadmin") === "0") : ?>
+			<div class="info_inner" id="account">
+				<?php include("profile/account.php") ?>
+			</div>
+		<?php endif; ?>
 	</div>
 </div>
 

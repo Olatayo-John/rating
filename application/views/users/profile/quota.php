@@ -34,28 +34,6 @@
     </div>
 </div>
 
-<!-- <div class="row col-md-12 m-0 p-0 pb-5">
-    <div class="col-lg-6 col-xs-6 col-md-6 total-column">
-        <div class="panel_s">
-            <div class="panel-body">
-                <h3 class="_total">
-                    <?php echo $usertotal->total_ratings ?>
-                </h3>
-                <span>Ratings</span>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-xs-6 col-md-6 total-column">
-        <div class="panel_s">
-            <div class="panel-body">
-                <h3 class="_total">
-                    <?php echo ($usertotal->total_sms + $usertotal->total_email) ?>
-                </h3>
-                <span>Links</span>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <div class="row col-md-12 m-0 p-0 pb-5">
     <div class="col-lg-4 col-xs-4 col-md-4 total-column">
@@ -71,7 +49,7 @@
     <div class="col-lg-4 col-xs-4 col-md-4 total-column">
         <div class="panel_s">
             <div class="panel-body">
-                <h3 class="_total" style="<?php echo ($quota->webspace_left == "0")?"opacity: .5;":"" ?>">
+                <h3 class="_total" style="<?php echo ($quota->webspace_left == "0") ? "opacity: .5;" : "" ?>">
                     <?php echo $quota->webspace_left ?>
                 </h3>
                 <span>Left</span>
@@ -105,7 +83,7 @@
         <div class="col-lg-4 col-xs-4 col-md-4 total-column">
             <div class="panel_s">
                 <div class="panel-body">
-                    <h3 class="_total" style="<?php echo ($quota->userspace_left == "0")?"opacity: .5;":"" ?>">
+                    <h3 class="_total" style="<?php echo ($quota->userspace_left == "0") ? "opacity: .5;" : "" ?>">
                         <?php echo $quota->userspace_left ?>
                     </h3>
                     <span>Left</span>
@@ -125,7 +103,20 @@
     </div>
 <?php endif; ?>
 
-
+<div class="p-3">
+    <?php if ($this->session->userdata("mr_sub") === "0") : ?>
+        <div class="font-weight-bold" style="margin:auto 0;color:#294a63">
+            Payment Pending!!!
+        </div>
+        <button class="btn btn-danger">
+            <a href="pay#">Pay Now</a>
+        </button>
+    <?php elseif ($this->session->userdata("mr_sub") === "1") : ?>
+        <button class="btn btn-success" type="button">
+            <i class="fas fa-check-circle pr-1"></i>Payment Done
+        </button>
+    <?php endif; ?>
+</div>
 
 
 
@@ -146,8 +137,10 @@
                 <label for="Webspace" class="font-weight-bolder">Webspace</label>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia ratione dolorum velit blanditiis, ad aspernatur, accusantium explicabo maxime adipisci soluta ea perferendis maiores laborum consectetur ex. Ab minus ex eaque non tempora dicta odit dignissimos fugit harum eos magnam dolor vel, nostrum, quis quibusdam autem.</p>
 
+                <?php if ($this->session->userdata("mr_admin") === "1") : ?>
                 <label for="Userspace" class="font-weight-bolder">Userspace</label>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia ratione dolorum velit blanditiis, ad aspernatur, accusantium explicabo maxime adipisci soluta ea perferendis maiores laborum consectetur ex.</p>
+                <?php endif; ?>
             </div>
             <div class="modal-footer text-right">
                 <button type="button" class="btn btn-secondary close_helpmodal">Close</button>

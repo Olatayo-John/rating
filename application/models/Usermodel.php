@@ -568,10 +568,10 @@ class Usermodel extends CI_Model
 
 	public function deact_account()
 	{
-		$this->db->set('active', '0');
+		$this->db->set('active', '2');
 		$this->db->where('id', $this->session->userdata('mr_id'));
 		$this->db->update('users');
-		$this->session->set_userdata('mr_active', '0');
+		$this->session->set_userdata('mr_active', '2');
 		return true;
 	}
 

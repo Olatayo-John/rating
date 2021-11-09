@@ -5,8 +5,16 @@
     <div class="form-group">
         <label><span class="text-danger">* </span>Current Password</label>
         <input type="password" name="auto-pwd" style="opacity: 0; position: absolute">
-        <input type="text" name="c_pwd" class="form-control c_pwd" placeholder="Your current password" required>
+        <input type="password" name="c_pwd" class="form-control c_pwd" placeholder="Your current password" required>
     </div>
+
+    <div class="form-group">
+        <button class="btn text-light genpwdbtn" style="background-color:#294a63" type="button" name="genpwdbtn">
+            Generate Password
+        </button>
+        <input type="text" class="genptext">
+    </div>
+
     <div class="form-group">
         <label><span class="text-danger">* </span>New Password</label>
         <input type="password" minlenght="6" name="n_pwd" class="form-control n_pwd" placeholder="Password must be at least 6 characters long" required>
@@ -38,7 +46,7 @@
                 <form action="<?php echo base_url('password-update'); ?>" method="post">
                     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
-                    <span class="font-weight-bolder text-success codeinstruct">Verfication code will be sent to this email</span>
+                    <span class="text-success codeinstruct">Verfication code will be sent to this email</span>
                     <div class="form-group">
                         <input type="email" name="fp_email" value="<?php echo $user_info->email ?>" class="fp_email form-control" required readonly disabled style="cursor:not-allowed">
                     </div>
@@ -146,8 +154,6 @@
             var userid = "<?php echo $this->session->userdata('mr_id') ?>";
             var useremail = $(".fp_email").val();
             var vcode_init = randonpassword();
-
-            console.log(vcode_init);
 
             $.ajax({
                 url: "<?php echo base_url('resetpassword_vcode'); ?>",
@@ -331,9 +337,9 @@
         $(document).on('click', 'button.close_forgotpass_modal', function(e) {
             e.preventDefault();
             var inproc = $(".close_forgotpass_modal").attr("proc");
-            console.log(inproc);
+
             if (inproc === "true") {
-                var con = confirm("Are you sure you want to exit this process? Your code has been verified");
+                var con = confirm("Are you sure you want to exit this process?");
                 if (con === false) {
                     return false;
                 } else {

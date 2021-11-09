@@ -40,12 +40,16 @@
 </div>
 
 <div class="mb-3 p-2 bg-white d-flex tab_div" style="justify-content:space-evenly;margin-top: 74px;">
-	<a href="" class="tab_link mail_a sndasmailbtn"><i class="fas fa-envelope mr-2"></i>Send as Email</a>
-	<a href="" class="tab_link sms_a sndassmsbtn"><i class=" fas fa-comment-dots mr-2"></i>Send as SMS</a>
+	<a href="#email" class="tab_link mail_a sndasmailbtn" id="email">
+		<i class="fas fa-envelope mr-2"></i>Send as Email
+	</a>
+	<a href="#sms" class="tab_link sms_a sndassmsbtn" id="sms">
+		<i class=" fas fa-comment-dots mr-2"></i>Send as SMS
+	</a>
 </div>
 
 <div class="mb-5 bg-white p-4 allform">
-	<form action="<?php echo base_url('share'); ?>" method="post" id="gen_link_form" class="gen_link_form">
+	<form action="<?php echo base_url('share'); ?>" method="post" id="gen_link_form" class="gen_link_form email genform">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
 		<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
 		<div class="import text-right d-flex justify-content-between mb-4">
@@ -77,7 +81,7 @@
 				<i class="fas fa-envelope mr-2"></i>Send Email</button>
 		</div>
 	</form>
-	<form action="<?php echo base_url('smsshare'); ?>" method="post" id="sms_gen_link_form" class="sms_gen_link_form">
+	<form action="<?php echo base_url('smsshare'); ?>" method="post" id="sms_gen_link_form" class="sms_gen_link_form sms genform">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
 		<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
 		<div class="sms_import text-right d-flex justify-content-between mb-4">
@@ -133,7 +137,7 @@
 				$(".bdy").load("<?php echo base_url("body.txt"); ?>");
 				$(".smsbdy").load("<?php echo base_url("body.txt"); ?>");
 
-				$('.gen_link_form').show();
+				// $('.gen_link_form').show();
 			},
 			error: function(data) {
 				var protocol = window.location.protocol;

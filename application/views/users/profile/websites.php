@@ -1,9 +1,11 @@
 <h4 class="text-dark">Websites</h4>
 <hr class="web">
 <div class="d-flex btn_wrapper_div" style="justify-content:space-between">
-    <div style="color:#a71d2a;font-weight:600;">
+    <div style="color:#294a63;font-weight:bold;margin:auto 0">
         <?php if ($this->session->userdata("mr_iscmpy") === "1") : ?>
-            <div>Available webspace of <span class="webspaceleft"><?php echo $this->session->userdata("mr_webspace_left") ?></span> (webspace is used by all users under "<?php echo $this->session->userdata("mr_cmpy") ?> COMPANY")</div>
+            <div>Available webspace of <span class="webspaceleft"><?php echo $this->session->userdata("mr_webspace_left") ?></span>
+            </div>
+            <!-- <div>Webspace is used by all users under <?php echo $this->session->userdata("mr_cmpy") ?></div> -->
         <?php else : ?>
             <div>Available webspace of <span class="webspaceleft"><?php echo $this->session->userdata("mr_webspace_left") ?></span></div>
         <?php endif; ?>
@@ -20,7 +22,7 @@
 
 <div class="eachwebwrapper" id="eachwebwrapper">
     <?php if ($websites->num_rows() === 0) : ?>
-        <h5 class="text-center text-uppercase pt-4 pb-3 noweb text-danger">No website(s) created</h5>
+        <h6 class="text-center pt-4 pb-3 noweb text-danger">No website(s) created</h6>
     <?php endif; ?>
 
     <?php if ($websites->num_rows() > 0) : ?>
@@ -39,7 +41,7 @@
                     <div class="d-flex">
                         <input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="<?php echo $web['web_link'] ?>" readonly required style="cursor:not-allowed">
                         <div class="d-flex col-md-2">
-                            <button type="button" class="btn btn-success viewweb_btn " id="<?php echo $web['id'] ?>">
+                            <button type="button" class="btn text-light viewweb_btn " id="<?php echo $web['id'] ?>"style="background:#294a63">
                                 View
                             </button>
                             <?php if ($web['active'] == "1") : ?>
@@ -113,7 +115,7 @@
                         <div class="modal_btn_actions d-flex justify-content-between">
                             <button type="button" class="btn btn-secondary closewebmodal_btn">Close</button>
                             <button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#294a63;">
-                                <i class="fas fa-save mr-2"></i>Create</button>
+                                <i class="fas fa-save mr-2"></i>Add</button>
                         </div>
                     </form>
                 </div>

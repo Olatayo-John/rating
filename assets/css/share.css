@@ -14,10 +14,10 @@
 	/* color: black; */
 }
 form.gen_link_form{
-	display: all;
+	/* display: all; */
 }
 form.sms_gen_link_form{
-	display: none;
+	/* display: none; */
 }
 label{
 	font-weight: bolder;

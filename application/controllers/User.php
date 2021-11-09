@@ -64,7 +64,7 @@ class User extends CI_Controller
 			}
 			if ($validate == "inactive_access") {
 				$this->Logmodel->log_act($type = "inactive_access");
-				$this->session->set_flashdata('invalid', 'Your account has been de-activated by Admin. Contact support for further queries');
+				$this->session->set_flashdata('invalid', 'Your account has been de-activated. Please Contact support');
 				redirect('/');
 			}
 			if ($validate == "inactive") {
@@ -555,11 +555,12 @@ class User extends CI_Controller
 			if ($pwd_res == false) {
 				$this->Logmodel->log_act($type = "userpwderr");
 				$this->session->set_flashdata('invalid', 'Incorrect password provided');
-				redirect($_SERVER['HTTP_REFERER']);
+				redirect('account#resetPassword');
 			} else {
 				$this->Logmodel->log_act($type = "userpwd");
 				$this->session->set_flashdata('valid', 'Password changed');
-				redirect($_SERVER['HTTP_REFERER']);
+				redirect('account#resetPassword');
+
 			}
 		}
 	}
@@ -720,7 +721,12 @@ class User extends CI_Controller
 				$this->logout();
 				exit;
 			} else if ($this->session->userdata('mr_sub') == '0') {
-				$this->session->set_flashdata('invalid', 'Your subscriptiontion isnt active. Contact Admin if you have a valid quota');
+				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+					$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
+				} else {
+					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
+				}
+				$this->session->set_flashdata('invalid', $sessmsg);
 				redirect($_SERVER['HTTP_REFERER']);
 			} else if ($cq_res !== false) {
 				$usermail_expire = $cq_res->email;
@@ -829,7 +835,12 @@ class User extends CI_Controller
 		if ($cq_res === "not_Found") {
 			return false;
 		} else if ($this->session->userdata('mr_sub') == '1') {
-			$this->session->set_flashdata('invalid', 'Your subscriptiontion isnt active. Contact Admin if you have a valid quota');
+			if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+				$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
+			} else {
+				$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
+			}
+			$this->session->set_flashdata('invalid', $sessmsg);
 			return false;
 		} else if ($cq_res !== false) {
 			$usermail_expire = $cq_res->email;
@@ -903,8 +914,13 @@ class User extends CI_Controller
 				$this->logout();
 				exit;
 			} else if ($this->session->userdata('mr_sub') == '0') {
-				$this->session->set_flashdata('invalid', 'Your subscriptiontion isnt active. Contact Admin if you have a valid quota');
-				redirect($_SERVER['HTTP_REFERER']);
+				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+					$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
+				} else {
+					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
+				}
+				$this->session->set_flashdata('invalid', $sessmsg);
+				redirect('share#sms');
 			} else if ($cq_res !== false) {
 				$usermail_expire = $cq_res->email;
 				$this->Logmodel->log_act($type = "quota_expire");
@@ -955,7 +971,12 @@ class User extends CI_Controller
 		if ($cq_res === "not_Found") {
 			return false;
 		} else if ($this->session->userdata('mr_sub') == '0') {
-			$this->session->set_flashdata('invalid', 'Your subscriptiontion isnt active. Contact Admin if you have a valid quota');
+			if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+				$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
+			} else {
+				$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
+			}
+			$this->session->set_flashdata('invalid', $sessmsg);
 			return false;
 		} else if ($cq_res !== false) {
 			$usermail_expire = $cq_res->email;

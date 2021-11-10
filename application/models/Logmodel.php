@@ -190,6 +190,9 @@ class Logmodel extends CI_Model
             case 'admin_uuqerr':
                 $msg = "Error renewing User quota | Admin. [ID: " . $this->session->userdata('mr_id') . ", UserID: " . $_POST['user_id'] . ", Bought: " . $_POST['bought'] . ", Used: " . $_POST['used'] . ", Balance: " . $_POST['balance'] . "]";
                 break;
+			case 'cmpy_deluser_err':
+                $msg = "Error deleting User from Comapny | Amin[ID: ".$this->session->userdata('mr_id')." UserID: ".$_POST['']." Company: ".$this->session->userdata('mr_cmpy')." CompanyID: ".$this->session->userdata('mr_cmpyid')."]";
+                break;
         }
 
         $data = array(

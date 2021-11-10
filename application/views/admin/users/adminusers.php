@@ -45,9 +45,23 @@
 
 
 <div class="d-flex pb-4" style="justify-content:space-between;">
-	<div style="font-weight: bold;text-transform: uppercase;color:#294a63">
+	<!-- <div style="font-weight: bold;text-transform: uppercase;color:#294a63">
 		<h4><?php echo $this->session->userdata("mr_cmpy") ?></h4>
+	</div> -->
+
+	<div class="row col pl-0">
+		<div class="col-lg-4 col-xs-4 col-md-4 total-column">
+			<div class="panel_s">
+				<div class="panel-body">
+					<h3 class="_total">
+						<?php echo ($quota->used) ?>
+					</h3>
+					<span style="color:#a71d2a">Total Quota Used</span>
+				</div>
+			</div>
+		</div>
 	</div>
+
 	<?php if ($adminusers->num_rows() < $this->session->userdata("mr_userspace")) : ?>
 		<div>
 			<a href="<?php echo base_url('adduser'); ?>" class="btn text-light" style="background:#294a63;">
@@ -114,6 +128,7 @@
 		</tbody>
 	</table>
 <?php endif; ?>
+<?php print_r($quota); ?><br>
 
 
 
@@ -340,6 +355,28 @@
 					}
 
 					$('.csrf-token').val(data.token);
+				}
+			});
+		});
+
+		//testCase
+		$(document).on('click', '.testCase', function(e) {
+			e.preventDefault();
+
+			$.ajax({
+				url: "<?php echo base_url("testCase"); ?>",
+				method: "post",
+				dataType: "json",
+				data: {
+					[csrfName]: csrfHash,
+				},
+				error: function(res) {
+					// window.location.reload();
+				},
+				success: function(res) {
+					console.log(res);
+
+					$('.csrf-token').val(res.token);
 				}
 			});
 		});

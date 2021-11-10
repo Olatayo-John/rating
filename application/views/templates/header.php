@@ -52,7 +52,7 @@
 		<div class="logoimg mr-auto ml-3">
 			<img src="<?php echo base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
 		</div>
-		<?php print_r($_SESSION) ?>
+		<!-- <?php print_r($_SESSION) ?> -->
 
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>
 			<?php if ($this->session->userdata('mr_sub') == "0") : ?>
@@ -102,7 +102,7 @@
 				<?php if ($this->session->userdata('mr_logged_in') && ($this->session->userdata('mr_sadmin') == "1" || $this->session->userdata('mr_admin') == "1")) : ?>
 					<li class="nav-item">
 						<a href="<?php echo base_url('users') ?>" class="nav-link" style="<?php echo ($url == 'users') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-users" style="<?php echo ($url == 'users') ? 'color:#294a63' : 'color:#fff' ?>"></i>Users
+							<i class="fas fa-users" style="<?php echo ($url == 'users') ? 'color:#294a63' : 'color:#fff' ?>"></i>Manage Users
 						</a>
 					</li>
 				<?php endif; ?>

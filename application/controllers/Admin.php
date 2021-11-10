@@ -150,6 +150,9 @@ class Admin extends CI_Controller
 		$data['admininfo'] = $this->Adminmodel->get_admininfo();
 		$data['adminusers'] = $this->Adminmodel->get_adminusers();
 		$data['allusers'] = $this->Adminmodel->get_allusers();
+		
+		$data['quota'] = $this->Usermodel->user_totalquota();
+		$data['usertotal'] = $this->Usermodel->user_alltotalratings();
 
 		// print_r($data['admininfo']);die;
 		$this->load->view('templates/header', $data);
@@ -691,5 +694,24 @@ class Admin extends CI_Controller
 			$this->session->set_flashdata('valid', 'Contacts cleared!');
 			redirect('feedbacks');
 		}
+	}
+
+
+
+	public function testCase(){
+		// $res= $this->Adminmodel->testCase();
+		$this->load->model('Log_model');
+		$res= $this->Log_model->log_act($type = "logoutttt");
+
+		if($res !== true){
+			$data['status'] = false;
+			$data['msg'] = "Error Logging...";
+		}else {
+			$data['status'] = true;
+			$data['msg'] = "Logged!";
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
 	}
 }

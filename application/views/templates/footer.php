@@ -14,18 +14,17 @@
 		$(".info_div").removeClass('col-md-12').addClass('col-md-10');
 	}
 
+	function topFunction() {
+		// document.body.scrollTop = 0;
+		// document.documentElement.scrollTop = 0;
+
+		$('html, body').animate({scrollTop: 0}, 100);
+
+	}
+
 	$('[data-toggle="tooltip"]').tooltip();
 
 	setTimeout(() => document.querySelector('.alertsuccess,.alerterror').remove(), 6000);
-
-	// window.icons = {
-	// 	refresh: 'ion-md-refresh',
-	// 	'columns': 'fa-th-list',
-	// 	export : 'fa-download',
-	// 	detail : 'fa-download',
-	// 	icon : 'fa-download',
-	// 	'detail-view' : 'fa-download',
-	// }
 
 	$(document).ready(function() {
 

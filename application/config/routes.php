@@ -135,6 +135,9 @@ $route['clearlogs'] = 'admin/clearlogs';
 
 $route['logout'] = 'user/logout';
 
+//testCase
+$route['testCase'] = 'admin/testCase';
+
 
 // $route['404_override'] = '';
 $route['404_override'] = 'user/fof';

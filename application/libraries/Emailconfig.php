@@ -29,7 +29,7 @@ class Emailconfig
 
         $this->CI->email->from('jvweedtest@gmail.com', 'Rating');
         $this->CI->email->to($email);
-        $this->CI->email->subject("Your Verification Code");
+        $this->CI->email->subject("Verification Code");
         $this->CI->email->message($body);
 
         if ($this->CI->email->send()) {
@@ -41,11 +41,11 @@ class Emailconfig
 
     public function resetpassword_vcode($email, $act_key, $userid)
     {
-        $body = "Your code is " . $act_key . "\nEnter the above code to reset your password.\n\nSend us an email at info@nktech.in for any queries.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+        $body = "Your verification code is " . $act_key . "\nEnter the above code to reset your password.\n\nSend us an email at info@nktech.in for any queries.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
 
         $this->CI->email->from('jvweedtest@gmail.com', 'Rating');
         $this->CI->email->to($email);
-        $this->CI->email->subject("Password Reset Verification Code");
+        $this->CI->email->subject("Password Reset - Verification Code");
         $this->CI->email->message($body);
 
         if ($this->CI->email->send()) {
@@ -110,10 +110,10 @@ class Emailconfig
         if ($user_mail) {
             $subj = "Support message from " . $user_mail;
         } else if (!$user_mail) {
-            $subj = "Support mail";
+            $subj = "Support Mail";
         }
 
-        $this->CI->email->from('jvweedtest@gmail.com', 'Quota Limit');
+        $this->CI->email->from('jvweedtest@gmail.com', 'Rating');
         $this->CI->email->to('john.nktech@gmail.com');
         $this->CI->email->subject($subj);
         $this->CI->email->message($bdy);

@@ -84,6 +84,61 @@ class Adminmodel extends CI_Model
 		return $userinfo;
 	}
 
+	public function total_ratings()
+	{
+		$this->db->select('id');
+		$this->db->where('cmpyid', $this->session->userdata('mr_id'));
+		$query = $this->db->get('users')->result_array();
+
+		$idarray= array($this->session->userdata('mr_id'));
+		foreach($query as $queryid){
+			array_push($idarray,$queryid['id']);
+		}
+
+		$this->db->where_in('user_id', $idarray);
+		$this->db->select_sum('total_ratings');
+		$query = $this->db->get('user_details');
+		return $query->result_array();
+		exit;
+	}
+
+	public function total_sms()
+	{
+		$this->db->select('id');
+		$this->db->where('cmpyid', $this->session->userdata('mr_id'));
+		$query = $this->db->get('users')->result_array();
+
+		$idarray= array($this->session->userdata('mr_id'));
+		foreach($query as $queryid){
+			array_push($idarray,$queryid['id']);
+		}
+
+		$this->db->where_in('user_id', $idarray);
+		$this->db->select_sum('total_sms');
+		$query = $this->db->get('user_details');
+		return $query->result_array();
+		exit;
+	}
+
+	public function total_email()
+	{
+		$this->db->select('id');
+		$this->db->where('cmpyid', $this->session->userdata('mr_id'));
+		$query = $this->db->get('users')->result_array();
+
+		$idarray= array($this->session->userdata('mr_id'));
+		foreach($query as $queryid){
+			array_push($idarray,$queryid['id']);
+		}
+
+		$this->db->where_in('user_id', $idarray);
+		$this->db->select_sum('total_email');
+		$query = $this->db->get('user_details');
+		return $query->result_array();
+		exit;
+	}
+
+	//disabled
 	public function change_userstatus($uact, $uid, $formkey)
 	{
 		if ($uact == '0') {
@@ -100,6 +155,7 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
+	//disabled
 	public function admin_deleteuser($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
@@ -164,12 +220,12 @@ class Adminmodel extends CI_Model
 		return $query->row();
 	}
 
-	public function get_userquota($id, $form_key,$iscmpy,$cmpyid)
+	public function get_userquota($id, $form_key, $iscmpy, $cmpyid)
 	{
-		if(!empty($iscmpy) && $iscmpy === "1" && isset($cmpyid) && !empty($cmpyid) && $cmpyid !== ""){
-			$wherearray= array('by_user_id' => $cmpyid);
-		}else{
-			$wherearray= array('by_user_id' => $id, 'by_form_key' => $form_key);
+		if (!empty($iscmpy) && $iscmpy === "1" && isset($cmpyid) && !empty($cmpyid) && $cmpyid !== "") {
+			$wherearray = array('by_user_id' => $cmpyid);
+		} else {
+			$wherearray = array('by_user_id' => $id, 'by_form_key' => $form_key);
 		}
 
 		$this->db->where($wherearray);
@@ -179,7 +235,7 @@ class Adminmodel extends CI_Model
 
 	public function get_userwebsites($id, $form_key)
 	{
-		$this->db->order_by('web_name','asc');
+		$this->db->order_by('web_name', 'asc');
 		$this->db->where(array('user_id' => $id, 'form_key' => $form_key));
 		$query = $this->db->get('websites');
 		return $query->result();
@@ -276,7 +332,7 @@ class Adminmodel extends CI_Model
 	public function admin_updateuserpwd($user_id, $rspwd)
 	{
 		$this->db->set('password', password_hash($rspwd, PASSWORD_DEFAULT));
-		$this->db->where('id',$user_id);
+		$this->db->where('id', $user_id);
 		$this->db->update("users");
 		return true;
 	}
@@ -285,7 +341,7 @@ class Adminmodel extends CI_Model
 	{
 		$this->db->select("u.id as uid,u.cmpy,u.iscmpy,u.cmpyid,u.uname,u.fname,u.lname,u.email,u.mobile,u.active,u.form_key");
 		$this->db->from('users u');
-		$this->db->where('sadmin','0');
+		$this->db->where('sadmin', '0');
 		// $this->db->join('user_details ud', 'u.form_key=ud.form_key', 'inner');
 		$userinfo = $this->db->get();
 		return $userinfo;

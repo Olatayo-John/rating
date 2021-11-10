@@ -149,12 +149,17 @@ class Admin extends CI_Controller
 
 		$data['admininfo'] = $this->Adminmodel->get_admininfo();
 		$data['adminusers'] = $this->Adminmodel->get_adminusers();
+
 		$data['allusers'] = $this->Adminmodel->get_allusers();
 		
 		$data['quota'] = $this->Usermodel->user_totalquota();
 		$data['usertotal'] = $this->Usermodel->user_alltotalratings();
 
-		// print_r($data['admininfo']);die;
+		$data['total_ratings'] = $this->Adminmodel->total_ratings();
+		$data['total_sms'] = $this->Adminmodel->total_sms();
+		$data['total_email'] = $this->Adminmodel->total_email();
+
+		// print_r($data['total_ratings']);die;
 		$this->load->view('templates/header', $data);
 		$this->load->view('admin/users', $data);
 		$this->load->view('templates/footer');

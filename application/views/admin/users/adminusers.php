@@ -50,13 +50,43 @@
 	</div> -->
 
 	<div class="row col pl-0">
-		<div class="col-lg-4 col-xs-4 col-md-4 total-column">
+		<div class="col-lg-3 col-xs-3 col-md-3 total-column pr-0">
 			<div class="panel_s">
 				<div class="panel-body">
 					<h3 class="_total">
 						<?php echo ($quota->used) ?>
 					</h3>
-					<span style="color:#a71d2a">Total Quota Used</span>
+					<span style="color:#294a63">Total Quota</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-xs-3 col-md-3 total-column">
+			<div class="panel_s">
+				<div class="panel-body">
+					<h3 class="_total">
+						<?php echo ($total_ratings[0]['total_ratings']) ?>
+					</h3>
+					<span style="color:#294a63">Total Ratings</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-xs-3 col-md-3 total-column pr-0">
+			<div class="panel_s">
+				<div class="panel-body">
+					<h3 class="_total">
+					<?php echo ($total_sms[0]['total_sms']) ?>
+					</h3>
+					<span style="color:#294a63">Total Email</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-xs-3 col-md-3 total-column">
+			<div class="panel_s">
+				<div class="panel-body">
+					<h3 class="_total">
+					<?php echo ($total_email[0]['total_email']) ?>
+					</h3>
+					<span style="color:#294a63">Total SMS</span>
 				</div>
 			</div>
 		</div>
@@ -128,7 +158,6 @@
 		</tbody>
 	</table>
 <?php endif; ?>
-<?php print_r($quota); ?><br>
 
 
 

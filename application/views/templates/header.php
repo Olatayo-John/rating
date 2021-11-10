@@ -52,7 +52,7 @@
 		<div class="logoimg mr-auto ml-3">
 			<img src="<?php echo base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
 		</div>
-		<!-- <?php print_r($_SESSION) ?> -->
+		<?php print_r($_SESSION) ?>
 
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>
 			<?php if ($this->session->userdata('mr_sub') == "0") : ?>

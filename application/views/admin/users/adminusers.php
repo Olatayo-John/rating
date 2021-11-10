@@ -45,9 +45,6 @@
 
 
 <div class="d-flex pb-4" style="justify-content:space-between;">
-	<!-- <div style="font-weight: bold;text-transform: uppercase;color:#294a63">
-		<h4><?php echo $this->session->userdata("mr_cmpy") ?></h4>
-	</div> -->
 
 	<div class="row col pl-0">
 		<div class="col-lg-3 col-xs-3 col-md-3 total-column pr-0">

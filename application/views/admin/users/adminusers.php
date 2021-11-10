@@ -44,58 +44,48 @@
 </div>
 
 
-<div class="d-flex pb-4" style="justify-content:space-between;">
 
-	<div class="row col pl-0">
-		<div class="col-lg-3 col-xs-3 col-md-3 total-column pr-0">
-			<div class="panel_s">
-				<div class="panel-body">
-					<h3 class="_total">
-						<?php echo ($quota->used) ?>
-					</h3>
-					<span style="color:#294a63">Total Quota</span>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-3 col-xs-3 col-md-3 total-column">
-			<div class="panel_s">
-				<div class="panel-body">
-					<h3 class="_total">
-						<?php echo ($total_ratings[0]['total_ratings']) ?>
-					</h3>
-					<span style="color:#294a63">Total Ratings</span>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-3 col-xs-3 col-md-3 total-column pr-0">
-			<div class="panel_s">
-				<div class="panel-body">
-					<h3 class="_total">
-					<?php echo ($total_sms[0]['total_sms']) ?>
-					</h3>
-					<span style="color:#294a63">Total Email</span>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-3 col-xs-3 col-md-3 total-column">
-			<div class="panel_s">
-				<div class="panel-body">
-					<h3 class="_total">
-					<?php echo ($total_email[0]['total_email']) ?>
-					</h3>
-					<span style="color:#294a63">Total SMS</span>
-				</div>
+<div class="row col-md-12 p-0 pb-4">
+	<div class="col-lg-3 col-xs-3 col-md-3 total-column pr-0">
+		<div class="panel_s">
+			<div class="panel-body">
+				<h3 class="_total">
+					<?php echo ($quota->used) ?>
+				</h3>
+				<span style="color:#294a63">Total Quota</span>
 			</div>
 		</div>
 	</div>
-
-	<?php if ($adminusers->num_rows() < $this->session->userdata("mr_userspace")) : ?>
-		<div>
-			<a href="<?php echo base_url('adduser'); ?>" class="btn text-light" style="background:#294a63;">
-				<i class="fas fa-user-plus pr-2"></i>Add User
-			</a>
+	<div class="col-lg-3 col-xs-3 col-md-3 total-column pr-0">
+		<div class="panel_s">
+			<div class="panel-body">
+				<h3 class="_total">
+					<?php echo ($total_ratings[0]['total_ratings']) ?>
+				</h3>
+				<span style="color:#294a63">Total Ratings</span>
+			</div>
 		</div>
-	<?php endif; ?>
+	</div>
+	<div class="col-lg-3 col-xs-3 col-md-3 total-column pr-0">
+		<div class="panel_s">
+			<div class="panel-body">
+				<h3 class="_total">
+					<?php echo ($total_sms[0]['total_sms']) ?>
+				</h3>
+				<span style="color:#294a63">Total Email</span>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-xs-3 col-md-3 total-column">
+		<div class="panel_s">
+			<div class="panel-body">
+				<h3 class="_total">
+					<?php echo ($total_email[0]['total_email']) ?>
+				</h3>
+				<span style="color:#294a63">Total SMS</span>
+			</div>
+		</div>
+	</div>
 </div>
 
 
@@ -104,7 +94,7 @@
 		<p>You have no user in your company(<?php echo $this->session->userdata("mr_cmpy") ?>)</p>
 	</div>
 <?php else : ?>
-	<table id="sadmintable" data-toggle="table" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-detail-view="true" data-detail-formatter="detailFormatter" data-pagination="true" data-show-print="true">
+	<table id="sadmintable" data-toggle="table" data-search="true" data-show-export="true" data-show-print="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-detail-view="true" data-detail-formatter="detailFormatter" data-pagination="true" <?php echo ($adminusers->num_rows() < $this->session->userdata("mr_userspace")) ? "data-buttons=buttons" : "" ?> data-show-button-text="true">
 		<thead class="text-light" style="background:#294a63">
 			<tr>
 				<th data-field="name" data-sortable="true">Full Name / Username</th>
@@ -162,12 +152,34 @@
 	var csrfName = $('.csrf-token').attr('name');
 	var csrfHash = $('.csrf-token').val();
 
-
 	// function detailFormatter(index, row) {
 	// 	var html = []
 	// 	html.push('<div><a href="" id="' + row._id + '" formkey="' + row._data.formkey + '" iscmpy="' + row._data.iscmpy + '" cmpyid="' + row._data.cmpyid + '" class="vuser pr-1" style="color:#294a63">View</a><a href="" id="' + row._id + '" formkey="' + row._data.formkey + '" class="duser text-danger">Delete</a></div>');
 	// 	return html.join('');
 	// }
+
+
+	$(function() {
+		var buttonsOrder = ['columns', 'print', 'export', 'btnAdd'];
+
+		$('#sadmintable').bootstrapTable('refreshOptions', {
+			buttonsOrder: buttonsOrder
+		})
+
+	});
+
+	function buttons() {
+		return {
+			btnAdd: {
+				text: 'New User',
+				icon: 'fa-user-plus',
+				event: function() {
+					adduserurl = "<?php echo base_url('adduser'); ?>";
+					location.assign(adduserurl);
+				}
+			}
+		}
+	}
 
 	function detailFormatter(index, row) {
 		var html = []

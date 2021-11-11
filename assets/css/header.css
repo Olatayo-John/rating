@@ -16,7 +16,6 @@ a,.btn a{
 	color:#fff;
 }
 a:hover{
-	/* color:#294a63 !important; */
 	text-decoration: none !important;
 }
 .btn:focus,button:focus{

@@ -1,12 +1,15 @@
 </div>
+
+
 <script type="text/javascript">
+
 	function opennav() {
 		document.getElementById('side-nav').style.left = "0";
 		document.getElementById('content').style.marginLeft = "214px";
 		$(".tab_div").hide();
 		$(".info_div").removeClass('col-md-10').addClass('col-md-12');
 	}
-
+	
 	function closenav() {
 		document.getElementById('side-nav').style.left = "-200px";
 		document.getElementById('content').style.marginLeft = "14px";
@@ -14,17 +17,19 @@
 		$(".info_div").removeClass('col-md-12').addClass('col-md-10');
 	}
 
+
 	function topFunction() {
-		// document.body.scrollTop = 0;
-		// document.documentElement.scrollTop = 0;
-
 		$('html, body').animate({scrollTop: 0}, 100);
-
 	}
+
 
 	$('[data-toggle="tooltip"]').tooltip();
 
+
 	setTimeout(() => document.querySelector('.alertsuccess,.alerterror').remove(), 6000);
+
+
+
 
 	$(document).ready(function() {
 

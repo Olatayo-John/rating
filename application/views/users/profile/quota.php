@@ -7,12 +7,22 @@
         Except <strong style="color:#294a63">Userspace,</strong> all other services applies to you & all users under <a href="<?php echo base_url('users') ?>" style="color:#294a63;font-weight:bold;"><?php echo $this->session->userdata("mr_cmpy"); ?></a>
     </p>
 <?php endif; ?>
+
+
 <div class="row col-md-12 m-0 p-0 pb-5">
     <div class="col-lg-4 col-xs-12 col-md-12 total-column">
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total"><?php echo $quota->bought ?></h3>
-                <span class="text-success">Quota Bought</span>
+                <span class="text-success">Quota</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-xs-12 col-md-12 total-column">
+        <div class="panel_s">
+            <div class="panel-body">
+                <h3 class="_total"><?php echo $quota->used ?></h3>
+                <span>Used</span>
             </div>
         </div>
     </div>
@@ -24,15 +34,9 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-xs-12 col-md-12 total-column">
-        <div class="panel_s">
-            <div class="panel-body">
-                <h3 class="_total"><?php echo $quota->used ?></h3>
-                <span style="color:#a71d2a">Used</span>
-            </div>
-        </div>
-    </div>
 </div>
+
+
 
 
 <div class="row col-md-12 m-0 p-0 pb-5">
@@ -46,7 +50,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-xs-4 col-md-4 total-column">
+    <!-- <div class="col-lg-4 col-xs-4 col-md-4 total-column">
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total" style="<?php echo ($quota->webspace_left == "0") ? "opacity: .5;" : "" ?>">
@@ -55,18 +59,21 @@
                 <span>Left</span>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="col-lg-4 col-xs-4 col-md-4 total-column">
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total">
                     <?php echo ($quota->webspace - $quota->webspace_left) ?>
                 </h3>
-                <span style="color:#a71d2a">Used</span>
+                <span>Used</span>
             </div>
         </div>
     </div>
 </div>
+
+
+
 
 <?php if ($this->session->userdata("mr_admin") === "1") : ?>
     <div class="row col-md-12 m-0 p-0 pb-5">
@@ -80,7 +87,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-xs-4 col-md-4 total-column">
+        <!-- <div class="col-lg-4 col-xs-4 col-md-4 total-column">
             <div class="panel_s">
                 <div class="panel-body">
                     <h3 class="_total" style="<?php echo ($quota->userspace_left == "0") ? "opacity: .5;" : "" ?>">
@@ -89,19 +96,21 @@
                     <span>Left</span>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="col-lg-4 col-xs-4 col-md-4 total-column">
             <div class="panel_s">
                 <div class="panel-body">
                     <h3 class="_total">
                         <?php echo ($quota->userspace - $quota->userspace_left) ?>
                     </h3>
-                    <span style="color:#a71d2a">Used</span>
+                    <span>Used</span>
                 </div>
             </div>
         </div>
     </div>
 <?php endif; ?>
+
+
 
 <div class="p-3">
     <?php if ($this->session->userdata("mr_sub") === "0") : ?>

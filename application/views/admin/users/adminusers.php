@@ -43,6 +43,9 @@
 	</div>
 </div>
 
+<div style="font-weight: bold;text-transform: uppercase;color:#294a63"class="pb-4">
+	<h4><?php echo $this->session->userdata("mr_cmpy") ?></h4>
+</div>
 
 
 <div class="row col-md-12 p-0 pb-4">
@@ -114,11 +117,12 @@
 						<?php echo $admininfo->fname . " " . $admininfo->lname ?>
 					<?php else : ?>
 						<?php echo $admininfo->uname ?>
-					<?php endif; ?> (ADMIN)
+					<?php endif; ?><strong class="text-danger">(ADMIN)</strong>
 				</td>
-				<td><a href="mailto:<?php echo $admininfo->email ?>"><?php echo $admininfo->email ?></a></td>
+				<!-- <td><a href="mailto:<?php echo $admininfo->email ?>"><?php echo $admininfo->email ?></a></td> -->
+				<td><?php echo $admininfo->email ?></td>
 				<td><?php echo $admininfo->mobile ?></td>
-				<td class="font-weight-bolder"><?php echo $admininfo->total_ratings + $admininfo->total_email + $admininfo->total_sms ?></td>
+				<td><?php echo $admininfo->total_ratings + $admininfo->total_email + $admininfo->total_sms ?></td>
 				<td><?php echo $admininfo->total_ratings ?></td>
 				<td><?php echo $admininfo->total_email ?></td>
 				<td><?php echo $admininfo->total_sms ?></td>
@@ -135,7 +139,7 @@
 					</td>
 					<td><a href="mailto:<?php echo $user->email ?>"><?php echo $user->email ?></a></td>
 					<td><?php echo $user->mobile ?></td>
-					<td class="font-weight-bolder"><?php echo $user->total_ratings + $user->total_email + $user->total_sms ?></td>
+					<td><?php echo $user->total_ratings + $user->total_email + $user->total_sms ?></td>
 					<td><?php echo $user->total_ratings ?></td>
 					<td><?php echo $user->total_email ?></td>
 					<td><?php echo $user->total_sms ?></td>

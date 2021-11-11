@@ -3,7 +3,7 @@
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total"><?php echo $rr->num_rows() ?></h3>
-                <span style="color:#a71d2a;">Total Ratings</span>
+                <span class="text-success">Ratings</span>
             </div>
         </div>
     </div>

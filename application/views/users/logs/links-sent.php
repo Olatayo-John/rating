@@ -3,7 +3,7 @@
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total"><?php echo $ud->total_email+$ud->total_sms ?></h3>
-                <span style="color:#a71d2a;">Total Links</span>
+                <span class="text-success">Links</span>
             </div>
         </div>
     </div>

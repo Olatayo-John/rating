@@ -153,8 +153,6 @@ class Admin extends CI_Controller
 		$data['allusers'] = $this->Adminmodel->get_allusers();
 		
 		$data['quota'] = $this->Usermodel->user_totalquota();
-		$data['usertotal'] = $this->Usermodel->user_alltotalratings();
-
 		$data['total_ratings'] = $this->Adminmodel->total_ratings();
 		$data['total_sms'] = $this->Adminmodel->total_sms();
 		$data['total_email'] = $this->Adminmodel->total_email();

@@ -153,10 +153,11 @@ label i.fas,.tab_link i.fas{
 	color:#294a63;
 }
 h3._total {
-    font-weight: 400;
+    font-weight: bold;
     /* margin: 0; */
-    margin: 0 0 5px 0;
+    margin: 0;
     font-size: 20px;
+	color:#294a63;
 }
 .total-column span {
 	/* font-weight: bold; */

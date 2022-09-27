@@ -560,7 +560,6 @@ class User extends CI_Controller
 				$this->Logmodel->log_act($type = "userpwd");
 				$this->session->set_flashdata('valid', 'Password changed');
 				redirect('account#resetPassword');
-
 			}
 		}
 	}
@@ -863,22 +862,17 @@ class User extends CI_Controller
 				$this->session->set_flashdata('invalid', 'Number of emails to be sent exceeds your remaining quota point of ' . $qbl_res->bal . '.');
 				return false;
 			} else {
-				$notsentarr = array("firatarr");
-				$flag = null;
-
+				$notsentarr = array();
 				foreach ($emaildata as $mail) {
-					if (!empty($mail) && isset($mail) && filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-						$flag = false;
-					} else {
-						$flag = true;
+					if (empty($mail) || !isset($mail) || !filter_var($mail, FILTER_VALIDATE_EMAIL)) {
 						array_push($notsentarr, $mail);
 					}
 				}
 
-				if ($flag === true) {
+				if (count($notsentarr) > 0) {
 					$this->session->set_flashdata('invalid', 'some emails provided are invalid or empty. Please check the data' . print_r($notsentarr) . '');
 					return false;
-				} else if ($flag === false) {
+				} else if (count($notsentarr) == 0) {
 					foreach ($emaildata as $mail) {
 						$this->load->library('emailconfig');
 						$mail_res = $this->emailconfig->send_multiple_link_email($mail, $subj, $bdy);
@@ -1028,10 +1022,11 @@ class User extends CI_Controller
 		}
 	}
 
-	public function fof(){
+	public function fof()
+	{
 		$data['title'] = "404 | Page Not Found";
 
-		$this->load->view('templates/header',$data);
+		$this->load->view('templates/header', $data);
 		$this->load->view('templates/fof');
 		$this->load->view('templates/footer');
 	}

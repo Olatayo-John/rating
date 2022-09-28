@@ -321,7 +321,7 @@
 			e.preventDefault();
 			var uid = $(this).attr("id");
 			var formkey = $(this).attr("formkey");
-			var con = confirm("Are you sure you want to delete this user along with its data? Quota used by this user cannot be refunded");
+			var con = confirm("Are you sure you want to delete this user along with its data? Quota used by this user will not be refunded");
 			if (con === false) {
 				return false;
 			} else {

@@ -40,6 +40,35 @@ $(document).ready(function () {
 		var hpwd = $('.pwd').attr('type', 'password');
 	});
 
+
+	//mouse event on "ANY" plan
+	$(".plandiv").on({
+		mouseenter: function () {
+			var plan = $(this).attr("plan");
+
+			//reset back
+			$("div.plandiv").css({
+				'transition': '.4s',
+				'transform': 'scale(1)'
+			});
+
+			//zoom out the selected plan
+			$("div." + plan + "").css({
+				'transition': '.4s',
+				'transform': 'scale(1.1)'
+			});
+		},
+		mouseleave: function () {
+			var plan = $(this).attr("plan");
+
+			//reset back
+			$("div.plandiv").css({
+				'transition': '.4s',
+				'transform': 'scale(1)'
+			});
+		}
+	});
+
 	$(document).on('click', '.chooseplanbtn', function () {
 		var plan = $(this).attr("plan");
 		var quota = $(this).attr("quota");
@@ -53,18 +82,8 @@ $(document).ready(function () {
 			$(".webspace").val(webspace);
 			$(".userspace").val(userspace);
 
-			$("div.plandiv").css({
-				'transition': '.4s',
-				'transform': 'scale(1)'
-			});
-
-			$("div." + plan + "").css({
-				'transition': '.4s',
-				'transform': 'scale(1.1)'
-			});
-
-			$(".chooseplanbtn").removeClass("bg-success").html("Chose Plan");;
-			$(this).addClass("bg-success").html("Chose Plan");
+			$(".chooseplanbtn").removeClass("bg-success").html("Choose Plan");;
+			$(this).addClass("bg-success").html("Current Plan");
 		} else {
 			window.location.reload();
 		}
@@ -106,10 +125,10 @@ $(document).ready(function () {
 				$('.cmpy').css('border', '2px solid red');
 				document.getElementById("cmpy").scrollIntoView();
 				return false;
-			}else{
+			} else {
 				$('.cmpy').css('border', '1px solid #ced4da');
 			}
-		}else{
+		} else {
 			$('.cmpy').css('border', '1px solid #ced4da');
 		}
 

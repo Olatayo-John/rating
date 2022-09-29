@@ -39,7 +39,9 @@
 			<i class="fas fa-eye-slash mr-2"></i>
 			<button class="btn text-light genpwdbtn bg-danger" type="button" name="genpwdbtn">Generate Password</button>
 		</div>
-		<div class="form-group mb-2 d-flex">
+
+		<hr>
+		<div class="form-group mb-3 d-flex">
 			<div style="color:#294a63;" class="font-weight-bolder">Are you a company?</div>
 			<input type="checkbox" class="cmpychkb form" id="cmpychkb" name="cmpychkb" style="margin:auto 0 auto 3px;">
 		</div>
@@ -48,6 +50,7 @@
 			<input type="text" name="cmpy" class="form-control cmpy" placeholder="Company Name" id="cmpy">
 			<span class="cmpyerr text-danger" style="display:none">Company already exist</span>
 		</div>
+		<hr>
 
 		<div class="pt-4">
 			<h4 class="text-dark">Subscriptions</h4>
@@ -57,7 +60,7 @@
 			<input type="hidden" name="userspace" class="userspace" id="userspace">
 
 			<div class="row col-md-12 m-0">
-				<div class="col-md-3 plandiv planone">
+				<div class="col-md-3 plandiv planone" plan="planone">
 					<div class="card">
 						<div class="card-header text-center plantype mb-3">
 							<label for="">Basic</label>
@@ -79,7 +82,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-3 plandiv plantwo">
+				<div class="col-md-3 plandiv plantwo" plan="plantwo">
 					<div class="card">
 						<div class="card-header text-center plantype mb-3">
 							<label for="">Basic</label>
@@ -102,7 +105,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-3 plandiv planthree">
+				<div class="col-md-3 plandiv planthree" plan="planthree">
 					<div class="card">
 						<div class="card-header text-center plantype mb-3">
 							<label for="">SILVER</label>
@@ -125,7 +128,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-3 plandiv planfour">
+				<div class="col-md-3 plandiv planfour" plan="planfour">
 					<div class="card">
 						<div class="card-header text-center plantype mb-3">
 							<label for="">GOLD</label>
@@ -159,6 +162,10 @@
 		</div>
 	</form>
 </div>
+
+
+
+
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/register.js'); ?>"></script>
 <script>

@@ -45,6 +45,8 @@ class User extends CI_Controller
 		}
 	}
 
+	//login function
+	//check if username an password are valid
 	public function login()
 	{
 		if ($this->session->userdata('mr_logged_in')) {
@@ -75,6 +77,7 @@ class User extends CI_Controller
 					redirect('user/emailverify/' . $res_login);
 				}
 			}
+			//if valid, create sessions via user details
 			if ($validate) {
 				$id = $validate->id;
 				$sadmin = $validate->sadmin;
@@ -126,6 +129,8 @@ class User extends CI_Controller
 		}
 	}
 
+	//logout
+	//clear all sessions and redirect to login page
 	public function logout()
 	{
 		$this->Logmodel->log_act($type = "logout");
@@ -155,6 +160,7 @@ class User extends CI_Controller
 		redirect('/');
 	}
 
+	//check if username exist when registering
 	public function check_duplicate_username()
 	{
 		$data['user_data'] = $this->Usermodel->check_duplicate_username(htmlentities($_POST['uname_val']));
@@ -162,6 +168,7 @@ class User extends CI_Controller
 		echo json_encode($data);
 	}
 
+	//check if company name exist when registering
 	public function check_duplicatecmpy()
 	{
 		$data['user_data'] = $this->Usermodel->check_duplicatecmpy(htmlentities($_POST['cmpy_val']));
@@ -169,6 +176,7 @@ class User extends CI_Controller
 		echo json_encode($data);
 	}
 
+	//reister function
 	public function register()
 	{
 		$data['title'] = "register";
@@ -178,6 +186,7 @@ class User extends CI_Controller
 			redirect('/');
 		}
 
+		//validate input forms
 		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
 		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
@@ -212,7 +221,9 @@ class User extends CI_Controller
 				redirect('register');
 				exit();
 			} else {
+				// for default users who are not a company
 				$admin = $iscmpy = $userspace = 0;
+
 				if (isset($_POST['cmpychkb'])) {
 					$admin = $iscmpy = 1;
 					$userspace = htmlentities($this->input->post('userspace'));
@@ -225,7 +236,7 @@ class User extends CI_Controller
 					exit();
 				} else {
 					$this->Logmodel->log_act($type = "newuser");
-					$this->session->set_flashdata('valid', 'Verification code sent to you mail.');
+					$this->session->set_flashdata('valid', 'Verification code sent to your mail.');
 					redirect('emailverify/' . $form_key);
 					exit();
 				}
@@ -233,6 +244,7 @@ class User extends CI_Controller
 		}
 	}
 
+	//email verification after registration
 	public function emailverify($key)
 	{
 		$check_res = $this->Usermodel->check_verification($key);

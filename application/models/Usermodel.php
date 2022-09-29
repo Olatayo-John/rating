@@ -116,6 +116,10 @@ class Usermodel extends CI_Model
 		$lastid = $this->db->insert_id();
 		$this->insert_user_details($lastid, $form_key);
 		$this->insert_quota($lastid, $userspace, $form_key);
+
+		if(($iscmpy === 1) && ($admin === 1)){
+			$this->insert_company_details($lastid, $form_key);
+		}
 		return TRUE;
 	}
 
@@ -135,6 +139,19 @@ class Usermodel extends CI_Model
 			'total_five' => '0',
 		);
 		$this->db->insert('user_details', $data);
+		return true;
+	}
+
+	public function insert_company_details($lastid)
+	{
+		$data = array(
+			'cmpyid' => $lastid,
+			'cmpyName' => htmlentities($this->input->post('cmpy')),
+			'cmpyEmail' => '',
+			'cmpyMobile' => '',
+			'cmpyLogo' => ''
+		);
+		$this->db->insert('company_details', $data);
 		return true;
 	}
 

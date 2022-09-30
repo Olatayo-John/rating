@@ -92,11 +92,6 @@ class User extends CI_Controller
 				$sub = $validate->sub;
 				$website_form = $validate->website_form;
 				$form_key = $validate->form_key;
-				$bought = $validate->bought;
-				$webspace = $validate->webspace;
-				$webspace_left = $validate->webspace_left;
-				$userspace = $validate->userspace;
-				$userspace_left = $validate->userspace_left;
 
 				$user_sess = array(
 					'mr_id' => $id,
@@ -112,11 +107,6 @@ class User extends CI_Controller
 					'mr_sub' => $sub,
 					'mr_website_form' => $website_form,
 					'mr_form_key' => $form_key,
-					'mr_web_quota' => $bought,
-					'mr_webspace' => $webspace,
-					'mr_webspace_left' => $webspace_left,
-					'mr_userspace' => $userspace,
-					'mr_userspace_left' => $userspace_left,
 					'mr_logged_in' => TRUE,
 				);
 				$this->session->set_userdata($user_sess);
@@ -148,11 +138,6 @@ class User extends CI_Controller
 		$this->session->unset_userdata('mr_sub');
 		$this->session->unset_userdata('mr_website_form');
 		$this->session->unset_userdata('mr_form_key');
-		$this->session->unset_userdata('mr_web_quota');
-		$this->session->unset_userdata('mr_webspace');
-		$this->session->unset_userdata('mr_webspace_left');
-		$this->session->unset_userdata('mr_userspace');
-		$this->session->unset_userdata('mr_userspace_left');
 		$this->session->unset_userdata('mr_logged_in');
 		// $this->session->sess_destroy();
 
@@ -287,11 +272,6 @@ class User extends CI_Controller
 						$sub = $validate->sub;
 						$website_form = $validate->website_form;
 						$form_key = $validate->form_key;
-						$bought = $validate->bought;
-						$webspace = $validate->webspace;
-						$webspace_left = $validate->webspace_left;
-						$userspace = $validate->userspace;
-						$userspace_left = $validate->userspace_left;
 
 						$user_sess = array(
 							'mr_id' => $id,
@@ -307,11 +287,6 @@ class User extends CI_Controller
 							'mr_sub' => $sub,
 							'mr_website_form' => $website_form,
 							'mr_form_key' => $form_key,
-							'mr_web_quota' => $bought,
-							'mr_webspace' => $webspace,
-							'mr_webspace_left' => $webspace_left,
-							'mr_userspace' => $userspace,
-							'mr_userspace_left' => $userspace_left,
 							'mr_logged_in' => TRUE,
 						);
 						$this->session->set_userdata($user_sess);
@@ -324,6 +299,7 @@ class User extends CI_Controller
 		}
 	}
 
+	//resend verification email
 	public function resendemailverify($key)
 	{
 		$check_res = $this->Usermodel->check_verification($key);

@@ -40,7 +40,6 @@ $(document).ready(function () {
 		var hpwd = $('.pwd').attr('type', 'password');
 	});
 
-
 	//mouse event on "ANY" plan
 	$(".plandiv").on({
 		mouseenter: function () {
@@ -71,16 +70,18 @@ $(document).ready(function () {
 
 	$(document).on('click', '.chooseplanbtn', function () {
 		var plan = $(this).attr("plan");
-		var quota = $(this).attr("quota");
-		var webspace = $(this).attr("webspace");
-		var userspace = $(this).attr("userspace");
+		var sms_quota = $(this).attr("sms_quota");
+		var email_quota = $(this).attr("email_quota");
+		var whatsapp_quota = $(this).attr("whatsapp_quota");
+		var web_quota = $(this).attr("web_quota");
 
-		$(".quota,.webspace").val("");
+		$(".sms_quota,.email_quota,.whatsapp_quota,.web_quota").val("");
 
-		if (plan !== "" && quota !== "" && webspace !== "" && userspace !== "") {
-			$(".quota").val(quota);
-			$(".webspace").val(webspace);
-			$(".userspace").val(userspace);
+		if (plan !== "" && sms_quota !== "" && email_quota !== "" && whatsapp_quota !== "" && web_quota !== "") {
+			$(".sms_quota").val(sms_quota);
+			$(".email_quota").val(email_quota);
+			$(".whatsapp_quota").val(whatsapp_quota);
+			$(".web_quota").val(web_quota);
 
 			$(".chooseplanbtn").removeClass("bg-success").html("Choose Plan");;
 			$(this).addClass("bg-success").html("Current Plan");
@@ -89,16 +90,19 @@ $(document).ready(function () {
 		}
 	});
 
+	//check all validation
 	$('button.registerbtn').click(function (e) {
-		// e.preventDefault();
+		e.preventDefault();
 		var email = $('.email').val();
 		var mobile = $('.mobile').val();
 		var cmpy = $('.cmpy').val();
 		var cmpychkb = $('.cmpychkb').val();
 		var uname = $('.uname').val();
 		var pwd = $('.pwd').val();
-		var quota = $(".quota").val();
-		var webspace = $(".webspace").val();
+		var sms_quota = $(".sms_quota").val();
+		var email_quota = $(".email_quota").val();
+		var whatsapp_quota = $(".whatsapp_quota").val();
+		var web_quota = $(".web_quota").val();
 
 		if (email == "" || email == null) {
 			$('.email').css('border', '2px solid red');
@@ -151,7 +155,7 @@ $(document).ready(function () {
 			$('.pwd').css('border', '1px solid #ced4da');
 			$('.pwderr').hide();
 		}
-		if (quota == "" || quota == null || webspace == "" || webspace == null) {
+		if (sms_quota == "" || sms_quota == null || email_quota == "" || email_quota == null || whatsapp_quota == "" || whatsapp_quota == null || web_quota == "" || web_quota == null) {
 			$(".ajax_succ_div,.ajax_err_div").hide();
 			$(".ajax_res_err").text("Please pick a plan");
 			$(".ajax_err_div").fadeIn().delay("6000").fadeOut();

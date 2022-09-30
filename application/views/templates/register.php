@@ -55,9 +55,10 @@
 		<div class="pt-4">
 			<h4 class="text-dark">Subscriptions</h4>
 			<hr class="sub">
-			<input type="hidden" name="quota" class="quota" id="quota">
-			<input type="hidden" name="webspace" class="webspace" id="webspace">
-			<input type="hidden" name="userspace" class="userspace" id="userspace">
+			<input type="text" name="sms_quota" class="sms_quota" id="sms_quota">
+			<input type="text" name="email_quota" class="email_quota" id="email_quota">
+			<input type="text" name="whatsapp_quota" class="whatsapp_quota" id="whatsapp_quota">
+			<input type="text" name="web_quota" class="web_quota" id="web_quota">
 
 			<div class="row col-md-12 m-0">
 				<div class="col-md-3 plandiv planone" plan="planone">
@@ -71,13 +72,14 @@
 						<div class="card-body">
 							<p class="text-center mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 							<ol style="list-style-type: disc;">
-								<li><strong>10</strong> Quota Points</li>
-								<li><strong>5</strong> Website Space</li>
-								<li class="us"><strong>3</strong> Employee's Space</li>
+								<li><strong>0</strong> SMS Quota</li>
+								<li><strong>100</strong> Email Quota</li>
+								<li><strong>5</strong> WhatsApp Quota</li>
+								<li><strong>1</strong> Website Quota</li>
 							</ol>
 						</div>
 						<div class="card-footer p-0">
-							<button class="btn btn-block chooseplanbtn" quota="10" webspace="5" userspace="3" plan="planone" type="button">Choose Plan</button>
+							<button class="btn btn-block chooseplanbtn" sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planone" type="button">Choose Plan</button>
 						</div>
 					</div>
 				</div>
@@ -94,13 +96,14 @@
 						<div class="card-body">
 							<p class="text-center mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 							<ol style="list-style-type: disc;">
-								<li><strong>50</strong> Quota Points</li>
-								<li><strong>10</strong> Website Space</li>
-								<li class="us"><strong>5</strong> Employee's Space</li>
+								<li><strong>0</strong> SMS Quota</li>
+								<li><strong>100</strong> Email Quota</li>
+								<li><strong>5</strong> WhatsApp Quota</li>
+								<li><strong>1</strong> Website Quota</li>
 							</ol>
 						</div>
 						<div class="card-footer p-0">
-							<button class="btn btn-block chooseplanbtn" quota="50" webspace="10" userspace="5" plan="plantwo" type="button">Choose Plan</button>
+							<button class="btn btn-block chooseplanbtn" sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="plantwo" type="button">Choose Plan</button>
 						</div>
 					</div>
 				</div>
@@ -117,13 +120,14 @@
 						<div class="card-body">
 							<p class="text-center mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 							<ol style="list-style-type: disc;">
-								<li><strong>100</strong> Quota Points</li>
-								<li><strong>15</strong> Website Space</li>
-								<li class="us"><strong>10</strong> Employee's Space</li>
+								<li><strong>0</strong> SMS Quota</li>
+								<li><strong>100</strong> Email Quota</li>
+								<li><strong>5</strong> WhatsApp Quota</li>
+								<li><strong>1</strong> Website Quota</li>
 							</ol>
 						</div>
 						<div class="card-footer p-0">
-							<button class="btn btn-block chooseplanbtn" quota="100" webspace="15" userspace="10" plan="planthree" type="button">Choose Plan</button>
+							<button class="btn btn-block chooseplanbtn" sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planthree" type="button">Choose Plan</button>
 						</div>
 					</div>
 				</div>
@@ -140,14 +144,14 @@
 						<div class="card-body">
 							<p class="text-center mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 							<ol style="list-style-type: disc;">
-								<li><strong>200</strong> Quota Points</li>
-								<li><strong>20</strong> Website Space</li>
-								<li class="us"><strong>15</strong> Employee's Space</li>
-
+								<li><strong>0</strong> SMS Quota</li>
+								<li><strong>100</strong> Email Quota</li>
+								<li><strong>5</strong> WhatsApp Quota</li>
+								<li><strong>1</strong> Website Quota</li>
 							</ol>
 						</div>
 						<div class="card-footer p-0">
-							<button class="btn btn-block chooseplanbtn" quota="150" webspace="20" userspace="15" plan="planfour" type="button">Choose Plan</button>
+							<button class="btn btn-block chooseplanbtn" sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planfour" type="button">Choose Plan</button>
 						</div>
 					</div>
 				</div>
@@ -172,6 +176,7 @@
 	$(document).ready(function() {
 		$('[data-toggle="tooltip"]').tooltip();
 
+		//check for duplicate username
 		$(".uname").keyup(function() {
 			var uname_val = $(".uname").val();
 			var csrfName = $(".csrf_token").attr("name");
@@ -206,14 +211,15 @@
 		$(".cmpychkb").change(function() {
 			var chl = $('#cmpychkb').is(":checked");
 			if (chl == true) {
-				$('.cmpydiv,li.us').fadeIn();
+				$('.cmpydiv').fadeIn();
 				$('.cmpy').attr('required', 'required');
 			} else {
-				$('.cmpydiv,li.us').fadeOut();
+				$('.cmpydiv').fadeOut();
 				$('.cmpy').removeAttr('required');
 			}
 		});
 
+		//check for duplicate companyName
 		$(".cmpy").keyup(function() {
 			var cmpy_val = $(".cmpy").val();
 			var csrfName = $(".csrf_token").attr("name");

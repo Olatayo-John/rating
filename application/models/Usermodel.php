@@ -142,19 +142,6 @@ class Usermodel extends CI_Model
 		return true;
 	}
 
-	public function insert_company_details($lastid)
-	{
-		$data = array(
-			'cmpyid' => $lastid,
-			'cmpyName' => htmlentities($this->input->post('cmpy')),
-			'cmpyEmail' => '',
-			'cmpyMobile' => '',
-			'cmpyLogo' => ''
-		);
-		$this->db->insert('company_details', $data);
-		return true;
-	}
-
 	public function insert_quota($lastid, $userspace, $form_key)
 	{
 		$data = array(
@@ -167,6 +154,19 @@ class Usermodel extends CI_Model
 			'by_form_key' => $form_key,
 		);
 		$this->db->insert('quota', $data);
+		return true;
+	}
+
+	public function insert_company_details($lastid)
+	{
+		$data = array(
+			'cmpyid' => $lastid,
+			'cmpyName' => htmlentities($this->input->post('cmpy')),
+			'cmpyEmail' => '',
+			'cmpyMobile' => '',
+			'cmpyLogo' => ''
+		);
+		$this->db->insert('company_details', $data);
 		return true;
 	}
 

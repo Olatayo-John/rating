@@ -13,7 +13,7 @@
 			<div class="text-danger font-weight-bolder codeerr" style="display: none;">Invalid code length</div>
 		</div>
 		<div class="form-group verifybtndiv">
-			<button class="btn text-light verifycodebtn" type="submit" style="background:#294a63">Verify</button>
+			<button class="btn btn-block text-light verifycodebtn" type="submit" style="background:#294a63">Verify</button>
 		</div>
 		<div class="text-right font-weight-bolder rsendcodediv">
 			<div class="spinner-border rsend_spinner" style="right:140px;width:20px;height:20px;top:unset;left:unset;display:none;">

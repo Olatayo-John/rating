@@ -55,10 +55,10 @@
 		<div class="pt-4">
 			<h4 class="text-dark">Subscriptions</h4>
 			<hr class="sub">
-			<input type="text" name="sms_quota" class="sms_quota" id="sms_quota">
-			<input type="text" name="email_quota" class="email_quota" id="email_quota">
-			<input type="text" name="whatsapp_quota" class="whatsapp_quota" id="whatsapp_quota">
-			<input type="text" name="web_quota" class="web_quota" id="web_quota">
+			<input type="hidden" name="sms_quota" class="sms_quota" id="sms_quota">
+			<input type="hidden" name="email_quota" class="email_quota" id="email_quota">
+			<input type="hidden" name="whatsapp_quota" class="whatsapp_quota" id="whatsapp_quota">
+			<input type="hidden" name="web_quota" class="web_quota" id="web_quota">
 
 			<div class="row col-md-12 m-0">
 				<div class="col-md-3 plandiv planone" plan="planone">

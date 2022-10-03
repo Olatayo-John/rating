@@ -13,10 +13,10 @@
 			<label><i class="fas fa-lock mr-2 ml-2"></i>Password</label>
 			<input type="password" name="pwd" class="form-control pwd" placeholder="Your Password" required>
 		</div>
-		<div class="form-group">
+		<!-- <div class="form-group">
 			<input type="checkbox">
 			<span>Remember me</span>
-		</div>
+		</div> -->
 		<div class="form-group">
 			<button class="btn text-light btn-block loginbtn" type="submit">Login</button>
 		</div>

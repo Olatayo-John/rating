@@ -61,7 +61,9 @@ $route['verifyemail/(:any)'] = 'user/emailverify/$1';
 
 
 $route['websites'] = 'user/websites';
-$route['addwebsites'] = 'user/addwebsites';
+$route['get-user-quota'] = 'user/get_userQuota';
+$route['add-website'] = 'user/addwebsite';
+$route['remove-website'] = 'user/removewebsite';
 
 
 //users
@@ -93,7 +95,7 @@ $route['website-delete'] = 'user/delete_website';
 $route['website-status'] = 'user/website_status';
 $route['duplicate-webname'] = 'user/check_duplicate_webname';
 $route['duplicate-weblink'] = 'user/check_duplicate_weblink';
-$route['add-website'] = 'user/user_new_website';
+// $route['add-website'] = 'user/user_new_website';
 $route['password-update'] = 'user/password_update';
 $route['resetpassword_vcode'] = 'user/resetpassword_vcode';
 $route['verify'] = 'user/verifyvcode';

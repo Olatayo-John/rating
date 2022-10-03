@@ -25,6 +25,8 @@ class User extends CI_Controller
 		$this->load->view('errors/fof_error', $data);
 	}
 
+	//checks if user is loggedIn before accessing any page
+	//via page refresh
 	public function checklogin()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
@@ -35,6 +37,8 @@ class User extends CI_Controller
 		}
 	}
 
+	//checks if user is loggedIn before accessing any page
+	//via ajax calls
 	public function ajax_checklogin()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
@@ -46,7 +50,6 @@ class User extends CI_Controller
 	}
 
 	//login function
-	//check if username an password are valid
 	public function login()
 	{
 		if ($this->session->userdata('mr_logged_in')) {
@@ -63,6 +66,11 @@ class User extends CI_Controller
 				$this->Logmodel->log_act($type = "login_false");
 				$this->session->set_flashdata('invalid', 'Username or Password provided is wrong!');
 				redirect('user');
+			}
+			if ($validate == "inactive_access_by_cmpyAdmin") {
+				$this->Logmodel->log_act($type = "inactive_access");
+				$this->session->set_flashdata('invalid', 'Your account has been de-activated. Please Contact your Company Admin');
+				redirect('/');
 			}
 			if ($validate == "inactive_access") {
 				$this->Logmodel->log_act($type = "inactive_access");
@@ -88,8 +96,6 @@ class User extends CI_Controller
 				$uname = $validate->uname;
 				$email = $validate->email;
 				$mobile = $validate->mobile;
-				$active = $validate->active;
-				$sub = $validate->sub;
 				$website_form = $validate->website_form;
 				$form_key = $validate->form_key;
 
@@ -103,8 +109,6 @@ class User extends CI_Controller
 					'mr_uname' => $uname,
 					'mr_email' => $email,
 					'mr_mobile' => $mobile,
-					'mr_active' => $active,
-					'mr_sub' => $sub,
 					'mr_website_form' => $website_form,
 					'mr_form_key' => $form_key,
 					'mr_logged_in' => TRUE,
@@ -134,8 +138,6 @@ class User extends CI_Controller
 		$this->session->unset_userdata('mr_uname');
 		$this->session->unset_userdata('mr_email');
 		$this->session->unset_userdata('mr_mobile');
-		$this->session->unset_userdata('mr_active');
-		$this->session->unset_userdata('mr_sub');
 		$this->session->unset_userdata('mr_website_form');
 		$this->session->unset_userdata('mr_form_key');
 		$this->session->unset_userdata('mr_logged_in');
@@ -176,11 +178,12 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
 		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
-		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape|is_unique[users.uname]', array('is_unique' => 'Thi username is taken'));
+		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape|is_unique[users.uname]', array('is_unique' => 'This username is taken'));
 		$this->form_validation->set_rules('pwd', 'Password', 'required|trim|html_escape');
-		$this->form_validation->set_rules('quota', 'Quota', 'required|trim|html_escape');
-		$this->form_validation->set_rules('webspace', 'Quota', 'required|trim|html_escape');
-		$this->form_validation->set_rules('userspace', 'Quota', 'trim|html_escape');
+		$this->form_validation->set_rules('sms_quota', 'Quota', 'required|trim|html_escape');
+		$this->form_validation->set_rules('email_quota', 'Quota', 'required|trim|html_escape');
+		$this->form_validation->set_rules('whatsapp_quota', 'Quota', 'trim|html_escape');
+		$this->form_validation->set_rules('web_quota', 'Quota', 'trim|html_escape');
 		$this->form_validation->set_rules('cmpy', 'Company Name', 'trim|html_escape|is_unique[users.cmpy]', array('is_unique' => 'This Company already exist'));
 
 		if (!$this->form_validation->run()) {
@@ -201,19 +204,20 @@ class User extends CI_Controller
 			$mail_res = $this->emailconfig->send_email_code($email, $uname, $act_key, $link);
 
 			if ($mail_res !== TRUE) {
-				$this->Logmodel->log_act($type = "mail_err");
+				$this->Logmodel->log_act($type = "newUser_verify_mail_err", $m = "User", $e = $mail_res);
 				$this->session->set_flashdata('invalid', $mail_res);
 				redirect('register');
 				exit();
 			} else {
 				// for default users who are not a company
-				$admin = $iscmpy = $userspace = 0;
+				$admin = $iscmpy = 0;
 
 				if (isset($_POST['cmpychkb'])) {
 					$admin = $iscmpy = 1;
-					$userspace = htmlentities($this->input->post('userspace'));
 				}
-				$db_res = $this->Usermodel->register($admin, $iscmpy, $userspace, $act_key, $form_key);
+				//save in DB
+				$db_res = $this->Usermodel->register($admin, $iscmpy, $act_key, $form_key);
+
 				if ($db_res !== TRUE) {
 					$this->Logmodel->log_act($type = "db_err");
 					$this->session->set_flashdata('invalid', 'Error saving your details. Please try again');
@@ -232,6 +236,8 @@ class User extends CI_Controller
 	//email verification after registration
 	public function emailverify($key)
 	{
+		$data['title'] = "Email Verification";
+
 		$check_res = $this->Usermodel->check_verification($key);
 		if ($check_res == false) {
 			$this->session->set_flashdata('invalid', 'Wrong credentials');
@@ -246,7 +252,7 @@ class User extends CI_Controller
 			if ($this->form_validation->run() == false) {
 				$data['key'] = $key;
 				$data['email'] = $check_res->email;
-				$this->load->view('templates/header');
+				$this->load->view('templates/header', $data);
 				$this->load->view('templates/emailverify', $data);
 				$this->load->view('templates/footer');
 			} else {
@@ -268,8 +274,6 @@ class User extends CI_Controller
 						$uname = $validate->uname;
 						$email = $validate->email;
 						$mobile = $validate->mobile;
-						$active = $validate->active;
-						$sub = $validate->sub;
 						$website_form = $validate->website_form;
 						$form_key = $validate->form_key;
 
@@ -283,8 +287,6 @@ class User extends CI_Controller
 							'mr_uname' => $uname,
 							'mr_email' => $email,
 							'mr_mobile' => $mobile,
-							'mr_active' => $active,
-							'mr_sub' => $sub,
 							'mr_website_form' => $website_form,
 							'mr_form_key' => $form_key,
 							'mr_logged_in' => TRUE,
@@ -320,11 +322,11 @@ class User extends CI_Controller
 				$act_key =  mt_rand(0, 1000000);
 
 				$this->load->library('emailconfig');
-				$res_update = $this->emailconfig->send_email_code($email, $uname, $act_key, $link);
+				$mail_res = $this->emailconfig->send_email_code($email, $uname, $act_key, $link);
 
-				if ($res_update !== TRUE) {
-					$this->Logmodel->log_act($type = "mail_err");
-					$this->session->set_flashdata('invalid', $res_update);
+				if ($mail_res !== TRUE) {
+					$this->Logmodel->log_act($type = "newUser_verify_mail_err", $m = "User", $e = $mail_res);
+					$this->session->set_flashdata('invalid', $mail_res);
 					redirect($link);
 				} else {
 					$this->Usermodel->code_verify_update($act_key, $key);
@@ -335,6 +337,8 @@ class User extends CI_Controller
 		}
 	}
 
+	//user can creat n number of websites according to their packages
+	//this is done after registration
 	public function websites()
 	{
 		$data['title'] = "add websites";
@@ -350,6 +354,7 @@ class User extends CI_Controller
 		// $webcount = 0;
 
 		if ($webcount > 0) {
+			//redirect to home page if user as already created a website
 			$this->Usermodel->update_webform();
 			redirect("/");
 		} else {
@@ -359,7 +364,7 @@ class User extends CI_Controller
 		}
 	}
 
-	public function addwebsites()
+	public function get_userQuota()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$data['status'] = false;
@@ -367,22 +372,78 @@ class User extends CI_Controller
 		}
 		if ($this->session->userdata('mr_website_form') == "1") {
 			$data['status'] = false;
-			$data['mredirectsg'] = base_url("/");
-		} else {
-			$res = $this->Usermodel->addwebsites($_POST['webname_arr'], $_POST['weblink_arr']);
-			// $res = false;
-			if ($res !== true) {
-				$this->Logmodel->log_act($type = "websitenewerr");
-				$data['status'] = "error";
-				$data['redirect'] = base_url("/");
-				$this->session->set_flashdata('invalid', 'Error creating your websites');
-			} else {
-				$this->Logmodel->log_act($type = "websitenew");
-				$data['status'] = true;
-				$data['redirect'] = base_url("/");
-				$this->session->set_flashdata('valid', 'Websites created!!');
-			}
+			$data['redirect'] = base_url("/");
 		}
+
+		$res = $this->Usermodel->get_userQuota();
+		// $res = false;
+		if ($res) {
+			$data['status'] = true;
+			$data['userQuota'] = $res;
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	public function addwebsite()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$data['status'] = false;
+			$data['redirect'] = base_url("login");
+		}
+		if ($this->session->userdata('mr_website_form') == "1") {
+			$data['status'] = false;
+			$data['redirect'] = base_url("/");
+		}
+
+		$res = $this->Usermodel->addwebsite($_POST['web_name'], $_POST['web_link']);
+		if (!$res) {
+			$this->Logmodel->log_act($type = "websitenewerr");
+
+			$data['status'] = "error";
+			$data['redirect'] = "";
+			$data['msg'] = 'Error creating your website';
+		} else {
+			$this->Logmodel->log_act($type = "websitenew");
+
+			$data['status'] = true;
+			$data['redirect'] = "";
+			$data['msg'] = 'Website Added';
+			$data['webID'] = $res;
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	public function removewebsite()
+	{
+		if (!$this->session->userdata('mr_logged_in')) {
+			$data['status'] = false;
+			$data['redirect'] = base_url("login");
+		}
+		if ($this->session->userdata('mr_website_form') == "1") {
+			$data['status'] = false;
+			$data['redirect'] = base_url("/");
+		}
+
+		$res = $this->Usermodel->removewebsite($_POST['web_name'], $_POST['web_link'], $_POST['web_id']);
+
+		if ($res !== true) {
+			$this->Logmodel->log_act($type = "webdelerr");
+
+			$data['status'] = "error";
+			$data['redirect'] = "";
+			$data['msg'] = 'Error removing this website';
+		} else {
+			$this->Logmodel->log_act($type = "webdel");
+
+			$data['status'] = true;
+			$data['redirect'] = "";
+			$data['msg'] = 'Website Removed';
+		}
+
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
 	}
@@ -395,8 +456,7 @@ class User extends CI_Controller
 
 		$data['user_info'] = $this->Usermodel->get_info();
 		$data['websites'] = $this->Usermodel->get_user_websites();
-		$data['quota'] = $this->Usermodel->user_totalquota();
-		$data['usertotal'] = $this->Usermodel->user_alltotalratings();
+		$data['quota'] = $this->Usermodel->get_userQuota();
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('users/account', $data);

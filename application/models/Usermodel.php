@@ -3,6 +3,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Usermodel extends CI_Model
 {
+	// $this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,q.bought,q.webspace,q.webspace_left,q.userspace,q.userspace_left');
+	// $this->db->from('users u');
+	// $this->db->where('u.uname', $uname);
+	// $this->db->join('quota q', 'u.cmpyid=q.by_user_id', 'inner');
+	// $userinfo = $this->db->get()->row();
+	// return $userinfo;
+
 	public function login()
 	{
 		$uname = htmlentities($this->input->post('uname'));
@@ -18,35 +25,25 @@ class Usermodel extends CI_Model
 			exit();
 		}
 		if ($user->active == "2") {
-			return "inactive_access";
+			if ($user->active == "2" && $user->iscmpy == "1") {
+				return "inactive_access_by_cmpyAdmin";
+			} elseif ($user->active == "2" && $user->iscmpy == "0") {
+				return "inactive_access";
+			}
+
 			exit();
 		}
-		if ($user->active == "1" && $user->cmpyid == null) {
-			if (password_verify($pwd, $user->password)) {
-				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,q.bought,q.webspace,q.webspace_left,q.userspace,q.userspace_left');
-				$this->db->from('users u');
-				$this->db->where('u.uname', $uname);
-				$this->db->join('quota q', 'u.id=q.by_user_id', 'inner');
-				$userinfo = $this->db->get()->row();
-				return $userinfo;
-				exit();
-			} else {
-				return false;
-				exit();
-			}
-		} elseif ($user->active == "1" && $user->iscmpy == "1" && !empty($user->cmpyid)) {
-			if (password_verify($pwd, $user->password)) {
-				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,q.bought,q.webspace,q.webspace_left,q.userspace,q.userspace_left');
-				$this->db->from('users u');
-				$this->db->where('u.uname', $uname);
-				$this->db->join('quota q', 'u.cmpyid=q.by_user_id', 'inner');
-				$userinfo = $this->db->get()->row();
-				return $userinfo;
-				exit();
-			} else {
-				return false;
-				exit();
-			}
+		//verify passwords
+		if (password_verify($pwd, $user->password)) {
+			$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key');
+			$this->db->from('users u');
+			$this->db->where('uname', $uname);
+			$userinfo = $this->db->get()->row();
+			return $userinfo;
+			exit();
+		} else {
+			return false;
+			exit();
 		}
 	}
 
@@ -93,7 +90,7 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function register($admin, $iscmpy, $userspace, $act_key, $form_key)
+	public function register($admin, $iscmpy, $act_key, $form_key)
 	{
 		$data = array(
 			'sadmin' => '0',
@@ -114,15 +111,17 @@ class Usermodel extends CI_Model
 		);
 		$this->db->insert('users', $data);
 		$lastid = $this->db->insert_id();
-		$this->insert_user_details($lastid, $form_key);
-		$this->insert_quota($lastid, $userspace, $form_key);
 
-		if(($iscmpy === 1) && ($admin === 1)){
+		$this->insert_user_details($lastid, $form_key);
+		$this->insert_quota($lastid, $form_key);
+
+		if (($iscmpy === 1) && ($admin === 1)) {
 			$this->insert_company_details($lastid, $form_key);
 		}
 		return TRUE;
 	}
 
+	##
 	public function insert_user_details($lastid, $form_key)
 	{
 		$data = array(
@@ -141,16 +140,16 @@ class Usermodel extends CI_Model
 		$this->db->insert('user_details', $data);
 		return true;
 	}
+	##
 
-	public function insert_quota($lastid, $userspace, $form_key)
+	public function insert_quota($lastid, $form_key)
 	{
 		$data = array(
 			'by_user_id' => $lastid,
-			'bought' => htmlentities($this->input->post('quota')),
-			'used' => '0',
-			'bal' => htmlentities($this->input->post('quota')),
-			'webspace' => htmlentities($this->input->post('webspace')),
-			'userspace' => $userspace,
+			'sms_quota' => htmlentities($this->input->post('sms_quota')),
+			'email_quota' => htmlentities($this->input->post('email_quota')),
+			'whatsapp_quota' => htmlentities($this->input->post('whatsapp_quota')),
+			'web_quota' => htmlentities($this->input->post('web_quota')),
 			'by_form_key' => $form_key,
 		);
 		$this->db->insert('quota', $data);
@@ -162,8 +161,8 @@ class Usermodel extends CI_Model
 		$data = array(
 			'cmpyid' => $lastid,
 			'cmpyName' => htmlentities($this->input->post('cmpy')),
-			'cmpyEmail' => '',
 			'cmpyMobile' => '',
+			'cmpyEmail' => '',
 			'cmpyLogo' => ''
 		);
 		$this->db->insert('company_details', $data);
@@ -197,10 +196,9 @@ class Usermodel extends CI_Model
 			$this->db->where('form_key', $key);
 			$this->db->update('users');
 
-			$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,q.bought,q.webspace,q.userspace');
+			$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key');
 			$this->db->from('users u');
 			$this->db->where('u.form_key', $key);
-			$this->db->join('quota q', 'u.id=q.by_user_id', 'inner');
 			$userinfo = $this->db->get()->row();
 			return $userinfo;
 		}
@@ -217,7 +215,7 @@ class Usermodel extends CI_Model
 
 	public function get_user_websites()
 	{
-		$this->db->order_by('total_ratings', 'desc');
+		$this->db->order_by('id', 'desc');
 		$query = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
 		if (!$query) {
 			return false;
@@ -227,31 +225,82 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function addwebsites($webname_arr, $weblink_arr)
+	public function update_webform()
 	{
-		$web_count = count($webname_arr);
+		$user_id = $this->session->userdata("mr_id");
+		$form_key = $this->session->userdata("mr_form_key");
 
-		if ($this->get_webspacequota($web_count) === false) return false;
+		$this->db->set('website_form', '1');
+		$this->db->where(array('form_key' => $form_key, 'id' => $user_id));
+		$this->db->update("users");
 
-		for ($i = 0; $i < $web_count; $i++) {
-			$data = array(
-				'user_id' => $this->session->userdata('mr_id'),
-				'form_key' => $this->session->userdata('mr_form_key'),
-				'web_name' => htmlentities($webname_arr[$i]),
-				'web_link' => htmlentities($weblink_arr[$i]),
-				'active' => $this->session->userdata('mr_active'),
-				'total_ratings' => "0",
-				'five_star' => "0",
-				'four_star' => "0",
-				'three_star' => "0",
-				'two_star' => "0",
-				'one_star' => "0",
-			);
-			$this->db->insert('websites', $data);
+		$this->session->set_userdata("mr_website_form", "1");
+		return true;
+		exit;
+	}
+
+	public function get_userQuota()
+	{
+		$id = $this->session->userdata("mr_id");
+		$form_key = $this->session->userdata("mr_form_key");
+		$iscmpy = $this->session->userdata("mr_iscmpy");
+		$cmpyid = $this->session->userdata("mr_cmpyid");
+
+		if ($iscmpy == "1" && !empty($cmpyid) && $cmpyid !== "" && $cmpyid !== null) {
+			$wherearray = array('by_user_id' => $cmpyid);
+		} else {
+			$wherearray = array('by_user_id' => $id, 'by_form_key' => $form_key);
 		}
-		$this->update_webform();
-		$this->update_webquota($web_count);
-		return TRUE;
+		$this->db->where($wherearray);
+		$quotaInfo = $this->db->get("quota")->row();
+		return $quotaInfo;
+	}
+
+	public function addwebsite($web_name, $web_link)
+	{
+
+		$data = array(
+			'user_id' => $this->session->userdata('mr_id'),
+			'form_key' => $this->session->userdata('mr_form_key'),
+			'web_name' => htmlentities($web_name),
+			'web_link' => htmlentities($web_link),
+			'active' => '1',
+			'total_ratings' => "0",
+			'star_rating' => "0"
+		);
+		$this->db->insert('websites', $data);
+		$webID = $this->db->insert_id();
+
+		$this->update_webquota($type="web_quota-1");
+		return $webID;
+	}
+
+	public function removewebsite($web_name, $web_link, $web_id)
+	{
+		$this->db->where(array('id' => $web_id, 'web_name' => $web_name, 'web_link' => $web_link));
+		$this->db->delete('websites');
+
+		$this->update_webquota($type = "web_quota+1");
+		return true;
+	}
+
+	public function update_webquota($type)
+	{
+		$user_id = $this->session->userdata("mr_id");
+		$form_key = $this->session->userdata("mr_form_key");
+		$iscmpy = $this->session->userdata("mr_iscmpy");
+		$cmpyid = $this->session->userdata("mr_cmpyid");
+
+		if ($iscmpy == "1" && !empty($cmpyid) && $cmpyid !== "" && $cmpyid !== null) {
+			$wherearray = array('by_user_id' => $cmpyid);
+		} else {
+			$wherearray = array('by_user_id' => $user_id, 'by_form_key' => $form_key);
+		}
+		$this->db->set('web_quota', $type, FALSE);
+		$this->db->where($wherearray);
+		$this->db->update("quota");
+		return true;
+		exit;
 	}
 
 	public function get_webspacequota($web_count)
@@ -260,7 +309,6 @@ class Usermodel extends CI_Model
 		$form_key = $this->session->userdata("mr_form_key");
 		$iscmpy = $this->session->userdata("mr_iscmpy");
 		$cmpyid = $this->session->userdata("mr_cmpyid");
-		$webspace = $this->session->userdata("mr_webspace");
 
 		if ($iscmpy == "1" && !empty($cmpyid) && $cmpyid !== "" && $cmpyid !== null) {
 			$wherearray = array('by_user_id' => $cmpyid);
@@ -280,72 +328,12 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function update_webform()
-	{
-		$user_id = $this->session->userdata("mr_id");
-		$form_key = $this->session->userdata("mr_form_key");
-
-		$this->db->set('website_form', '1');
-		$this->db->where(array('form_key' => $form_key, 'id' => $user_id));
-		$this->db->update("users");
-
-		$this->session->set_userdata("mr_website_form", "1");
-		return true;
-		exit;
-	}
-
-	public function update_webquota($web_count)
-	{
-		$user_id = $this->session->userdata("mr_id");
-		$form_key = $this->session->userdata("mr_form_key");
-		$iscmpy = $this->session->userdata("mr_iscmpy");
-		$cmpyid = $this->session->userdata("mr_cmpyid");
-
-		if ($iscmpy == "1" && !empty($cmpyid) && $cmpyid !== "" && $cmpyid !== null) {
-			$wherearray = array('by_user_id' => $cmpyid);
-		} else {
-			$wherearray = array('by_user_id' => $user_id, 'by_form_key' => $form_key);
-		}
-		$this->db->set('webspace_left', 'webspace_left-' . $web_count, FALSE);
-		$this->db->where($wherearray);
-		$this->db->update("quota");
-
-		$webspaceupdate = $this->session->userdata("mr_webspace_left") - $web_count;
-
-		$this->session->set_userdata("mr_webspace_left", $webspaceupdate);
-		return true;
-		exit;
-	}
-
 	public function get_info()
 	{
 		$query = $this->db->get_where('users', array('id' => $this->session->userdata('mr_id')))->row();
 		if (!$query) {
 			return false;
 			exit();
-		} else {
-			return $query;
-		}
-	}
-
-	public function user_totalquota()
-	{
-		$query = $this->db->get_where('quota', array('by_form_key' => $this->session->userdata('mr_form_key')))->row();
-		if ($query) {
-			return $query;
-			exit;
-		} else {
-			return false;
-			exit;
-		}
-	}
-
-	public function user_alltotalratings()
-	{
-		$query = $this->db->get_where('user_details', array('form_key' => $this->session->userdata('mr_form_key')))->row();
-		if (!$query) {
-			return false;
-			exit;
 		} else {
 			return $query;
 		}
@@ -756,28 +744,5 @@ class Usermodel extends CI_Model
 		$this->db->where('form_key', $this->session->userdata('mr_form_key'));
 		$this->db->update('user_details');
 		return true;
-	}
-
-	public function get_userquota()
-	{
-		$user_id = $this->session->userdata("mr_id");
-		$form_key = $this->session->userdata('mr_form_key');
-		$iscmpy = $this->session->userdata('mr_iscmpy');
-		$cmpyid = $this->session->userdata('mr_cmpyid');
-
-		if ($iscmpy == "1" && !empty($cmpyid) && $cmpyid !== "" && $cmpyid !== null) {
-			$wherearray = array('by_user_id' => $cmpyid);
-		} else {
-			$wherearray = array('by_form_key' => $form_key, 'by_user_id' => $user_id);
-		}
-
-		$query = $this->db->get_where('quota', $wherearray)->row();
-		if ($query) {
-			return $query;
-			exit;
-		} else {
-			return false;
-			exit;
-		}
 	}
 }

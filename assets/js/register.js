@@ -92,7 +92,8 @@ $(document).ready(function () {
 
 	//check all validation
 	$('button.registerbtn').click(function (e) {
-		e.preventDefault();
+		// e.preventDefault();
+		
 		var email = $('.email').val();
 		var mobile = $('.mobile').val();
 		var cmpy = $('.cmpy').val();

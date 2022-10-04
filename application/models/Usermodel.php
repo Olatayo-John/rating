@@ -339,6 +339,19 @@ class Usermodel extends CI_Model
 		}
 	}
 
+	public function personal_edit()
+	{
+		$data = array(
+			'fname' => htmlentities($this->input->post('fname')),
+			'lname' => htmlentities($this->input->post('lname')),
+			'email' => htmlentities($this->input->post('email')),
+			'mobile' => htmlentities($this->input->post('mobile')),
+		);
+		$this->db->where('id', $this->session->userdata('mr_id'));
+		$this->db->update('users', $data);
+		return TRUE;
+	}
+
 	public function check_duplicate_webname($webname)
 	{
 		$data = $this->db->get_where('websites', array('user_id' => $this->session->userdata("mr_id"), 'form_key' => $this->session->userdata("mr_form_key"), 'web_name' => $webname));
@@ -437,19 +450,6 @@ class Usermodel extends CI_Model
 				}
 			}
 		}
-	}
-
-	public function personal_edit()
-	{
-		$data = array(
-			'fname' => htmlentities($this->input->post('fname')),
-			'lname' => htmlentities($this->input->post('lname')),
-			'email' => htmlentities($this->input->post('email')),
-			'mobile' => htmlentities($this->input->post('mobile')),
-		);
-		$this->db->where('id', $this->session->userdata('mr_id'));
-		$this->db->update('users', $data);
-		return TRUE;
 	}
 
 	public function delete_website($id)

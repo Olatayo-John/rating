@@ -97,7 +97,8 @@ div.alerterror,div.alertsuccess,.ajax_alert_div{
 	}
 }
 #content{
-	margin: 60px 14px 14px 14px;
+	/* margin: 60px 14px 14px 14px; */
+	margin: 60px 14px 14px 214px;
 	transition: .4s;
 }
 
@@ -122,13 +123,14 @@ nav{
 	font-size: 15px;
 }
 div.side-nav{
-	background: #294a63;
+	/* background: #294a63; */
 	background: -webkit-linear-gradient(to right, #294a63, #294a63);
 	background: linear-gradient(to right, #294a63, #294a63);
 	position: fixed;
 	overflow-x: hidden;
 	top: 60px;
-	left: -200px;
+	/* left: -200px; */
+	left: 0;
 	z-index: 1;
 	height: 100%;
 	width: 200px;

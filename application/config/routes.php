@@ -90,6 +90,7 @@ $route['admin/users/(:any)'] = 'admin/users/$1';
 
 $route['account'] = 'user/account';
 $route['profile-edit'] = 'user/personal_edit';
+
 $route['website-edit'] = 'user/edit_website';
 $route['website-delete'] = 'user/delete_website';
 $route['website-status'] = 'user/website_status';

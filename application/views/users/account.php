@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/account.css'); ?>">
 
-<div class="row set_wrapper">
-	<div class="tab_div col-md-2">
+<div class="set_wrapper">
+	<div class="tab_div">
 		<a href="#profile" class="tab_link" id="profile">Profile</a>
 		<a href="#websites" class="tab_link" id="websites">Websites</a>
 		<?php if (!$this->session->userdata("mr_cmpyid")) : ?>
@@ -14,7 +14,7 @@
 	</div>
 
 
-	<div class="info_div col-md-10 p-3">
+	<div class="info_div p-3">
 		<div class="info_inner" id="profile">
 			<?php include("profile/profile_edit.php") ?>
 		</div>

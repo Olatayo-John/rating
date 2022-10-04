@@ -47,7 +47,8 @@
 	</div>
 	<nav class="navbar navbar-expand-lg navbar-light fixed-top">
 
-		<button class="btn menubtn" onclick="opennav()">&#9776;</button>
+		<!-- <button class="btn menubtn" onclick="opennav()">&#9776;</button> -->
+		<button class="btn menubtn" onclick="closenav()">&#9776;</button>
 
 		<div class="logoimg mr-auto ml-3">
 			<img src="<?php echo base_url("assets/images/logo_dark.png") ?>" class="navbar-label">

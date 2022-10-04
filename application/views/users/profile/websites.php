@@ -2,20 +2,17 @@
 <hr class="web">
 <div class="d-flex btn_wrapper_div" style="justify-content:space-between">
     <div style="color:#294a63;font-weight:bold;margin:auto 0">
-        <?php if ($this->session->userdata("mr_iscmpy") === "1") : ?>
-            <div>Available webspace of <span class="webspaceleft"><?php echo $this->session->userdata("mr_webspace_left") ?></span>
-            </div>
-            <!-- <div>Webspace is used by all users under <?php echo $this->session->userdata("mr_cmpy") ?></div> -->
-        <?php else : ?>
-            <div>Available webspace of <span class="webspaceleft"><?php echo $this->session->userdata("mr_webspace_left") ?></span></div>
-        <?php endif; ?>
+        <div>Available webspace of <span class="webspaceleft"><?php echo $this->session->userdata("mr_webspace_left") ?></span>
+        </div>
+
+        <div>Available webspace of <span class="webspaceleft"><?php echo $this->session->userdata("mr_webspace_left") ?></span></div>
+
     </div>
     <div>
-        <?php if ($this->session->userdata("mr_webspace_left") > 0) : ?>
-            <button type="button" class="text-light btn addwebmodal_btn" style="background:#294a63">
-                <i class="fas fa-plus-circle mr-2"></i>New Website
-            </button>
-        <?php endif ?>
+
+        <button type="button" class="text-light btn addwebmodal_btn" style="background:#294a63">
+            <i class="fas fa-plus-circle mr-2"></i>New Website
+        </button>
     </div>
 </div>
 <hr>
@@ -41,19 +38,24 @@
                     <div class="d-flex">
                         <input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="<?php echo $web['web_link'] ?>" readonly required style="cursor:not-allowed">
                         <div class="d-flex col-md-2">
-                            <button type="button" class="btn text-light viewweb_btn " id="<?php echo $web['id'] ?>"style="background:#294a63">
-                                View
-                            </button>
+
+                            <a type="button" class="btn btn-info viewweb_btn statusweb_btn acbtn" id="<?php echo $web['id'] ?>" title="View">
+                                <i class="fa-solid fa-pen-to-square"></i> View
+                            </a>
+
                             <?php if ($web['active'] == "1") : ?>
-                                <button type="button" class="btn statusweb_btn text-light dacbtn" attrid="<?php echo $web['id'] ?>" id="<?php echo $web['id'] ?>" status="0" style="background:#294a63">
-                                    Deactivate
-                                </button>
+                                <a type="button" class="btn btn-danger statusweb_btn dacbtn" attrid="<?php echo $web['id'] ?>" id="<?php echo $web['id'] ?>" status="0" title="Activate">
+                                    <i class="fa-solid fa-toggle-on"></i> De-activate
+                                </a>
                             <?php endif; ?>
                             <?php if ($web['active'] == "0") : ?>
-                                <button type="button" class="btn statusweb_btn text-light  acbtn" attrid="<?php echo $web['id'] ?>" id="<?php echo $web['id'] ?>" status="1" style="background:#294a63">
-                                    Activate
-                                </button>
+                                <a type="button" class="btn btn-success statusweb_btn acbtn" attrid="<?php echo $web['id'] ?>" id="<?php echo $web['id'] ?>" status="1" title="Activate">
+                                    <i class="fa-solid fa-toggle-on"></i> Activate
+                                </a>
                             <?php endif; ?>
+                            <a type=" button" class="btn btn-danger delete_button" title="Delete">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </a>
                         </div>
                     </div>
                 </div>

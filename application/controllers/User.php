@@ -479,7 +479,8 @@ class User extends CI_Controller
 			$res = $this->Usermodel->personal_edit();
 			if ($res !== TRUE) {
 				$this->Logmodel->log_act($type = "prfileerr");
-				$this->session->set_flashdata('invalid', 'Profile Update Failed');
+				$this->session->set_flashdata('invalid', 'Update Failed');
+				
 				redirect('account');
 			} else {
 				$this->Logmodel->log_act($type = "prfile");

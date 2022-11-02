@@ -17,14 +17,14 @@
 		</div>
 	</div>
 
-	<div class="ls_wrapper pt-2 pb-2 mt-3">
+	<div class="ls_wrapper pt-2 pb-2 mt-4">
 		<div class="ls_header">
 			<div>
 				<h4>Links Sent</h4>
 				<!-- <hr> -->
 			</div>
 			<div class="drop_i">
-				<i class="fas fa-caret-down ls_i" inview="hidden"></i>
+				<i class="fas fa-caret-down ls_i" inview="showing"></i>
 			</div>
 		</div>
 		<div class="ls_innerwrapper">

@@ -1,6 +1,6 @@
 <div style="margin-top: 74px;">
 	<?php if ($feedbacks->num_rows() > 0) : ?>
-		<div class="bg-white p-2 text-right">
+		<div class="bg-light p-2 text-right">
 			<a href="<?php echo base_url('clearfeedbacks'); ?>" class="btn btn-danger clear_feedbacks">
 				<i class="fas fa-trash-alt mr-2"></i>Clear all Contacts
 			</a>
@@ -8,7 +8,7 @@
 	<?php endif; ?>
 </div>
 
-<div class="bg-white p-3 mt-3">
+<div class="bg-light p-3 mt-3">
 	<table id="feedbackstable" data-toggle="table" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-pagination="true">
 		<thead class="text-light" style="background:#294a63">
 			<tr>

@@ -50,6 +50,10 @@
 			}
 
 		});
+
+		$(document).on("click", ".ajax_err_div_close", function() {
+			$(".ajax_err_div").fadeOut();
+		});
 	})
 </script>
 </body>

@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/email_verify.css'); ?>">
 
-<div class="bg-white" style="margin-top: 74px;">
+<div class="bg-light" style="margin-top: 74px;">
 	<form action="<?php echo base_url('verifyemail/' . $key); ?>" method="POST" class="email_verify_form">
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="form-group">

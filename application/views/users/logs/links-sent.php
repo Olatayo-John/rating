@@ -3,7 +3,7 @@
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total"><?php echo $ud->total_email+$ud->total_sms ?></h3>
-                <span class="text-success">Links</span>
+                <span class="">Total Links</span>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
 </div>
 
 
-<table id="lstable" data-toggle="table" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-pagination="true">
+<table id="lstable" data-toggle="table" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-pagination="true">
     <thead class="text-light" style="background:#294a63">
         <tr>
             <th data-field="type" data-sortable="true">Type</th>

@@ -1,5 +1,5 @@
-<h4 class="text-dark">Personal Information</h4>
-<hr class="p_i">
+<!-- <h4 class="text-dark">Personal Information</h4> -->
+<!-- <hr class="p_i"> -->
 <form action="<?php echo base_url('profile-edit'); ?>" method="post">
     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
     <div class="row">
@@ -43,7 +43,7 @@
     <hr>
     <div class="form-group text-right">
         <button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#294a63">
-            <i class="fas fa-user mr-2"></i>Update Profile</button>
+            Update</button>
     </div>
     <hr>
 </form>

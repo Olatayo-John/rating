@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/websites.css'); ?>">
 
-<div class="bg-white" style="margin-top: 74px;">
+<div class="bg-light" style="margin-top: 74px;">
     <div class="modal add_web_modal">
         <div class="modal-dialog modal-dialog-top">
             <div class="modal-content">
@@ -139,7 +139,6 @@
             var csrfHash = $('.csrf_token').val();
             var userQuotaInfo = getUserQuota;
 
-            console.log(userQuotaInfo);
         });
         //
 

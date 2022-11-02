@@ -45,15 +45,15 @@
 	<div class="spinnerdiv">
 		<div class="spinner-border" style="color:cornflowerblue"></div>
 	</div>
-	<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top p-0">
 
 		<!-- <button class="btn menubtn" onclick="opennav()">&#9776;</button> -->
-		<button class="btn menubtn" onclick="closenav()">&#9776;</button>
 
-		<div class="logoimg mr-auto ml-3">
+		<div class="logoimg mr-auto m-1">
 			<img src="<?php echo base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
 		</div>
-		<?php print_r($_SESSION) ?>
+		<!-- <?php print_r($_SESSION) ?> -->
 
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>
 			<?php if ($this->session->userdata('mr_sub') == "0") : ?>
@@ -67,99 +67,126 @@
 				</div>
 			<?php endif; ?>
 
-			<div class="navbar-brand text-uppercase font-weight-bolder" style="font-size: 1.1rem;display: nonem;">
+			<div class="navbar-brand text-uppercase font-weight-bolder" style="display: nonee;">
 				<a href="<?php echo base_url('account') ?>" style="color:#294a63">
 					<span>
 						<i class="fas fa-user-circle p_icon"></i>
 					</span>
-					<?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : '') ?></a>
+					<?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : 'Account') ?></a>
 			</div>
 		<?php endif; ?>
 
 		<div class="side-nav" id="side-nav">
 			<?php $url = $this->uri->segment(1); ?>
 			<ul>
+				<!-- loginANDregister -->
 				<?php if (!$this->session->userdata('mr_logged_in')) : ?>
 					<li class="nav-item">
-						<a href="<?php echo base_url('login') ?>" class="nav-link" style="<?php echo ($url == 'login') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-user" style="<?php echo ($url == 'login') ? 'color:#294a63' : 'color:#fff' ?>"></i>Login
+						<a href="<?php echo base_url('login') ?>" class="nav-link" style="<?php echo ($url == 'login' || $url == 'user' || $url == '') ? 'background:white;color:#294a63' : '' ?>">
+							<i class="fas fa-user"></i>
+							<b>Login</b>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="<?php echo base_url('register') ?>" class="nav-link" style="<?php echo ($url == 'register') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-user-plus" style="<?php echo ($url == 'register') ? 'color:#294a63' : 'color:#fff' ?>"></i>Register
+							<i class="fas fa-user-plus"></i>
+							<b>Register</b>
 						</a>
 					</li>
 				<?php endif; ?>
 
+				<!-- shareLink -->
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>
 					<li class="nav-item">
 						<a href="<?php echo base_url('share') ?>" class="nav-link" style="<?php echo ($url == 'share') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-link" style="<?php echo ($url == 'share') ? 'color:#294a63' : 'color:#fff' ?>"></i>Send Link
+							<i class="fas fa-link"></i>Send Link
 						</a>
 					</li>
 				<?php endif; ?>
 
+				<!-- manageUsers -->
 				<?php if ($this->session->userdata('mr_logged_in') && ($this->session->userdata('mr_sadmin') == "1" || $this->session->userdata('mr_admin') == "1")) : ?>
 					<li class="nav-item">
 						<a href="<?php echo base_url('users') ?>" class="nav-link" style="<?php echo ($url == 'users') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-users" style="<?php echo ($url == 'users') ? 'color:#294a63' : 'color:#fff' ?>"></i>Manage Users
+							<i class="fas fa-users"></i><b>Manage Users</b>
 						</a>
 					</li>
 				<?php endif; ?>
 
+				<!-- myAccount -->
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>
 					<li class="nav-item">
 						<a href="<?php echo base_url('account') ?>" class="nav-link" style="<?php echo ($url == 'account') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-user-circle" style="<?php echo ($url == 'account') ? 'color:#294a63' : 'color:#fff' ?>"></i>My Account
+							<i class="fas fa-user-circle"></i>My Account
 						</a>
 					</li>
 
 					<li class="nav-item">
 						<a href="<?php echo base_url('logs') ?>" class="nav-link" style="<?php echo ($url == 'logs') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-chart-area" style="<?php echo ($url == 'logs') ? 'color:#294a63' : 'color:#fff' ?>"></i>Logs
+							<i class="fas fa-chart-area"></i>Logs
 						</a>
 					</li>
 
+					<!--  -->
 					<li class="nav-item" style="display: none;">
 						<a href="<?php echo base_url('plan') ?>" class="nav-link" style="<?php echo ($url == 'plan') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-retweet" style="<?php echo ($url == 'plan') ? 'color:#294a63' : 'color:#fff' ?>"></i>Renew Plan
+							<i class="fas fa-retweet"></i>Renew Plan
 						</a>
 					</li>
+					<!--  -->
 				<?php endif; ?>
 
+				<!-- payments -->
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
 					<li class="nav-item" style="display:none">
 						<a href="<?php echo base_url('payments') ?>" class="nav-link" style="<?php echo ($url == 'payments') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-wallet" style="<?php echo ($url == 'payments') ? 'color:#294a63' : 'color:#fff' ?>"></i>Payments
+							<i class="fas fa-wallet"></i><b>Payments</b>
 						</a>
 					</li>
 				<?php endif; ?>
 
+				<!-- contactUs -->
 				<li class="nav-item">
 					<a href="<?php echo base_url('contact') ?>" class="nav-link" style="<?php echo ($url == 'contact') ? 'background:white;color:#294a63' : '' ?>">
-						<i class="fas fa-id-card" style="<?php echo ($url == 'contact') ? 'color:#294a63' : 'color:#fff' ?>"></i>Contact Us
+						<i class="fas fa-id-card"></i><b>Contact Us</b>
 					</a>
 				</li>
 
+				<!-- <li class="sub-menu dcjq-parent-li">
+					<a href="javascript:;" class="dcjq-parent active">
+						<i class="fa fa-calendar-check"></i>
+						<span>Appointment</span>
+						<span class="dcjq-icon"></span></a>
+					<ul class="sub" style="display: block;">
+						<li><a href="appointment"><i class="fa fa-list-alt"></i>All</a></li>
+						<li><a href="appointment/addNewView"><i class="fa fa-plus-circle"></i>Add</a></li>
+						<li><a href="appointment/todays"><i class="fa fa-list-alt"></i>Todays</a></li>
+						<li><a href="appointment/upcoming"><i class="fa fa-list-alt"></i>Upcoming</a></li>
+						<li><a href="appointment/calendar"><i class="fa fa-list-alt"></i>Calendar</a></li>
+						<li><a href="appointment/request"><i class="fa fa-list-alt"></i>Request</a></li>
+					</ul>
+				</li> -->
+
+				<!-- feedbacksFromContactUs -->
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
 					<li class="nav-item">
 						<a href="<?php echo base_url('feedbacks') ?>" class="nav-link" style="<?php echo ($url == 'feedbacks') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-comment" style="<?php echo ($url == 'feedbacks') ? 'color:#294a63' : 'color:#fff' ?>"></i>Feedbacks
+							<i class="fas fa-comment"></i><b>Feedbacks</b>
 						</a>
 					</li>
 
 					<li class="nav-item">
 						<a href="<?php echo base_url('activity') ?>" class="nav-link" style="<?php echo ($url == 'activity') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-clipboard-check" style="<?php echo ($url == 'activity') ? 'color:#294a63' : 'color:#fff' ?>"></i>Activity Log
+							<i class="fas fa-clipboard-check"></i><b>Activity Log</b>
 						</a>
 					</li>
 				<?php endif; ?>
 
+				<!-- logOUT -->
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>
 					<li class="nav-item">
 						<a href="<?php echo base_url('logout') ?>" class="nav-link text-danger">
-							<i class="fas fa-sign-out-alt"></i>Logout
+							<i class="fas fa-sign-out-alt"></i><b>Logout</b>
 						</a>
 					</li>
 				<?php endif; ?>

@@ -79,10 +79,10 @@ class Logmodel extends CI_Model
                 $msg = "Invalid rating Link | User | [Key: " . htmlentities($_GET['k']) .  "]";
                 break;
             case 'webstatuserr':
-                $msg = "Error changing Website status | User | [ID: " . $this->session->userdata('mr_id') . ", WebID: " . $_POST['id'] . ", Status: " . $_POST['status'] . "]";
+                $msg = "Error changing Website status | User | [ID: " . $this->session->userdata('mr_id') . ", WebID: " . $_POST['id'] . ", Status: " . $_POST['webstatus'] . "]";
                 break;
             case 'webstatus':
-                $msg = "Website status changed | User | [ID: " . $this->session->userdata('mr_id') . ", WebID: " . $_POST['id'] . ", Status: " . $_POST['status'] . "]";
+                $msg = "Website status changed | User | [ID: " . $this->session->userdata('mr_id') . ", WebID: " . $_POST['id'] . ", Status: " . $_POST['webstatus'] . "]";
                 break;
             case 'webnewerr':
                 $msg = "Error creatiing new Website | User | [ID: " . $this->session->userdata('mr_id') . ", WebName: " . htmlentities($_POST['web_name_new']) . ", WebLink: " . htmlentities($_POST['web_link_new']) . "]";

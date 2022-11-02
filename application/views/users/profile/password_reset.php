@@ -1,5 +1,5 @@
-<h4 class="text-dark">Reset Password</h4>
-<hr class="preset">
+<!-- <h4 class="text-dark">Reset Password</h4> -->
+<!-- <hr class="preset"> -->
 <form action="<?php echo base_url('password-update'); ?>" method="post">
     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
     <div class="form-group">
@@ -7,6 +7,7 @@
         <input type="password" name="auto-pwd" style="opacity: 0; position: absolute">
         <input type="password" name="c_pwd" class="form-control c_pwd" placeholder="Your current password" required>
     </div>
+    <hr>
 
     <div class="form-group">
         <button class="btn text-light genpwdbtn" style="background-color:#294a63" type="button" name="genpwdbtn">
@@ -32,16 +33,19 @@
         </div>
         <div class="text-right">
             <button class="btn text-light saveact_btn" type="submit saveact_btn" style="background-color:#294a63">
-                <i class="fas fa-lock mr-2"></i>Update Password
+                Update Password
             </button>
         </div>
     </div>
     <hr>
 </form>
 
-<div class="modal forgotpass_modal">
+<div class="modal fade forgotpass_modal">
     <div class="modal-dialog modal-dialog-top">
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close close_forgotpass_modal" aria-hidden="true">&times;</button>
+            </div>
             <div class="modal-body">
                 <form action="<?php echo base_url('password-update'); ?>" method="post">
                     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
@@ -56,12 +60,12 @@
                             <button class="btn text-light rsendcodebtn bg-danger" type="button">Resend Code</button>
                         </div>
                         <div class="form-group sendcodebtndiv">
-                            <button class="btn text-light sendcodebtn" type="button" style="background:#294a63">Send Verfication Code</button>
+                            <button class="btn text-light sendcodebtn" type="button" style="background:#294a63">Send verfication code</button>
                         </div>
                     </div>
 
                     <div class="form-group vcodediv">
-                        <label for="vcode">Enter the Verfication Code sent to your email</label>
+                        <label for="vcode">Enter the verfication code sent to your email</label>
                         <input type="text" class="vcode form-control" required>
                         <span class="vcodeerr text-danger"></span>
                     </div>
@@ -71,8 +75,8 @@
                     </div>
 
                     <div class="form-group fp_pwddiv">
-                        <label for="fp_pwd font-weight-bolder">New Password</label>
-                        <input type="password" name="fp_pwd" class="fp_pwd form-control" placeholder="Password must be over 6characters long">
+                        <label for="fp_pwd font-weight-bolder">Enter a new Password</label>
+                        <input type="password" name="fp_pwd" class="fp_pwd form-control" placeholder="Password must be over 6 characters long">
                         <span class="fp_passerr text-danger"></span>
                     </div>
                     <hr>
@@ -80,11 +84,6 @@
                         <button class="btn text-light fp_newpwdbtn" type="button" style="background:#294a63">Confirm</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer" style="justify-content:start;">
-                <div>
-                    <button class="btn btn-secondary close_forgotpass_modal" proc="">Close</button>
-                </div>
             </div>
         </div>
     </div>
@@ -280,7 +279,7 @@
 
             if (newpwd == "" || newpwd == undefined || newpwd == null) {
                 $('.fp_pwd').css('border', '1px solid red');
-                $('.fp_passerr').text('Enter your new Password').show();
+                $('.fp_passerr').text('Enter a new Password').show();
                 return false;
             } else {
                 $('.fp_pwd').css('border', '1px solid #ced4da');
@@ -336,13 +335,14 @@
 
         $(document).on('click', 'button.close_forgotpass_modal', function(e) {
             e.preventDefault();
+
             var inproc = $(".close_forgotpass_modal").attr("proc");
 
             if (inproc === "true") {
                 var con = confirm("Are you sure you want to exit this process?");
                 if (con === false) {
                     return false;
-                } else {
+                } else if (con === true) {
                     $('.forgotpass_modal').modal("hide");
 
                     $(".codeinstruct").html("Verfication code will be sent to this email");
@@ -366,7 +366,7 @@
 
                     return true;
                 }
-            } else {
+            } else if (inproc === "false" || inproc === undefined) {
                 $('.forgotpass_modal').modal("hide");
             }
 

@@ -42,7 +42,6 @@ class User extends CI_Controller
 	public function ajax_checklogin()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
 			return false;
 		} else {
 			return true;
@@ -93,6 +92,7 @@ class User extends CI_Controller
 				$iscmpy = $validate->iscmpy;
 				$cmpyid = $validate->cmpyid;
 				$cmpy = $validate->cmpy;
+				$sub = $validate->sub;
 				$uname = $validate->uname;
 				$email = $validate->email;
 				$mobile = $validate->mobile;
@@ -106,6 +106,7 @@ class User extends CI_Controller
 					'mr_iscmpy' => $iscmpy,
 					'mr_cmpyid' => $cmpyid,
 					'mr_cmpy' => $cmpy,
+					'mr_sub' => $sub,
 					'mr_uname' => $uname,
 					'mr_email' => $email,
 					'mr_mobile' => $mobile,
@@ -135,6 +136,7 @@ class User extends CI_Controller
 		$this->session->unset_userdata('mr_iscmpy');
 		$this->session->unset_userdata('mr_cmpyid');
 		$this->session->unset_userdata('mr_cmpy');
+		$this->session->unset_userdata('mr_sub');
 		$this->session->unset_userdata('mr_uname');
 		$this->session->unset_userdata('mr_email');
 		$this->session->unset_userdata('mr_mobile');
@@ -177,7 +179,7 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
 		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
-		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
+		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|exact_length[10]|html_escape');
 		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape|is_unique[users.uname]', array('is_unique' => 'This username is taken'));
 		$this->form_validation->set_rules('pwd', 'Password', 'required|trim|html_escape');
 		$this->form_validation->set_rules('sms_quota', 'Quota', 'required|trim|html_escape');
@@ -186,7 +188,7 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('web_quota', 'Quota', 'trim|html_escape');
 		$this->form_validation->set_rules('cmpy', 'Company Name', 'trim|html_escape|is_unique[users.cmpy]', array('is_unique' => 'This Company already exist'));
 
-		if (!$this->form_validation->run()) {
+		if ($this->form_validation->run() === false) {
 			$this->load->view('templates/header', $data);
 			$this->load->view('templates/register');
 			$this->load->view('templates/footer');
@@ -271,6 +273,7 @@ class User extends CI_Controller
 						$iscmpy = $validate->iscmpy;
 						$cmpyid = $validate->cmpyid;
 						$cmpy = $validate->cmpy;
+						$sub = $validate->sub;
 						$uname = $validate->uname;
 						$email = $validate->email;
 						$mobile = $validate->mobile;
@@ -284,6 +287,7 @@ class User extends CI_Controller
 							'mr_iscmpy' => $iscmpy,
 							'mr_cmpyid' => $cmpyid,
 							'mr_cmpy' => $cmpy,
+							'mr_sub' => $sub,
 							'mr_uname' => $uname,
 							'mr_email' => $email,
 							'mr_mobile' => $mobile,
@@ -351,7 +355,6 @@ class User extends CI_Controller
 
 		$data['webs'] = $this->Usermodel->get_user_websites();
 		$webcount = $data['webs']->num_rows();
-		// $webcount = 0;
 
 		if ($webcount > 0) {
 			//redirect to home page if user as already created a website
@@ -368,11 +371,9 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$data['status'] = false;
-			$data['redirect'] = base_url("login");
-		}
-		if ($this->session->userdata('mr_website_form') == "1") {
-			$data['status'] = false;
-			$data['redirect'] = base_url("/");
+			$data['redirect'] = base_url("logout");
+			echo json_encode($data);
+			exit;
 		}
 
 		$res = $this->Usermodel->get_userQuota();
@@ -390,11 +391,15 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$data['status'] = false;
-			$data['redirect'] = base_url("login");
+			$data['redirect'] = base_url("logout");
+			echo json_encode($data);
+			exit;
 		}
 		if ($this->session->userdata('mr_website_form') == "1") {
 			$data['status'] = false;
 			$data['redirect'] = base_url("/");
+			echo json_encode($data);
+			exit;
 		}
 
 		$res = $this->Usermodel->addwebsite($_POST['web_name'], $_POST['web_link']);
@@ -421,11 +426,15 @@ class User extends CI_Controller
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
 			$data['status'] = false;
-			$data['redirect'] = base_url("login");
+			$data['redirect'] = base_url("logout");
+			echo json_encode($data);
+			exit;
 		}
 		if ($this->session->userdata('mr_website_form') == "1") {
 			$data['status'] = false;
 			$data['redirect'] = base_url("/");
+			echo json_encode($data);
+			exit;
 		}
 
 		$res = $this->Usermodel->removewebsite($_POST['web_name'], $_POST['web_link'], $_POST['web_id']);
@@ -480,32 +489,17 @@ class User extends CI_Controller
 			if ($res !== TRUE) {
 				$this->Logmodel->log_act($type = "prfileerr");
 				$this->session->set_flashdata('invalid', 'Update Failed');
-				
+
 				redirect('account');
 			} else {
 				$this->Logmodel->log_act($type = "prfile");
 				$this->session->set_flashdata('valid', 'Profile Updated');
 
 				$this->session->set_userdata('mr_email', htmlentities($this->input->post('email')));
-				$this->session->set_userdata('mr_mobile', htmlentities($this->input->post('mobile')));
 
 				redirect('account');
 			}
 		}
-	}
-
-	public function checkduplicatewebname()
-	{
-		$data['webdata'] = $this->Usermodel->checkduplicatewebname($_POST['form_key'], $_POST['user_id'], $_POST['web_name_add']);
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
-	}
-
-	public function checkduplicateweblink()
-	{
-		$data['webdata'] = $this->Usermodel->checkduplicateweblink($_POST['form_key'], $_POST['user_id'], $_POST['web_link_add']);
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
 	}
 
 	public function check_duplicate_webname()
@@ -522,18 +516,29 @@ class User extends CI_Controller
 		echo json_encode($data);
 	}
 
-	public function user_new_website()
+	public function createwebsite()
 	{
-		$res = $this->Usermodel->user_new_website($_POST['web_name_new'], $_POST['web_link_new']);
-		if (gettype($res) === "string") {
-			$this->Logmodel->log_act($type = "webnewerr");
-			$data['status'] = false;
-			$data['msg'] = $res;
-		} else if (gettype($res) === "integer") {
-			$this->Logmodel->log_act($type = "webnew");
-			$data['status'] = true;
-			$data['msg'] = "Website created";
-			$data['insert_id'] = $res;
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
+		} else {
+			//check postdata
+			if ($_POST['web_name_new'] && $_POST['web_link_new']) {
+				$res = $this->Usermodel->createwebsite($_POST['web_name_new'], $_POST['web_link_new']);
+				if (gettype($res) === "string") {
+					$this->Logmodel->log_act($type = "webnewerr");
+					$data['status'] = false;
+					$data['msg'] = $res;
+				} else if (gettype($res) === "integer") {
+					$this->Logmodel->log_act($type = "webnew");
+					$data['status'] = true;
+					$data['msg'] = "Website created";
+					$data['insert_id'] = $res;
+				}
+			} else {
+				$data['status'] = false;
+				$data['msg'] = "Missing parameters";
+			}
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
@@ -552,37 +557,61 @@ class User extends CI_Controller
 			$this->session->set_flashdata('valid', 'Data deleted successfully!');
 		}
 	}
+	////
 
 	public function edit_website()
 	{
-		$act_res = $this->Usermodel->edit_website($_POST['id']);
-		if ($act_res == false) {
-			$this->Logmodel->log_act($type = "webstatuserr");
-			$data['status'] = false;
-			$data['msg'] = "Error retrieving data";
+		//check login
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
 		} else {
-			$data['status'] = true;
-			$data['web_name'] = $act_res->web_name;
-			$data['web_link'] = $act_res->web_link;
+			//check postdata
+			if ($_POST['id']) {
+				$act_res = $this->Usermodel->edit_website($_POST['id']);
+				if ($act_res == false) {
+					$this->Logmodel->log_act($type = "webstatuserr");
+					$data['status'] = false;
+					$data['msg'] = "Error retrieving data";
+				} else {
+					$data['status'] = true;
+					$data['act_res'] = $act_res;
+				}
+			} else {
+				$data['status'] = false;
+				$data['msg'] = "Missing parameters";
+			}
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
 	}
 
-	public function website_status()
+	public function website_update()
 	{
-		$wb = $_POST['status'];
-
-		$act_res = $this->Usermodel->website_status($_POST['id'], $_POST['status']);
-		if ($act_res == false) {
-			$this->Logmodel->log_act($type = "webstatuserr");
-			$data['status'] = false;
-			$data['msg'] = ($wb == 0) ? "Error de-activating this website" : "Error activating this website";
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
 		} else {
-			$this->Logmodel->log_act($type = "webstatus");
-			$data['status'] = true;
-			$data['msg'] = ($wb == 0) ? "Website de-activated!" : "Website is active!";
+			$webstatusArr = array('0', '1');
+			if ($_POST['id'] && in_array($_POST['webstatus'], $webstatusArr)) {
+				$wb = $_POST['webstatus'];
+
+				$act_res = $this->Usermodel->website_update($_POST['id'], $_POST['webstatus']);
+
+				if ($act_res == false) {
+					$this->Logmodel->log_act($type = "webstatuserr");
+					$data['status'] = false;
+					$data['msg'] = ($wb == 0) ? "Error de-activating this website" : "Error activating this website";
+				} else {
+					$this->Logmodel->log_act($type = "webstatus");
+					$data['status'] = true;
+					$data['msg'] = ($wb == 0) ? "Website de-activated!" : "Website is active!";
+				}
+			} else {
+				$data['status'] = false;
+				$data['msg'] = "Missing parameters";
+			}
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();

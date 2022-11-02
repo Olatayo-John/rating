@@ -5,15 +5,15 @@ $(document).ready(function () {
 
 	if (curlhash == "" || curlhash == null || curlhash == undefined) {
 		$('div.info_inner').hide();
-		$('.tab_link').css('font-weight', 'initial');
-		$('a#profile').css('font-weight', 'bold');
+		$('.tab_link').css({'font-weight':'initial','opacity':'1'});
+		$('a#profile').css({ 'font-weight': 'bold', 'opacity': '0.5' });
 		$('div#profile').show();
 
 		topFunction();
 	} else {
 		$('div.info_inner').hide();
-		$('.tab_link').css('font-weight', 'initial');
-		$('a#' + curlh + '').css('font-weight', 'bold');
+		$('.tab_link').css({'font-weight':'initial','opacity':'1'});
+		$('a#' + curlh + '').css({ 'font-weight': 'bold', 'opacity': '0.5' });
 		$('div#' + curlh + '').show();
 
 		topFunction();
@@ -21,12 +21,12 @@ $(document).ready(function () {
 
 	$(document).on('click', 'a.tab_link', function () {
 
-		var a_id= $(this).attr('id');
+		var a_id = $(this).attr('id');
 
 		$('div.info_inner').hide();
-		$('.tab_link').css('font-weight', 'initial');
-		$(this).css('font-weight', 'bold');
-		$('div#'+a_id+'').show();
+		$('.tab_link').css({'font-weight': 'initial','opacity':'1'});
+		$(this).css({ 'font-weight': 'bold', 'opacity': '0.5' });
+		$('div#' + a_id + '').show();
 
 		topFunction();
 	});

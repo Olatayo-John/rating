@@ -92,11 +92,11 @@ $route['account'] = 'user/account';
 $route['profile-edit'] = 'user/personal_edit';
 
 $route['website-edit'] = 'user/edit_website';
-$route['website-delete'] = 'user/delete_website';
-$route['website-status'] = 'user/website_status';
+// $route['website-delete'] = 'user/delete_website';
+$route['update-website'] = 'user/website_update';
 $route['duplicate-webname'] = 'user/check_duplicate_webname';
 $route['duplicate-weblink'] = 'user/check_duplicate_weblink';
-// $route['add-website'] = 'user/user_new_website';
+$route['create-website'] = 'user/createwebsite';
 $route['password-update'] = 'user/password_update';
 $route['resetpassword_vcode'] = 'user/resetpassword_vcode';
 $route['verify'] = 'user/verifyvcode';

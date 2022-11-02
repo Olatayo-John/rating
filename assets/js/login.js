@@ -1,19 +1,25 @@
 $(document).ready(function() {
 	$('button.loginbtn').click(function() {
+		// e.preventDefault();
+		
 		var name= $('.uname').val();	
 		var pass= $('.pwd').val();
+		var err= null;
 
 		if (name == "" || name == null) {
-			$('.uname').css('border','2px solid red');
-			return false;
+			err = true;
 		}else{
-			$('.uname').css('border','0 solid red');
+			err = "";
 		}
+
 		if (pass == "" || pass == null) {
-			$('.pwd').css('border','2px solid red');
-			return false;
+			err = true;
 		}else{
-			$('.pwd').css('border','0 solid red');
+			err = "";
+		}
+
+		if(err === true){
+			return false;
 		}
 	});
 });

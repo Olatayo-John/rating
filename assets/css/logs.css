@@ -37,7 +37,7 @@ label{
 	font-size:20px;
 }
 .ls_innerwrapper{
-	display: none;
+	/* display: none; */
 }
 
 
@@ -64,6 +64,6 @@ h3._total {
 	color:#294a63;
 }
 .total-column span {
-	color:#294a63;
+	color:#007bff;
     word-break: break-word;
 }

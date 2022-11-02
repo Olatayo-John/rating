@@ -1,8 +1,8 @@
+.wrapper_div{
+	padding: 21px;
+}
 label,.fa-eye,.fa-eye-slash,.fa-question-circle,.fas-question-circle{
 	color: #294a63;
-}
-.form-group label{
-	font-weight: bold;
 }
 .fa-question-circle,.fas-question-circle{
 	color: #294a63;

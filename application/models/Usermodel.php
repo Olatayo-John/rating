@@ -121,7 +121,7 @@ class Usermodel extends CI_Model
 		return TRUE;
 	}
 
-	##
+	///
 	public function insert_user_details($lastid, $form_key)
 	{
 		$data = array(
@@ -140,7 +140,7 @@ class Usermodel extends CI_Model
 		$this->db->insert('user_details', $data);
 		return true;
 	}
-	##
+	///
 
 	public function insert_quota($lastid, $form_key)
 	{
@@ -271,7 +271,7 @@ class Usermodel extends CI_Model
 		$this->db->insert('websites', $data);
 		$webID = $this->db->insert_id();
 
-		$this->update_webquota($type="web_quota-1");
+		$this->update_webquota($type = "web_quota-1");
 		return $webID;
 	}
 
@@ -316,13 +316,12 @@ class Usermodel extends CI_Model
 			$wherearray = array('by_user_id' => $user_id, 'by_form_key' => $form_key);
 		}
 		$this->db->where($wherearray);
-		$webinfo = $this->db->get("quota")->row();
+		$res = $this->db->get("quota")->row();
 
-		if ($webinfo->webspace_left > 0 && $webinfo->webspace_left >= $web_count) {
+		if ($res->web_quota > 0) {
 			return true;
 			exit;
 		} else {
-			$this->session->set_userdata("mr_webspace_left", $webinfo->webspace_left);
 			return false;
 			exit;
 		}
@@ -376,31 +375,7 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function checkduplicatewebname($form_key, $user_id, $web_name_add)
-	{
-		$data = $this->db->get_where('websites', array('user_id' => $user_id, 'form_key' => $form_key, 'web_name' => $web_name_add));
-		if (!$data) {
-			return false;
-			exit;
-		} else {
-			return $data->num_rows();
-			exit;
-		}
-	}
-
-	public function checkduplicateweblink($form_key, $user_id, $web_link_add)
-	{
-		$data = $this->db->get_where('websites', array('user_id' => $user_id, 'form_key' => $form_key, 'web_link' => $web_link_add));
-		if (!$data) {
-			return false;
-			exit;
-		} else {
-			return $data->num_rows();
-			exit;
-		}
-	}
-
-	//not been used rn
+	///
 	public function noof_userwebites()
 	{
 		$query = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
@@ -412,12 +387,13 @@ class Usermodel extends CI_Model
 			exit;
 		}
 	}
+	///
 
-	public function user_new_website($web_name_new, $web_link_new)
+	public function createwebsite($web_name_new, $web_link_new)
 	{
 		$web_count = 1;
 		if ($this->get_webspacequota($web_count) === false) {
-			return "Quota reached.";
+			return "Web Quota exceeded";
 			exit;
 		} else {
 			$dupname = $this->check_duplicate_webname($web_name_new);
@@ -430,20 +406,16 @@ class Usermodel extends CI_Model
 					return "You have an existing website with the link '" . $web_link_new . "'";
 					exit;
 				} else {
-					$this->update_webquota($web_count);
+					$this->update_webquota($type = "web_quota-1");
 
 					$data = array(
 						'user_id' => $this->session->userdata('mr_id'),
 						'form_key' => $this->session->userdata('mr_form_key'),
 						'web_name' => htmlentities($_POST['web_name_new']),
 						'web_link' => htmlentities($_POST['web_link_new']),
-						'active' => $this->session->userdata('mr_active'),
+						'active' => '1',
 						'total_ratings' => "0",
-						'five_star' => "0",
-						'four_star' => "0",
-						'three_star' => "0",
-						'two_star' => "0",
-						'one_star' => "0",
+						'star_rating' => "0"
 					);
 					$this->db->insert('websites', $data);
 					return $this->db->insert_id();
@@ -452,6 +424,7 @@ class Usermodel extends CI_Model
 		}
 	}
 
+	///
 	public function delete_website($id)
 	{
 		$user_id = $this->session->userdata("mr_id");
@@ -461,6 +434,7 @@ class Usermodel extends CI_Model
 		$this->db->delete('websites');
 		return TRUE;
 	}
+	///
 
 	public function edit_website($id)
 	{
@@ -476,26 +450,12 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function website_status($id, $status)
-	{
-		$user_id = $this->session->userdata("mr_id");
-		$form_key = $this->session->userdata("mr_form_key");
-
-		$this->db->where(array('id' => $id, 'user_id' => $user_id, 'form_key' => $form_key));
-		$this->db->set('active', $status);
-		$this->db->update('websites');
-		return TRUE;
-	}
-
-
-	//func not added in user controller- edit_website or something
-	public function update_website()
+	public function website_update($id, $webstatus)
 	{
 		$data = array(
-			'web_name' => htmlentities($this->input->post('web_name_edit')),
-			'web_link' => htmlentities($this->input->post('web_link_edit')),
+			'active' => $webstatus,
 		);
-		$id = htmlentities($this->input->post('web_id'));
+		$id = $id;
 		$user_id = $this->session->userdata("mr_id");
 		$form_key = $this->session->userdata("mr_form_key");
 
@@ -596,12 +556,14 @@ class Usermodel extends CI_Model
 		return $query;
 	}
 
+	///
 	public function userdetails()
 	{
 		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'form_key' => $this->session->userdata("mr_form_key")));
 		$query = $this->db->get('user_details')->row();
 		return $query;
 	}
+	///
 
 	public function is_userquotaexpired()
 	{

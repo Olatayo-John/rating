@@ -77,18 +77,18 @@ $(document).ready(function () {
 		var webspace = $(".webspace").val();
 
 		if (email == "" || email == null) {
-			$('.email').css('border', '2px solid red');
-			document.getElementById("email").scrollIntoView();
+			$('.email').css('border', '1px solid red');
+			document.getElementById("email").scrollIntoView(false);
 			return false;
 		} else {
 			$('.email').css('border', '1px solid #ced4da');
 		}
 		if (mobile == "" || mobile == null) {
-			$('.mobile').css('border', '2px solid red');
-			document.getElementById("mobile").scrollIntoView();
+			$('.mobile').css('border', '1px solid red');
+			document.getElementById("mobile").scrollIntoView(false);
 			return false;
 		} if (mobile.length < 10 || mobile.length > 10) {
-			document.getElementById("mobile").scrollIntoView();
+			document.getElementById("mobile").scrollIntoView(false);
 			$('.mobileerr').show();
 			return false;
 		} else {
@@ -98,29 +98,29 @@ $(document).ready(function () {
 		var chl = $('#cmpychkb').is(":checked");
 		if (chl == true) {
 			if (cmpy == "" || cmpy == null) {
-				$('.cmpy').css('border', '2px solid red');
-				document.getElementById("cmpy").scrollIntoView();
+				$('.cmpy').css('border', '1px solid red');
+				document.getElementById("cmpy").scrollIntoView(false);
 				return false;
-			}else{
+			} else {
 				$('.cmpy').css('border', '1px solid #ced4da');
 			}
-		}else{
+		} else {
 			$('.cmpy').css('border', '1px solid #ced4da');
 		}
 
 		if (uname == "" || uname == null) {
-			$('.uname').css('border', '2px solid red');
-			document.getElementById("uname").scrollIntoView();
+			$('.uname').css('border', '1px solid red');
+			document.getElementById("uname").scrollIntoView(false);
 			return false;
 		} else {
 			$('.uname').css('border', '1px solid #ced4da');
 		}
 		if (pwd == "" || pwd == null) {
-			$('.pwd').css('border', '2px solid red');
-			document.getElementById("pwd").scrollIntoView();
+			$('.pwd').css('border', '1px solid red');
+			document.getElementById("pwd").scrollIntoView(false);
 			return false;
 		} if (pwd.length < 6) {
-			document.getElementById("pwd").scrollIntoView();
+			document.getElementById("pwd").scrollIntoView(false);
 			$('.pwderr').show();
 			return false;
 		} else {

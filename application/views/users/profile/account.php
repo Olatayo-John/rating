@@ -1,5 +1,5 @@
-<h4 class="text-dark">Account</h4>
-<hr class="account">
+<!-- <h4 class="text-dark">Account</h4> -->
+<!-- <hr class="account"> -->
 <hr>
 <div class="text-right">
     <button class="btn btn-danger deact_btn" type="button" user_id="<?php echo $user_info->id ?>"><i class="fas fa-user-alt-slash mr-2"></i>De-activate account?</button>

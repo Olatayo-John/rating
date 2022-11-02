@@ -1,5 +1,6 @@
 label {
 	color: #294a63;
+	font-weight: 500;
 }
 
 .set_wrapper {
@@ -11,7 +12,7 @@ label {
 	display: flex;
 	justify-content: space-between;
 	padding: 0 14px;
-	background-color: #294a63;
+	/* background-color: #294a63; */
 }
 
 .tab_div a.prof_a {
@@ -117,12 +118,12 @@ label i.fas,
 }
 
 .webnamelabel {
-	font-weight: bold;
+	font-weight: 500;
 }
 
-.dacbtn,
-.acbtn {
-	width: 87px;
+.viewweb_btn {
+	margin: auto;
+	cursor: pointer;
 }
 
 

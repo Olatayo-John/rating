@@ -5,12 +5,12 @@ $(document).ready(function () {
 
 	if (curlhash == "" || curlhash == null || curlhash == undefined) {
 		$('.tab_link').css('border-bottom', 'none');
-		$('a#as-email').css('border-bottom', '2px solid #294a63');
+		$('a#as-email').css('border-bottom', '1px solid #294a63');
 		$('.genform').hide();
 		$('form.as-email').show();
 	}else{
 		$('.tab_link').css('border-bottom', 'none');
-		$('a#'+curlh+'').css('border-bottom', '2px solid #294a63');
+		$('a#'+curlh+'').css('border-bottom', '1px solid #294a63');
 		$('.genform').hide();
 		$('form.'+curlh+'').show();
 	}
@@ -18,7 +18,7 @@ $(document).ready(function () {
 	$('a.mail_a').click(function (e) {
 		// e.preventDefault();
 		$('.tab_link').css('border-bottom', 'none');
-		$(this).css('border-bottom', '2px solid #294a63');
+		$(this).css('border-bottom', '1px solid #294a63');
 		$('.genform').hide();
 		$('form.as-email').show();
 	});
@@ -26,7 +26,7 @@ $(document).ready(function () {
 	$('a.sms_a').click(function (e) {
 		// e.preventDefault();
 		$('.tab_link').css('border-bottom', 'none');
-		$(this).css('border-bottom', '2px solid #294a63');
+		$(this).css('border-bottom', '1px solid #294a63');
 		$('.genform').hide();
 		$('form.as-sms').show();
 	});

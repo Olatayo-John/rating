@@ -1,6 +1,6 @@
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token form-control">
 
-<div class="bg-white" style="margin-top: 74px;">
+<div class="bg-light" style="margin-top: 74px;">
     <div class="text-right p-2">
         <a href="<?php echo base_url('clearlogs'); ?>" class="btn btn-danger clearlogs">
             <i class="fas fa-trash-alt mr-2"></i>Clear all Logs
@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<div class="bg-white p-3 mt-3">
+<div class="bg-light p-3 mt-3">
     <table id="logstable" data-toggle="table" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-pagination="true">
         <thead class="text-light" style="background:#294a63">
             <tr>

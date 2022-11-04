@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/register.css'); ?>">
 
-<div class="wrapper_div">
-	<form action="<?php echo base_url('user/register'); ?>" method="post" class="bg-light" id="regForm">
+<div class="wrapper_div bg-light-custom">
+	<form action="<?php echo base_url('register'); ?>" method="post" class="" id="regForm">
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
 		<div class="row">
@@ -59,114 +59,87 @@
 		</div>
 		<hr>
 
+		<!-- plans -->
 		<div class="pt-4">
-			<h4 class="text-dark">Subscriptions</h4>
-			<hr class="sub">
+			<!-- <h4 class="text-dark">Subscriptions</h4>
+			<hr class="sub"> -->
 			<input type="hidden" name="sms_quota" class="sms_quota" id="sms_quota">
 			<input type="hidden" name="email_quota" class="email_quota" id="email_quota">
 			<input type="hidden" name="whatsapp_quota" class="whatsapp_quota" id="whatsapp_quota">
 			<input type="hidden" name="web_quota" class="web_quota" id="web_quota">
 
-			<div class="row col-md-12 m-0">
-				<div class="col-md-3 plandiv planone" plan="planone">
-					<div class="card">
-						<div class="card-header text-center plantype mb-3">
-							<label for="">Basic</label>
-						</div>
-						<div class="text-center planamt">
-							FREE
-						</div>
-						<div class="card-body">
-							<p class="text-center mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-							<ol style="list-style-type: disc;">
-								<li><strong>0</strong> SMS Quota</li>
-								<li><strong>100</strong> Email Quota</li>
-								<li><strong>5</strong> WhatsApp Quota</li>
-								<li><strong>1</strong> Website Quota</li>
-							</ol>
-						</div>
-						<div class="card-footer p-0">
-							<button class="btn btn-block chooseplanbtn" sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planone" type="button">Choose Plan</button>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-3 plandiv plantwo" plan="plantwo">
-					<div class="card">
-						<div class="card-header text-center plantype mb-3">
-							<label for="">Basic</label>
-						</div>
-						<div class="text-center planamt">
-							<i class="fas fa-rupee-sign"></i>
-							2000
-						</div>
-						<div class="card-body">
-							<p class="text-center mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-							<ol style="list-style-type: disc;">
-								<li><strong>0</strong> SMS Quota</li>
-								<li><strong>100</strong> Email Quota</li>
-								<li><strong>5</strong> WhatsApp Quota</li>
-								<li><strong>1</strong> Website Quota</li>
-							</ol>
-						</div>
-						<div class="card-footer p-0">
-							<button class="btn btn-block chooseplanbtn" sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="plantwo" type="button">Choose Plan</button>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-3 plandiv planthree" plan="planthree">
-					<div class="card">
-						<div class="card-header text-center plantype mb-3">
-							<label for="">SILVER</label>
-						</div>
-						<div class="text-center planamt">
-							<i class="fas fa-rupee-sign"></i>
-							4000
-						</div>
-						<div class="card-body">
-							<p class="text-center mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-							<ol style="list-style-type: disc;">
-								<li><strong>0</strong> SMS Quota</li>
-								<li><strong>100</strong> Email Quota</li>
-								<li><strong>5</strong> WhatsApp Quota</li>
-								<li><strong>1</strong> Website Quota</li>
-							</ol>
-						</div>
-						<div class="card-footer p-0">
-							<button class="btn btn-block chooseplanbtn" sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planthree" type="button">Choose Plan</button>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-3 plandiv planfour" plan="planfour">
-					<div class="card">
-						<div class="card-header text-center plantype mb-3">
-							<label for="">GOLD</label>
-						</div>
-						<div class="text-center planamt">
-							<i class="fas fa-rupee-sign"></i>
-							6000
-						</div>
-						<div class="card-body">
-							<p class="text-center mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-							<ol style="list-style-type: disc;">
-								<li><strong>0</strong> SMS Quota</li>
-								<li><strong>100</strong> Email Quota</li>
-								<li><strong>5</strong> WhatsApp Quota</li>
-								<li><strong>1</strong> Website Quota</li>
-							</ol>
-						</div>
-						<div class="card-footer p-0">
-							<button class="btn btn-block chooseplanbtn" sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planfour" type="button">Choose Plan</button>
-						</div>
-					</div>
-				</div>
+			<div class="text-center">
+				<h3>Simple Pricing for Everyone!</h3>
+				<p>All plans come with a 100% money-back guarantee.</p>
 			</div>
+
+			<div class="plansDiv row">
+				<div class="col-md-4 planone" plan="planone">
+					<div class="planDetails">
+						<h5>Free Plan</h5>
+						<h6>
+							<span>Rs </span>
+							<b>0.00 /per month</b>
+						</h6>
+
+						<button type="button" class='btn chooseplanbtn' sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planthree">Choose Plan</button>
+
+						<ul>
+							<li>0 SMS Quota</li>
+							<li>100 Email Quota</li>
+							<li>5 WhatsApp Quota</li>
+							<li>1 Website Quota</li>
+							<li class="cmp_fet">Unlimited Users</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-md-4 plantwo" plan="plantwo">
+					<div class="planDetails">
+						<h5>Basic Plan</h5>
+						<h6>
+							<span>Rs </span>
+							<b>1.00 /per month</b>
+						</h6>
+
+						<button type="button" class='btn chooseplanbtn' sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planthree">Choose Plan</button>
+
+						<ul>
+							<li>0 SMS Quota</li>
+							<li>100 Email Quota</li>
+							<li>5 WhatsApp Quota</li>
+							<li>1 Website Quota</li>
+							<li class="cmp_fet">Unlimited Users</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-md-4 planthree" plan="planthree">
+					<div class="planDetails">
+						<h5>Regular Plan</h5>
+						<h6>
+							<span>Rs </span>
+							<b>2.00 /per month</b>
+						</h6>
+
+						<button type="button" class='btn chooseplanbtn' sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planthree">Choose Plan</button>
+
+						<ul>
+							<li>0 SMS Quota</li>
+							<li>100 Email Quota</li>
+							<li>5 WhatsApp Quota</li>
+							<li>1 Website Quota</li>
+							<li class="cmp_fet">Unlimited Users</li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+
 		</div>
 		<hr>
 
-		<div class="btngrp bg-light pt-3 pb-3">
+		<div class="btngrp bg-light-custom pt-3 pb-3">
 			<button class="btn text-light registerbtn" type="submit" style="background:#294a63">Create Account</button>
 			<a href="<?php echo base_url('login'); ?>" class="loginbtn text-danger" style="colosr:#294a63">
 				Already a user?</a>
@@ -201,11 +174,9 @@
 					$(".csrf_token").val(data.token);
 					if (data.user_data > 0) {
 						$('.unameerr').show();
-						$(".uname").css('border', '1px solid red');
 						$(".registerbtn").attr("type", "button");
 					} else {
 						$('.unameerr').hide();
-						$(".uname").css('border', '1px solid #ced4da');
 						$(".registerbtn").attr("type", "submit");
 					}
 				},
@@ -218,10 +189,10 @@
 		$(".cmpychkb").change(function() {
 			var chl = $('#cmpychkb').is(":checked");
 			if (chl == true) {
-				$('.cmpydiv').fadeIn();
+				$('.cmpydiv,.cmp_fet').fadeIn();
 				$('.cmpy').attr('required', 'required');
 			} else {
-				$('.cmpydiv').fadeOut();
+				$('.cmpydiv,.cmp_fet').fadeOut();
 				$('.cmpy').removeAttr('required');
 			}
 		});
@@ -244,11 +215,9 @@
 					$(".csrf_token").val(data.token);
 					if (data.user_data > 0) {
 						$('.cmpyerr').show();
-						$(".cmpy").css('border', '1px solid red');
 						$(".registerbtn").attr("type", "button");
 					} else {
 						$('.cmpyerr').hide();
-						$(".cmpy").css('border', '1px solid #ced4da');
 						$(".registerbtn").attr("type", "submit");
 					}
 				},

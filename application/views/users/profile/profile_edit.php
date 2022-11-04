@@ -1,7 +1,8 @@
 <!-- <h4 class="text-dark">Personal Information</h4> -->
 <!-- <hr class="p_i"> -->
-<form action="<?php echo base_url('profile-edit'); ?>" method="post">
+<form action="<?php echo base_url('profile-edit'); ?>" method="post" id="profileForm">
     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
     <div class="row">
         <div class="form-group col-md-6">
             <label>First Name</label>
@@ -12,15 +13,18 @@
             <input type="text" name="lname" class="form-control lname" value="<?php echo $user_info->lname ?>" placeholder="Your Last Name">
         </div>
     </div>
+
     <div class="form-group">
-        <label><span class="text-danger">* </span>Email</label>
+        <label>Email</label> <span>*</span>
         <input type="email" name="email" class="form-control email" value="<?php echo $user_info->email ?>" placeholder="example@domain-name.com" required>
     </div>
+
     <div class="form-group">
-        <label><span class="text-danger">* </span>Mobile</label>
+        <label>Mobile</label> <span>*</span>
         <input type="number" name="mobile" class="form-control mobile" value="<?php echo $user_info->mobile ?>" placeholder="0123456789" required>
-        <div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
+        <div class="err mobileerr">Invalid mobile length</div>
     </div>
+
     <div class="row">
         <div class="form-group col-md-6">
             <label>Username</label>
@@ -33,6 +37,7 @@
             </div>
         <?php endif; ?>
     </div>
+
     <div class="form-group">
         <div class="d-flex" style="justify-content:space-between">
             <label>Your Link<i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></label>
@@ -60,35 +65,36 @@
     }
 
     $(document).ready(function() {
-        $('.save_pinfo_btn').click(function(e) {
+        $('form#profileForm').submit(function(e) {
             // e.preventDefault();
             var uname = $('.uname').val();
             var email = $('.email').val();
             var mobile = $('.mobile').val();
+            var formErr = null;
 
             if (uname == "" || uname == null) {
-                $('.uname').css('border', '1px solid red');
-                return false;
+                formErr = true;
             } else {
-                $('.uname').css('border', '1px solid #ced4da');
+                formErr = "";
             }
+
             if (email == "" || email == null) {
-                $('.email').css('border', '1px solid red');
-                return false;
+                formErr = true;
             } else {
-                $('.email').css('border', '1px solid #ced4da');
+                formErr = "";
             }
-            if (mobile == "" || mobile == null) {
-                $('.mobile').css('border', '1px solid red');
-                return false;
-            }
-            if (mobile.length < 10 || mobile.length > 10) {
-                $('.mobile').css('border', '1px solid red');
+
+            if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
+                formErr = true;
                 $('.mobileerr').show();
-                return false;
             } else {
-                $('.mobile').css('border', '1px solid #ced4da');
+                formErr = "";
                 $('.mobileerr').hide();
+            }
+
+
+            if (formErr === true) {
+                return false;
             }
         });
 

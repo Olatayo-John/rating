@@ -39,7 +39,7 @@
 	</div>
 </div>
 
-<div class="mb-3 p-2 bg-light d-flex tab_div" style="justify-content:space-evenly;margin-top: 74px;">
+<div class="mb-3 p-2 bg-light-custom d-flex tab_div" style="justify-content:space-evenly;margin-top: 74px;">
 	<a href="#as-email" class="tab_link mail_a sndasmailbtn" id="as-email">
 		<i class="fas fa-envelope mr-2"></i>Send as Email
 	</a>
@@ -48,7 +48,7 @@
 	</a>
 </div>
 
-<div class="mb-5 bg-light p-4 allform">
+<div class="mb-5 bg-light-custom p-4 allform">
 	<form action="<?php echo base_url('share'); ?>" method="post" id="gen_link_form" class="gen_link_form as-email genform">
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
 		<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">

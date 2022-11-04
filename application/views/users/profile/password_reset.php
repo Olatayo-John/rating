@@ -1,9 +1,10 @@
 <!-- <h4 class="text-dark">Reset Password</h4> -->
 <!-- <hr class="preset"> -->
-<form action="<?php echo base_url('password-update'); ?>" method="post">
+<form action="<?php echo base_url('password-update'); ?>" method="post" id="pwdForm">
     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
     <div class="form-group">
-        <label><span class="text-danger">* </span>Current Password</label>
+        <label>Current Password</label> <span>*</span>
         <input type="password" name="auto-pwd" style="opacity: 0; position: absolute">
         <input type="password" name="c_pwd" class="form-control c_pwd" placeholder="Your current password" required>
     </div>
@@ -17,14 +18,14 @@
     </div>
 
     <div class="form-group">
-        <label><span class="text-danger">* </span>New Password</label>
+        <label>New Password</label> <span>*</span>
         <input type="password" minlenght="6" name="n_pwd" class="form-control n_pwd" placeholder="Password must be at least 6 characters long" required>
-        <span class="text-danger n_pwd_err">Password is too short</span>
+        <span class="err n_pwd_err">Password is too short</span>
     </div>
     <div class="form-group">
-        <label><span class="text-danger">* </span>Re-type Password</label>
+        <label>Re-type Password</label> <span>*</span>
         <input type="password" minlenght="6" name="rtn_pwd" class="form-control rtn_pwd" placeholder="Re-type Password" required>
-        <span class="text-danger rtn_pwd_err">Passwords do not match</span>
+        <span class="err rtn_pwd_err">Passwords do not match</span>
     </div>
     <hr>
     <div class="d-flex" style="justify-content:space-between;">
@@ -67,7 +68,7 @@
                     <div class="form-group vcodediv">
                         <label for="vcode">Enter the verfication code sent to your email</label>
                         <input type="text" class="vcode form-control" required>
-                        <span class="vcodeerr text-danger"></span>
+                        <span class="vcodeerr err"></span>
                     </div>
                     <hr>
                     <div class="form-group text-right vcodebtndiv">
@@ -77,7 +78,7 @@
                     <div class="form-group fp_pwddiv">
                         <label for="fp_pwd font-weight-bolder">Enter a new Password</label>
                         <input type="password" name="fp_pwd" class="fp_pwd form-control" placeholder="Password must be over 6 characters long">
-                        <span class="fp_passerr text-danger"></span>
+                        <span class="fp_passerr err"></span>
                     </div>
                     <hr>
                     <div class="form-group text-right fp_newpwdbtndiv">
@@ -103,41 +104,40 @@
     }
 
     $(document).ready(function() {
-        $('button.saveact_btn').click(function(e) {
+        $('form#pwdForm').submit(function(e) {
             // e.preventDefault();
             var c_pwd = $('.c_pwd').val();
             var n_pwd = $('.n_pwd').val();
             var rtn_pwd = $('.rtn_pwd').val();
+            var formErr = null;
 
             if (c_pwd == "" || c_pwd == null) {
-                $('.c_pwd').css('border', '1px solid red');
-                return false;
+                formErr = true;
             } else {
-                $('.c_pwd').css('border', '1px solid #ced4da');
+                formErr = "";
             }
-            if (n_pwd == "" || n_pwd == null) {
-                $('.n_pwd').css('border', '1px solid red');
-                return false;
-            }
-            if (n_pwd.length < 6) {
-                $('.n_pwd').css('border', '1px solid red');
+
+            if (n_pwd == "" || n_pwd == null || n_pwd.length < 6) {
+                formErr = true;
                 $('span.n_pwd_err').show();
-                return false;
             } else {
                 $('span.n_pwd_err').hide();
-                $('.n_pwd').css('border', '1px solid #ced4da');
+                formErr = "";
             }
+
             if (rtn_pwd == "" || rtn_pwd == null) {
-                $('.rtn_pwd').css('border', '1px solid red');
-                return false;
+                formErr = true;
             }
             if (n_pwd !== rtn_pwd) {
-                $('.rtn_pwd').css('border', '1px solid red');
+                formErr = true;
                 $('span.rtn_pwd_err').show();
-                return false;
             } else {
                 $('span.rtn_pwd_err').hide();
-                $('.rtn_pwd').css('border', '1px solid #ced4da');
+                formErr = "";
+            }
+
+            if (formErr === true) {
+                return false;
             }
         });
 
@@ -211,7 +211,7 @@
 
 
             if (vecode == "" || vecode == undefined || vecode == null) {
-                $('.vcode').css('border', '1px solid red');
+                $('.vcode').css('border-bottom', '2px solid #dc3545');
                 $('.vcodeerr').text('Verfication code is required').show();
                 return false;
             } else {
@@ -272,21 +272,14 @@
 
         $(document).on('click', 'button.fp_newpwdbtn', function(e) {
             e.preventDefault();
+
             var csrfHash = $('.csrf_token').val();
             var csrfName = $('.csrf_token').attr("name");
             var newpwd = $('.fp_pwd').val();
             var userid = "<?php echo $this->session->userdata('mr_id') ?>";
 
-            if (newpwd == "" || newpwd == undefined || newpwd == null) {
-                $('.fp_pwd').css('border', '1px solid red');
-                $('.fp_passerr').text('Enter a new Password').show();
-                return false;
-            } else {
-                $('.fp_pwd').css('border', '1px solid #ced4da');
-                $('.fp_passerr').hide();
-            }
-            if (newpwd.length < 6) {
-                $('.fp_pwd').css('border', '1px solid red');
+            if (newpwd == "" || newpwd == undefined || newpwd == null || newpwd.length < 6) {
+                $('.fp_pwd').css('border-bottom', '2px solid #dc3545');
                 $('.fp_passerr').text('Password too short').show();
                 return false;
             } else {

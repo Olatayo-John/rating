@@ -4,7 +4,7 @@
 	<div>
 		<a href="<?php echo base_url("users") ?>" class="btn text-light" style="background: #294a63;">Back</a>
 	</div>
-	<form action="<?php echo base_url('adduser'); ?>" method="post" class="bg-light" style="padding:20px">
+	<form action="<?php echo base_url('adduser'); ?>" method="post" class="bg-light-custom" style="padding:20px">
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="row">
 			<div class="form-group col">
@@ -64,7 +64,7 @@
 		</div>
 		<hr>
 
-		<div class="bg-light text-right">
+		<div class="bg-light-custom text-right">
 			<button class="btn text-light registerbtn" type="submit" style="background:#294a63">Create User Account</button>
 		</div>
 	</form>

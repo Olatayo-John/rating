@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/contact.css'); ?>">
 
-<div class="col-md-12 wrapper_div bg-light" style="display:flex;flex-direction:row">
+<div class="col-md-12 wrapper_div bg-light-custom" style="display:flex;flex-direction:row">
 
 	<div class="col-md-6">
 		<form action="<?php echo base_url('admin/contact'); ?>" method="post" class="contactform">

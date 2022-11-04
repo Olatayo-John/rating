@@ -1,66 +1,126 @@
-.wrapper_div{
+.wrapper_div {
 	padding: 21px;
 }
-label,.fa-eye,.fa-eye-slash,.fa-question-circle,.fas-question-circle{
+
+label,
+.fa-eye,
+.fa-eye-slash,
+.fa-question-circle,
+.fas-question-circle {
 	color: #294a63;
 }
-.fa-question-circle,.fas-question-circle{
+
+.fa-question-circle,
+.fas-question-circle {
 	color: #294a63;
 	cursor: pointer;
 }
-i.fa-eye,i.fa-eye-slash{
+
+i.fa-eye,
+i.fa-eye-slash {
 	display: none;
 	cursor: pointer;
 }
-.genpwdbtn{
-	background:#294a63;
+
+.genpwdbtn {
+	background: #294a63;
 }
 
-hr.sub{
+hr.sub {
 	margin: auto 0;
 	margin-bottom: 30px;
 	border-bottom: 3px solid #294a63;
 	width: 100px;
 }
-.plantype label{
-	color:#fff;
+
+/* oldDesign */
+.plantype label {
+	color: #fff;
 	margin: 0;
 	text-transform: uppercase;
 	display: none;
 }
-.planamt{
-    border-radius: 50%;
-    padding: 16px;
-    margin: 0 auto;
-    background: #294a63;
-	color:#fff;
-}
-.plantype,.card-footer button{
-	background:#294a63;
-	color:#fff;
-}
-.card-body p,ol{
-	margin: 0;
+
+.planamt {
+	border-radius: 50%;
+	padding: 16px;
+	margin: 0 auto;
+	background: #294a63;
+	color: #fff;
 }
 
-.cmpydiv{
+.plantype,
+.card-footer button {
+	background: #294a63;
+	color: #fff;
+}
+
+.card-body p,
+ol {
+	margin: 0;
+}
+/*  */
+
+/* plans */
+.planDetails {
+	text-align: center;
+	box-shadow: 0 10px 15px #294a63;
+	/* border-radius: 10px; */
+	padding: 40px 30px;
+	margin: 0 14px;
+	background: #fff;
+}
+
+.planDetails h6{
+	font-weight: bold;
+}
+.planDetails button {
+	border: 1px solid #294a63;
+	color: #294a63;
+	line-height: 34px;
+	padding: 0 30px;
+	border-radius: 20px;
+	margin: 10px 0;
+	transition: .5s;
+}
+.planDetails button:hover{
+	color: #fff !important;
+	background: #294a63 !important;
+	transform: scale(1);
+}
+.planDetails ul {
+	padding-top: 20px;
+	text-align: left;
+}
+.planDetails ul li{
+	font-weight: 500;
+	padding: 8px;
+	border-bottom: 1px solid #294a63
+}
+
+/*  */
+
+.cmpydiv, li.cmp_fet {
 	display: none;
 }
-.chooseplanbtn:hover{
+
+.chooseplanbtn:hover {
 	color: #fff !important
 }
 
-div.btngrp{
+div.btngrp {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	margin-top: 25px;
 }
-button.registerbtn{
+
+button.registerbtn {
 	border-radius: 0;
 	margin-right: auto;
 }
-a.loginbtn{
+
+a.loginbtn {
 	margin-top: 5px;
 	/* text-align: center; */
 	color: #8BC34A;
@@ -71,14 +131,16 @@ a.loginbtn{
 
 
 @media only screen and (max-width: 500px) {
-	div.btngrp{
+	div.btngrp {
 		display: flex;
 		flex-direction: column;
 	}
-	button.registerbtn{
+
+	button.registerbtn {
 		margin: 0;
 	}
-	a.loginbtn{
+
+	a.loginbtn {
 		text-align: center;
 		margin-top: 5px;
 	}

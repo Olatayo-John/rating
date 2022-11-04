@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <div class="mr-3 ml-3 bg-light con">
+    <div class="mr-3 ml-3 bg-light-custom con">
         <div class="content">
             <i class="far fa-file-alt"></i>
             <div class="fof_text">

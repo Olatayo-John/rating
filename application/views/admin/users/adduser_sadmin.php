@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/newuser.css'); ?>">
 
 <div class="pt-3">
-	<form action="<?php echo base_url('user/register'); ?>" method="post" class="bg-light" style="padding:20px">
+	<form action="<?php echo base_url('user/register'); ?>" method="post" class="bg-light-custom" style="padding:20px">
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 		<div class="row">
 			<div class="form-group col">
@@ -152,7 +152,7 @@
 		</div>
 		<hr>
 
-		<div class="btngrp bg-light pt-3 pb-3">
+		<div class="btngrp bg-light-custom pt-3 pb-3">
 			<button class="btn text-light registerbtn" type="submit" style="background:#294a63">Create Account</button>
 			<a href="<?php echo base_url('login'); ?>" class="loginbtn text-danger" style="colosr:#294a63">
 				Already a user?</a>

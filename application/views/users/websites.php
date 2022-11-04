@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/websites.css'); ?>">
 
-<div class="bg-light" style="margin-top: 74px;">
+<div class="bg-light-custom" style="margin-top: 74px;">
     <div class="modal add_web_modal">
         <div class="modal-dialog modal-dialog-top">
             <div class="modal-content">

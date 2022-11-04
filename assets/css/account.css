@@ -4,15 +4,15 @@ label {
 }
 
 .set_wrapper {
-	margin: 74px 0 0 0;
+	padding: 0 21px;
 }
 
 /* side nav_links */
 .tab_div {
 	display: flex;
-	justify-content: space-between;
-	padding: 0 14px;
-	/* background-color: #294a63; */
+	/* justify-content: space-between; */
+	padding: 0;
+	background-color: #294a63;
 }
 
 .tab_div a.prof_a {
@@ -22,7 +22,7 @@ label {
 
 .tab_link {
 	color: #fff;
-	padding: 10px 0;
+	padding: 8px 20px;
 }
 
 .tab_link:hover {
@@ -31,7 +31,7 @@ label {
 }
 
 .info_div {
-	background: white;
+	/* background: white; */
 }
 
 /* common tab css */
@@ -190,6 +190,7 @@ h3._total {
 	border-bottom: 2px solid #294a63;
 	height: 33.5px;
 	margin-left: 10px;
+	background:transparent;
 }
 
 

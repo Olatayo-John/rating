@@ -14,7 +14,7 @@
 	</div>
 
 
-	<div class="info_div p-4">
+	<div class="info_div p-3 bg-light-custom">
 		<div class="info_inner" id="profile">
 			<?php include("profile/profile_edit.php") ?>
 		</div>

@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/votes.css'); ?>">
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_token">
-<div class="mr-3 ml-3 mt-4 mb-5 bg-light">
+<div class="mr-3 ml-3 mt-4 mb-5 bg-light-custom">
 	<div class="modal updateusermodal">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">

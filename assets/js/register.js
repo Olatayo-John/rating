@@ -83,8 +83,14 @@ $(document).ready(function () {
 			$(".whatsapp_quota").val(whatsapp_quota);
 			$(".web_quota").val(web_quota);
 
-			$(".chooseplanbtn").removeClass("bg-success").html("Choose Plan");;
-			$(this).addClass("bg-success").html("Current Plan");
+			$(".chooseplanbtn").html("Choose Plan").css({
+				background:'#fff',
+				color:'#294a63'
+			});
+			$(this).html("Current Plan").css({
+				background:'#294a63',
+				color:'#fff'
+			});
 		} else {
 			window.location.reload();
 		}

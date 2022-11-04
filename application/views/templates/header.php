@@ -79,14 +79,16 @@
 		<div class="side-nav" id="side-nav">
 			<?php $url = $this->uri->segment(1); ?>
 			<ul>
-				<!-- loginANDregister -->
 				<?php if (!$this->session->userdata('mr_logged_in')) : ?>
+					<!-- login -->
 					<li class="nav-item">
 						<a href="<?php echo base_url('login') ?>" class="nav-link" style="<?php echo ($url == 'login' || $url == 'user' || $url == '') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-user"></i>
 							<b>Login</b>
 						</a>
 					</li>
+
+					<!-- register -->
 					<li class="nav-item">
 						<a href="<?php echo base_url('register') ?>" class="nav-link" style="<?php echo ($url == 'register') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-user-plus"></i>
@@ -99,7 +101,7 @@
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>
 					<li class="nav-item">
 						<a href="<?php echo base_url('share') ?>" class="nav-link" style="<?php echo ($url == 'share') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-link"></i>Send Link
+							<i class="fas fa-link"></i><b>Send Link</b>
 						</a>
 					</li>
 				<?php endif; ?>
@@ -113,30 +115,31 @@
 					</li>
 				<?php endif; ?>
 
-				<!-- myAccount -->
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>
+					<!-- myAccount -->
 					<li class="nav-item">
 						<a href="<?php echo base_url('account') ?>" class="nav-link" style="<?php echo ($url == 'account') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-user-circle"></i>My Account
+							<i class="fas fa-user-circle"></i><b>My Account</b>
 						</a>
 					</li>
 
+					<!-- logs -->
 					<li class="nav-item">
 						<a href="<?php echo base_url('logs') ?>" class="nav-link" style="<?php echo ($url == 'logs') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-chart-area"></i>Logs
+							<i class="fas fa-chart-area"></i><b>Logs</b>
 						</a>
 					</li>
 
-					<!--  -->
+					<!-- renewPlan disabled -->
 					<li class="nav-item" style="display: none;">
 						<a href="<?php echo base_url('plan') ?>" class="nav-link" style="<?php echo ($url == 'plan') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-retweet"></i>Renew Plan
+							<i class="fas fa-retweet"></i>bRenew Plan
 						</a>
 					</li>
 					<!--  -->
 				<?php endif; ?>
 
-				<!-- payments -->
+				<!-- payments disabled-->
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
 					<li class="nav-item" style="display:none">
 						<a href="<?php echo base_url('payments') ?>" class="nav-link" style="<?php echo ($url == 'payments') ? 'background:white;color:#294a63' : '' ?>">
@@ -167,14 +170,15 @@
 					</ul>
 				</li> -->
 
-				<!-- feedbacksFromContactUs -->
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
+					<!-- feedbacksFromContactUs -->
 					<li class="nav-item">
 						<a href="<?php echo base_url('feedbacks') ?>" class="nav-link" style="<?php echo ($url == 'feedbacks') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-comment"></i><b>Feedbacks</b>
 						</a>
 					</li>
 
+					<!-- actvity logs -->
 					<li class="nav-item">
 						<a href="<?php echo base_url('activity') ?>" class="nav-link" style="<?php echo ($url == 'activity') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-clipboard-check"></i><b>Activity Log</b>
@@ -184,7 +188,7 @@
 
 				<!-- logOUT -->
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>
-					<li class="nav-item">
+					<li class="nav-item logoutli">
 						<a href="<?php echo base_url('logout') ?>" class="nav-link text-danger">
 							<i class="fas fa-sign-out-alt"></i><b>Logout</b>
 						</a>

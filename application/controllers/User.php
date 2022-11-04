@@ -202,6 +202,7 @@ class User extends CI_Controller
 			$form_key =  $uname_form . mt_rand(0, 100000);
 			$link = base_url() . "emailverify/" . $form_key;
 
+			//try sending email before inserting to DB
 			$this->load->library('emailconfig');
 			$mail_res = $this->emailconfig->send_email_code($email, $uname, $act_key, $link);
 
@@ -217,6 +218,7 @@ class User extends CI_Controller
 				if (isset($_POST['cmpychkb'])) {
 					$admin = $iscmpy = 1;
 				}
+
 				//save in DB
 				$db_res = $this->Usermodel->register($admin, $iscmpy, $act_key, $form_key);
 
@@ -457,6 +459,7 @@ class User extends CI_Controller
 		echo json_encode($data);
 	}
 
+	//
 	public function account()
 	{
 		$data['title'] = "account";
@@ -480,7 +483,7 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
 		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
-		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
+		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|exact_length[10]|html_escape');
 
 		if ($this->form_validation->run() === FALSE) {
 			redirect('account');

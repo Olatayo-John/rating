@@ -1,6 +1,6 @@
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token form-control">
 
-<div class="bg-light mt-3 ml-3 mr-3 pt-3 pb-3">
+<div class="bg-light-custom mt-3 ml-3 mr-3 pt-3 pb-3">
     <div class="d-flex">
         <div class="col">
             <?php if ($pays->num_rows() > 0) : ?>
@@ -19,7 +19,7 @@
 
 </div>
 
-<div class="payment_table_div mr-3 ml-3 mt-3 mb-5 bg-light" style="overflow-x:scroll;overflow-y:hidden;">
+<div class="payment_table_div mr-3 ml-3 mt-3 mb-5 bg-light-custom" style="overflow-x:scroll;overflow-y:hidden;">
     <table class="table table-bordered table-center table-hover tablepayment" id="tablepayment">
         <tr class="font-weight-bolder text-light text-center" style="background:#294a63;white-space: nowrap;">
             <th><span class="icon">

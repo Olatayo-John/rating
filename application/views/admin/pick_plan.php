@@ -43,7 +43,7 @@
 	</div>
 
 	<div class="col-md-3 plan-two">
-		<div class="card bg-light">
+		<div class="card bg-light-custom">
 			<div class="card-header text-center bg-secondary">
 				<label>SILVER</label>
 			</div>
@@ -151,7 +151,7 @@
 	</div>
 </div>
 
-<div class="ml-3 mr-3 bg-light pb-3 mb-5 payment_div" style="padding: 10px 30px">
+<div class="ml-3 mr-3 bg-light-custom pb-3 mb-5 payment_div" style="padding: 10px 30px">
 	<p class="text-center font-weight-bolder">Kindly find the details below for payment</p>
 	<p class="mb-0"><strong>Bank: </strong> ICICI Bank </p>
 	<p class="mb-0"> <strong>A/c Name: </strong> NKTechnologies ITSOL Private Limited</p>

@@ -95,7 +95,7 @@ div.form-group span {
 }
 
 div.err,
-span.err {
+span.err,.e_mobile {
 	color: #dc3545 !important;
 	font-weight: 500 !important;
 	display: none;

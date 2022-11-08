@@ -1,29 +1,50 @@
 .wrapper_div {
 	padding: 0 21px 21px 21px;
 }
-.tab_div{
+
+.tab_div {
 	display: flex;
 	justify-content: space-between;
-	background:#294a63;
+	background: #294a63;
 	padding: 8px 14px;
 }
-.tab_link{
+
+.tab_link {
 	color: #fff;
 }
-.tab_link:hover{
-	color:#fff !important
+
+.tab_link:hover {
+	color: #fff !important
 }
 
-.smsForm,.whatsappForm{
+.smsForm,
+.whatsappForm {
+	display: none;
+}
+
+.importDiv {
+	margin-bottom: 21px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.sms_SendSingleBtn,
+.email_SendSingleBtn,
+.email_sendBtn_m,
+.sms_sendBtn_m {
 	display: none;
 }
 
 @media only screen and (max-width: 620px) {
-	div.import,div.sms_import{
+
+	div.import,
+	div.sms_import {
 		display: flex;
 		flex-direction: column;
 	}
-	button.importemail,button.smsimport{
+
+	button.importemail,
+	button.smsimport {
 		margin: 10px 0;
 	}
 }

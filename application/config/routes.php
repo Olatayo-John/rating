@@ -115,15 +115,19 @@ $route['wtr/(:any)'] = 'user/wtr/$1';
 //share
 $route['getlink'] = 'user/getlink';
 $route['share'] = 'user/sendlink';
+
+$route['sms-sample-csv'] = 'user/smssample_csv';
+$route['email-sample-csv'] = 'user/emailsample_csv';
+
 $route['share-email'] = 'user/email_share';
 $route['share-sms'] = 'user/sms_share';
 $route['share-whatsapp'] = 'user/whatsapp_share';
-// $route['importcsv_sms'] = 'user/importcsv_sms';
-// $route['importcsv_email'] = 'user/importcsv_email';
-$route['smssample_csv'] = 'user/smssample_csv';
-$route['emailsample_csv'] = 'user/emailsample_csv';
-$route['sendmultiplesms'] = 'user/sendmultiplesms';
-$route['sendmultipleemail'] = 'user/sendmultipleemail';
+
+$route['import-csv-email'] = 'user/importcsv_email';
+$route['import-csv-sms'] = 'user/importcsv_sms';
+
+$route['share-email-multiple'] = 'user/sendmultipleemail';
+$route['share-sms-multiple'] = 'user/sendmultiplesms';
 
 //plan
 // $route['pgResponses'] = 'admin/pgResponses';

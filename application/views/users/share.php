@@ -5,18 +5,23 @@
 	<div class="emailmodal modal">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form enctype="multipart/form-data" method="post" id="upload_csv">
-					<div class="modal-body">
-						<h6 class="font-weight-bolder text-danger text-center">
-							*CSV file must have header of only "Email"
-						</h6>
-						<input type="file" name="csv_file" id="csv_file" accept=".csv" class="form-control" style="border:none">
-					</div>
-					<div class="modal-footer justify-content-between">
-						<button class="btn btn-secondary closebtn" type="button">Close</button>
-						<button class="btn text-light importbtn" type="submit" style="background-color:#294a63">Import</button>
-					</div>
-				</form>
+				<div class="modal-header">
+					<button type="button" class="close close_EmailModalBtn" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<form enctype="multipart/form-data" method="post" id="emailForm_csvUpload">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
+
+						<div class="form-group">
+							<label for="">CSV must have header of only "Email"</label>
+							<input type="file" name="email_csv_file" id="email_csv_file" accept=".csv" class="" style="border:none">
+						</div>
+
+						<div class="text-right">
+							<button class="btn text-light email_SendMultipleBtn" type="submit" style="background-color:#294a63">Import CSV</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -24,22 +29,28 @@
 	<div class="smsmodal modal">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form enctype="multipart/form-data" method="post" id="smsupload_csv">
-					<div class="modal-body">
-						<h6 class="font-weight-bolder text-danger text-center">
-							*CSV file must have header of only "Phonenumber"
-						</h6>
-						<input type="file" name="sms_csv_file" id="sms_csv_file" accept=".csv" class="form-control" style="border:none">
-					</div>
-					<div class="modal-footer justify-content-between">
-						<button class="btn btn-secondary smsclosebtn" type="button">Close</button>
-						<button class="btn text-light smsimportbtn" type="submit" style="background-color:#294a63">Import</button>
-					</div>
-				</form>
+				<div class="modal-header">
+					<button type="button" class="close close_SmsModalBtn" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">
+					<form enctype="multipart/form-data" method="post" id="smsForm_csvUpload">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
+
+						<div class="form-group">
+							<label for="">CSV must have header of only "Phonenumber"</label>
+							<input type="file" name="sms_csv_file" id="sms_csv_file" accept=".csv" class="" style="border:none">
+						</div>
+
+						<div class="text-right">
+							<button class="btn text-light sms_SendMultipleBtn" type="submit" style="background-color:#294a63">Import CSV</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
 
+	<!-- tabLinks -->
 	<div class="tab_div">
 		<a href="#as-email" class="tab_link mail_a sndasmailbtn" id="as-email" tabFormName="emailForm">
 			<i class="fas fa-envelope mr-2"></i>Email
@@ -51,41 +62,44 @@
 			<i class="fa-brands fa-whatsapp mr-2"></i>Whatsapp
 		</a>
 	</div>
+	<!--  -->
+
 
 	<div class="bg-light-custom allform p-3">
 		<!-- email -->
 		<form action="<?php echo base_url('share-email'); ?>" method="post" id="emailForm" class="emailForm as-email genform">
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
 			<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
-			<div class="import text-right d-flex justify-content-between mb-4">
-				<button class="btn text-light singlemailsend" type="button" style="display: none;background-color:#294a63">Send single mail</button>
-				<input type="hidden" name="link_for" class="link_for">
-				<button class="btn text-light importemail" type="button" style="background-color:#294a63">Import multiple emails in CSV format</button>
-				<a href="<?php echo base_url('emailsample_csv'); ?>" class="email_sample_csv btn btn-danger">
+
+			<div class="importDiv">
+				<button class="btn text-light email_SendSingleBtn" type="button" style="background-color:#294a63">Send single</button>
+				<button class="btn text-light email_ImportMultipleBtn" type="button" style="background-color:#294a63">Import multiple</button>
+
+				<a href="<?php echo base_url('email-sample-csv'); ?>" class="btn btn-danger">
 					<i class="fas fa-file-csv mr-2"></i>Download sample</a>
 			</div>
 
 			<div class="form-group">
 				<label class="labelemail">E-mail</label>
-				<input type="email" name="email" class="form-control email" placeholder="example@domain.com" id="email">
+				<input type="email" name="email" class="form-control email" placeholder="example@domain.com" id="email" required>
 				<select class="form-control email_select" name="email_select" id="email_select" style="display: none;" readonly conn="false">
-					<option></option>
 				</select>
 			</div>
 
 			<div class="form-group">
 				<label>Subject</label>
-				<input type="text" name="subj" class="form-control subj">
+				<input type="text" name="subj" class="form-control subj" required>
 			</div>
 
 			<div class="form-group">
 				<label>Body</label>
-				<textarea class="form-control emailbdy" rows="8" name="emailbdy"></textarea>
+				<textarea class="form-control emailbdy" rows="8" name="emailbdy" required></textarea>
 			</div>
 
 			<hr>
 			<div class="text-right">
-				<button class="btn email_sendBtn text-light" style="background-color:#294a63">Send</button>
+				<button class="btn email_sendBtn text-light" type="submit" style="background-color:#294a63">Send</button>
+				<button class="btn email_sendBtn_m text-light" type="submit" style="background-color:#294a63">Send</button>
 			</div>
 		</form>
 
@@ -93,31 +107,32 @@
 		<form action="<?php echo base_url('share-sms'); ?>" method="post" id="smsForm" class="smsForm as-sms genform">
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
 			<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
-			<div class="sms_import text-right d-flex justify-content-between mb-4">
-				<button class="btn text-light singlsmssend" type="button" style="display: none;background-color:#294a63">Send single sms</button>
-				<input type="hidden" name="link_for" class="link_for">
-				<button class="btn text-light smsimport" type="button" style="background-color:#294a63">Import multiple Phonenumber in CSV format</button>
-				<a href="<?php echo base_url('smssample_csv'); ?>" class="email_sample_csv btn btn-danger">
+
+			<div class="importDiv">
+				<button class="btn text-light sms_SendSingleBtn" type="button" style="background-color:#294a63">Send single</button>
+				<button class="btn text-light sms_ImportMultipleBtn" type="button" style="background-color:#294a63">Import multiple</button>
+
+				<a href="<?php echo base_url('sms-sample-csv'); ?>" class="btn btn-danger">
 					<i class="fas fa-file-csv mr-2"></i>Download sample</a>
 			</div>
 
 			<div class=" form-group">
 				<label class="phonelabel">Phonenumber</label>
-				<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile">
-				<span class="e_mobile text-danger font-weight-bolder" style="display: none;">Invalid mobile length</span>
+				<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile" required value="7556435678">
+				<span class="e_mobile">Invalid mobile length</span>
 				<select class="form-control sms_select" name="sms_select" id="sms_select" style="display: none;" readonly conn="false">
-					<option></option>
 				</select>
 			</div>
 
 			<div class="form-group">
 				<label>Body</label>
-				<textarea class="form-control smsbdy" rows="8" name="smsbdy"></textarea>
+				<textarea class="form-control smsbdy" rows="8" name="smsbdy" required></textarea>
 			</div>
 
 			<hr>
 			<div class="text-right">
-				<button class="btn text-light sms_sendBtn" style="background-color:#294a63">Send</button>
+				<button class="btn text-light sms_sendBtn" type="submit" style="background-color:#294a63">Send</button>
+				<button class="btn text-light sms_sendBtn_m" type="submit" style="background-color:#294a63">Send</button>
 			</div>
 		</form>
 
@@ -134,12 +149,12 @@
 
 			<div class="form-group">
 				<label>Body</label>
-				<textarea class="form-control whpbdy" rows="8" name="whpbdy"></textarea>
+				<textarea class="form-control whpbdy" rows="8" name="whpbdy" required></textarea>
 			</div>
 
 			<hr>
 			<div class="text-right">
-				<button class="btn text-light whp_sendBtn" style="background-color:#294a63">Send</button>
+				<button class="btn text-light whp_sendBtn" type="submit" style="background-color:#294a63">Send</button>
 			</div>
 		</form>
 	</div>
@@ -183,133 +198,26 @@
 			}
 		});
 
-		$('#upload_csv').on('submit', function(e) {
+		//show email import modal
+		//send single email
+		$('button.email_ImportMultipleBtn,button.email_SendSingleBtn').click(function(e) {
 			e.preventDefault();
-			var file = $('#csv_file').val();
-			var csrfName = $('.csrf_hash').attr('name');
-			var csrfHash = $('.csrf_hash').val();
 
-			if (file == "" || file == null) {
-				$('#csv_file').css('border', '2px solid red');
-				return false;
-			} else {
-				$('#csv_file').css('border', '2px solid #ced4da');
-			}
-
-			$.ajax({
-				url: "<?php echo base_url('user/importcsv_email'); ?>",
-				method: "post",
-				data: new FormData(this),
-				[csrfName]: csrfHash,
-				dataType: "json",
-				contentType: false,
-				cache: false,
-				processData: false,
-				beforSend: function(data) {
-					$('.importbtn').attr('disabled', 'disabled');
-					$('.importbtn').html('Importing...');
-					$('.importbtn').css('cursor', 'not-allowed');
-				},
-				success: function(data) {
-					$('.emailmodal').hide();
-					$('#csv_file').val("");
-					for (i = 0; i < data.length; i++) {
-						$('#email_select').append('<option disabled class="email_options">' + data[i].Email + '</option>');
-					}
-					$('#email').hide();
-					$('#email').val('nomailname@nodomainname.com');
-					$('.labelemail').html('Emails');
-
-					$('.sendlinkbtn').hide();
-					$('.sendmultiplelinkbtn').show();
-
-					$('#email_select').attr('conn', 'true');
-					$('#email_select').show();
-					$('.singlemailsend').show();
-
-					bseu = "<?php echo base_url('send_multiple_email'); ?>";
-					$("#gen_link_form").attr('action', bseu);
-				},
-				error: function(data) {
-					alert('Error importing data');
-				}
-			});
-		});
-
-		$('#smsupload_csv').on('submit', function(e) {
-			e.preventDefault();
-			var sms_file = $('#sms_csv_file').val();
-			var csrfName = $('.csrf_hash').attr('name');
-			var csrfHash = $('.csrf_hash').val();
-
-			if (sms_file == "" || sms_file == null) {
-				$('#sms_csv_file').css('border', '2px solid red');
-				return false;
-			} else {
-				$('#sms_csv_file').css('border', '2px solid #ced4da');
-			}
-
-			$.ajax({
-				url: "<?php echo base_url('user/importcsv_sms'); ?>",
-				method: "post",
-				data: new FormData(this),
-				[csrfName]: csrfHash,
-				dataType: "json",
-				contentType: false,
-				cache: false,
-				processData: false,
-				beforSend: function(data) {
-					$('.smsimportbtn').attr('disabled', 'disabled');
-					$('.smsimportbtn').html('Importing...');
-					$('.smsimportbtn').css('cursor', 'not-allowed');
-					$('.smsimportbtn').removeClass('btn-success').addClass('btn-danger');
-				},
-				success: function(data) {
-					$('#mobile').val('5555555555');
-					$(".phonelabel").html("Phonenumbers");
-					$('#sms_csv_file').val("");
-
-					$('.smsmodal').hide();
-
-					for (i = 0; i < data.length; i++) {
-						$('#sms_select').append('<option disabled class="sms_options">+91' + data[i].Phonenumber + '</option>');
-					}
-					$('#mobile').hide();
-					$('.smssendlinkbtn').hide();
-					$('.smssendmultiplelinkbtn').show();
-					$('#sms_select').attr('conn', 'true');
-					$('#sms_select').show();
-					$('.singlsmssend').show();
-					bseu = "<?php echo base_url('sendmultiplesms'); ?>";
-					$("#sms_gen_link_form").attr('action', bseu);
-				},
-				error: function(data) {
-					alert('Error importing data');
-				}
-			});
-		});
-
-		$('button.importemail').click(function() {
 			var sel_conn = $('#email_select').attr('conn');
-			if (sel_conn == "true") {
-				var ans = confirm("Are you sure you want to import a new data? Your imported data will be cleared.");
-				if (ans == true) {
-					$('.emailmodal').show();
 
+			if (sel_conn == "true") {
+				var ans = confirm("Your imported data will be cleared. Do you want to continue?");
+				if (ans == true) {
 					$('.email_options').remove();
-					$('#email_select').attr('conn', 'false');
-					$('#email_select').hide();
+					$('#email_select').attr('conn', 'false').removeAttr('required').hide();
 
 					$('.labelemail').html('E-mail');
-					$('#email').val('');
-					$('#email').show();
-					$(".singlemailsend").hide();
+					$('#email').val('').attr('required', true).show();
 
-					bseu = "<?php echo base_url('share'); ?>";
-					$("#gen_link_form").attr('action', bseu);
+					$(".email_SendSingleBtn,.email_sendBtn_m").hide();
+					$(".email_ImportMultipleBtn,.email_sendBtn").show();
 
-					$('.sendlinkbtn').show();
-					$('.sendmultiplelinkbtn').hide();
+					$('.emailmodal').show();
 				} else {
 					return false;
 				}
@@ -318,27 +226,26 @@
 			}
 		});
 
-		$('button.smsimport').click(function() {
+		//show sms import modal
+		//send single sms
+		$('button.sms_ImportMultipleBtn,button.sms_SendSingleBtn').click(function(e) {
+			e.preventDefault();
+
 			var sel_conn = $('#sms_select').attr('conn');
+
 			if (sel_conn == "true") {
-				var ans = confirm("Are you sure you want to import a new data? Your imported data will be cleared.");
+				var ans = confirm("Your imported data will be cleared. Do you want to continue?");
 				if (ans == true) {
-					$('.smsmodal').show();
-
 					$('.sms_options').remove();
-					$('#sms_select').attr('conn', 'false');
-					$('#sms_select').hide();
+					$('#sms_select').attr('conn', 'false').removeAttr('required').hide();
 
-					$(".phonelabel").html("Phonenumber");
-					$('#mobile').val('');
-					$('#mobile').show();
-					$(".singlsmssend").hide();
+					$('.phonelabel').html('Phonenumber');
+					$('#mobile').val('').attr('required', true).show();
 
-					bseu = "<?php echo base_url('smsshare'); ?>";
-					$("#sms_gen_link_form").attr('action', bseu);
+					$(".sms_SendSingleBtn,.sms_sendBtn_m").hide();
+					$(".sms_ImportMultipleBtn,.sms_sendBtn").show();
 
-					$('.smssendlinkbtn').show();
-					$('.smssendmultiplelinkbtn').hide();
+					$('.emailmodal').show();
 				} else {
 					return false;
 				}
@@ -347,82 +254,243 @@
 			}
 		});
 
-		$('.sendlinkbtn').click(function() {
-			var email = $('.email').val();
-			var sbj = $('.subj').val();
-			var body = $('.bdy').val();
+		//upload email file
+		$('#emailForm_csvUpload').on('submit', function(e) {
+			e.preventDefault();
 
-			if (email == "" || email == null) {
-				$('.email').css('border', '2px solid red');
+			var file = $('#email_csv_file').val();
+			var csrfName = $('.csrf_hash').attr('name');
+			var csrfHash = $('.csrf_hash').val();
+
+			if (file == "" || file == null) {
+				$('#email_csv_file').css('border-bottom', '2px solid #dc3545');
 				return false;
 			} else {
-				$('.email').css('border', '2px solid #ced4da');
-			}
-			if (sbj == "" || sbj == null) {
-				$('.subj').css('border', '2px solid red');
-				return false;
-			} else {
-				$('.subj').css('border', '2px solid #ced4da');
-			}
-			if (body == "" || body == null) {
-				$('.bdy').css('border', '2px solid red');
-				return false;
-			} else {
-				$('.bdy').css('border', '2px solid #ced4da');
+				$('#email_csv_file').css('border', '2px solid #ced4da');
 			}
 
 			$.ajax({
-				success: function() {
-					$('.sendlinkbtn').attr('disabled', 'disabled');
-					$('.sendlinkbtn').html('Sending...');
-					$('.sendlinkbtn').css('cursor', 'not-allowed');
+				url: "<?php echo base_url('import-csv-email'); ?>",
+				method: "post",
+				data: new FormData(this),
+				[csrfName]: csrfHash,
+				dataType: "json",
+				contentType: false,
+				cache: false,
+				processData: false,
+				beforeSend: function(data) {
+					$('.email_SendMultipleBtn').attr('disabled', 'disabled').html('Importing...').css('cursor', 'not-allowed');
+
+					$(".ajax_succ_div,.ajax_err_div").hide();
+					$(".ajax_res_err,.ajax_res_succ").empty();
+				},
+				success: function(data) {
+					if (data.status === false) {
+						$(".ajax_res_err").append(data.msg);
+						$(".ajax_err_div").fadeIn();
+
+					} else if (data.status === true) {
+						if (parseInt(data.EmailArray.length) > 0) {
+							$('.emailmodal').hide();
+
+							$('#email_csv_file').val("");
+							for (i = 0; i < data.EmailArray.length; i++) {
+								$('#email_select').append('<option disabled class="email_options">' + data.EmailArray[i].Email + '</option>');
+							}
+
+							$('#email').hide().removeAttr('required');
+							$('.labelemail').html('Emails');
+
+							$('#email_select').attr({
+								conn: 'true',
+								required: true
+							}).show();
+
+							$('.email_SendSingleBtn,.email_sendBtn_m').show();
+							$('.email_ImportMultipleBtn,.email_sendBtn').hide();
+						} else {
+							$(".ajax_res_err").append('Empty file uploaded');
+							$(".ajax_err_div").fadeIn();
+						}
+					}
+
+					$('.csrf_hash').val(data.token);
+					$('.email_SendMultipleBtn').removeAttr('disabled').html('Import CSV').css('cursor', 'pointer');
+				},
+				error: function(data) {
+					alert('Error importing data');
+					window.location.reload();
 				}
 			});
 		});
 
-		$('.singlemailsend').click(function() {
-			$('.email_options').remove();
-			$('#email_select').attr('conn', 'false');
-			$('#email_select').hide();
-
-			$('.labelemail').html('E-mail');
-			$('#email').val('');
-			$('#email').show();
-			$(".singlemailsend").hide();
-
-			bseu = "<?php echo base_url('share'); ?>";
-			$("#gen_link_form").attr('action', bseu);
-
-			$('.sendlinkbtn').show();
-			$('.sendmultiplelinkbtn').hide();
-		});
-
-		$('.sendmultiplelinkbtn').click(function(e) {
+		//upload sms file
+		$('#smsForm_csvUpload').on('submit', function(e) {
 			e.preventDefault();
-			var link_for = $('.link_for').val();
-			var email = $('.email').val();
-			var subj = $('.subj').val();
-			var bdy = $('.bdy').val();
+
+			var sms_file = $('#sms_csv_file').val();
 			var csrfName = $('.csrf_hash').attr('name');
 			var csrfHash = $('.csrf_hash').val();
 
+			if (sms_file == "" || sms_file == null) {
+				$('#sms_csv_file').css('border', '2px solid #dc3545');
+				return false;
+			} else {
+				$('#sms_csv_file').css('border', '2px solid #ced4da');
+			}
+
+			$.ajax({
+				url: "<?php echo base_url('import-csv-sms'); ?>",
+				method: "post",
+				data: new FormData(this),
+				[csrfName]: csrfHash,
+				dataType: "json",
+				contentType: false,
+				cache: false,
+				processData: false,
+				beforeSend: function(data) {
+					$('.sms_SendMultipleBtn').attr('disabled', 'disabled').html('Importing...').css('cursor', 'not-allowed');
+
+					$(".ajax_succ_div,.ajax_err_div").hide();
+					$(".ajax_res_err,.ajax_res_succ").empty();
+				},
+				success: function(data) {
+					if (data.status === false) {
+						$(".ajax_res_err").append(data.msg);
+						$(".ajax_err_div").fadeIn();
+
+					} else if (data.status === true) {
+						if (parseInt(data.MobileArray.length) > 0) {
+							$('.smsmodal').hide();
+
+							$('#sms_csv_file').val("");
+							for (i = 0; i < data.MobileArray.length; i++) {
+								$('#sms_select').append('<option disabled class="sms_options">+91' + data.MobileArray[i].Phonenumber + '</option>');
+							}
+
+							$('#mobile').hide().removeAttr('required');
+							$('.phonelabel').html('Phonenumbers');
+
+							$('#sms_select').attr({
+								conn: 'true',
+								required: true
+							}).show();
+
+							$('.sms_SendSingleBtn,.sms_sendBtn_m').show();
+							$('.sms_ImportMultipleBtn,.sms_sendBtn').hide();
+						} else {
+							$(".ajax_res_err").append('Empty file uploaded');
+							$(".ajax_err_div").fadeIn();
+						}
+					}
+
+					$('.csrf_hash').val(data.token);
+					$('.sms_SendMultipleBtn').removeAttr('disabled').html('Import CSV').css('cursor', 'pointer');
+				},
+				error: function(data) {
+					alert('Error importing data');
+					window.location.reload();
+				}
+			});
+		});
+
+		//send single email
+		$('#emailForm').submit(function(e) {
+			// e.preventDefault();
+
+			var email = $('.email').val();
+			var sbj = $('.subj').val();
+			var body = $('.emailbdy').val();
+
 			if (email == "" || email == null) {
-				$('.email').css('border', '2px solid red');
+				return false;
+			}
+
+			if (sbj == "" || sbj == null) {
+				return false;
+			}
+
+			if (body == "" || body == null) {
+				return false;
+			}
+
+
+			$.ajax({
+				success: function() {
+					$('.email_sendBtn').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
+				}
+			});
+
+		});
+
+		//send single sms
+		$('form#smsForm').submit(function(e) {
+			// e.preventDefault();
+
+			var mobile = $('.mobile').val();
+			var smsbdy = $('.smsbdy').val();
+
+			if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
+				$('.e_mobile').show();
 				return false;
 			} else {
-				$('.email').css('border', '2px solid #ced4da');
+				$('.e_mobile').hide();
 			}
+
+			if (smsbdy == "" || smsbdy == null) {
+				return false;
+			}
+
+			$.ajax({
+				success: function() {
+					$('.sms_sendBtn').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
+				}
+			});
+
+		});
+
+		//send single whatsapp
+		$('form#whatsappForm').submit(function(e) {
+			// e.preventDefault();
+
+			var mobile = $('.whpMobile').val();
+			var smsbdy = $('.whpbdy').val();
+
+			if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
+				return false;
+				$('.e_mobile').show();
+			} else {
+				$('.e_mobile').hide();
+			}
+
+			if (smsbdy == "" || smsbdy == null) {
+				return false;
+			}
+
+			$.ajax({
+				success: function() {
+					$('.whp_sendBtn').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
+				}
+			});
+
+		});
+
+
+		//send multiple email
+		$('.email_sendBtn_m').click(function(e) {
+			e.preventDefault();
+
+			var subj = $('.subj').val();
+			var bdy = $('.emailbdy').val();
+			var csrfName = $('.csrf_hash').attr('name');
+			var csrfHash = $('.csrf_hash').val();
+
 			if (subj == "" || subj == null) {
-				$('.subj').css('border', '2px solid red');
 				return false;
-			} else {
-				$('.subj').css('border', '2px solid #ced4da');
 			}
+
 			if (bdy == "" || bdy == null) {
-				$('.bdy').css('border', '2px solid red');
 				return false;
-			} else {
-				$('.bdy').css('border', '2px solid #ced4da');
 			}
 
 			var emaildata = [];
@@ -431,83 +499,54 @@
 				emaildata.push(eachopt);
 			});
 
+			if (parseInt(emaildata.length) == 0 || parseInt(emaildata.length) < 0) {
+				return false;
+			}
+
 			$.ajax({
-					url: "<?php echo base_url('sendmultipleemail'); ?>",
-					method: "post",
-					data: {
-						emaildata: emaildata,
-						subj: subj,
-						bdy: bdy,
-						link_for: link_for,
-						[csrfName]: csrfHash,
-					},
-					beforeSend: function() {
-						$('.sendmultiplelinkbtn').attr('disabled', 'disabled');
-						$('.sendmultiplelinkbtn').html('Sending...');
-						$('.sendmultiplelinkbtn').css('cursor', 'not-allowed');
-					},
-					error: function() {
-						alert("Error sending e-mails. Please try again");
-						window.location.reload();
+				url: "<?php echo base_url('share-email-multiple'); ?>",
+				method: "post",
+				dataType:"json",
+				data: {
+					emaildata: emaildata,
+					subj: subj,
+					bdy: bdy,
+					[csrfName]: csrfHash,
+				},
+				beforeSend: function() {
+					$('.email_sendBtn_m').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
+
+					$(".ajax_succ_div,.ajax_err_div").hide();
+					$(".ajax_res_err,.ajax_res_succ").empty();
+				},
+				success: function(data) {
+					console.log(data);
+
+					if (data.status === false) {
+						$(".ajax_res_err").append(data.msg);
+						$(".ajax_err_div").fadeIn();
+					} else if (data.status === 'error') {
+						window.location.assign(data.redirect);
+					} else if (data.status === true) {
+						
 					}
-				})
-				.done(function() {
-					window.location.reload();
-				});
-		});
 
-		$('.singlsmssend').click(function() {
-			$('.sms_options').remove();
-			$('#sms_select').attr('conn', 'false');
-			$('#sms_select').hide();
+					$('.csrf_hash').val(data.token);
+					$('.email_sendBtn_m').removeAttr('disabled').html('Send').css('cursor', 'pointer');
 
-			$('#mobile').val('');
-			$('#mobile').show();
-			$(".phonelabel").html("Phonenumber");
-			$(".singlsmssend").hide();
-
-			bseu = "<?php echo base_url('smsshare'); ?>";
-			$("#sms_gen_link_form").attr('action', bseu);
-
-			$('.smssendlinkbtn').show();
-			$('.smssendmultiplelinkbtn').hide();
-		});
-
-		$('.smssendlinkbtn').click(function() {
-			var mobile = $('.mobile').val();
-			var smsbdy = $('.smsbdy').val();
-
-			if (mobile == "" || mobile == null) {
-				$('.mobile').css('border', '2px solid red');
-				return false;
-			}
-			if (mobile.length < 10 || mobile.length > 10) {
-				$('.mobile').css('border', '2px solid red');
-				$('.e_mobile').show();
-				return false;
-			} else {
-				$('.mobile').css('border', '2px solid #ced4da');
-				$('.e_mobile').hide();
-			}
-			if (smsbdy == "" || smsbdy == null) {
-				$('.smsbdy').css('border', '2px solid red');
-				return false;
-			} else {
-				$('.smsbdy').css('border', '2px solid #ced4da');
-			}
-
-			$.ajax({
-				success: function() {
-					$('.smssendlinkbtn').attr('disabled', 'disabled');
-					$('.smssendlinkbtn').html('Sending...');
-					$('.smssendlinkbtn').css('cursor', 'not-allowed');
+				},
+				error: function() {
+					alert("Error sending e-mails. Please try again");
+					// window.location.reload();
 				}
-			});
+			})
 		});
 
 
-		$('.smssendmultiplelinkbtn').click(function(e) {
+		//send multiple sms
+		$('.sms_sendBtn_m').click(function(e) {
 			e.preventDefault();
+
 			var link_for = $('.link_for').val();
 			var mobile = $('.mobile').val();
 			var smsbdy = $('.smsbdy').val();
@@ -515,11 +554,11 @@
 			var csrfHash = $('.csrf_hash').val();
 
 			if (mobile == "" || mobile == null) {
-				$('.mobile').css('border', '2px solid red');
+				$('.mobile').css('border', '2px solid #dc3545');
 				return false;
 			}
 			if (mobile.length < 10 || mobile.length > 10) {
-				$('.mobile').css('border', '2px solid red');
+				$('.mobile').css('border', '2px solid #dc3545');
 				$('.e_mobile').show();
 				return false;
 			} else {
@@ -527,7 +566,7 @@
 				$('.e_mobile').hide();
 			}
 			if (smsbdy == "" || smsbdy == null) {
-				$('.smsbdy').css('border', '2px solid red');
+				$('.smsbdy').css('border', '2px solid #dc3545');
 				return false;
 			} else {
 				$('.smsbdy').css('border', '2px solid #ced4da');
@@ -540,7 +579,7 @@
 			});
 
 			$.ajax({
-					url: "<?php echo base_url('sendmultiplesms'); ?>",
+					url: "<?php echo base_url('share-sms-multiple'); ?>",
 					method: "post",
 					data: {
 						mobiledata: mobiledata,

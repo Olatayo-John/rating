@@ -20,11 +20,15 @@ $(document).ready(function () {
 		$('form.'+tabFormName+'').show();
 	});
 
-	$('button.closebtn').click(function () {
+	$('button.close_EmailModalBtn').click(function (e) {
+		e.preventDefault();
+
 		$('.emailmodal').hide();
 	});
 
-	$('button.smsclosebtn').click(function () {
+	$('button.close_SmsModalBtn').click(function (e) {
+		e.preventDefault();
+
 		$('.smsmodal').hide();
 	});
 

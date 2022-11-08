@@ -586,14 +586,12 @@ class Usermodel extends CI_Model
 	}
 	///
 
-	public function is_userquotaexpired()
+	public function is_userquotaexpired($qType)
 	{
 		$user_id = $this->session->userdata("mr_id");
 		$form_key = $this->session->userdata('mr_form_key');
 		$iscmpy = $this->session->userdata('mr_iscmpy');
 		$cmpyid = $this->session->userdata('mr_cmpyid');
-		$sadmin = $this->session->userdata('mr_sadmin');
-		$admin = $this->session->userdata('mr_admin');
 
 		if ($iscmpy == "1" && !empty($cmpyid) && $cmpyid !== "" && $cmpyid !== null) {
 			$wherearray = array('by_user_id' => $cmpyid);
@@ -607,12 +605,12 @@ class Usermodel extends CI_Model
 		$query = $this->db->get('quota')->row();
 
 		if ($query) {
-			if ($query->bal == '0'  || $query->bal < '0' || $query->bought === $query->used) {
+			if ($query->$qType == '0'  || $query->$qType < '0') {
 				$this->db->where($mwherearray);
 				$mquery = $this->db->get('users')->row();
 				if ($mquery) {
 					$mailid = $mquery->email;
-					return $mailid;
+					return $mailid; //companyAdmin email or user Email
 					exit;
 				}
 			} else {
@@ -625,74 +623,82 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function update_usersub($form_key)
-	{
-		$this->db->set('sub', '0');
-		$this->db->where('form_key', $form_key);
-		$this->db->update('users');
-		$this->session->set_userdata('mr_sub', '0');
-		return true;
-	}
-
 	public function email_saveinfo()
 	{
 		$data = array(
+			'link_for' => 'email',
+			'sent_to_sms' => '',
 			'sent_to_email' => htmlentities($this->input->post('email')),
 			'subj' => htmlentities($this->input->post('subj')),
-			'body' => htmlentities($this->input->post('bdy')),
+			'body' => htmlentities($this->input->post('emailbdy')),
 			'user_id' => $this->session->userdata('mr_id'),
 		);
 		$this->db->insert('sent_links', $data);
-		$length = '1';
-		$this->userdetails_emailupdate($length);
-		$this->userquotaupdate($length);
+
+		$length = 'email_quota-1';
+		$q = 'email_quota';
+
+		$this->userquotaupdate($length, $q);
 		return true;
 	}
 
 	public function multiplemail_saveinfo($emaildata, $subj, $bdy)
 	{
 		$data = array(
+			'link_for' => 'email',
+			'sent_to_sms' => '',
 			'sent_to_email' => htmlentities(implode(",", $emaildata)),
 			'subj' => htmlentities($subj),
 			'body' => htmlentities($bdy),
 			'user_id' => $this->session->userdata('mr_id'),
 		);
 		$this->db->insert('sent_links', $data);
-		$length = count($emaildata);
-		$this->userdetails_emailupdate($length);
-		$this->userquotaupdate($length);
+
+		$length= 'email_quota-'.count($emaildata).'';
+		$q = 'email_quota';
+
+		$this->userquotaupdate($length, $q);
 		return true;
 	}
 
 	public function sms_saveinfo()
 	{
 		$data = array(
+			'link_for' => 'sms',
 			'sent_to_sms' => htmlentities($this->input->post('mobile')),
+			'sent_to_email' => '',
+			'subj' => '',
 			'body' => htmlentities($this->input->post('smsbdy')),
 			'user_id' => $this->session->userdata('mr_id'),
 		);
 		$this->db->insert('sent_links', $data);
-		$length = '1';
-		$this->userdetails_smsupdate($length);
-		$this->userquotaupdate($length);
+
+		$length = 'sms_quota-1';
+		$q = 'sms_quota';
+
+		$this->userquotaupdate($length, $q);
 		return true;
 	}
 
 	public function multiplsms_saveinfo($mobiledata, $smsbdy)
 	{
 		$data = array(
+			'link_for' => 'sms',
 			'sent_to_sms' => htmlentities(implode(",", $mobiledata)),
+			'sent_to_email' => '',
+			'subj' => '',
 			'body' => htmlentities($smsbdy),
 			'user_id' => $this->session->userdata('mr_id'),
 		);
-		$length = count($mobiledata);
 		$this->db->insert('sent_links', $data);
-		$this->userdetails_smsupdate($length);
-		$this->userquotaupdate($length);
+
+		$length= 'sms_quota-'.count($mobiledata).'';
+		$q = 'sms_quota';
+		$this->userquotaupdate($length, $q);
 		return true;
 	}
 
-	public function userquotaupdate($length)
+	public function userquotaupdate($length, $q)
 	{
 		$user_id = $this->session->userdata("mr_id");
 		$form_key = $this->session->userdata('mr_form_key');
@@ -705,27 +711,10 @@ class Usermodel extends CI_Model
 			$wherearray = array('by_form_key' => $form_key, 'by_user_id' => $user_id);
 		}
 
-		$this->db->set('used', 'used+' . $length, FALSE);
-		$this->db->set('bal', 'bal-' . $length, FALSE);
+		$this->db->set($q, $length, FALSE);
 		$this->db->where($wherearray);
 		$this->db->update('quota');
 		return true;
 		exit;
-	}
-
-	public function userdetails_emailupdate($length)
-	{
-		$this->db->set('total_email', 'total_email+' . $length, FALSE);
-		$this->db->where('form_key', $this->session->userdata('mr_form_key'));
-		$this->db->update('user_details');
-		return true;
-	}
-
-	public function userdetails_smsupdate($length)
-	{
-		$this->db->set('total_sms', 'total_sms+' . $length, FALSE);
-		$this->db->where('form_key', $this->session->userdata('mr_form_key'));
-		$this->db->update('user_details');
-		return true;
 	}
 }

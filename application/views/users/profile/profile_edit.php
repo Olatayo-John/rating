@@ -27,16 +27,27 @@
 
     <div class="row">
         <div class="form-group col-md-6">
-            <label>Username</label>
-            <input type="text" name="uname" class="form-control uname" readonly disabled value="<?php echo $user_info->uname ?>" required disabled style="cursor: not-allowed;">
+            <label>Gender</label>
+            <select name="gender" id="gender" class="form-control gender">
+                <option value=""></option>
+                <option value="Male" <?php echo ($user_info->gender === 'Male') ? 'selected' : '' ?>>Male</option>
+                <option value="Female" <?php echo ($user_info->gender === 'Female') ? 'selected' : '' ?>>Female</option>
+                <option value="Other" <?php echo ($user_info->gender === 'Other') ? 'selected' : '' ?>>Other</option>
+            </select>
         </div>
-        <?php if ($this->session->userdata('mr_iscmpy') === "1") : ?>
-            <div class="form-group col-md-6">
-                <label>Company</label>
-                <input type="text" name="uname" class="form-control uname" readonly disabled value="<?php echo $user_info->cmpy ?>" required disabled style="cursor: not-allowed;">
-            </div>
-        <?php endif; ?>
+        <div class="form-group col-md-6">
+            <label>Date Of Birth</label>
+            <input type="date" name="dob" class="form-control dob" value="<?php echo $user_info->dob ?>">
+        </div>
     </div>
+
+
+    <?php if ($this->session->userdata('mr_iscmpy') === "1") : ?>
+        <div class="form-group">
+            <label>Company</label>
+            <input type="text" name="uname" class="form-control uname" readonly disabled value="<?php echo $user_info->cmpy ?>" required disabled style="cursor: not-allowed;">
+        </div>
+    <?php endif; ?>
 
     <div class="form-group">
         <div class="d-flex" style="justify-content:space-between">

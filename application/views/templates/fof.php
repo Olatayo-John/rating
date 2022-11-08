@@ -1,13 +1,17 @@
-<div id="container" class="bg-light-custom p-3">
-    <h1>404 Page Not Found</h1>
-    <p>The page you requested was not found.</p>
+<div id="wrapper">
+    <div class="errorDiv bg-light-custom p-3">
+        <h1>404 Page Not Found</h1>
+        <p>The page you requested was not found.</p>
+    </div>
 </div>
 
 
 <style>
-    #container {
-        border: 1px solid #fff;
-        box-shadow: 0 0 8px #294a63;
+    #wrapper {
+        padding: 0 21px 21px 21px;
+    }
+    .errorDiv{
+        box-shadow: 0 10px 15px #294a63;
     }
 
     h1,

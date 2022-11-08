@@ -49,6 +49,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+
 $route['default_controller'] = 'user';
 $route['/'] = 'user/index';
 
@@ -65,15 +66,12 @@ $route['get-user-quota'] = 'user/get_userQuota';
 $route['add-website'] = 'user/addwebsite';
 $route['remove-website'] = 'user/removewebsite';
 
-
-//users
+//Superadmin
 $route['users'] = 'admin/users';
-
-//users-sadmin
 $route['newuser'] = 'admin/adduser_sadmin';
 
 
-//users-cmpy
+//companyAdmin
 $route['adduser'] = 'admin/adduser_cmpy';
 $route['userstatus'] = 'admin/change_userstatus';
 $route['deleteuser'] = 'admin/admin_deleteuser';
@@ -88,9 +86,11 @@ $route['activate-sub'] = 'admin/admin_activatesub';
 $route['admin/users/(:any)'] = 'admin/users/$1';
 
 
-$route['account'] = 'user/account';
+//account
+// $route['account'] = 'user/account';
+$route['account'] = 'user/account_edit';
+$route['account-edit'] = 'user/account_edit';
 $route['profile-edit'] = 'user/personal_edit';
-
 $route['website-edit'] = 'user/edit_website';
 // $route['website-delete'] = 'user/delete_website';
 $route['update-website'] = 'user/website_update';
@@ -104,16 +104,20 @@ $route['passwordreset'] = 'user/changepassword';
 $route['deactivate-account'] = 'user/deact_account';
 
 
+//rating logs
+$route['logs'] = 'user/logs';
+
+
 //rate
 $route['wtr/(:any)'] = 'user/wtr/$1';
 
 
-$route['logs'] = 'user/logs';
-
-
+//share
 $route['getlink'] = 'user/getlink';
 $route['share'] = 'user/sendlink';
-$route['smsshare'] = 'user/sms_sendlink';
+$route['share-email'] = 'user/email_share';
+$route['share-sms'] = 'user/sms_share';
+$route['share-whatsapp'] = 'user/whatsapp_share';
 // $route['importcsv_sms'] = 'user/importcsv_sms';
 // $route['importcsv_email'] = 'user/importcsv_email';
 $route['smssample_csv'] = 'user/smssample_csv';
@@ -121,22 +125,23 @@ $route['emailsample_csv'] = 'user/emailsample_csv';
 $route['sendmultiplesms'] = 'user/sendmultiplesms';
 $route['sendmultipleemail'] = 'user/sendmultipleemail';
 
-
+//plan
 // $route['pgResponses'] = 'admin/pgResponses';
 $route['plan'] = 'admin/pick_plan';
 
-
+//payments
 $route['payments'] = 'admin/payments';
 
-
-$route['contact'] = 'admin/contact';
 $route['feedbacks'] = 'admin/feedbacks';
 $route['clearfeedbacks'] = 'admin/clearfeedbacks';
 $route['activity'] = 'admin/logs';
 $route['clearlogs'] = 'admin/clearlogs';
 
 
+//
+$route['contact'] = 'admin/contact';
 $route['logout'] = 'user/logout';
+
 
 //testCase
 $route['testCase'] = 'admin/testCase';

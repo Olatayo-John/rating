@@ -345,6 +345,8 @@ class Usermodel extends CI_Model
 			'lname' => htmlentities($this->input->post('lname')),
 			'email' => htmlentities($this->input->post('email')),
 			'mobile' => htmlentities($this->input->post('mobile')),
+			'gender' => htmlentities($this->input->post('gender')),
+			'dob' => htmlentities($this->input->post('dob')),
 		);
 		$this->db->where('id', $this->session->userdata('mr_id'));
 		$this->db->update('users', $data);
@@ -398,12 +400,12 @@ class Usermodel extends CI_Model
 		} else {
 			$dupname = $this->check_duplicate_webname($web_name_new);
 			if ($dupname > 0) {
-				return "You have an existing website with the name '" . $web_name_new . "'";
+				return "You have an existing website with the name [" . $web_name_new . "]";
 				exit;
 			} else {
 				$duplink = $this->check_duplicate_weblink($web_link_new);
 				if ($duplink > 0) {
-					return "You have an existing website with the link '" . $web_link_new . "'";
+					return "You have an existing website with the link [" . $web_link_new . "]";
 					exit;
 				} else {
 					$this->update_webquota($type = "web_quota-1");
@@ -552,6 +554,25 @@ class Usermodel extends CI_Model
 	{
 		$this->db->order_by('id', 'desc');
 		$this->db->where('user_id', $this->session->userdata("mr_id"));
+		$query = $this->db->get('sent_links');
+		return $query;
+	}
+
+	public function total_email()
+	{
+		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'link_for' => 'email'));
+		$query = $this->db->get('sent_links');
+		return $query;
+	}
+	public function total_sms()
+	{
+		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'link_for' => 'sms'));
+		$query = $this->db->get('sent_links');
+		return $query;
+	}
+	public function total_wapp()
+	{
+		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'link_for' => 'whatsapp'));
 		$query = $this->db->get('sent_links');
 		return $query;
 	}

@@ -1,32 +1,40 @@
-<div class="row col-md-12 m-0 mb-3 p-0">
-    <div class="col-lg-4 col-xs-12 col-md-12 total-column">
+<div class="row col-md-12 dataBox">
+    <div class="col-lg-3 col-md-3 col-xs-12 total-column">
         <div class="panel_s">
             <div class="panel-body">
-                <h3 class="_total"><?php echo $ud->total_email+$ud->total_sms ?></h3>
-                <span class="">Total Links</span>
+                <h3 class="_total"><?php echo $ls->num_rows() ?></h3>
+                <span class="">Links</span>
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-xs-12 col-md-12 total-column">
+    <div class="col-lg-3 col-md-3 col-xs-12 total-column">
         <div class="panel_s">
             <div class="panel-body">
-                <h3 class="_total"><?php echo $ud->total_email?></h3>
+                <h3 class="_total"><?php echo $t_mail->num_rows()?></h3>
                 <span>Emails</span>
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-xs-12 col-md-12 total-column">
+    <div class="col-lg-3 col-md-3 col-xs-12 total-column">
         <div class="panel_s">
             <div class="panel-body">
-                <h3 class="_total"><?php echo $ud->total_sms ?></h3>
+                <h3 class="_total"><?php echo $t_sms->num_rows() ?></h3>
                 <span>SMS</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-12 total-column">
+        <div class="panel_s">
+            <div class="panel-body">
+                <h3 class="_total"><?php echo $t_wp->num_rows() ?></h3>
+                <span>Whatsapp</span>
             </div>
         </div>
     </div>
 </div>
 
 
-<table id="lstable" data-toggle="table" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-pagination="true">
+<table id="lstable" data-toggle="table" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="right" data-pagination="true">
     <thead class="text-light" style="background:#294a63">
         <tr>
             <th data-field="type" data-sortable="true">Type</th>

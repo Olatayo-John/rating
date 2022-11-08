@@ -24,10 +24,10 @@
             <div class="col-md-12 p-0 d-flex eachwebinfo">
                 <div class="form-group" style="margin:0">
                     <?php if ($web['active'] == "1") : ?>
-                        <span class="web_stati text-success" id="<?php echo $web['id'] ?>"><i class="fas fa-circle" title="Webste is active"></i></span>
+                        <span class="web_stati text-success" id="<?php echo $web['id'] ?>"><i class="fas fa-circle" title="Website is active"></i></span>
                     <?php endif; ?>
                     <?php if ($web['active'] == "0") : ?>
-                        <span class="web_stati text-danger" id="<?php echo $web['id'] ?>"><i class="fas fa-circle" title="Webste is not active"></i></span>
+                        <span class="web_stati text-danger" id="<?php echo $web['id'] ?>"><i class="fas fa-circle" title="Website is not active"></i></span>
                     <?php endif; ?>
                 </div>
                 <div class="form-group col pr-0">
@@ -73,7 +73,7 @@
                     </div>
 
                     <hr>
-                    <div>
+                    <div class="text-right">
                         <button type="button" class="btn text-light submit_editweb_modal" style="background-color:#294a63">Submit</button>
                     </div>
                 </form>
@@ -81,6 +81,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- add new website modal -->
 <div class="modal fade add_web_modal">
@@ -106,7 +107,7 @@
                     </div>
 
                     <hr>
-                    <div>
+                    <div class="text-right">
                         <button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#294a63;">
                             Add</button>
                     </div>
@@ -196,7 +197,7 @@
 
                     if (data.webdata > 0) {
                         $('.web_name_err').html("You already have a website with this name").show();
-                        $(".web_name_new").css('border', '1px solid red');
+                        $(".web_name_new").css('border-bottom', '2px solid #dc3545');
                         $(".add_web_modal_btn").attr({
                             type: "button",
                             disabled: "disabled",
@@ -233,7 +234,7 @@
 
                     if (data.webdata > 0) {
                         $('.web_link_err').html("You already have a website with this Link").show();
-                        $(".web_link_new").css('border', '1px solid red');
+                        $(".web_link_new").css('border-bottom', '2px solid #dc3545');
                         $(".add_web_modal_btn").attr({
                             type: "button",
                             disabled: "disabled",
@@ -261,13 +262,13 @@
             var web_link_new = $('.web_link_new').val();
 
             if (web_name_new == "" || web_name_new == null || web_name_new == undefined) {
-                $('.web_name_new').css('border', '1px solid red');
+                $('.web_name_new').css('border-bottom', '2px solid #dc3545');
                 return false;
             } else {
                 $('.web_name_new').css('border', '1px solid #ced4da');
             }
             if (web_link_new == "" || web_link_new == null || web_link_new == undefined) {
-                $(".web_link_new").css('border', '1px solid red');
+                $(".web_link_new").css('border-bottom', '2px solid #dc3545');
                 return false;
             }
 
@@ -282,7 +283,7 @@
                 $(".web_link_err").fadeOut();
                 $('.web_link_new').css('border', '1px solid #ced4da');
             } else if (res == false) {
-                $(".web_link_new").css('border', '1px solid red');
+                $(".web_link_new").css('border-bottom', '2px solid #dc3545');
                 $(".web_link_err").html("Invalid WEB URL").fadeIn();
                 return false;
             }
@@ -310,7 +311,7 @@
 
                         $(".noweb").hide();
 
-                        $(".eachwebwrapper").append('<div class="col-md-12 p-0 d-flex eachwebinfo"><div class="form-group" style="margin:0"><span class="web_stati text-success" id="' + data.insert_id + '"><i class="fas fa-circle" title="Webste is active"></i></span></div><div class="form-group col pr-0"><label class="webnamelabel" id="webnamelabel">' + web_name_new + '</label><div class="d-flex"><input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="' + web_link_new + '" readonly required style="cursor:not-allowed"><div class="col"><i class="fa-solid fa-pen-to-square viewweb_btn" id="' + data.insert_id + '" style="color:#294a63"></i></div></div></div></div>');
+                        $(".eachwebwrapper").append('<div class="col-md-12 p-0 d-flex eachwebinfo"><div class="form-group" style="margin:0"><span class="web_stati text-success" id="' + data.insert_id + '"><i class="fas fa-circle" title="Website is active"></i></span></div><div class="form-group col pr-0"><label class="webnamelabel" id="webnamelabel">' + web_name_new + '</label><div class="d-flex"><input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="' + web_link_new + '" readonly required style="cursor:not-allowed"><div class="col"><i class="fa-solid fa-pen-to-square viewweb_btn" id="' + data.insert_id + '" style="color:#294a63"></i></div></div></div></div>');
 
                         var webscreated = $('.eachwebinfo').length;
                         var webspaceleftText = $('.webspaceleft').text();
@@ -399,11 +400,11 @@
 
                     if (webstatus == 1) {
                         $("span#" + id + "").removeClass("text-danger").addClass("text-success");
-                        $("span#" + id + " i").attr('title', 'Webste is active');
+                        $("span#" + id + " i").attr('title', 'Website is active');
                         $("button[attrid='" + id + "']").attr('status', '0').html("Deactivate");
                     } else if (webstatus == 0) {
                         $("span#" + id + "").removeClass("text-success").addClass("text-danger");
-                        $("span#" + id + " i").attr('title', 'Webste is not active');
+                        $("span#" + id + " i").attr('title', 'Website is not active');
                         $("button[attrid='" + id + "']").attr('status', '1').html("Activate");
                     }
 

@@ -2,10 +2,45 @@ label {
 	color: #294a63;
 	font-weight: 500;
 }
+.set_wrapper_out {
+	padding: 0 21px 21px 21px;
+}
 
 .set_wrapper {
 	padding: 0 21px;
 }
+
+
+/*  */
+.oudiv_wrapper{
+	border: 1px solid #c5d6de;
+}
+.oudiv {
+	border: 1px solid #c5d6de;
+    border-radius: 3px;
+}
+
+.oudiv h3 {
+	background: #294a63;
+	margin: 0;
+	font-size: 16px;
+	padding: 8px 14px;
+	color: #fff;
+	border-bottom: 1px solid #d7dfe3;
+}
+.table{
+	margin-bottom: 0 !important;
+	background:#fff;
+}
+/* tbody tr :nth-child(1) {
+	color: #294a63;
+	font-weight: 500;
+}
+tbody tr td a.webA{
+	color: #007bff !important;
+} */
+/*  */
+
 
 /* side nav_links */
 .tab_div {
@@ -190,7 +225,7 @@ h3._total {
 	border-bottom: 2px solid #294a63;
 	height: 33.5px;
 	margin-left: 10px;
-	background:transparent;
+	background: transparent;
 }
 
 

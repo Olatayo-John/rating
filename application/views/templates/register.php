@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/register.css'); ?>">
 
-<div class="wrapper_div bg-light-custom">
-	<form action="<?php echo base_url('register'); ?>" method="post" class="" id="regForm">
+<div class="wrapper_div">
+	<form action="<?php echo base_url('register'); ?>" method="post" class="bg-light-custom p-3" id="regForm">
 		<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
 		<div class="row">

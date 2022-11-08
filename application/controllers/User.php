@@ -359,7 +359,6 @@ class User extends CI_Controller
 		$webcount = $data['webs']->num_rows();
 
 		if ($webcount > 0) {
-			//redirect to home page if user as already created a website
 			$this->Usermodel->update_webform();
 			redirect("/");
 		} else {
@@ -392,31 +391,31 @@ class User extends CI_Controller
 	public function addwebsite()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$data['status'] = false;
+			$data['status'] = 'error';
 			$data['redirect'] = base_url("logout");
+
+			$data['token'] = $this->security->get_csrf_hash();
 			echo json_encode($data);
 			exit;
 		}
 		if ($this->session->userdata('mr_website_form') == "1") {
-			$data['status'] = false;
+			$data['status'] = 'error';
 			$data['redirect'] = base_url("/");
+
+			$data['token'] = $this->security->get_csrf_hash();
 			echo json_encode($data);
 			exit;
 		}
 
-		$res = $this->Usermodel->addwebsite($_POST['web_name'], $_POST['web_link']);
-		if (!$res) {
+		$res = $this->Usermodel->createwebsite($_POST['web_name'], $_POST['web_link']);
+		if (gettype($res) === "string") {
 			$this->Logmodel->log_act($type = "websitenewerr");
-
-			$data['status'] = "error";
-			$data['redirect'] = "";
-			$data['msg'] = 'Error creating your website';
-		} else {
+			$data['status'] = false;
+			$data['msg'] = $res;
+		} else if (gettype($res) === "integer") {
 			$this->Logmodel->log_act($type = "websitenew");
-
 			$data['status'] = true;
-			$data['redirect'] = "";
-			$data['msg'] = 'Website Added';
+			$data['msg'] = "Website created";
 			$data['webID'] = $res;
 		}
 
@@ -471,7 +470,22 @@ class User extends CI_Controller
 		$data['quota'] = $this->Usermodel->get_userQuota();
 
 		$this->load->view('templates/header', $data);
-		$this->load->view('users/account', $data);
+		$this->load->view('users/account_view', $data);
+		$this->load->view('templates/footer');
+	}
+
+	public function account_edit()
+	{
+		$data['title'] = "edit account";
+
+		$this->checklogin();
+
+		$data['user_info'] = $this->Usermodel->get_info();
+		$data['websites'] = $this->Usermodel->get_user_websites();
+		$data['quota'] = $this->Usermodel->get_userQuota();
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('users/account_edit', $data);
 		$this->load->view('templates/footer');
 	}
 
@@ -484,9 +498,11 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
 		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|exact_length[10]|html_escape');
+		$this->form_validation->set_rules('gender', 'Gender', 'trim|html_escape');
+		$this->form_validation->set_rules('dob', 'Date Of Birth', 'trim|html_escape');
 
 		if ($this->form_validation->run() === FALSE) {
-			redirect('account');
+			redirect('account-edit');
 		} else {
 			$res = $this->Usermodel->personal_edit();
 			if ($res !== TRUE) {
@@ -500,7 +516,7 @@ class User extends CI_Controller
 
 				$this->session->set_userdata('mr_email', htmlentities($this->input->post('email')));
 
-				redirect('account');
+				redirect('account-edit');
 			}
 		}
 	}
@@ -630,18 +646,18 @@ class User extends CI_Controller
 		$this->form_validation->set_rules('rtn_pwd', 'Re-type Password', 'required|trim|min_length[6]|matches[n_pwd]');
 
 		if ($this->form_validation->run() == false) {
-			redirect('account');
+			redirect('account-edit');
 		} else {
 			$pwd_res = $this->Usermodel->check_pwd();
 			if ($pwd_res == false) {
 				$this->Logmodel->log_act($type = "userpwderr");
 				$this->session->set_flashdata('invalid', 'Incorrect password provided');
-				redirect('account#resetPassword');
 			} else {
 				$this->Logmodel->log_act($type = "userpwd");
 				$this->session->set_flashdata('valid', 'Password changed');
-				redirect('account#resetPassword');
 			}
+
+			redirect('account-edit#resetPassword');
 		}
 	}
 
@@ -749,6 +765,10 @@ class User extends CI_Controller
 		$data['ls'] = $this->Usermodel->allsentlinksbyuser();
 		$data['ud'] = $this->Usermodel->userdetails();
 
+		$data['t_mail'] = $this->Usermodel->total_email();
+		$data['t_sms'] = $this->Usermodel->total_sms();
+		$data['t_wp'] = $this->Usermodel->total_wapp();
+
 		// print_r($data['ud']->total_email);
 		// die;
 		$this->load->view('templates/header', $data);
@@ -758,20 +778,25 @@ class User extends CI_Controller
 
 	public function getlink()
 	{
-		$this->checklogin();
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
+		} else {
+			$myfile = fopen("body.txt", "w") or die("Unable to open file!");
+			$txt = "Click the link below, to rate any of my websites\n";
+			fwrite($myfile, $txt);
+			$txt = base_url() . "wtr/" . $this->session->userdata("mr_form_key") . "\n\n";
+			fwrite($myfile, $txt);
+			$txt = $this->session->userdata("mr_uname") . "\n";
+			fwrite($myfile, $txt);
+			$txt = $this->session->userdata("mr_email") . "\n";
+			fwrite($myfile, $txt);
+			$txt = "Regards";
+			fwrite($myfile, $txt);
+			fclose($myfile);
 
-		$myfile = fopen("body.txt", "w") or die("Unable to open file!");
-		$txt = "Click the link below, to rate any of my websites\n";
-		fwrite($myfile, $txt);
-		$txt = base_url() . "wtr/" . $this->session->userdata("mr_form_key") . "\n\n";
-		fwrite($myfile, $txt);
-		$txt = $this->session->userdata("mr_uname") . "\n";
-		fwrite($myfile, $txt);
-		$txt = $this->session->userdata("mr_email") . "\n";
-		fwrite($myfile, $txt);
-		$txt = "Regards";
-		fwrite($myfile, $txt);
-		fclose($myfile);
+			$data['status'] = true;
+		}
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
@@ -783,73 +808,9 @@ class User extends CI_Controller
 
 		$this->checklogin();
 
-		// if($this->session->userdata("mr_sub") <= '0'){
-		// 	$this->session->set_flashdata('invalid', "You dont have an active subscription");
-		// }
-
-		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
-		$this->form_validation->set_rules('subj', 'Subject', 'required|trim|html_escape');
-		$this->form_validation->set_rules('bdy', 'Body', 'required|trim|html_escape');
-
-		if ($this->form_validation->run() == false) {
-			$this->load->view('templates/header', $data);
-			$this->load->view('users/share');
-			$this->load->view('templates/footer');
-		} else {
-			$cq_res = $this->Usermodel->is_userquotaexpired();
-			if ($cq_res === "not_Found") {
-				$this->logout();
-				exit;
-			} else if ($this->session->userdata('mr_sub') == '0') {
-				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
-					$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
-				} else {
-					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
-				}
-				$this->session->set_flashdata('invalid', $sessmsg);
-				redirect($_SERVER['HTTP_REFERER']);
-			} else if ($cq_res !== false) {
-				$usermail_expire = $cq_res->email;
-				$this->Logmodel->log_act($type = "quota_expire");
-
-				$this->load->library('emailconfig');
-				$this->emailconfig->quota_send_mail_expire($usermail_expire);
-
-				$this->session->set_flashdata('invalid', 'Quota has expired');
-				redirect($_SERVER['HTTP_REFERER']);
-			} else if ($cq_res === false) {
-				if (!filter_var($this->input->post('email'), FILTER_VALIDATE_EMAIL)) {
-					$this->session->set_flashdata('invalid', '(' . $this->input->post('email') . ') is an invalid email');
-					redirect($_SERVER['HTTP_REFERER']);
-				}
-				$email = htmlentities($this->input->post('email'));
-				$subj = htmlentities($this->input->post('subj'));
-				$bdy = htmlentities($this->input->post('bdy'));
-
-				$this->load->library('emailconfig');
-				$mail_res = $this->emailconfig->link_send_mail($email, $subj, $bdy);
-
-				if ($mail_res !== true) {
-					$this->Logmodel->log_act($type = "mail_err");
-					$this->session->set_flashdata('invalid', $mail_res);
-					redirect($_SERVER['HTTP_REFERER']);
-					exit;
-				} else {
-					$this->Logmodel->log_act($type = "smail_sent");
-					$res = $this->Usermodel->email_saveinfo();
-					if ($res !== true) {
-						$this->Logmodel->log_act($type = "db_err");
-						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
-						redirect($_SERVER['HTTP_REFERER']);
-						exit;
-					} else {
-						$this->session->set_flashdata('valid', 'Link sent successfully');
-						redirect($_SERVER['HTTP_REFERER']);
-						exit;
-					}
-				}
-			}
-		}
+		$this->load->view('templates/header', $data);
+		$this->load->view('users/share');
+		$this->load->view('templates/footer');
 	}
 
 	public function emailsample_csv()
@@ -905,6 +866,74 @@ class User extends CI_Controller
 			);
 		}
 		echo json_encode($data);
+	}
+
+	public function email_share()
+	{
+
+		$this->checklogin();
+
+		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
+		$this->form_validation->set_rules('subj', 'Subject', 'required|trim|html_escape');
+		$this->form_validation->set_rules('bdy', 'Body', 'required|trim|html_escape');
+
+		if ($this->form_validation->run() == false) {
+			redirect('share');
+		} else {
+			$cq_res = $this->Usermodel->is_userquotaexpired();
+			if ($cq_res === "not_Found") {
+				$this->logout();
+				exit;
+			} else if ($this->session->userdata('mr_sub') == '0') {
+				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+					$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
+				} else {
+					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
+				}
+				$this->session->set_flashdata('invalid', $sessmsg);
+				redirect($_SERVER['HTTP_REFERER']);
+			} else if ($cq_res !== false) {
+				$usermail_expire = $cq_res->email;
+				$this->Logmodel->log_act($type = "quota_expire");
+
+				$this->load->library('emailconfig');
+				$this->emailconfig->quota_send_mail_expire($usermail_expire);
+
+				$this->session->set_flashdata('invalid', 'Quota has expired');
+				redirect($_SERVER['HTTP_REFERER']);
+			} else if ($cq_res === false) {
+				if (!filter_var($this->input->post('email'), FILTER_VALIDATE_EMAIL)) {
+					$this->session->set_flashdata('invalid', '(' . $this->input->post('email') . ') is an invalid email');
+					redirect($_SERVER['HTTP_REFERER']);
+				}
+				$email = htmlentities($this->input->post('email'));
+				$subj = htmlentities($this->input->post('subj'));
+				$bdy = htmlentities($this->input->post('bdy'));
+
+				$this->load->library('emailconfig');
+				$mail_res = $this->emailconfig->link_send_mail($email, $subj, $bdy);
+
+				if ($mail_res !== true) {
+					$this->Logmodel->log_act($type = "mail_err");
+					$this->session->set_flashdata('invalid', $mail_res);
+					redirect($_SERVER['HTTP_REFERER']);
+					exit;
+				} else {
+					$this->Logmodel->log_act($type = "smail_sent");
+					$res = $this->Usermodel->email_saveinfo();
+					if ($res !== true) {
+						$this->Logmodel->log_act($type = "db_err");
+						$this->session->set_flashdata('invalid', 'Error saving contacts to DATABASE.');
+						redirect($_SERVER['HTTP_REFERER']);
+						exit;
+					} else {
+						$this->session->set_flashdata('valid', 'Link sent successfully');
+						redirect($_SERVER['HTTP_REFERER']);
+						exit;
+					}
+				}
+			}
+		}
 	}
 
 	public function sendmultipleemail()

@@ -1,23 +1,28 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/websites.css'); ?>">
 
-<div class="bg-light-custom" style="margin-top: 74px;">
+<div class="wrapper_div">
     <div class="modal add_web_modal">
         <div class="modal-dialog modal-dialog-top">
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close closewebmodal_btn" aria-hidden="true">&times;</button>
+                </div>
                 <div class="modal-body">
                     <form method="post" action="<?php echo base_url("user/add_website") ?>" class="add_web_modal_form">
                         <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
                         <div class="form-group">
                             <label>Website Name</label>
                             <input type="text" name="web_name" class="web_name form-control" placeholder="Name of the webisite" required>
                         </div>
+
                         <div class="form-group">
                             <label class="mb-0">Website Link</label>
                             <div class="text-danger font-weight-bolder mt-0 web_link_err"></div>
                             <input type="url" name="web_link" class="web_link form-control" placeholder="e.g https://domainname.com" required>
                         </div>
-                        <div class="modal_btn_actions d-flex justify-content-between">
-                            <button type="button" class="btn btn-secondary closewebmodal_btn">Close</button>
+
+                        <div class="text-right">
                             <button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#294a63;">Add</button>
                         </div>
                     </form>
@@ -26,12 +31,13 @@
         </div>
     </div>
 
-    <form action="<?php echo base_url('account'); ?>" method="post" class="addweb_form">
+    <form action="<?php echo base_url('account'); ?>" method="post" class="addweb_form bg-light-custom">
         <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
         <div class="text-right">
             <button type="button" class="text-light btn addwebmodal_btn" style="background:#294a63">
                 <i class="fas fa-plus-circle mr-2"></i>
-                Add a website to your account
+                Add a website
             </button>
         </div>
 
@@ -51,9 +57,9 @@
 
         <div class="web_info_div" id="web_info_div">
             <?php foreach ($webs->result_array() as $web) : ?>
-                <div class="d-flex flex-direction-row col-md-12 eachwebinfo">
+                <div class="d-flex flex-direction-row col-md-12 p-0 eachwebinfo">
                     <div class="form-group" style="margin:0">
-                        <span class="web_num"><i class="fas fa-circle"></i></span>
+                        <span class="text-success"><i class="fas fa-circle" title="Website is active"></i></span>
                     </div>
                     <div class="form-group col">
                         <label class="webnamelabel" id="webnamelabel"><?php echo $web['web_name'] ?></label>
@@ -185,8 +191,12 @@
         });
 
         //close the modal to add new websites
-        $(document).on('click', 'button.closewebmodal_btn', function(e) {
+        $(document).on('click', '.closewebmodal_btn', function(e) {
             e.preventDefault();
+
+            $('.web_name,.web_link').val('');
+            // $('.web_name,.web_link').css('border', '1px solid #ced4da');
+
             $('.add_web_modal').modal("hide");
         });
 
@@ -201,13 +211,13 @@
             var countweb = $('.countwebs').text();
 
             if (web_name == "" || web_name == null) {
-                $('.web_name').css('border', '2px solid red');
+                $('.web_name').css('border-bottom', '2px solid #dc3545');
                 return false;
             } else {
                 $('.web_name').css('border', '1px solid #ced4da');
             }
             if (web_link == "" || web_link == null) {
-                $(".web_link").css('border', '2px solid red');
+                $(".web_link").css('border-bottom', '2px solid #dc3545');
                 return false;
             }
 
@@ -222,7 +232,7 @@
                 $(".web_link_err").fadeOut();
                 $('.web_link').css('border', '1px solid #ced4da');
             } else if (res == false) {
-                $(".web_link").css('border', '2px solid red');
+                $(".web_link").css('border-bottom', '2px solid #dc3545');
                 $(".web_link_err").html("Invalid WEB URL").fadeIn();
                 return false;
             }
@@ -244,7 +254,7 @@
                         $('.ajax_res_succ').html(data.msg);
                         $('.ajax_succ_div').fadeIn();
 
-                        $(".web_info_div").append('<div class="d-flex flex-direction-row col-md-12 web_wrapper eachwebinfo" id="' + data.webID + '" webname="' + web_name + '" weblink="' + web_link + '"><div class="form-group" style="margin:0"><span class="web_num"><i class="fas fa-circle"></i></span></div><div class="form-group col"><label class="webname_label" id="webname_label">' + web_name + '</label><input type="url" name="weblink_input" class="form-control weblink_input" id="weblink_input" value="' + web_link + '" readonly required style="cursor:not-allowed"></div><div class="form-group" style="margin:35px 0 0 0"><i class="fas fa-times remove_web_i text-danger" web_id="' + data.webID + '" web_name="' + web_name + '" web_link="' + web_link + '"></i></div></div>');
+                        $(".web_info_div").append('<div class="d-flex flex-direction-row col-md-12 p-0 web_wrapper eachwebinfo" id="' + data.webID + '" webname="' + web_name + '" weblink="' + web_link + '"><div class="form-group" style="margin:0"><span class="text-success"><i class="fas fa-circle" title="Website is active"></i></span></div><div class="form-group col"><label class="webname_label" id="webname_label">' + web_name + '</label><input type="url" name="weblink_input" class="form-control weblink_input" id="weblink_input" value="' + web_link + '" readonly required style="cursor:not-allowed"></div><div class="form-group" style="margin:35px 0 0 0"><i class="fas fa-times remove_web_i text-danger" web_id="' + data.webID + '" web_name="' + web_name + '" web_link="' + web_link + '"></i></div></div>');
 
                         $('.add_web_modal').modal("hide");
                         $('.web_name').val("");
@@ -253,10 +263,12 @@
                         var new_countweb = parseInt(countweb) + 1;
                         $(".countwebs").html(new_countweb);
 
-                    } else if (data.status == "error" || data.status == false) {
+                    } else if (data.status == false) {
                         $(".ajax_succ_div,.ajax_err_div").fadeOut();
                         $('.ajax_res_err').html(data.msg);
                         $('.ajax_err_div').fadeIn();
+                    } else if (data.status == "error") {
+                        window.location.assign(data.redirect);
                     }
                 }
             });

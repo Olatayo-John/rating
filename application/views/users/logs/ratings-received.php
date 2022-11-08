@@ -1,20 +1,21 @@
-<div class="row col-md-12 m-0 mb-3 p-0">
-    <div class="col-lg-2 col-md-2 col-xs-12 total-column">
+<div class="row col-md-12 dataBox">
+    <div class="col-lg-3 col-md-3 col-xs-12 total-column">
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total"><?php echo $rr->num_rows() ?></h3>
-                <span class="">Total Ratings</span>
+                <span class="">Ratings</span>
             </div>
         </div>
     </div>
 </div>
 
-<table id="rrtable" data-toggle="table" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-pagination="true">
+<table id="rrtable" data-toggle="table" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="right" data-pagination="true">
     <thead class="text-light" style="background:#294a63">
         <tr>
             <th data-field="webname" data-sortable="true">Website</th>
-            <th data-field="ratedby" data-sortable="true">Rated By</th>
             <th data-field="review" data-sortable="true">Review</th>
+            <th data-field="ratedby" data-sortable="true">Rated By</th>
+            <th data-field="IP" data-sortable="true">IP</th>
             <th data-field="date" data-sortable="true">Date</th>
         </tr>
     </thead>
@@ -24,7 +25,6 @@
                 <td>
                     <a href="<?php echo $rr->web_link; ?>" target="_blank"><?php echo $rr->web_name; ?></a>
                 </td>
-                <td><?php echo $rr->name; ?></td>
                 <td>
                     <?php if (!empty($rr->review) && isset($rr->review) && $rr->review !== null) : ?>
                         <?php echo $rr->review; ?>
@@ -32,6 +32,8 @@
                         <?php echo $rr->star . " Star"; ?>
                     <?php endif; ?>
                 </td>
+                <td><?php echo $rr->name; ?></td>
+                <td><?php echo $rr->user_ip; ?></td>
                 <td style="color:#a71d2a;"><?php echo $rr->rated_at; ?></td>
             </tr>
         <?php endforeach; ?>

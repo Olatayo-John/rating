@@ -38,6 +38,7 @@ button:focus {
 	outline: none !important;
 }
 
+button,
 button.btn,
 a.btn {
 	border-radius: 0;
@@ -46,6 +47,16 @@ a.btn {
 
 .bg-light-custom {
 	background: #eceff4;
+}
+
+input.form-control[readonly]:focus,
+select.form-control[readonly]:focus,
+textarea.form-control[readonly]:focus {
+	border: 1px solid #ced4da;
+	/* border-bottom-color: #294a63; */
+	border-bottom: 2px solid #294a63;
+	box-shadow: none;
+	border-radius: 0;
 }
 
 input.form-control:valid:focus,
@@ -79,17 +90,9 @@ input.search_user:focus {
 }
 
 div.form-group span {
-	/* color: #dc3545 !important; */
 	color: #dc3545;
 	font-weight: bolder;
 }
-
-/* div.form-group span.text-success{
-	color:#28a745!important;
-}
-div.form-group span.text-danger{
-	color: #dc3545 !important;
-} */
 
 div.err,
 span.err {
@@ -271,7 +274,7 @@ div ul li a.nav-link b {
 	font-weight: 500;
 	left: 60px;
 	bottom: 0;
-	min-width: 100px;
+	min-width: 150px;
 	line-height: 48px;
 	border-radius: 0 50px 50px 0;
 	color: #fff;

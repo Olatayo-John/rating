@@ -1,5 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/share.css'); ?>">
-<div class="container">
+
+
+<div class="wrapper_div">
 	<div class="emailmodal modal">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -37,83 +39,113 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="tab_div">
+		<a href="#as-email" class="tab_link mail_a sndasmailbtn" id="as-email" tabFormName="emailForm">
+			<i class="fas fa-envelope mr-2"></i>Email
+		</a>
+		<a href="#as-sms" class="tab_link sms_a sndassmsbtn" id="as-sms" tabFormName="smsForm">
+			<i class="fas fa-comment-dots mr-2"></i>SMS
+		</a>
+		<a href="#as-whatsapp" class="tab_link whatsapp_a sndaswhpbtn" id="as-whatsapp" tabFormName="whatsappForm">
+			<i class="fa-brands fa-whatsapp mr-2"></i>Whatsapp
+		</a>
+	</div>
+
+	<div class="bg-light-custom allform p-3">
+		<!-- email -->
+		<form action="<?php echo base_url('share-email'); ?>" method="post" id="emailForm" class="emailForm as-email genform">
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
+			<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
+			<div class="import text-right d-flex justify-content-between mb-4">
+				<button class="btn text-light singlemailsend" type="button" style="display: none;background-color:#294a63">Send single mail</button>
+				<input type="hidden" name="link_for" class="link_for">
+				<button class="btn text-light importemail" type="button" style="background-color:#294a63">Import multiple emails in CSV format</button>
+				<a href="<?php echo base_url('emailsample_csv'); ?>" class="email_sample_csv btn btn-danger">
+					<i class="fas fa-file-csv mr-2"></i>Download sample</a>
+			</div>
+
+			<div class="form-group">
+				<label class="labelemail">E-mail</label>
+				<input type="email" name="email" class="form-control email" placeholder="example@domain.com" id="email">
+				<select class="form-control email_select" name="email_select" id="email_select" style="display: none;" readonly conn="false">
+					<option></option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label>Subject</label>
+				<input type="text" name="subj" class="form-control subj">
+			</div>
+
+			<div class="form-group">
+				<label>Body</label>
+				<textarea class="form-control emailbdy" rows="8" name="emailbdy"></textarea>
+			</div>
+
+			<hr>
+			<div class="text-right">
+				<button class="btn email_sendBtn text-light" style="background-color:#294a63">Send</button>
+			</div>
+		</form>
+
+		<!-- sms -->
+		<form action="<?php echo base_url('share-sms'); ?>" method="post" id="smsForm" class="smsForm as-sms genform">
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
+			<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
+			<div class="sms_import text-right d-flex justify-content-between mb-4">
+				<button class="btn text-light singlsmssend" type="button" style="display: none;background-color:#294a63">Send single sms</button>
+				<input type="hidden" name="link_for" class="link_for">
+				<button class="btn text-light smsimport" type="button" style="background-color:#294a63">Import multiple Phonenumber in CSV format</button>
+				<a href="<?php echo base_url('smssample_csv'); ?>" class="email_sample_csv btn btn-danger">
+					<i class="fas fa-file-csv mr-2"></i>Download sample</a>
+			</div>
+
+			<div class=" form-group">
+				<label class="phonelabel">Phonenumber</label>
+				<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile">
+				<span class="e_mobile text-danger font-weight-bolder" style="display: none;">Invalid mobile length</span>
+				<select class="form-control sms_select" name="sms_select" id="sms_select" style="display: none;" readonly conn="false">
+					<option></option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label>Body</label>
+				<textarea class="form-control smsbdy" rows="8" name="smsbdy"></textarea>
+			</div>
+
+			<hr>
+			<div class="text-right">
+				<button class="btn text-light sms_sendBtn" style="background-color:#294a63">Send</button>
+			</div>
+		</form>
+
+		<!-- whatsapp -->
+		<form action="<?php echo base_url('share-whatsapp'); ?>" method="post" id="whatsappForm" class="whatsappForm as-whatsapp genform">
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
+			<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
+
+			<div class="form-group">
+				<label class="phonelabel">Whatsapp Number</label>
+				<input type="number" name="whpMobile" class="form-control whpMobile" placeholder="Whatsapp number" required>
+				<span class="e_whpMobile err">Invalid mobile length</span>
+			</div>
+
+			<div class="form-group">
+				<label>Body</label>
+				<textarea class="form-control whpbdy" rows="8" name="whpbdy"></textarea>
+			</div>
+
+			<hr>
+			<div class="text-right">
+				<button class="btn text-light whp_sendBtn" style="background-color:#294a63">Send</button>
+			</div>
+		</form>
+	</div>
 </div>
 
-<div class="mb-3 p-2 bg-light-custom d-flex tab_div" style="justify-content:space-evenly;margin-top: 74px;">
-	<a href="#as-email" class="tab_link mail_a sndasmailbtn" id="as-email">
-		<i class="fas fa-envelope mr-2"></i>Send as Email
-	</a>
-	<a href="#as-sms" class="tab_link sms_a sndassmsbtn" id="as-sms">
-		<i class=" fas fa-comment-dots mr-2"></i>Send as SMS
-	</a>
-</div>
 
-<div class="mb-5 bg-light-custom p-4 allform">
-	<form action="<?php echo base_url('share'); ?>" method="post" id="gen_link_form" class="gen_link_form as-email genform">
-		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
-		<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
-		<div class="import text-right d-flex justify-content-between mb-4">
-			<button class="btn text-light singlemailsend" type="button" style="display: none;background-color:#294a63">Send single mail</button>
-			<input type="hidden" name="link_for" class="link_for">
-			<button class="btn text-light importemail" type="button" style="background-color:#294a63">Import multiple emails in CSV format</button>
-			<a href="<?php echo base_url('emailsample_csv'); ?>" class="email_sample_csv btn btn-danger">
-				<i class="fas fa-file-csv mr-2"></i>Download sample</a>
-		</div>
-		<div class="form-group">
-			<label class="labelemail">E-mail</label>
-			<input type="email" name="email" class="form-control email" placeholder="example@domain.com" id="email">
-			<select class="form-control email_select" name="email_select" id="email_select" style="display: none;" readonly conn="false">
-				<option></option>
-			</select>
-		</div>
-		<div class="form-group">
-			<label>Subject</label>
-			<input type="text" name="subj" class="form-control subj">
-		</div>
-		<div class="form-group">
-			<label>Body</label>
-			<textarea class="form-control bdy" rows="8" name="bdy"></textarea>
-		</div>
-		<hr>
-		<div class="sendlinkdiv">
-			<button class="btn sendlinkbtn text-light" style="background-color:#294a63"><i class="fas fa-envelope mr-2"></i>Send Email</button>
-			<button class="btn sendmultiplelinkbtn text-light" style="display: none;background-color:#294a63">
-				<i class="fas fa-envelope mr-2"></i>Send Email</button>
-		</div>
-	</form>
-	<form action="<?php echo base_url('smsshare'); ?>" method="post" id="sms_gen_link_form" class="sms_gen_link_form as-sms genform">
-		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
-		<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
-		<div class="sms_import text-right d-flex justify-content-between mb-4">
-			<button class="btn text-light singlsmssend" type="button" style="display: none;background-color:#294a63">Send single sms</button>
-			<input type="hidden" name="link_for" class="link_for">
-			<button class="btn text-light smsimport" type="button" style="background-color:#294a63">Import multiple Phonenumber in CSV format</button>
-			<a href="<?php echo base_url('smssample_csv'); ?>" class="email_sample_csv btn btn-danger">
-				<i class="fas fa-file-csv mr-2"></i>Download sample</a>
-		</div>
-		<div class=" form-group">
-			<label class="phonelabel">Phonenumber</label>
-			<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile">
-			<span class="e_mobile text-danger font-weight-bolder" style="display: none;">Invalid mobile length</span>
-			<select class="form-control sms_select" name="sms_select" id="sms_select" style="display: none;" readonly conn="false">
-				<option></option>
-			</select>
-		</div>
-		<div class="form-group">
-			<label>Body</label>
-			<textarea class="form-control smsbdy" rows="8" name="smsbdy"></textarea>
-		</div>
-		<hr>
-		<div class="sendlinkdiv">
-			<button class="btn text-light smssendlinkbtn" style="background-color:#294a63"><i class="fas fa-comment-dots mr-2"></i>Send SMS</button>
-			<button class="btn text-light smssendmultiplelinkbtn" style="display: none;background-color:#294a63">
-				<i class=" fas fa-comment-dots mr-2"></i>Send SMS</button>
-		</div>
-	</form>
-</div>
-
-
-</div>
 <script type="text/javascript" src="<?php echo base_url('assets/js/share.js'); ?>"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -121,6 +153,7 @@
 		var csrfName = $('.csrf_hash').attr('name');
 		var csrfHash = $('.csrf_hash').val();
 
+		//load message body/file.txt
 		$.ajax({
 			url: "<?php echo base_url('getlink'); ?>",
 			method: "post",
@@ -132,18 +165,21 @@
 			success: function(data) {
 				$('.csrf_hash').val(data.token);
 
-				$('.subj').val("Rating");
+				if (data.status === true) {
+					$('.subj').val("Rating");
 
-				$(".bdy").load("<?php echo base_url("body.txt"); ?>");
-				$(".smsbdy").load("<?php echo base_url("body.txt"); ?>");
+					$(".emailbdy,.smsbdy,.whpbdy").load("<?php echo base_url("body.txt"); ?>");
 
-				// $('.gen_link_form').show();
+				} else if (data.status == false) {
+					$(".ajax_succ_div,.ajax_err_div").fadeOut();
+					$('.ajax_res_err').html(data.msg);
+					$('.ajax_err_div').fadeIn();
+				} else if (data.status == "error") {
+					window.location.assign(data.redirect);
+				}
 			},
 			error: function(data) {
-				var protocol = window.location.protocol;
-				var url_redirect = window.location.hostname + "/rating/account";
-				var new_url = protocol + "//" + url_redirect;
-				window.location.assign(new_url);
+				window.location.assign(data.redirect);
 			}
 		});
 

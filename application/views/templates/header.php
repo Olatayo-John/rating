@@ -53,7 +53,7 @@
 		<div class="logoimg mr-auto m-1">
 			<img src="<?php echo base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
 		</div>
-		<!-- <?php print_r($_SESSION) ?> -->
+		<?php print_r($_SESSION) ?>
 
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>
 			<?php if ($this->session->userdata('mr_sub') == "0") : ?>
@@ -118,7 +118,7 @@
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>
 					<!-- myAccount -->
 					<li class="nav-item">
-						<a href="<?php echo base_url('account') ?>" class="nav-link" style="<?php echo ($url == 'account') ? 'background:white;color:#294a63' : '' ?>">
+						<a href="<?php echo base_url('account') ?>" class="nav-link" style="<?php echo ($url == 'account' || $url == 'account-edit') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-user-circle"></i><b>My Account</b>
 						</a>
 					</li>
@@ -147,13 +147,6 @@
 						</a>
 					</li>
 				<?php endif; ?>
-
-				<!-- contactUs -->
-				<li class="nav-item">
-					<a href="<?php echo base_url('contact') ?>" class="nav-link" style="<?php echo ($url == 'contact') ? 'background:white;color:#294a63' : '' ?>">
-						<i class="fas fa-id-card"></i><b>Contact Us</b>
-					</a>
-				</li>
 
 				<!-- <li class="sub-menu dcjq-parent-li">
 					<a href="javascript:;" class="dcjq-parent active">
@@ -185,6 +178,13 @@
 						</a>
 					</li>
 				<?php endif; ?>
+
+				<!-- contactUs -->
+				<li class="nav-item">
+					<a href="<?php echo base_url('contact') ?>" class="nav-link" style="<?php echo ($url == 'contact') ? 'background:white;color:#294a63' : '' ?>">
+						<i class="fas fa-id-card"></i><b>Contact Us</b>
+					</a>
+				</li>
 
 				<!-- logOUT -->
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>

@@ -89,16 +89,27 @@ input.search_user:focus {
 	background-color: transparent !important;
 }
 
-div.form-group span {
+div.form-group span,
+span.company {
 	color: #dc3545;
 	font-weight: bolder;
 }
 
+td.date{
+	color: #dc3545;
+	font-weight: 500;
+}
+
 div.err,
-span.err,.e_mobile {
+span.err,
+.e_mobile {
 	color: #dc3545 !important;
 	font-weight: 500 !important;
 	display: none;
+}
+
+.btn-md {
+	background: #294a63 !important;
 }
 
 /*  */

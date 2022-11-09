@@ -34,23 +34,13 @@
                 </td>
                 <td><?php echo $rr->name; ?></td>
                 <td><?php echo $rr->user_ip; ?></td>
-                <td style="color:#a71d2a;"><?php echo $rr->rated_at; ?></td>
+                <td class="date"><?php echo $rr->rated_at; ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 
 
-<style>
-    .search-input {
-        border: none;
-        border-bottom: 1px solid #294a63;
-    }
-
-    .btn-md {
-        background: #294a63 !important;
-    }
-</style>
 <script>
     $(document).ready(function() {});
 </script>

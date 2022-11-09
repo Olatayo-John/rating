@@ -60,11 +60,13 @@ $route['duplicatecmpy'] = 'user/check_duplicatecmpy';
 $route['emailverify/(:any)'] = 'user/emailverify/$1';
 $route['verifyemail/(:any)'] = 'user/emailverify/$1';
 
-
+//creating web after reg
 $route['websites'] = 'user/websites';
 $route['get-user-quota'] = 'user/get_userQuota';
 $route['add-website'] = 'user/addwebsite';
 $route['remove-website'] = 'user/removewebsite';
+//
+
 
 //Superadmin
 $route['users'] = 'admin/users';
@@ -86,7 +88,20 @@ $route['activate-sub'] = 'admin/admin_activatesub';
 $route['admin/users/(:any)'] = 'admin/users/$1';
 
 
-//account
+//plan
+// $route['pgResponses'] = 'admin/pgResponses';
+$route['plan'] = 'admin/pick_plan';
+
+//payments
+$route['payments'] = 'admin/payments';
+
+$route['feedbacks'] = 'admin/feedbacks';
+$route['clear-feedbacks'] = 'admin/clearfeedbacks';
+$route['activity'] = 'admin/logs';
+$route['clear-activity-logs'] = 'admin/clearlogs';
+
+
+//user-account
 // $route['account'] = 'user/account';
 $route['account'] = 'user/account_edit';
 $route['account-edit'] = 'user/account_edit';
@@ -104,12 +119,8 @@ $route['passwordreset'] = 'user/changepassword';
 $route['deactivate-account'] = 'user/deact_account';
 
 
-//rating logs
+//rating and links-shared logs
 $route['logs'] = 'user/logs';
-
-
-//rate
-$route['wtr/(:any)'] = 'user/wtr/$1';
 
 
 //share
@@ -129,20 +140,12 @@ $route['import-csv-sms'] = 'user/importcsv_sms';
 $route['share-email-multiple'] = 'user/sendmultipleemail';
 $route['share-sms-multiple'] = 'user/sendmultiplesms';
 
-//plan
-// $route['pgResponses'] = 'admin/pgResponses';
-$route['plan'] = 'admin/pick_plan';
 
-//payments
-$route['payments'] = 'admin/payments';
-
-$route['feedbacks'] = 'admin/feedbacks';
-$route['clearfeedbacks'] = 'admin/clearfeedbacks';
-$route['activity'] = 'admin/logs';
-$route['clearlogs'] = 'admin/clearlogs';
+//rate
+$route['wtr/(:any)'] = 'user/wtr/$1';
 
 
-//
+
 $route['contact'] = 'admin/contact';
 $route['logout'] = 'user/logout';
 

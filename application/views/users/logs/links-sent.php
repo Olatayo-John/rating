@@ -10,7 +10,7 @@
     <div class="col-lg-3 col-md-3 col-xs-12 total-column">
         <div class="panel_s">
             <div class="panel-body">
-                <h3 class="_total"><?php echo $t_mail->num_rows()?></h3>
+                <h3 class="_total"><?php echo $t_mail->num_rows() ?></h3>
                 <span>Emails</span>
             </div>
         </div>
@@ -44,30 +44,29 @@
             <th data-field="date" data-sortable="true">Date</th>
         </tr>
     </thead>
+
     <tbody>
         <?php foreach ($ls->result_array() as $web) : ?>
             <tr>
-                <td><?php echo (empty($web['sent_to_sms']) || $web['sent_to_sms'] == null) ? "EMAIL" : "SMS"; ?></td>
-                <td style="word-break:break-all;"><?php echo (empty($web['sent_to_sms']) || $web['sent_to_sms'] == null) ? $web['sent_to_email'] : $web['sent_to_sms']; ?></td>
+                <td><?php echo strtoupper($web['link_for']) ?></td>
+                <td>
+                    <?php if (!empty($web['sent_to_sms']) && $web['sent_to_sms'] !== null) : ?>
+                        <!-- <?php echo $web['sent_to_sms']; ?> -->
+                        <a href="mailto:<?php echo $web['sent_to_sms']; ?>"><?php echo $web['sent_to_sms']; ?></a>
+                    <?php elseif (!empty($web['sent_to_email']) && $web['sent_to_email'] !== null) : ?>
+                        <!-- <?php echo $web['sent_to_email']; ?> -->
+                        <a href="tel:<?php echo $web['sent_to_email']; ?>"><?php echo $web['sent_to_email']; ?></a>
+                    <?php endif; ?>
+                </td>
                 <td><?php echo $web['subj']; ?></td>
                 <td style="word-break:break-all;"><?php echo $web['body']; ?></td>
-                <td style="color:#a71d2a;"><?php echo $web['sent_at']; ?></td>
+                <td class="date"><?php echo $web['sent_at']; ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 
 
-<style>
-    .search-input {
-        border: none;
-        border-bottom: 1px solid #294a63;
-    }
-
-    .btn-md {
-        background: #294a63 !important;
-    }
-</style>
 
 <script>
     $(document).ready(function() {

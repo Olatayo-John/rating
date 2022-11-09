@@ -6,7 +6,7 @@ header("Expires: 0");
 require_once(APPPATH . "libraries/paytm/config_paytm.php");
 require_once(APPPATH . "libraries/paytm/encdec_paytm.php");
 
-class Admin extends CI_Controller
+class Admin extends Admin_Controller
 {
 	public function index()
 	{
@@ -21,53 +21,6 @@ class Admin extends CI_Controller
 			$this->load->view('templates/header', $data);
 			$this->load->view('users/login');
 			$this->load->view('templates/footer');
-		}
-	}
-
-	public function is_bothadmin()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('logout');
-		} else {
-			if ($this->session->userdata('mr_sadmin') === "1") {
-				return true;
-			} else if ($this->session->userdata('mr_admin') === "1") {
-				return true;
-			} else {
-				$this->session->set_flashdata('acces_denied', 'Access Denied.');
-				return false;
-			}
-		}
-	}
-
-	public function is_admin()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('logout');
-		} else {
-			if ($this->session->userdata('mr_admin') === "1") {
-				return true;
-			} else {
-				$this->session->set_flashdata('acces_denied', 'Access Denied.');
-				return false;
-			}
-		}
-	}
-
-	public function is_sadmin()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
-			redirect('logout');
-		} else {
-			if ($this->session->userdata('mr_sadmin') === "1") {
-				return true;
-			} else {
-				$this->session->set_flashdata('acces_denied', 'Access Denied.');
-				return false;
-			}
 		}
 	}
 
@@ -151,7 +104,7 @@ class Admin extends CI_Controller
 		$data['adminusers'] = $this->Adminmodel->get_adminusers();
 
 		$data['allusers'] = $this->Adminmodel->get_allusers();
-		
+
 		$data['quota'] = $this->Usermodel->user_totalquota();
 		$data['total_ratings'] = $this->Adminmodel->total_ratings();
 		$data['total_sms'] = $this->Adminmodel->total_sms();
@@ -333,7 +286,7 @@ class Admin extends CI_Controller
 
 		if ($_POST['logincred'] === "true") {
 			$this->load->library('emailconfig');
-			$mail_res = $this->emailconfig->resetpassword($_POST['user_email'], $_POST['rspwd'],$_POST['user_name']);
+			$mail_res = $this->emailconfig->resetpassword($_POST['user_email'], $_POST['rspwd'], $_POST['user_name']);
 			// $mail_res = true;
 
 			if ($mail_res == true) {
@@ -593,10 +546,14 @@ class Admin extends CI_Controller
 
 	public function logs()
 	{
-		$this->is_sadmin() === false ? redirect('share') : '';
+		$this->is_sadmin();
 
-		$data['title'] = "logs";
+		$this->setTabUrl($mod = 'activity');
+
+		$data['title'] = "activity logs";
+
 		$data['logs'] = $this->Adminmodel->get_all_logs();
+
 		$this->load->view('templates/header', $data);
 		$this->load->view('admin/logs');
 		$this->load->view('templates/footer');
@@ -604,23 +561,58 @@ class Admin extends CI_Controller
 
 	public function clearlogs()
 	{
-		$this->is_sadmin() === false ? redirect('share') : '';
+		if ($this->ajax_is_sadmin() === true) {
 
-		$res = $this->Adminmodel->clear_logs();
-		$this->Logmodel->log_act($type = "logsclear");
+			$res = $this->Adminmodel->clear_logs();
 
-		if ($res !== true) {
-			$this->session->set_flashdata('invalid', 'Error clearing data');
-			redirect('activity');
-		} else {
-			$this->session->set_flashdata('valid', 'Activity Logs cleared!');
-			redirect('activity');
+			if ($res !== true) {
+				$this->session->set_flashdata('invalid', 'Error clearing data');
+			} else {
+				$this->Logmodel->log_act($type = "logsclear");
+				$this->session->set_flashdata('valid', 'Activity Logs Data cleared!');
+			}
 		}
+
+		redirect('activity');
+	}
+
+	public function feedbacks()
+	{
+		$data['title'] = "feedbacks";
+
+		$this->setTabUrl($mod = 'feedbacks');
+
+		$this->is_sadmin();
+
+		$data['feedbacks'] = $this->Adminmodel->get_feedbacks();
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('admin/feedbacks', $data);
+		$this->load->view('templates/footer');
+	}
+
+	public function clearfeedbacks()
+	{
+		if ($this->ajax_is_sadmin() === true) {
+
+			$res = $this->Adminmodel->clear_feedbacks();
+
+			if ($res !== true) {
+				$this->session->set_flashdata('invalid', 'Error clearing data');
+			} else {
+				$this->Logmodel->log_act($type = "feedbckclear");
+				$this->session->set_flashdata('valid', 'Feedback Data cleared!');
+			}
+		}
+
+		redirect('feedbacks');
 	}
 
 	public function contact()
 	{
 		$data['title'] = "contact us";
+
+		$this->setTabUrl($mod = 'contact');
 
 		$this->form_validation->set_rules('name', 'Full Name', 'required|trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
@@ -657,59 +649,31 @@ class Admin extends CI_Controller
 				if ($mail_res !== true) {
 					$this->Logmodel->log_act($type = "mail_err");
 					$this->session->set_flashdata('invalid', 'Error sending your message');
-					redirect($_SERVER['HTTP_REFERER']);
 				} else {
 					$res = $this->Adminmodel->contact();
 					$this->Logmodel->log_act($type = "cnt_us");
 					$this->session->set_flashdata('valid', 'Message sent. We will get back to you as soon as possible');
-					redirect($_SERVER['HTTP_REFERER']);
 				}
 			} else {
 				$this->session->set_flashdata('invalid', 'Google Recaptcha Unsuccessfull');
-				redirect($_SERVER['HTTP_REFERER']);
 			}
-		}
-	}
 
-	public function feedbacks()
-	{
-		$data['title'] = "feedbacks";
-
-		$this->is_sadmin() === false ? redirect('share') : '';
-
-		$data['feedbacks'] = $this->Adminmodel->get_feedbacks();
-		$this->load->view('templates/header', $data);
-		$this->load->view('admin/feedbacks', $data);
-		$this->load->view('templates/footer');
-	}
-
-	public function clearfeedbacks()
-	{
-		$this->is_sadmin() === false ? redirect('share') : '';
-
-		$res = $this->Adminmodel->clear_feedbacks();
-		$this->Logmodel->log_act($type = "feedbckclear");
-
-		if ($res !== true) {
-			$this->session->set_flashdata('invalid', 'Error clearing data');
-			redirect('feedbacks');
-		} else {
-			$this->session->set_flashdata('valid', 'Contacts cleared!');
-			redirect('feedbacks');
+			redirect('contact');
 		}
 	}
 
 
 
-	public function testCase(){
+	public function testCase()
+	{
 		// $res= $this->Adminmodel->testCase();
 		$this->load->model('Log_model');
-		$res= $this->Log_model->log_act($type = "logoutttt");
+		$res = $this->Log_model->log_act($type = "logoutttt");
 
-		if($res !== true){
+		if ($res !== true) {
 			$data['status'] = false;
 			$data['msg'] = "Error Logging...";
-		}else {
+		} else {
 			$data['status'] = true;
 			$data['msg'] = "Logged!";
 		}

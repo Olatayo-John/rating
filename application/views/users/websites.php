@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <form action="<?php echo base_url('account'); ?>" method="post" class="addweb_form bg-light-custom">
+    <form action="<?php echo base_url('share'); ?>" method="post" class="addweb_form bg-light-custom">
         <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
         <div class="text-right">

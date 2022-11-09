@@ -77,12 +77,12 @@
 		<?php endif; ?>
 
 		<div class="side-nav" id="side-nav">
-			<?php $url = $this->uri->segment(1); ?>
+			<?php $url = $this->session->userdata('url') ?>
 			<ul>
 				<?php if (!$this->session->userdata('mr_logged_in')) : ?>
 					<!-- login -->
 					<li class="nav-item">
-						<a href="<?php echo base_url('login') ?>" class="nav-link" style="<?php echo ($url == 'login' || $url == 'user' || $url == '') ? 'background:white;color:#294a63' : '' ?>">
+						<a href="<?php echo base_url('login') ?>" class="nav-link" style="<?php echo ($url == 'login' || $url == 'user') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-user"></i>
 							<b>Login</b>
 						</a>
@@ -133,7 +133,7 @@
 					<!-- renewPlan disabled -->
 					<li class="nav-item" style="display: none;">
 						<a href="<?php echo base_url('plan') ?>" class="nav-link" style="<?php echo ($url == 'plan') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-retweet"></i>bRenew Plan
+							<i class="fas fa-retweet"></i><b>Renew Plan</b>
 						</a>
 					</li>
 					<!--  -->
@@ -147,21 +147,6 @@
 						</a>
 					</li>
 				<?php endif; ?>
-
-				<!-- <li class="sub-menu dcjq-parent-li">
-					<a href="javascript:;" class="dcjq-parent active">
-						<i class="fa fa-calendar-check"></i>
-						<span>Appointment</span>
-						<span class="dcjq-icon"></span></a>
-					<ul class="sub" style="display: block;">
-						<li><a href="appointment"><i class="fa fa-list-alt"></i>All</a></li>
-						<li><a href="appointment/addNewView"><i class="fa fa-plus-circle"></i>Add</a></li>
-						<li><a href="appointment/todays"><i class="fa fa-list-alt"></i>Todays</a></li>
-						<li><a href="appointment/upcoming"><i class="fa fa-list-alt"></i>Upcoming</a></li>
-						<li><a href="appointment/calendar"><i class="fa fa-list-alt"></i>Calendar</a></li>
-						<li><a href="appointment/request"><i class="fa fa-list-alt"></i>Request</a></li>
-					</ul>
-				</li> -->
 
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
 					<!-- feedbacksFromContactUs -->

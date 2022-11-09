@@ -118,7 +118,7 @@
 
 			<div class=" form-group">
 				<label class="phonelabel">Phonenumber</label>
-				<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile" required value="7556435678">
+				<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile" required value="1234567890">
 				<span class="e_mobile">Invalid mobile length</span>
 				<select class="form-control sms_select" name="sms_select" id="sms_select" style="display: none;" readonly conn="false">
 				</select>
@@ -143,7 +143,7 @@
 
 			<div class="form-group">
 				<label class="phonelabel">Whatsapp Number</label>
-				<input type="number" name="whpMobile" class="form-control whpMobile" placeholder="Whatsapp number" required>
+				<input type="number" name="whpMobile" class="form-control whpMobile" placeholder="Whatsapp number" required value="1234567890">
 				<span class="e_whpMobile err">Invalid mobile length</span>
 			</div>
 
@@ -159,6 +159,8 @@
 		</form>
 	</div>
 </div>
+
+
 
 
 <script type="text/javascript" src="<?php echo base_url('assets/js/share.js'); ?>"></script>
@@ -365,7 +367,7 @@
 
 							$('#sms_csv_file').val("");
 							for (i = 0; i < data.MobileArray.length; i++) {
-								$('#sms_select').append('<option disabled class="sms_options">+91' + data.MobileArray[i].Phonenumber + '</option>');
+								$('#sms_select').append('<option disabled class="sms_options">' + data.MobileArray[i].Phonenumber + '</option>');
 							}
 
 							$('#mobile').hide().removeAttr('required');
@@ -450,26 +452,57 @@
 		});
 
 		//send single whatsapp
-		$('form#whatsappForm').submit(function(e) {
-			// e.preventDefault();
+		// $('form#whatsappForm').submit(function(e) {
+		$('button.whp_sendBtn').click(function(e) {
+			e.preventDefault();
 
 			var mobile = $('.whpMobile').val();
-			var smsbdy = $('.whpbdy').val();
+			var whpbdy = $('.whpbdy').val();
 
 			if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
+				$('.e_whpMobile err').show();
 				return false;
-				$('.e_mobile').show();
 			} else {
-				$('.e_mobile').hide();
+				$('.e_whpMobile err').hide();
 			}
 
-			if (smsbdy == "" || smsbdy == null) {
+			if (whpbdy == "" || whpbdy == null) {
 				return false;
 			}
 
 			$.ajax({
-				success: function() {
+				url: '<?php echo base_url('share-whatsapp') ?>',
+				method: 'post',
+				dataType: 'json',
+				data: {
+					mobile: mobile,
+					whpbdy: whpbdy,
+					[csrfName]: csrfHash
+				},
+				beforeSend: function() {
 					$('.whp_sendBtn').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
+
+					$(".ajax_succ_div,.ajax_err_div").hide();
+					$(".ajax_res_err,.ajax_res_succ").empty();
+				},
+				success: function(data) {
+					if (data.status === false) {
+						$(".ajax_res_err").append(data.msg);
+						$(".ajax_err_div").fadeIn();
+					} else if (data.status === 'error') {
+						window.location.assign(data.redirect);
+					} else if (data.status === true) {
+						var shareLink = "https://api.whatsapp.com/send?phone=" + mobile + "&text=" + whpbdy + "";
+						window.open(shareLink);
+						window.location.reload();
+					}
+
+					$('.csrf_hash').val(data.token);
+					$('.whp_sendBtn').removeAttr('disabled').html('Send').css('cursor', 'pointer');
+				},
+				error: function() {
+					alert('Error!');
+					window.location.reload();
 				}
 			});
 
@@ -506,7 +539,7 @@
 			$.ajax({
 				url: "<?php echo base_url('share-email-multiple'); ?>",
 				method: "post",
-				dataType:"json",
+				dataType: "json",
 				data: {
 					emaildata: emaildata,
 					subj: subj,
@@ -520,15 +553,23 @@
 					$(".ajax_res_err,.ajax_res_succ").empty();
 				},
 				success: function(data) {
-					console.log(data);
-
 					if (data.status === false) {
 						$(".ajax_res_err").append(data.msg);
+
+						//show user emails that were not sent
+						if (data.emailnotsentarr) {
+							if (data.emailnotsentarr.length > 0) {
+								for (let index = 0; index < data.emailnotsentarr.length; index++) {
+									$(".ajax_res_err").append('<div>' + data.emailnotsentarr[index] + '</div>');
+								}
+							}
+						}
+
 						$(".ajax_err_div").fadeIn();
 					} else if (data.status === 'error') {
 						window.location.assign(data.redirect);
 					} else if (data.status === true) {
-						
+						window.location.reload();
 					}
 
 					$('.csrf_hash').val(data.token);
@@ -537,7 +578,7 @@
 				},
 				error: function() {
 					alert("Error sending e-mails. Please try again");
-					// window.location.reload();
+					window.location.reload();
 				}
 			})
 		});
@@ -547,29 +588,13 @@
 		$('.sms_sendBtn_m').click(function(e) {
 			e.preventDefault();
 
-			var link_for = $('.link_for').val();
 			var mobile = $('.mobile').val();
 			var smsbdy = $('.smsbdy').val();
 			var csrfName = $('.csrf_hash').attr('name');
 			var csrfHash = $('.csrf_hash').val();
 
-			if (mobile == "" || mobile == null) {
-				$('.mobile').css('border', '2px solid #dc3545');
-				return false;
-			}
-			if (mobile.length < 10 || mobile.length > 10) {
-				$('.mobile').css('border', '2px solid #dc3545');
-				$('.e_mobile').show();
-				return false;
-			} else {
-				$('.mobile').css('border', '2px solid #ced4da');
-				$('.e_mobile').hide();
-			}
 			if (smsbdy == "" || smsbdy == null) {
-				$('.smsbdy').css('border', '2px solid #dc3545');
 				return false;
-			} else {
-				$('.smsbdy').css('border', '2px solid #ced4da');
 			}
 
 			var mobiledata = [];
@@ -578,28 +603,54 @@
 				mobiledata.push(eachopt);
 			});
 
+			if (parseInt(mobiledata.length) == 0 || parseInt(mobiledata.length) < 0) {
+				return false;
+			}
+
 			$.ajax({
-					url: "<?php echo base_url('share-sms-multiple'); ?>",
-					method: "post",
-					data: {
-						mobiledata: mobiledata,
-						smsbdy: smsbdy,
-						link_for: link_for,
-						[csrfName]: csrfHash,
-					},
-					beforeSend: function() {
-						$('.smssendmultiplelinkbtn').attr('disabled', 'disabled');
-						$('.smssendmultiplelinkbtn').html('Sending...');
-						$('.smssendmultiplelinkbtn').css('cursor', 'not-allowed');
-					},
-					error: function() {
-						alert("Error sending messages. Please try again");
+				url: "<?php echo base_url('share-sms-multiple'); ?>",
+				method: "post",
+				dataType: 'json',
+				data: {
+					mobiledata: mobiledata,
+					smsbdy: smsbdy,
+					[csrfName]: csrfHash,
+				},
+				beforeSend: function() {
+					$('.sms_sendBtn_m').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
+
+					$(".ajax_succ_div,.ajax_err_div").hide();
+					$(".ajax_res_err,.ajax_res_succ").empty();
+				},
+				success: function(data) {
+					if (data.status === false) {
+						$(".ajax_res_err").append(data.msg);
+
+						//show user numbers that were not sent
+						if (data.mobilenotsentarr) {
+							if (data.mobilenotsentarr.length > 0) {
+								for (let index = 0; index < data.mobilenotsentarr.length; index++) {
+									$(".ajax_res_err").append('<div>' + data.mobilenotsentarr[index].mobile + ' - ' + data.mobilenotsentarr[index].errorCode + ' - ' + data.mobilenotsentarr[index].errorInfo + '</div>');
+								}
+							}
+						}
+
+						$(".ajax_err_div").fadeIn();
+					} else if (data.status === 'error') {
+						window.location.assign(data.redirect);
+					} else if (data.status === true) {
 						window.location.reload();
 					}
-				})
-				.done(function() {
+
+					$('.csrf_hash').val(data.token);
+					$('.sms_sendBtn_m').removeAttr('disabled').html('Send').css('cursor', 'pointer');
+
+				},
+				error: function() {
+					alert("Error sending messages. Please try again");
 					window.location.reload();
-				});
+				}
+			})
 		});
 
 	});

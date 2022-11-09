@@ -256,25 +256,6 @@ class Usermodel extends CI_Model
 		return $quotaInfo;
 	}
 
-	public function addwebsite($web_name, $web_link)
-	{
-
-		$data = array(
-			'user_id' => $this->session->userdata('mr_id'),
-			'form_key' => $this->session->userdata('mr_form_key'),
-			'web_name' => htmlentities($web_name),
-			'web_link' => htmlentities($web_link),
-			'active' => '1',
-			'total_ratings' => "0",
-			'star_rating' => "0"
-		);
-		$this->db->insert('websites', $data);
-		$webID = $this->db->insert_id();
-
-		$this->update_webquota($type = "web_quota-1");
-		return $webID;
-	}
-
 	public function removewebsite($web_name, $web_link, $web_id)
 	{
 		$this->db->where(array('id' => $web_id, 'web_name' => $web_name, 'web_link' => $web_link));
@@ -413,8 +394,8 @@ class Usermodel extends CI_Model
 					$data = array(
 						'user_id' => $this->session->userdata('mr_id'),
 						'form_key' => $this->session->userdata('mr_form_key'),
-						'web_name' => htmlentities($_POST['web_name_new']),
-						'web_link' => htmlentities($_POST['web_link_new']),
+						'web_name' => htmlentities($web_name_new),
+						'web_link' => htmlentities($web_link_new),
 						'active' => '1',
 						'total_ratings' => "0",
 						'star_rating' => "0"
@@ -642,19 +623,19 @@ class Usermodel extends CI_Model
 		return true;
 	}
 
-	public function multiplemail_saveinfo($emaildata, $subj, $bdy)
+	public function multiplemail_saveinfo($mail, $subj, $bdy)
 	{
 		$data = array(
 			'link_for' => 'email',
 			'sent_to_sms' => '',
-			'sent_to_email' => htmlentities(implode(",", $emaildata)),
+			'sent_to_email' => htmlentities($mail),
 			'subj' => htmlentities($subj),
 			'body' => htmlentities($bdy),
 			'user_id' => $this->session->userdata('mr_id'),
 		);
 		$this->db->insert('sent_links', $data);
 
-		$length= 'email_quota-'.count($emaildata).'';
+		$length= 'email_quota-1';
 		$q = 'email_quota';
 
 		$this->userquotaupdate($length, $q);
@@ -680,11 +661,11 @@ class Usermodel extends CI_Model
 		return true;
 	}
 
-	public function multiplsms_saveinfo($mobiledata, $smsbdy)
+	public function multiplsms_saveinfo($mobile, $smsbdy)
 	{
 		$data = array(
 			'link_for' => 'sms',
-			'sent_to_sms' => htmlentities(implode(",", $mobiledata)),
+			'sent_to_sms' => $mobile,
 			'sent_to_email' => '',
 			'subj' => '',
 			'body' => htmlentities($smsbdy),
@@ -692,8 +673,27 @@ class Usermodel extends CI_Model
 		);
 		$this->db->insert('sent_links', $data);
 
-		$length= 'sms_quota-'.count($mobiledata).'';
+		$length= 'sms_quota-1';
 		$q = 'sms_quota';
+		$this->userquotaupdate($length, $q);
+		return true;
+	}
+
+	public function whatsapp_saveinfo($mobile,$whpbdy)
+	{
+		$data = array(
+			'link_for' => 'whatsapp',
+			'sent_to_sms' => $mobile,
+			'sent_to_email' => '',
+			'subj' => '',
+			'body' => htmlentities($whpbdy),
+			'user_id' => $this->session->userdata('mr_id'),
+		);
+		$this->db->insert('sent_links', $data);
+
+		$length = 'whatsapp_quota-1';
+		$q = 'whatsapp_quota';
+
 		$this->userquotaupdate($length, $q);
 		return true;
 	}

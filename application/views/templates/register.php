@@ -82,10 +82,10 @@
 							<b>0.00 /per month</b>
 						</h6>
 
-						<button type="button" class='btn chooseplanbtn' sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planthree">Choose Plan</button>
+						<button type="button" class='btn chooseplanbtn' sms_quota="5" email_quota="100" whatsapp_quota="5" web_quota="5" plan="planthree">Choose Plan</button>
 
 						<ul>
-							<li>0 SMS Quota</li>
+							<li>5 SMS Quota</li>
 							<li>100 Email Quota</li>
 							<li>5 WhatsApp Quota</li>
 							<li>1 Website Quota</li>
@@ -102,13 +102,13 @@
 							<b>1.00 /per month</b>
 						</h6>
 
-						<button type="button" class='btn chooseplanbtn' sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planthree">Choose Plan</button>
+						<button type="button" class='btn chooseplanbtn' sms_quota="5" email_quota="100" whatsapp_quota="5" web_quota="5" plan="planthree">Choose Plan</button>
 
 						<ul>
-							<li>0 SMS Quota</li>
+							<li>5 SMS Quota</li>
 							<li>100 Email Quota</li>
 							<li>5 WhatsApp Quota</li>
-							<li>1 Website Quota</li>
+							<li>5 Website Quota</li>
 							<li class="cmp_fet">Unlimited Users</li>
 						</ul>
 					</div>
@@ -122,13 +122,13 @@
 							<b>2.00 /per month</b>
 						</h6>
 
-						<button type="button" class='btn chooseplanbtn' sms_quota="0" email_quota="100" whatsapp_quota="5" web_quota="1" plan="planthree">Choose Plan</button>
+						<button type="button" class='btn chooseplanbtn' sms_quota="5" email_quota="100" whatsapp_quota="5" web_quota="5" plan="planthree">Choose Plan</button>
 
 						<ul>
-							<li>0 SMS Quota</li>
+							<li>5 SMS Quota</li>
 							<li>100 Email Quota</li>
 							<li>5 WhatsApp Quota</li>
-							<li>1 Website Quota</li>
+							<li>5 Website Quota</li>
 							<li class="cmp_fet">Unlimited Users</li>
 						</ul>
 					</div>

@@ -59,6 +59,13 @@
 </div>
 
 
+<?php if($this->session->userdata("mr_iscmpy") === "1") : ?>
+<div class="text-right user_cmpy">
+    <p>Quota is shared by all users under <span class="company"><?php echo $user_info->cmpy; ?></span></p>
+</div>
+<?php endif; ?>
+
+
 
 
 <div class="modal helpmodal">
@@ -89,6 +96,12 @@
     </div>
 </div>
 
+
+<style>
+    div.user_cmpy{
+        font-weight: 500;
+    }
+</style>
 <script>
     $(document).ready(function() {
         $(document).on('click', '.doc', function(e) {

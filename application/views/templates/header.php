@@ -51,8 +51,10 @@
 		<!-- <button class="btn menubtn" onclick="opennav()">&#9776;</button> -->
 
 		<div class="logoimg mr-auto m-1">
-			<img src="<?php echo base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
+			<!-- <img src="<?php echo base_url("assets/images/logo_dark.png") ?>" class="navbar-label"> -->
+			<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
 		</div>
+
 		<?php print_r($_SESSION) ?>
 
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>
@@ -61,18 +63,14 @@
 					<strong><i class="fas fa-exclamation-circle text-danger mr-1"></i>Inactive subscription</strong>
 				</div>
 			<?php endif; ?>
-			<?php if ($this->session->userdata('mr_sub') == "1") : ?>
-				<div class="text-success mr-3">
-					<strong><i class="fas fa-exclamation-circle text-success mr-1"></i>Active subscription</strong>
-				</div>
-			<?php endif; ?>
 
 			<div class="navbar-brand text-uppercase font-weight-bolder" style="display: nonee;">
-				<a href="<?php echo base_url('account') ?>" style="color:#294a63">
-					<span>
-						<i class="fas fa-user-circle p_icon"></i>
-					</span>
-					<?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : 'Account') ?></a>
+				<a href="<?php echo base_url('account') ?>" style="color:#fff">
+					<!-- <span>
+						<i class="fas fa-user p_icon"></i>
+					</span> -->
+					<?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : 'My Account') ?>
+				</a>
 			</div>
 		<?php endif; ?>
 
@@ -119,7 +117,7 @@
 					<!-- myAccount -->
 					<li class="nav-item">
 						<a href="<?php echo base_url('account') ?>" class="nav-link" style="<?php echo ($url == 'account' || $url == 'account-edit') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-user-circle"></i><b>My Account</b>
+							<i class="fas fa-user"></i><b>My Account</b>
 						</a>
 					</li>
 
@@ -164,10 +162,10 @@
 					</li>
 				<?php endif; ?>
 
-				<!-- contactUs -->
+				<!-- support -->
 				<li class="nav-item">
-					<a href="<?php echo base_url('contact') ?>" class="nav-link" style="<?php echo ($url == 'contact') ? 'background:white;color:#294a63' : '' ?>">
-						<i class="fas fa-id-card"></i><b>Contact Us</b>
+					<a href="<?php echo base_url('support') ?>" class="nav-link" style="<?php echo ($url == 'support') ? 'background:white;color:#294a63' : '' ?>">
+						<i class="fas fa-question-circle"></i><b>Support</b>
 					</a>
 				</li>
 
@@ -200,24 +198,10 @@
 			<strong class="ajax_res_succ text-dark"></strong>
 		</div>
 
-		<!-- success-function -->
-		<?php if ($this->session->flashdata('valid')) : ?>
-			<div class="alertsuccess">
-				<strong><?php echo $this->session->flashdata('valid') ?></strong>
-			</div>
-		<?php endif; ?>
-
-		<!-- failed-function -->
-		<?php if ($this->session->flashdata('invalid')) : ?>
-			<div class="alerterror">
-				<strong><?php echo $this->session->flashdata('invalid') ?></strong>
-			</div>
-		<?php endif; ?>
-
-		<!-- access-denied -->
-		<?php if ($this->session->flashdata('acces_denied')) : ?>
-			<div class="alerterror">
-				<strong><?php echo $this->session->flashdata('acces_denied') ?></strong>
+		<!-- session-flashMsg-function -->
+		<?php if ($this->session->userdata('FlashMsg')) : ?>
+			<div class="alert<?php echo $this->session->userdata('FlashMsg')['status'] ?>">
+				<strong><?php echo $this->session->userdata('FlashMsg')['msg'] ?></strong>
 			</div>
 		<?php endif; ?>
 

@@ -1,5 +1,7 @@
-.wrapper_div {
-	padding: 0 21px 21px 21px;
+.wrapper_div,
+.adduserDiv {
+	/* padding: 0 21px 21px 21px; */
+	padding: 14px;
 }
 
 label,
@@ -26,87 +28,10 @@ i.fa-eye-slash {
 	background: #294a63;
 }
 
-hr.sub {
-	margin: auto 0;
-	margin-bottom: 30px;
-	border-bottom: 3px solid #294a63;
-	width: 100px;
-}
-
-/* oldDesign */
-.plantype label {
-	color: #fff;
-	margin: 0;
-	text-transform: uppercase;
+.cmpydiv {
 	display: none;
 }
 
-.planamt {
-	border-radius: 50%;
-	padding: 16px;
-	margin: 0 auto;
-	background: #294a63;
-	color: #fff;
-}
-
-.plantype,
-.card-footer button {
-	background: #294a63;
-	color: #fff;
-}
-
-.card-body p,
-ol {
-	margin: 0;
-}
-/*  */
-
-/* plans */
-.planDetails {
-	text-align: center;
-	box-shadow: 0 10px 15px #294a63;
-	/* border-radius: 10px; */
-	padding: 40px 30px;
-	margin: 0 14px;
-	background: #fff;
-}
-
-.planDetails h6{
-	font-weight: bold;
-}
-.planDetails button {
-	border: 1px solid #294a63;
-	color: #294a63;
-	line-height: 34px;
-	padding: 0 30px;
-	border-radius: 20px;
-	margin: 10px 0;
-	transition: .5s;
-}
-.planDetails button:hover{
-	color: #fff !important;
-	background: #294a63 !important;
-	transform: scale(1);
-}
-.planDetails ul {
-	padding-top: 20px;
-	text-align: left;
-}
-.planDetails ul li{
-	font-weight: 500;
-	padding: 8px;
-	border-bottom: 1px solid #294a63
-}
-
-/*  */
-
-.cmpydiv, li.cmp_fet {
-	display: none;
-}
-
-.chooseplanbtn:hover {
-	color: #fff !important
-}
 
 div.btngrp {
 	display: flex;

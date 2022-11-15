@@ -8,9 +8,11 @@
 
 <style>
     #wrapper {
-        padding: 0 21px 21px 21px;
+        /* padding: 0 21px 21px 21px; */
+        padding: 14px;
     }
-    .errorDiv{
+
+    .errorDiv {
         box-shadow: 0 10px 15px #294a63;
     }
 

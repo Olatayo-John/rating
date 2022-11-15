@@ -2,22 +2,26 @@ label {
 	color: #294a63;
 	font-weight: 500;
 }
+
 .set_wrapper_out {
-	padding: 0 21px 21px 21px;
+	/* padding: 0 21px 21px 21px; */
+	padding: 14px;
 }
 
 .set_wrapper {
-	padding: 0 21px;
+	/* padding: 0 21px 21px 21px; */
+	padding: 14px;
 }
 
 
 /*  */
-.oudiv_wrapper{
+.oudiv_wrapper {
 	border: 1px solid #c5d6de;
 }
+
 .oudiv {
 	border: 1px solid #c5d6de;
-    border-radius: 3px;
+	border-radius: 3px;
 }
 
 .oudiv h3 {
@@ -28,10 +32,12 @@ label {
 	color: #fff;
 	border-bottom: 1px solid #d7dfe3;
 }
-.table{
+
+.table {
 	margin-bottom: 0 !important;
-	background:#fff;
+	background: #fff;
 }
+
 /* tbody tr :nth-child(1) {
 	color: #294a63;
 	font-weight: 500;

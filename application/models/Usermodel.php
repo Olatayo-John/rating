@@ -3,13 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Usermodel extends CI_Model
 {
-	// $this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,q.bought,q.webspace,q.webspace_left,q.userspace,q.userspace_left');
-	// $this->db->from('users u');
-	// $this->db->where('u.uname', $uname);
-	// $this->db->join('quota q', 'u.cmpyid=q.by_user_id', 'inner');
-	// $userinfo = $this->db->get()->row();
-	// return $userinfo;
-
 	public function login()
 	{
 		$uname = htmlentities($this->input->post('uname'));
@@ -35,10 +28,26 @@ class Usermodel extends CI_Model
 		}
 		//verify passwords
 		if (password_verify($pwd, $user->password)) {
-			$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key');
-			$this->db->from('users u');
-			$this->db->where('uname', $uname);
-			$userinfo = $this->db->get()->row();
+			
+			//companyAdmin and companyUsers
+			if ($user->iscmpy == '1') {
+				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,cd.cmpyLogo')->from('users u');
+
+				if ($user->admin == '1') {
+					$this->db->join('company_details cd', 'cd.userid = u.id');
+				} elseif ($user->admin == '0') {
+					$this->db->join('company_details cd', 'cd.userid = u.cmpyid');
+				}
+
+				$this->db->where('u.uname', $uname);
+				$userinfo = $this->db->get()->row();
+			} else {
+				echo "not cmpy";
+				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key')->from('users u');
+				$this->db->where('u.uname', $uname);
+				$userinfo = $this->db->get()->row();
+			}
+
 			return $userinfo;
 			exit();
 		} else {
@@ -104,7 +113,7 @@ class Usermodel extends CI_Model
 			'mobile' => htmlentities($this->input->post('mobile')),
 			'active' => "0",
 			'website_form' => "0",
-			'sub' => "0",
+			'sub' => "1",
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
@@ -112,7 +121,6 @@ class Usermodel extends CI_Model
 		$this->db->insert('users', $data);
 		$lastid = $this->db->insert_id();
 
-		$this->insert_user_details($lastid, $form_key);
 		$this->insert_quota($lastid, $form_key);
 
 		if (($iscmpy === 1) && ($admin === 1)) {
@@ -120,27 +128,6 @@ class Usermodel extends CI_Model
 		}
 		return TRUE;
 	}
-
-	///
-	public function insert_user_details($lastid, $form_key)
-	{
-		$data = array(
-			'user_id' => $lastid,
-			'form_key' => $form_key,
-			'uname' => htmlentities($this->input->post('uname')),
-			'total_ratings' => '0',
-			'total_sms' => '0',
-			'total_email' => '0',
-			'total_one' => '0',
-			'total_two' => '0',
-			'total_three' => '0',
-			'total_four' => '0',
-			'total_five' => '0',
-		);
-		$this->db->insert('user_details', $data);
-		return true;
-	}
-	///
 
 	public function insert_quota($lastid, $form_key)
 	{
@@ -171,7 +158,7 @@ class Usermodel extends CI_Model
 
 	public function check_verification($key)
 	{
-		$this->db->select('active,email');
+		$this->db->select('active,email,form_key');
 		$this->db->where(array('form_key' => $key));
 		$query = $this->db->from('users');
 		if (!$query) {
@@ -222,6 +209,17 @@ class Usermodel extends CI_Model
 			exit();
 		} else {
 			return $query;
+		}
+	}
+
+	public function get_companyInfo()
+	{
+		$query = $this->db->get_where('company_details', array('userid' => $this->session->userdata('mr_id')));
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query->row();
 		}
 	}
 
@@ -358,20 +356,6 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	///
-	public function noof_userwebites()
-	{
-		$query = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
-		if (!$query) {
-			return false;
-			exit();
-		} else {
-			return $query->num_rows();
-			exit;
-		}
-	}
-	///
-
 	public function createwebsite($web_name_new, $web_link_new)
 	{
 		$web_count = 1;
@@ -445,6 +429,28 @@ class Usermodel extends CI_Model
 		$this->db->where(array('id' => $id, 'user_id' => $user_id, 'form_key' => $form_key));
 		$this->db->update('websites', $data);
 		return TRUE;
+	}
+
+	public function company_edit($data)
+	{
+
+		$this->db->where('userid', $this->session->userdata('mr_id'));
+		$this->db->update('company_details', $data);
+
+		$cmpyName = $data['cmpyName'];
+		$this->update_company_users($cmpyName);
+		return TRUE;
+	}
+
+	public function update_company_users($cmpyName)
+	{
+		$data = array(
+			'cmpy' => $cmpyName
+		);
+
+		$this->db->where('id', $this->session->userdata('mr_id'));
+		$this->db->or_where('cmpyid', $this->session->userdata('mr_id'));
+		$this->db->update('users', $data);
 	}
 
 	public function check_pwd()
@@ -558,15 +564,6 @@ class Usermodel extends CI_Model
 		return $query;
 	}
 
-	///
-	public function userdetails()
-	{
-		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'form_key' => $this->session->userdata("mr_form_key")));
-		$query = $this->db->get('user_details')->row();
-		return $query;
-	}
-	///
-
 	public function is_userquotaexpired($qType)
 	{
 		$user_id = $this->session->userdata("mr_id");
@@ -635,7 +632,7 @@ class Usermodel extends CI_Model
 		);
 		$this->db->insert('sent_links', $data);
 
-		$length= 'email_quota-1';
+		$length = 'email_quota-1';
 		$q = 'email_quota';
 
 		$this->userquotaupdate($length, $q);
@@ -673,13 +670,13 @@ class Usermodel extends CI_Model
 		);
 		$this->db->insert('sent_links', $data);
 
-		$length= 'sms_quota-1';
+		$length = 'sms_quota-1';
 		$q = 'sms_quota';
 		$this->userquotaupdate($length, $q);
 		return true;
 	}
 
-	public function whatsapp_saveinfo($mobile,$whpbdy)
+	public function whatsapp_saveinfo($mobile, $whpbdy)
 	{
 		$data = array(
 			'link_for' => 'whatsapp',

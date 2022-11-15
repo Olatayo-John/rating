@@ -14,12 +14,12 @@ class Rate extends CI_Controller
 		} else {
 			$res = $this->Usermodel->check_cred($w, $k);
 			if ($res == false) {
-				$this->session->set_flashdata("invalid", "Invalid Link!");
+				$this->setFlashMsg("error", "Invalid Link!");
 				redirect("user/wtr/" . $k);
 			} else if ($res == true) {
 				$data['active'] = $this->Adminmodel->is_user_active($k);
 				if ($data['active']->active === "0" || $data['active']->sub_active === "0") {
-					$this->session->set_flashdata("invalid", "User account is inactive or has no subscription");
+					$this->setFlashMsg("error", "User account is inactive or has no subscription");
 					redirect("user/wtr/" . $k);
 				} else {
 					$this->load->view('templates/header');
@@ -48,7 +48,7 @@ class Rate extends CI_Controller
 		} else {
 			$form_key = $this->get_key($key);
 			if ($form_key !== $key) {
-				$this->session->set_flashdata("invalid", "Invalid Link!");
+				$this->setFlashMsg("error", "Invalid Link!");
 				$this->index();
 			} else if ($form_key === $key) {
 				$data['form_key'] = $form_key;
@@ -75,7 +75,7 @@ class Rate extends CI_Controller
 			$res = $this->Usermodel->check_cred($w, $k);
 			if ($res == false) {
 				// $this->Logmodel->log_act($type = "invalidlink");
-				$this->session->set_flashdata("invalid", "Invalid Link!");
+				$this->setFlashMsg("error", "Invalid Link!");
 				redirect("wtr/" . $k);
 			} elseif ($res == true) {
 				redirect('rate?w=' . $w . '&k=' . $k);
@@ -125,10 +125,10 @@ class Rate extends CI_Controller
 		$res = $this->emailconfig->notifyuser_sendemail($uemail, $uname);
 		if ($res !== true) {
 			$this->Logmodel->log_act($type = "mail_err");
-			$this->session->set_flashdata('invalid', $res);
+			$this->setFlashMsg('error', $res);
 			redirect($_SERVER['HTTP_REFERER']);
 		} else {
-			$this->session->set_flashdata('valid', 'User has been notified');
+			$this->setFlashMsg('success', 'User has been notified');
 			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}

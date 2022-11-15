@@ -27,7 +27,7 @@ class Admin extends CI_Controller
 	public function is_bothadmin()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('logout');
 		} else {
 			if ($this->session->userdata('mr_sadmin') === "1") {
@@ -35,7 +35,7 @@ class Admin extends CI_Controller
 			} else if ($this->session->userdata('mr_admin') === "1") {
 				return true;
 			} else {
-				$this->session->set_flashdata('acces_denied', 'Access Denied.');
+				$this->setFlashMsg('error', lang('acc_denied'));
 				return false;
 			}
 		}
@@ -44,13 +44,13 @@ class Admin extends CI_Controller
 	public function is_admin()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('logout');
 		} else {
 			if ($this->session->userdata('mr_admin') === "1") {
 				return true;
 			} else {
-				$this->session->set_flashdata('acces_denied', 'Access Denied.');
+				$this->setFlashMsg('error', lang('acc_denied'));
 				return false;
 			}
 		}
@@ -59,13 +59,13 @@ class Admin extends CI_Controller
 	public function is_sadmin()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('logout');
 		} else {
 			if ($this->session->userdata('mr_sadmin') === "1") {
 				return true;
 			} else {
-				$this->session->set_flashdata('acces_denied', 'Access Denied.');
+				$this->setFlashMsg('error', lang('acc_denied'));
 				return false;
 			}
 		}
@@ -79,7 +79,7 @@ class Admin extends CI_Controller
 		$data['adminusers'] = $this->Adminmodel->get_adminusers();
 
 		if ($data['adminusers']->num_rows() >= $this->session->userdata("mr_userspace")) {
-			$this->session->set_flashdata('invalid', "You have reached the number of users you can create (" . $this->session->userdata("mr_userspace") . ")");
+			$this->setFlashMsg('error', "You have reached the number of users you can create (" . $this->session->userdata("mr_userspace") . ")");
 			redirect('users');
 		}
 
@@ -121,19 +121,19 @@ class Admin extends CI_Controller
 
 			if ($mail_res !== TRUE) {
 				$this->Logmodel->log_act($type = "mail_err");
-				$this->session->set_flashdata('invalid', $mail_res);
+				$this->setFlashMsg('error', $mail_res);
 				redirect('adduser');
 				exit();
 			} else {
 				$db_res = $this->Adminmodel->adduser($act_key, $form_key);
 				if ($db_res !== TRUE) {
 					$this->Logmodel->log_act($type = "db_err");
-					$this->session->set_flashdata('invalid', 'Error saving user details. Please try again');
+					$this->setFlashMsg('error', 'Error saving user details. Please try again');
 					redirect('adduser');
 					exit();
 				} else {
 					$this->Logmodel->log_act($type = "newuser");
-					$this->session->set_flashdata('valid', 'User created.');
+					$this->setFlashMsg('success', 'User created.');
 					redirect('users');
 					exit();
 				}
@@ -182,7 +182,7 @@ class Admin extends CI_Controller
 		if ($this->is_admin() === false) return false;
 
 		// $res = $this->Adminmodel->admin_deleteuser($_POST['uid'], $_POST['formkey']);
-		$res =true;
+		$res = true;
 		if ($res !== true) {
 			$this->Logmodel->log_act($type = "admin_deleteusererr");
 			$data['res'] = "error";
@@ -191,7 +191,7 @@ class Admin extends CI_Controller
 			$this->Logmodel->log_act($type = "admin_deleteuser");
 			$data['res'] = "success";
 			$data['msg'] = "User data deleted!";
-			$this->session->set_flashdata('valid', 'User data deleted!');
+			$this->setFlashMsg('success', 'User data deleted!');
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
@@ -216,11 +216,11 @@ class Admin extends CI_Controller
 	function user_profupdate()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		$res = $this->Adminmodel->user_profupdate($_POST['user_id'], $_POST['form_key'], $_POST['uname'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile']);
@@ -242,11 +242,11 @@ class Admin extends CI_Controller
 	function user_webupdate()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		$res = $this->Adminmodel->user_webupdate($_POST['id'], $_POST['user_id'], $_POST['form_key'], $_POST['web_name_edit'], $_POST['web_link_edit']);
@@ -268,7 +268,7 @@ class Admin extends CI_Controller
 	public function add_website()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		$res = $this->Adminmodel->add_website($_POST['user_id'], $_POST['form_key'], $_POST['active'], $_POST['web_name_add'], $_POST['web_link_add']);
@@ -291,11 +291,11 @@ class Admin extends CI_Controller
 	function delete_user_web()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		$res = $this->Adminmodel->delete_user_web($_POST['web_id'], $_POST['user_id'], $_POST['form_key'], $_POST['web_name'], $_POST['web_link']);
@@ -317,11 +317,11 @@ class Admin extends CI_Controller
 	function deactivateuser()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		$res = $this->Adminmodel->deactivateuser($_POST['user_id'], $_POST['user_form_key']);
@@ -343,11 +343,11 @@ class Admin extends CI_Controller
 	function activateuser()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		$res = $this->Adminmodel->activateuser($_POST['user_id'], $_POST['user_form_key']);
@@ -368,11 +368,11 @@ class Admin extends CI_Controller
 	public function verify_user_sub()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		} else {
 			$res = $this->Adminmodel->verify_user_sub($_POST['user_id'], $_POST['form_key'], $_POST['web_quota']);
@@ -395,11 +395,11 @@ class Admin extends CI_Controller
 	public function unverify_user_sub()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		} else {
 			$res = $this->Adminmodel->unverify_user_sub($_POST['user_id'], $_POST['form_key']);
@@ -422,11 +422,11 @@ class Admin extends CI_Controller
 	public function updateuser_quota()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		} else {
 			if ((!is_int(json_decode($_POST['web_quota']))) || (!is_int(json_decode($_POST['used']))) || (!is_int(json_decode($_POST['bought']))) || (!is_int(json_decode($_POST['balance'])))) {
@@ -456,11 +456,11 @@ class Admin extends CI_Controller
 	function user_accupdate()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			return false;
 		}
 		$res = $this->Adminmodel->user_accupdate($_POST['user_id'], $_POST['form_key'], $_POST['new_pwd']);
@@ -495,11 +495,11 @@ class Admin extends CI_Controller
 	/* public function add_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		}
 		$this->form_validation->set_rules('full_name', 'Full Name', 'required|trim|html_escape');
@@ -521,7 +521,7 @@ class Admin extends CI_Controller
 			//$res= $this->Usermodel->register($form_key,$pwd);
 			$res = true;
 			if ($res !== TRUE) {
-				$this->session->set_flashdata('invalid', 'Registration Failed');
+				$this->setFlashMsg('error', 'Registration Failed');
 				redirect('register');
 				exit();
 			} else {
@@ -532,7 +532,7 @@ class Admin extends CI_Controller
 					$mobile = $this->input->post('mobile');
 					$login_link = base_url();
 					$res = $this->send_email_code($fname, $randpwd, $email, $link, $login_link);
-					$this->session->set_flashdata('valid', 'User added. Login credentials sent to user e-mail and mobile');
+					$this->setFlashMsg('success', 'User added. Login credentials sent to user e-mail and mobile');
 					redirect($_SERVER['HTTP_REFERER']);;
 				} elseif (isset($_POST['mail_chkbox'])) {
 					$fname = $this->input->post('full_name');
@@ -541,11 +541,11 @@ class Admin extends CI_Controller
 					$mobile = $this->input->post('mobile');
 					$login_link = base_url();
 					$res = $this->send_email_code($fname, $randpwd, $email, $link, $login_link);
-					$this->session->set_flashdata('valid', 'User added. Login credentials sent to user e-mail');
+					$this->setFlashMsg('success', 'User added. Login credentials sent to user e-mail');
 					redirect($_SERVER['HTTP_REFERER']);
 				} elseif (isset($_POST['mobile_chkbox'])) {
 					require __DIR__ . '/twilosms.php';
-					$this->session->set_flashdata('valid', 'User added. Login credentials sent to user mobile');
+					$this->setFlashMsg('success', 'User added. Login credentials sent to user mobile');
 					redirect($_SERVER['HTTP_REFERER']);
 				}
 			}
@@ -586,11 +586,11 @@ class Admin extends CI_Controller
 		$data['title'] = "reviews";
 
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		}
 		$config['base_url'] = base_url() . "admin/votes/";
@@ -633,11 +633,11 @@ class Admin extends CI_Controller
 	public function votes_export_csv()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('user');
 		}
 		header("Content-Type: text/csv; charset=utf-8");
@@ -655,11 +655,11 @@ class Admin extends CI_Controller
 	public function votes_reload_table()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		}
 		$config['per_page'] = 10;
@@ -727,11 +727,11 @@ class Admin extends CI_Controller
 	public function votes_filter_param()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		}
 		$data = $this->Adminmodel->votes_filter_param($_POST['param'], $_POST['type']);
@@ -796,11 +796,11 @@ class Admin extends CI_Controller
 	public function votes_search_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		}
 		$output = '';
@@ -864,11 +864,11 @@ class Admin extends CI_Controller
 	public function votes_get_user()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		} else {
 			$data['users'] = $this->Adminmodel->get_ratings($_POST['key']);
@@ -883,11 +883,11 @@ class Admin extends CI_Controller
 	public function indiv_votes_export_csv($key)
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		}
 		header("Content-Type: text/csv; charset=utf-8");
@@ -904,11 +904,11 @@ class Admin extends CI_Controller
 	public function search_ind_votes()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_admin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		}
 		$output = '';
@@ -963,11 +963,11 @@ class Admin extends CI_Controller
 		$data['title'] = "payments";
 
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('/');
 		}
 		if ($this->session->userdata('mr_sadmin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('/');
 		}
 
@@ -980,11 +980,11 @@ class Admin extends CI_Controller
 	public function reload_table_payments()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_sadmin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		}
 		$output = '';
@@ -1051,11 +1051,11 @@ class Admin extends CI_Controller
 	public function payments_export_csv()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_sadmin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('user');
 		}
 		header("Content-Type: text/csv; charset=utf-8");
@@ -1073,11 +1073,11 @@ class Admin extends CI_Controller
 	public function payments_search()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('login');
 		}
 		if ($this->session->userdata('mr_sadmin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('login');
 		}
 		$output = '';
@@ -1144,7 +1144,7 @@ class Admin extends CI_Controller
 	public function pick_plan()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('user');
 		}
 		$this->load->view('templates/header');
@@ -1228,18 +1228,18 @@ class Admin extends CI_Controller
 						$this->notifyadmin($admin_mail, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status);
 					}
 
-					$this->session->set_flashdata('valid', 'Payment Done. Please wait while we verify your payment');
+					$this->setFlashMsg('success', 'Payment Done. Please wait while we verify your payment');
 					$this->load->view('templates/header');
 					$this->load->view('admin/pay_status', ['userData' => $userData]);
 					$this->load->view('templates/footer');
 				} else {
-					$this->session->set_flashdata('invalid', 'Payment Failed.');
+					$this->setFlashMsg('error', 'Payment Failed.');
 					$this->load->view('templates/header');
 					$this->load->view('admin/pay_status', ['userData' => $userData]);
 					$this->load->view('templates/footer');
 				}
 			} else {
-				$this->session->set_flashdata('invalid', 'Payment Failed.');
+				$this->setFlashMsg('error', 'Payment Failed.');
 				$this->load->view('templates/header');
 				$this->load->view('admin/pay_status', ['userData' => $userData]);
 				$this->load->view('templates/footer');
@@ -1307,10 +1307,10 @@ class Admin extends CI_Controller
 		$this->Logmodel->log_act($type = "logsclear");
 
 		if ($res !== true) {
-			$this->session->set_flashdata('invalid', 'Error clearing data');
+			$this->setFlashMsg('error', 'Error clearing data');
 			redirect('activity');
 		} else {
-			$this->session->set_flashdata('valid', 'Activity Logs cleared!');
+			$this->setFlashMsg('success', 'Activity Logs cleared!');
 			redirect('activity');
 		}
 	}
@@ -1353,16 +1353,16 @@ class Admin extends CI_Controller
 
 				if ($mail_res !== true) {
 					$this->Logmodel->log_act($type = "mail_err");
-					$this->session->set_flashdata('invalid', 'Error sending your message');
+					$this->setFlashMsg('error', 'Error sending your message');
 					redirect($_SERVER['HTTP_REFERER']);
 				} else {
 					$res = $this->Adminmodel->contact();
 					$this->Logmodel->log_act($type = "cnt_us");
-					$this->session->set_flashdata('valid', 'Message sent. We will get back to you as soon as possible');
+					$this->setFlashMsg('success', 'Message sent. We will get back to you as soon as possible');
 					redirect($_SERVER['HTTP_REFERER']);
 				}
 			} else {
-				$this->session->set_flashdata('invalid', 'Google Recaptcha Unsuccessfull');
+				$this->setFlashMsg('error', 'Google Recaptcha Unsuccessfull');
 				redirect($_SERVER['HTTP_REFERER']);
 			}
 		}
@@ -1388,10 +1388,10 @@ class Admin extends CI_Controller
 		$this->Logmodel->log_act($type = "feedbckclear");
 
 		if ($res !== true) {
-			$this->session->set_flashdata('invalid', 'Error clearing data');
+			$this->setFlashMsg('error', 'Error clearing data');
 			redirect('feedbacks');
 		} else {
-			$this->session->set_flashdata('valid', 'Contacts cleared!');
+			$this->setFlashMsg('success', 'Contacts cleared!');
 			redirect('feedbacks');
 		}
 	}

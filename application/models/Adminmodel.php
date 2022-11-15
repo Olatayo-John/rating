@@ -3,12 +3,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Adminmodel extends CI_Model
 {
-	public function adduser($act_key, $form_key)
+	public function get_allusers()
+	{
+		$this->db->where('sadmin', '0');
+		$userinfo = $this->db->get('users');
+		return $userinfo;
+	}
+
+	public function get_adminusers()
+	{
+		$cmpyid = $this->session->userdata("mr_id");
+		$cmpy = $this->session->userdata("mr_cmpy");
+
+		$this->db->where(array('cmpyid' => $cmpyid, 'iscmpy' => '1', 'cmpy' => $cmpy));
+		$userinfo = $this->db->get('users');
+		return $userinfo;
+	}
+
+	public function adminadduser($act_key, $form_key)
 	{
 		$data = array(
 			'sadmin' => '0',
 			'admin' => '0',
-			'iscmpy' => $this->session->userdata("mr_iscmpy"),
+			'iscmpy' => '1',
 			'cmpy' => $this->session->userdata("mr_cmpy"),
 			'cmpyid' => $this->session->userdata("mr_id"),
 			'uname' => htmlentities($this->input->post('uname')),
@@ -18,219 +35,127 @@ class Adminmodel extends CI_Model
 			'mobile' => htmlentities($this->input->post('mobile')),
 			'active' => "0",
 			'website_form' => "0",
-			'sub' => $this->session->userdata("mr_sub"),
+			'sub' => '1',
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
 		);
 		$this->db->insert('users', $data);
 		$lastid = $this->db->insert_id();
-		$this->insert_user_details($lastid, $form_key);
-		$this->insert_quota($lastid, $form_key);
+
+		$this->admin_insert_quota($lastid, $form_key);
 		return TRUE;
 	}
 
-	public function insert_user_details($lastid, $form_key)
-	{
-		$data = array(
-			'user_id' => $lastid,
-			'form_key' => $form_key,
-			'uname' => htmlentities($this->input->post('uname')),
-			'total_ratings' => '0',
-			'total_sms' => '0',
-			'total_email' => '0',
-			'total_one' => '0',
-			'total_two' => '0',
-			'total_three' => '0',
-			'total_four' => '0',
-			'total_five' => '0',
-		);
-		$this->db->insert('user_details', $data);
-		return true;
-	}
-
-	public function insert_quota($lastid, $form_key)
+	public function admin_insert_quota($lastid, $form_key)
 	{
 		$data = array(
 			'by_user_id' => $lastid,
-			'bought' => '0',
-			'used' => '0',
-			'bal' => '0',
-			'webspace' => '0',
-			'userspace' => '0',
+			'sms_quota' => '0',
+			'email_quota' => '0',
+			'whatsapp_quota' => '0',
+			'web_quota' => '0',
 			'by_form_key' => $form_key,
 		);
 		$this->db->insert('quota', $data);
 		return true;
 	}
 
-	public function get_admininfo($limit = false, $offset = false)
+	public function sadminadduser($act_key, $form_key, $admin, $iscmpy)
 	{
-		$this->db->select("u.id as uid,u.iscmpy,u.cmpyid,u.uname,u.fname,u.lname,u.email,u.mobile,u.active,u.form_key,ud.id as udid,ud.total_ratings,ud.total_sms,ud.total_email,ud.total_one,ud.total_two,ud.total_three,ud.total_four,ud.total_five");
-		$this->db->from('users u');
-		$this->db->where(array('u.form_key' => $this->session->userdata("mr_form_key")));
-		$this->db->join('user_details ud', 'u.form_key=ud.form_key', 'inner');
-		$userinfo = $this->db->get()->row();
-		return $userinfo;
-	}
+		$data = array(
+			'sadmin' => '0',
+			'admin' => $admin,
+			'iscmpy' => $iscmpy,
+			'cmpy' => htmlentities($this->input->post('cmpy')),
+			'cmpyid' => null,
+			'uname' => htmlentities($this->input->post('uname')),
+			'fname' => htmlentities($this->input->post('fname')),
+			'lname' => htmlentities($this->input->post('lname')),
+			'email' => htmlentities($this->input->post('email')),
+			'mobile' => htmlentities($this->input->post('mobile')),
+			'active' => "0",
+			'website_form' => "0",
+			'sub' => '1',
+			'form_key' => $form_key,
+			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
+			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
+		);
+		print_r($data);
+		die;
+		$this->db->insert('users', $data);
+		$lastid = $this->db->insert_id();
 
-	public function get_adminusers($limit = false, $offset = false)
-	{
-		$this->db->select("u.id as uid,u.iscmpy,u.cmpyid,u.uname,u.fname,u.lname,u.email,u.mobile,u.active,u.form_key,ud.id as udid,ud.total_ratings,ud.total_sms,ud.total_email,ud.total_one,ud.total_two,ud.total_three,ud.total_four,ud.total_five");
-		$this->db->from('users u');
-		$this->db->where(array('u.cmpyid' => $this->session->userdata("mr_id"), 'iscmpy' => '1', 'cmpy' => $this->session->userdata("mr_cmpy")));
-		$this->db->join('user_details ud', 'u.form_key=ud.form_key', 'inner');
-		$userinfo = $this->db->get();
-		return $userinfo;
-	}
+		$this->sadmin_insert_quota($lastid, $form_key);
 
-	public function total_ratings()
-	{
-		$this->db->select('id');
-		$this->db->where('cmpyid', $this->session->userdata('mr_id'));
-		$query = $this->db->get('users')->result_array();
-
-		$idarray= array($this->session->userdata('mr_id'));
-		foreach($query as $queryid){
-			array_push($idarray,$queryid['id']);
+		if (($iscmpy === 1) && ($admin === 1)) {
+			$this->insert_company_details($lastid, $form_key);
 		}
 
-		$this->db->where_in('user_id', $idarray);
-		$this->db->select_sum('total_ratings');
-		$query = $this->db->get('user_details');
-		return $query->result_array();
-		exit;
+		return TRUE;
 	}
 
-	public function total_sms()
+	public function insert_company_details($lastid)
 	{
-		$this->db->select('id');
-		$this->db->where('cmpyid', $this->session->userdata('mr_id'));
-		$query = $this->db->get('users')->result_array();
+		$data = array(
+			'cmpyid' => $lastid,
+			'cmpyName' => htmlentities($this->input->post('cmpy')),
+			'cmpyMobile' => '',
+			'cmpyEmail' => '',
+			'cmpyLogo' => ''
+		);
+		$this->db->insert('company_details', $data);
+		return true;
+	}
 
-		$idarray= array($this->session->userdata('mr_id'));
-		foreach($query as $queryid){
-			array_push($idarray,$queryid['id']);
+	public function sadmin_insert_quota($lastid, $form_key)
+	{
+		$data = array(
+			'by_user_id' => $lastid,
+			'sms_quota' => htmlentities($this->input->post('sms_quota')),
+			'email_quota' => htmlentities($this->input->post('email_quota')),
+			'whatsapp_quota' => htmlentities($this->input->post('whatsapp_quota')),
+			'web_quota' => htmlentities($this->input->post('web_quota')),
+			'by_form_key' => $form_key,
+		);
+		$this->db->insert('quota', $data);
+		return true;
+	}
+
+	public function get_userQuota()
+	{
+		$id = $this->session->userdata("mr_id");
+		$form_key = $this->session->userdata("mr_form_key");
+		$iscmpy = $this->session->userdata("mr_iscmpy");
+		$cmpyid = $this->session->userdata("mr_cmpyid");
+
+		if ($iscmpy == "1" && !empty($cmpyid) && $cmpyid !== "" && $cmpyid !== null) {
+			$wherearray = array('by_user_id' => $cmpyid);
+		} else {
+			$wherearray = array('by_user_id' => $id, 'by_form_key' => $form_key);
 		}
-
-		$this->db->where_in('user_id', $idarray);
-		$this->db->select_sum('total_sms');
-		$query = $this->db->get('user_details');
-		return $query->result_array();
-		exit;
-	}
-
-	public function total_email()
-	{
-		$this->db->select('id');
-		$this->db->where('cmpyid', $this->session->userdata('mr_id'));
-		$query = $this->db->get('users')->result_array();
-
-		$idarray= array($this->session->userdata('mr_id'));
-		foreach($query as $queryid){
-			array_push($idarray,$queryid['id']);
-		}
-
-		$this->db->where_in('user_id', $idarray);
-		$this->db->select_sum('total_email');
-		$query = $this->db->get('user_details');
-		return $query->result_array();
-		exit;
-	}
-
-	//disabled
-	public function change_userstatus($uact, $uid, $formkey)
-	{
-		if ($uact == '0') {
-			$uact_to = "1";
-		} elseif ($uact == '1') {
-			$uact_to = "2";
-		} elseif ($uact == '2') {
-			$uact_to = "1";
-		}
-		$this->db->where(array('id' => $uid, 'form_key' => $formkey));
-		$this->db->set('active', $uact_to);
-		$this->db->update('users');
-
-		return true;
-	}
-
-	//disabled
-	public function admin_deleteuser($user_id, $form_key)
-	{
-		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
-		$this->db->delete('users');
-
-		$this->delete_user_ratings($form_key);
-		$this->delete_user_quota($user_id, $form_key);
-		$this->delete_user_sentlinks($user_id);
-		$this->delete_user_details($user_id, $form_key);
-		$this->delete_user_websites($user_id, $form_key);
-
-		return true;
-	}
-
-	public function delete_user_ratings($form_key)
-	{
-		$this->db->where('form_key', $form_key);
-		$this->db->delete('all_ratings');
-		return true;
-	}
-
-	public function delete_user_quota($user_id, $form_key)
-	{
-		$this->db->where(array('by_user_id' => $user_id, 'by_form_key' => $form_key));
-		$this->db->delete('quota');
-		return true;
-	}
-
-	public function delete_user_sentlinks($user_id)
-	{
-		$this->db->where('user_id', $user_id);
-		$this->db->delete('sent_links');
-		return true;
-	}
-
-	public function delete_user_details($user_id, $form_key)
-	{
-		$this->db->where(array('user_id' => $user_id, 'form_key' => $form_key));
-		$this->db->delete('user_details');
-		return true;
-	}
-
-	public function delete_user_websites($user_id, $form_key)
-	{
-		$this->db->where(array('user_id' => $user_id, 'form_key' => $form_key));
-		$this->db->delete('websites');
-		return true;
+		$this->db->where($wherearray);
+		$quotaInfo = $this->db->get("quota")->row();
+		return $quotaInfo;
 	}
 
 	public function get_userinfo($id, $form_key)
 	{
-		$this->db->select("id,iscmpy,cmpyid,cmpy,uname,fname,lname,email,mobile,active,website_form,sub,form_key");
 		$this->db->where(array('id' => $id, 'form_key' => $form_key));
 		$query = $this->db->get('users');
 		return $query->row();
 	}
 
-	public function get_userdetails($id, $form_key)
+	public function admin_get_userQuota($id, $form_key, $iscmpy, $cmpyid)
 	{
-		$this->db->where(array('user_id' => $id, 'form_key' => $form_key));
-		$query = $this->db->get('user_details');
-		return $query->row();
-	}
-
-	public function get_userquota($id, $form_key, $iscmpy, $cmpyid)
-	{
-		if (!empty($iscmpy) && $iscmpy === "1" && isset($cmpyid) && !empty($cmpyid) && $cmpyid !== "") {
+		if ($iscmpy == "1" && !empty($cmpyid) && $cmpyid !== "" && $cmpyid !== null) {
 			$wherearray = array('by_user_id' => $cmpyid);
 		} else {
-			$wherearray = array('by_user_id' => $id, 'by_form_key' => $form_key);
+			// $wherearray = array('by_user_id' => $id, 'by_form_key' => $form_key);
 		}
-
 		$this->db->where($wherearray);
-		$query = $this->db->get('quota');
-		return $query->row();
+		$quotaInfo = $this->db->get("quota")->row();
+		return $quotaInfo;
 	}
 
 	public function get_userwebsites($id, $form_key)
@@ -257,13 +182,34 @@ class Adminmodel extends CI_Model
 		return $query->result();
 	}
 
-	public function admin_updateuserprofile($user_id, $form_key, $fname, $lname, $email, $mobile)
+	public function get_usertotalemail($user_id)
+	{
+		$this->db->where(array('user_id' => $user_id, 'link_for' => 'email'));
+		$query = $this->db->get('sent_links');
+		return $query->result_array();
+	}
+	public function get_usertotalsms($user_id)
+	{
+		$this->db->where(array('user_id' => $user_id, 'link_for' => 'sms'));
+		$query = $this->db->get('sent_links');
+		return $query->result_array();
+	}
+	public function get_usertotalwhp($user_id)
+	{
+		$this->db->where(array('user_id' => $user_id, 'link_for' => 'whatsapp'));
+		$query = $this->db->get('sent_links');
+		return $query->result_array();
+	}
+
+	public function updateprofile_admin($user_id, $form_key, $fname, $lname, $email, $mobile,$gender,$dob)
 	{
 		$data = array(
 			'fname' => htmlentities($fname),
 			'lname' => htmlentities($lname),
 			'email' => htmlentities($email),
-			'mobile' => strtolower(htmlentities($mobile)),
+			'mobile' => htmlentities($mobile),
+			'gender' => htmlentities($gender),
+			'dob' => htmlentities($dob),
 		);
 
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
@@ -272,7 +218,7 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function admin_deactivateaccount($user_id, $form_key)
+	public function deactivateaccount_admin($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$query = $this->db->set('active', "2");
@@ -280,7 +226,7 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function admin_activateaccount($user_id, $form_key)
+	public function activateaccount_admin($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$query = $this->db->set('active', "1");
@@ -288,7 +234,7 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function admin_deactivatesub($user_id, $form_key)
+	public function deactivatesub_admin($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$query = $this->db->set('sub', "0");
@@ -296,40 +242,15 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function admin_activatesub($user_id, $form_key)
+	public function activatesub_admin($user_id, $form_key)
 	{
-
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$this->db->set('sub', "1");
 		$query = $this->db->update("users");
 		return true;
 	}
 
-	public function updateuser_webquota($user_id, $form_key, $web_quota)
-	{
-		$w = htmlentities($web_quota);
-
-		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
-		$this->db->set('web_quota', $w);
-		$query = $this->db->update("users");
-		return true;
-	}
-
-	public function updateuser_quota($user_id, $form_key, $bought, $used, $balance)
-	{
-		$b = htmlentities($bought);
-		$u = htmlentities($used);
-		$bal = htmlentities($balance);
-
-		$this->db->set('bought',  $b);
-		$this->db->set('used', $u);
-		$this->db->set('bal', $bal);
-		$this->db->where(array('by_user_id' => $user_id, 'by_form_key' => $form_key));
-		$this->db->update("quota");
-		return true;
-	}
-
-	public function admin_updateuserpwd($user_id, $rspwd)
+	public function updatepassword_admin($user_id, $rspwd)
 	{
 		$this->db->set('password', password_hash($rspwd, PASSWORD_DEFAULT));
 		$this->db->where('id', $user_id);
@@ -337,16 +258,44 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function get_allusers($limit = false, $offset = false)
+	//disabled
+	public function admin_deleteuser($user_id, $form_key)
 	{
-		$this->db->select("u.id as uid,u.cmpy,u.iscmpy,u.cmpyid,u.uname,u.fname,u.lname,u.email,u.mobile,u.active,u.form_key");
-		$this->db->from('users u');
-		$this->db->where('sadmin', '0');
-		// $this->db->join('user_details ud', 'u.form_key=ud.form_key', 'inner');
-		$userinfo = $this->db->get();
-		return $userinfo;
-	}
+		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
+		$this->db->delete('users');
 
+		$this->delete_user_ratings($form_key);
+		$this->delete_user_quota($user_id, $form_key);
+		$this->delete_user_sentlinks($user_id);
+		$this->delete_user_websites($user_id, $form_key);
+
+		return true;
+	}
+	public function delete_user_ratings($form_key)
+	{
+		$this->db->where('form_key', $form_key);
+		$this->db->delete('all_ratings');
+		return true;
+	}
+	public function delete_user_quota($user_id, $form_key)
+	{
+		$this->db->where(array('by_user_id' => $user_id, 'by_form_key' => $form_key));
+		$this->db->delete('quota');
+		return true;
+	}
+	public function delete_user_sentlinks($user_id)
+	{
+		$this->db->where('user_id', $user_id);
+		$this->db->delete('sent_links');
+		return true;
+	}
+	public function delete_user_websites($user_id, $form_key)
+	{
+		$this->db->where(array('user_id' => $user_id, 'form_key' => $form_key));
+		$this->db->delete('websites');
+		return true;
+	}
+	//
 
 	public function get_ratings($key)
 	{
@@ -398,19 +347,6 @@ class Adminmodel extends CI_Model
 			// print_r($query);
 			// die;
 			return $query;
-		}
-	}
-
-	public function user_web_total($key)
-	{
-		$this->db->select('total_ratings');
-		$this->db->from('user_details');
-		$this->db->where('form_key', $key);
-		$query = $this->db->get();
-		if (!$query) {
-			return false;
-		} else {
-			return $query->result();
 		}
 	}
 
@@ -496,20 +432,6 @@ class Adminmodel extends CI_Model
 		return $query->num_rows();
 	}
 
-	public function all_sms()
-	{
-		$this->db->select_sum('sms');
-		$query = $this->db->get('user_details');
-		return $query->result_array();
-	}
-
-	public function all_email()
-	{
-		$this->db->select_sum('email');
-		$query = $this->db->get('user_details');
-		return $query->result_array();
-	}
-
 	public function user_allsentlinks()
 	{
 		$this->db->order_by('id', 'desc');
@@ -553,17 +475,22 @@ class Adminmodel extends CI_Model
 		return $query;
 	}
 
-	public function logs_export_csv()
-	{
-		$this->db->order_by('id', 'desc');
-		$this->db->select('id,msg,act_time');
-		$query = $this->db->get('activity');
-		return $query->result_array();
-	}
-
 	public function clear_logs()
 	{
 		$this->db->truncate('activity');
+		return true;
+	}
+
+	public function get_feedbacks()
+	{
+		$this->db->order_by('id', 'desc');
+		$query = $this->db->get('contact');
+		return $query;
+	}
+
+	public function clear_feedbacks()
+	{
+		$this->db->truncate('contact');
 		return true;
 	}
 
@@ -575,27 +502,6 @@ class Adminmodel extends CI_Model
 			'bdy' => htmlentities($this->input->post('msg')),
 		);
 		$this->db->insert('contact', $data);
-		return true;
-	}
-
-	public function get_feedbacks()
-	{
-		$this->db->order_by('id', 'desc');
-		$query = $this->db->get('contact');
-		return $query;
-	}
-
-	public function export_feedbacks()
-	{
-		$this->db->order_by('id', 'desc');
-		$this->db->select('id,name,user_mail,bdy');
-		$query = $this->db->get('contact');
-		return $query->result_array();
-	}
-
-	public function clear_feedbacks()
-	{
-		$this->db->truncate('contact');
 		return true;
 	}
 }

@@ -9,13 +9,12 @@
     </div>
 </div>
 
-<table id="rrtable" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-pagination="true">
+<table id="rrtable" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="right" data-pagination="true">
     <thead class="text-light" style="background:#294a63">
         <tr>
-            <th data-field="web_name" data-sortable="true">Website Name</th>
-            <th data-field="name" data-sortable="true">Rated By</th>
-            <th data-field="mobile" data-sortable="true">Mobile</th>
-            <th data-field="star" data-sortable="true">Star</th>
+            <th data-field="web_name" data-sortable="true">Website</th>
+            <th data-field="mobile" data-sortable="true">Review</th>
+            <th data-field="ratedby" data-sortable="true">Rated By</th>
             <th data-field="user_ip" data-sortable="true" data-visible="false">IP</th>
             <th data-field="rated_at" data-sortable="true" class="text-danger">Date</th>
         </tr>

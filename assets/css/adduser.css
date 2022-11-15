@@ -1,44 +1,39 @@
-label,.fa-eye,.fa-eye-slash,.fa-question-circle,.fas-question-circle{
+.adduserDiv {
+	/* padding: 0 21px 21px 21px; */
+	padding: 14px;
+}
+
+label,
+.fa-eye,
+.fa-eye-slash,
+.fa-question-circle,
+.fas-question-circle {
 	color: #294a63;
 }
-.form-group label{
-	font-weight: bold;
-}
-.fa-question-circle,.fas-question-circle{
+
+.fa-question-circle,
+.fas-question-circle {
 	color: #294a63;
 	cursor: pointer;
 }
-i.fa-eye,i.fa-eye-slash{
+
+i.fa-eye,
+i.fa-eye-slash {
 	display: none;
 	cursor: pointer;
 }
-.genpwdbtn{
-	background:#294a63;
+
+.genpwdbtn {
+	background: #294a63;
 }
 
-hr.sub{
+.cmpydiv {
+	display: none;
+}
+
+hr.sub {
 	margin: auto 0;
 	margin-bottom: 30px;
 	border-bottom: 3px solid #294a63;
 	width: 100px;
-}
-button.registerbtn{
-	border-radius: 0;
-}
-
-
-
-
-@media only screen and (max-width: 500px) {
-	div.btngrp{
-		display: flex;
-		flex-direction: column;
-	}
-	button.registerbtn{
-		margin: 0;
-	}
-	a.loginbtn{
-		text-align: center;
-		margin-top: 5px;
-	}
 }

@@ -68,24 +68,26 @@ $route['remove-website'] = 'user/removewebsite';
 //
 
 
-//Superadmin
+//Admins- [sadmin ,admin]
 $route['users'] = 'admin/users';
-$route['newuser'] = 'admin/adduser_sadmin';
+$route['add'] = 'admin/add';
 
+//SAdmin
+$route['sadmin-add-user'] = 'admin/adduser_sadmin';
+$route['sadmin-view-user'] = 'admin/viewuser_sadmin';
 
 //companyAdmin
-$route['adduser'] = 'admin/adduser_cmpy';
-$route['userstatus'] = 'admin/change_userstatus';
-$route['deleteuser'] = 'admin/admin_deleteuser';
-$route['viewuser'] = 'admin/admin_viewuser';
+$route['admin-add-user'] = 'admin/adduser_admin';
+$route['admin-view-user'] = 'admin/viewuser_admin';
+$route['admin-update-profile'] = 'admin/updateprofile_admin';
+$route['admin-deactivate-account'] = 'admin/deactivateaccount_admin';
+$route['admin-activate-account'] = 'admin/activateaccount_admin';
+$route['admin-deactivate-sub'] = 'admin/deactivatesub_admin';
+$route['admin-activate-sub'] = 'admin/activatesub_admin';
+$route['admin-update-password'] = 'admin/updatepassword_admin';
+
 $route['updateuserprofile'] = 'admin/admin_updateuserprofile';
 $route['updateuserpwd'] = 'admin/admin_updateuserpwd';
-$route['account-deactivate'] = 'admin/admin_deactivateaccount';
-$route['activate-account'] = 'admin/admin_activateaccount';
-$route['deactivate-sub'] = 'admin/admin_deactivatesub';
-$route['activate-sub'] = 'admin/admin_activatesub';
-
-$route['admin/users/(:any)'] = 'admin/users/$1';
 
 
 //plan
@@ -94,6 +96,7 @@ $route['plan'] = 'admin/pick_plan';
 
 //payments
 $route['payments'] = 'admin/payments';
+
 
 $route['feedbacks'] = 'admin/feedbacks';
 $route['clear-feedbacks'] = 'admin/clearfeedbacks';
@@ -105,6 +108,7 @@ $route['clear-activity-logs'] = 'admin/clearlogs';
 // $route['account'] = 'user/account';
 $route['account'] = 'user/account_edit';
 $route['account-edit'] = 'user/account_edit';
+$route['company-edit'] = 'user/company_edit';
 $route['profile-edit'] = 'user/personal_edit';
 $route['website-edit'] = 'user/edit_website';
 // $route['website-delete'] = 'user/delete_website';
@@ -146,7 +150,7 @@ $route['wtr/(:any)'] = 'user/wtr/$1';
 
 
 
-$route['contact'] = 'admin/contact';
+$route['support'] = 'admin/support';
 $route['logout'] = 'user/logout';
 
 

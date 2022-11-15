@@ -46,21 +46,21 @@
     </thead>
 
     <tbody>
-        <?php foreach ($ls->result_array() as $web) : ?>
+        <?php foreach ($ls->result_array() as $l) : ?>
             <tr>
-                <td><?php echo strtoupper($web['link_for']) ?></td>
+                <td><?php echo strtoupper($l['link_for']) ?></td>
                 <td>
-                    <?php if (!empty($web['sent_to_sms']) && $web['sent_to_sms'] !== null) : ?>
-                        <!-- <?php echo $web['sent_to_sms']; ?> -->
-                        <a href="mailto:<?php echo $web['sent_to_sms']; ?>"><?php echo $web['sent_to_sms']; ?></a>
-                    <?php elseif (!empty($web['sent_to_email']) && $web['sent_to_email'] !== null) : ?>
-                        <!-- <?php echo $web['sent_to_email']; ?> -->
-                        <a href="tel:<?php echo $web['sent_to_email']; ?>"><?php echo $web['sent_to_email']; ?></a>
+                    <?php if (!empty($l['sent_to_sms']) && $l['sent_to_sms'] !== null) : ?>
+                        <!-- <?php echo $l['sent_to_sms']; ?> -->
+                        <a href="mailto:<?php echo $l['sent_to_sms']; ?>"><?php echo $l['sent_to_sms']; ?></a>
+                    <?php elseif (!empty($l['sent_to_email']) && $l['sent_to_email'] !== null) : ?>
+                        <!-- <?php echo $l['sent_to_email']; ?> -->
+                        <a href="tel:<?php echo $l['sent_to_email']; ?>"><?php echo $l['sent_to_email']; ?></a>
                     <?php endif; ?>
                 </td>
-                <td><?php echo $web['subj']; ?></td>
-                <td style="word-break:break-all;"><?php echo $web['body']; ?></td>
-                <td class="date"><?php echo $web['sent_at']; ?></td>
+                <td><?php echo $l['subj']; ?></td>
+                <td style="word-break:break-all;"><?php echo $l['body']; ?></td>
+                <td class="date"><?php echo $l['sent_at']; ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

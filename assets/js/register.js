@@ -40,62 +40,6 @@ $(document).ready(function () {
 		var hpwd = $('.pwd').attr('type', 'password');
 	});
 
-	//mouse event on "ANY" plan
-	$(".plandiv").on({
-		mouseenter: function () {
-			var plan = $(this).attr("plan");
-
-			//reset back
-			$("div.plandiv").css({
-				'transition': '.4s',
-				'transform': 'scale(1)'
-			});
-
-			//zoom out the selected plan
-			$("div." + plan + "").css({
-				'transition': '.4s',
-				'transform': 'scale(1.1)'
-			});
-		},
-		mouseleave: function () {
-			var plan = $(this).attr("plan");
-
-			//reset back
-			$("div.plandiv").css({
-				'transition': '.4s',
-				'transform': 'scale(1)'
-			});
-		}
-	});
-
-	$(document).on('click', '.chooseplanbtn', function () {
-		var plan = $(this).attr("plan");
-		var sms_quota = $(this).attr("sms_quota");
-		var email_quota = $(this).attr("email_quota");
-		var whatsapp_quota = $(this).attr("whatsapp_quota");
-		var web_quota = $(this).attr("web_quota");
-
-		$(".sms_quota,.email_quota,.whatsapp_quota,.web_quota").val("");
-
-		if (plan !== "" && sms_quota !== "" && email_quota !== "" && whatsapp_quota !== "" && web_quota !== "") {
-			$(".sms_quota").val(sms_quota);
-			$(".email_quota").val(email_quota);
-			$(".whatsapp_quota").val(whatsapp_quota);
-			$(".web_quota").val(web_quota);
-
-			$(".chooseplanbtn").html("Choose Plan").css({
-				background:'#fff',
-				color:'#294a63'
-			});
-			$(this).html("Current Plan").css({
-				background:'#294a63',
-				color:'#fff'
-			});
-		} else {
-			window.location.reload();
-		}
-	});
-
 	//check all validation
 	$('form#regForm').submit(function (e) {
 		// e.preventDefault();
@@ -110,74 +54,56 @@ $(document).ready(function () {
 		var email_quota = $(".email_quota").val();
 		var whatsapp_quota = $(".whatsapp_quota").val();
 		var web_quota = $(".web_quota").val();
-		var formErr = null;
+
+		$(".ajax_res_err,.ajax_res_succ").text("");
+		$(".ajax_err_div,ajax_succ_div").hide();
 
 		if (email == "" || email == null) {
-			formErr = true;
 			document.getElementById("email").scrollIntoView(false);
-		} else {
-			formErr = "";
+			return false;
 		}
 
 		if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
-			formErr = true;
 			document.getElementById("mobile").scrollIntoView(false);
 			$('.mobileerr').show();
-		}else {
-			formErr = "";
-			$('.mobileerr').hide();
+			return false;
 		}
 
 		var chl = $('#cmpychkb').is(":checked");
 		if (chl == true) {
 			if (cmpy == "" || cmpy == null) {
-				formErr = true;
 				document.getElementById("cmpy").scrollIntoView(false);
-			} else {
-				formErr = "";
+				return false;
 			}
-		} else {
-			formErr = "";
 		}
 
 		if (uname == "" || uname == null) {
-			formErr = true;
 			document.getElementById("uname").scrollIntoView(false);
-		} else {
-			formErr = "";
+			return false;
 		}
 
 		if (pwd == "" || pwd == null || pwd.length < 6) {
-			formErr = true;
 			document.getElementById("pwd").scrollIntoView(false);
 			$('.pwderr').show();
+			return false;
 		} else {
-			formErr = "";
 			$('.pwderr').hide();
 		}
 
 		if (sms_quota == "" || sms_quota == null || email_quota == "" || email_quota == null || whatsapp_quota == "" || whatsapp_quota == null || web_quota == "" || web_quota == null) {
-			$(".ajax_succ_div,.ajax_err_div").hide();
 			$(".ajax_res_err").text("Please pick a plan");
-			$(".ajax_err_div").fadeIn().delay("6000").fadeOut();
-			formErr = true;
-		} else {
-			$(".ajax_err_div,ajax_succ_div").hide();
-			formErr = '';
+			$(".ajax_err_div").fadeIn();
+			return false;
 		}
 
-		if (formErr === true) {
-			return false;
-		} else {
-			$.ajax({
-				beforSend: function () {
-					$('.registerbtn').attr('disabled', 'disabled');
-					$('.registerbtn').html('Processing...');
-					$('.registerbtn').css('cursor', 'not-allowed');
-					$('.registerbtn').removeClass('btn-info').addClass('btn-danger');
-				}
-			});
-		}
+
+		$.ajax({
+			beforSend: function () {
+				$('.registerbtn').attr('disabled', 'disabled');
+				$('.registerbtn').html('Processing...');
+				$('.registerbtn').css('cursor', 'not-allowed');
+			}
+		});
 	});
 
 });

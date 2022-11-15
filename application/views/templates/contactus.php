@@ -1,10 +1,10 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/contact.css'); ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/support.css'); ?>">
 
 <div class="wrapper_div">
 	<div class="col-md-12 bg-light-custom" style="display:flex;flex-direction:row;flex-wrap:wrap;padding:0;">
 
 		<div class="col-md-6 p-3">
-			<form action="<?php echo base_url('admin/contact'); ?>" method="post" class="contactform">
+			<form action="<?php echo base_url('admin/support'); ?>" method="post" class="contactform">
 				<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
 				<div class="form-group">

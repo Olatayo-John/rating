@@ -2,7 +2,7 @@
 
 
 <div class="wrapper_div">
-	<div class="emailmodal modal">
+	<div class="emailmodal modal fade" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -26,7 +26,7 @@
 		</div>
 	</div>
 
-	<div class="smsmodal modal">
+	<div class="smsmodal modal fade" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -219,12 +219,12 @@
 					$(".email_SendSingleBtn,.email_sendBtn_m").hide();
 					$(".email_ImportMultipleBtn,.email_sendBtn").show();
 
-					$('.emailmodal').show();
+					$('.emailmodal').modal('show');
 				} else {
 					return false;
 				}
 			} else {
-				$('.emailmodal').show();
+				$('.emailmodal').modal('show');
 			}
 		});
 
@@ -247,12 +247,12 @@
 					$(".sms_SendSingleBtn,.sms_sendBtn_m").hide();
 					$(".sms_ImportMultipleBtn,.sms_sendBtn").show();
 
-					$('.emailmodal').show();
+					$('.emailmodal').modal('show');
 				} else {
 					return false;
 				}
 			} else {
-				$('.smsmodal').show();
+				$('.smsmodal').modal('show');
 			}
 		});
 

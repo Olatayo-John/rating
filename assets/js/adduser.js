@@ -11,11 +11,6 @@ $(document).ready(function () {
 	});
 
 	$("button.genpwdbtn").click(function () {
-		// var randpwd = Math.floor((Math.random() * 10000000) + 1);
-		// var pwd = $('.pwd').val(randpwd);
-		// $('i.fa-eye').show();
-		// $('i.fa-eye-slash').hide();
-
 		var length = 10;
 		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		var val = "";
@@ -40,7 +35,8 @@ $(document).ready(function () {
 		var hpwd = $('.pwd').attr('type', 'password');
 	});
 
-	$('button.registerbtn').click(function (e) {
+	//check all validation
+	$('form#adminAddUserForm').submit(function (e) {
 		// e.preventDefault();
 		var email = $('.email').val();
 		var mobile = $('.mobile').val();
@@ -48,41 +44,28 @@ $(document).ready(function () {
 		var pwd = $('.pwd').val();
 
 		if (email == "" || email == null) {
-			$('.email').css('border', '1px solid red');
 			document.getElementById("email").scrollIntoView(false);
 			return false;
-		} else {
-			$('.email').css('border', '1px solid #ced4da');
 		}
-		if (mobile == "" || mobile == null) {
-			$('.mobile').css('border', '1px solid red');
-			document.getElementById("mobile").scrollIntoView(false);
-			return false;
-		} if (mobile.length < 10 || mobile.length > 10) {
+
+		if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
 			document.getElementById("mobile").scrollIntoView(false);
 			$('.mobileerr').show();
 			return false;
 		} else {
-			$('.mobile').css('border', '1px solid #ced4da');
 			$('.mobileerr').hide();
 		}
+
 		if (uname == "" || uname == null) {
-			$('.uname').css('border', '1px solid red');
 			document.getElementById("uname").scrollIntoView(false);
 			return false;
-		} else {
-			$('.uname').css('border', '1px solid #ced4da');
 		}
-		if (pwd == "" || pwd == null) {
-			$('.pwd').css('border', '1px solid red');
-			document.getElementById("pwd").scrollIntoView(false);
-			return false;
-		} if (pwd.length < 6) {
+
+		if (pwd == "" || pwd == null || pwd.length < 6) {
 			document.getElementById("pwd").scrollIntoView(false);
 			$('.pwderr').show();
 			return false;
 		} else {
-			$('.pwd').css('border', '1px solid #ced4da');
 			$('.pwderr').hide();
 		}
 
@@ -91,7 +74,78 @@ $(document).ready(function () {
 				$('.registerbtn').attr('disabled', 'disabled');
 				$('.registerbtn').html('Processing...');
 				$('.registerbtn').css('cursor', 'not-allowed');
-				$('.registerbtn').removeClass('btn-info').addClass('btn-danger');
+			}
+		});
+	});
+
+	//check all validation
+	$('form#sadminAddUserForm').submit(function (e) {
+		// e.preventDefault();
+		var email = $('.email').val();
+		var mobile = $('.mobile').val();
+		var uname = $('.uname').val();
+		var pwd = $('.pwd').val();
+		var sms_quota = $(".sms_quota").val();
+		var email_quota = $(".email_quota").val();
+		var whatsapp_quota = $(".whatsapp_quota").val();
+		var web_quota = $(".web_quota").val();
+
+		$(".ajax_res_err,.ajax_res_succ").text("");
+		$(".ajax_err_div,ajax_succ_div").hide();
+
+		if (email == "" || email == null) {
+			document.getElementById("email").scrollIntoView(false);
+			return false;
+		}
+
+		if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
+			document.getElementById("mobile").scrollIntoView(false);
+			$('.mobileerr').show();
+			return false;
+		} else {
+			$('.mobileerr').hide();
+		}
+
+		if (uname == "" || uname == null) {
+			document.getElementById("uname").scrollIntoView(false);
+			return false;
+		}
+
+		var chl = $('#cmpychkb').is(":checked");
+		if (chl == true) {
+			if (cmpy == "" || cmpy == null) {
+				document.getElementById("cmpy").scrollIntoView(false);
+				return false;
+			}
+		}
+
+		var lcd = $('#logincred').is(":checked");
+		if (lcd !== true) {
+			$(".ajax_res_err").text("Send credentials not selected");
+			$(".ajax_err_div").fadeIn();
+			document.getElementById("cmpy").scrollIntoView(false);
+			return false;
+		}
+
+		if (pwd == "" || pwd == null || pwd.length < 6) {
+			document.getElementById("pwd").scrollIntoView(false);
+			$('.pwderr').show();
+			return false;
+		} else {
+			$('.pwderr').hide();
+		}
+
+		if (sms_quota == "" || sms_quota == null || email_quota == "" || email_quota == null || whatsapp_quota == "" || whatsapp_quota == null || web_quota == "" || web_quota == null) {
+			$(".ajax_res_err").text("Please pick a plan");
+			$(".ajax_err_div").fadeIn();
+			return false;
+		}
+
+		$.ajax({
+			beforSend: function () {
+				$('.registerbtn').attr('disabled', 'disabled');
+				$('.registerbtn').html('Processing...');
+				$('.registerbtn').css('cursor', 'not-allowed');
 			}
 		});
 	});

@@ -4,6 +4,9 @@
 <div class="modal vusermodal">
 	<div class="modal-dialog modal-xl">
 		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close close_SmsModalBtn" aria-hidden="true">&times;</button>
+			</div>
 			<div class="modal-body p-0">
 				<div class="row set_wrapper m-0">
 					<div class="tab_div col-md-2">
@@ -55,40 +58,35 @@
 	</div>
 </div>
 
-<?php if ($allusers->num_rows() <= 0) : ?>
-	<div style="text-align: center;font-weight: bold;text-transform: uppercase;" class="text-danger">
-		<p>No user(s)</p>
-	</div>
-<?php else : ?>
-	<table id="sadmintable" data-toggle="table" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-detail-view="true" data-detail-formatter="detailFormatter" data-pagination="true" data-show-print="true">
-		<thead class="text-light" style="background:#294a63">
-			<tr>
-				<th data-field="name" data-sortable="true">Full Name / Username</th>
-				<th data-field="email" data-sortable="true">Email</th>
-				<th data-field="mobile" data-sortable="true">Mobile</th>
-				<th data-field="cmpy" data-sortable="true">Company</th>
-				<th data-field="active" data-sortable="true">Active</th>
+
+<table id="admintable" data-toggle="table" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="right" data-pagination="true" class="table-sm">
+	<thead class="text-light" style="background:#294a63">
+		<tr>
+			<th data-field="name" data-sortable="true">Full Name / Username</th>
+			<th data-field="email" data-sortable="true">Email</th>
+			<th data-field="mobile" data-sortable="true">Mobile</th>
+			<th data-field="cmpy" data-sortable="true">Company</th>
+			<th data-field="active" data-sortable="true">Active</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($allusers->result() as $user) : ?>
+			<tr id="<?php echo $user->uid ?>" data-formkey="<?php echo $user->form_key ?>" data-iscmpy="<?php echo $user->iscmpy ?>" data-cmpyid="<?php echo $user->cmpyid ?>" class="classroone">
+				<td>
+					<?php if (!empty($user->fname) || !empty($user->lname)) : ?>
+						<?php echo $user->fname . " " . $user->lname ?>
+					<?php else : ?>
+						<?php echo $user->uname ?>
+					<?php endif; ?>
+				</td>
+				<td><a href="mailto:<?php echo $user->email ?>"><?php echo $user->email ?></a></td>
+				<td><?php echo $user->mobile ?></td>
+				<td><?php echo $user->cmpy ?></td>
+				<td><?php echo ($user->active === '0') ? '<i title="Account not verified" class="fas fa-circle text-warning acti"></i>' : ($user->active === '1' ? '<i title="Account active" class="fas fa-circle text-success acti"></i>' : ($user->active === '2' ? '<i title="Account not activate" class="fas fa-circle text-danger acti"></i>' : "undefined")) ?></td>
 			</tr>
-		</thead>
-		<tbody>
-			<?php foreach ($allusers->result() as $user) : ?>
-				<tr id="<?php echo $user->uid ?>" data-formkey="<?php echo $user->form_key ?>" data-iscmpy="<?php echo $user->iscmpy ?>" data-cmpyid="<?php echo $user->cmpyid ?>" class="classroone">
-					<td>
-						<?php if (!empty($user->fname) || !empty($user->lname)) : ?>
-							<?php echo $user->fname . " " . $user->lname ?>
-						<?php else : ?>
-							<?php echo $user->uname ?>
-						<?php endif; ?>
-					</td>
-					<td><a href="mailto:<?php echo $user->email ?>"><?php echo $user->email ?></a></td>
-					<td><?php echo $user->mobile ?></td>
-					<td><?php echo $user->cmpy ?></td>
-					<td><?php echo ($user->active === '0') ? '<i title="Account not verified" class="fas fa-circle text-warning acti"></i>' : ($user->active === '1' ? '<i title="Account active" class="fas fa-circle text-success acti"></i>' : ($user->active === '2' ? '<i title="Account not activate" class="fas fa-circle text-danger acti"></i>' : "undefined")) ?></td>
-				</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
-<?php endif; ?>
+		<?php endforeach; ?>
+	</tbody>
+</table>
 
 
 <script type="text/javascript">
@@ -144,10 +142,10 @@
 					$(".email").val(res.uinfos.email);
 					$(".mobile").val(res.uinfos.mobile);
 					$(".uname").val(res.uinfos.uname);
-					if(res.uinfos.iscmpy === "1"){
+					if (res.uinfos.iscmpy === "1") {
 						$(".cmpydiv").show();
 						$(".cmpy").val(res.uinfos.cmpy);
-					}else{
+					} else {
 						$(".cmpydiv").hide();
 						$(".cmpy").val("");
 					}
@@ -248,7 +246,7 @@
 						if (data.res === 'error') {
 							$(".ajax_succ_div,.ajax_err_div").hide();
 							$(".ajax_res_err").text(data.msg);
-							$(".ajax_err_div").fadeIn().delay("6000").fadeOut();
+							$(".ajax_err_div").fadeIn();
 						} else if (data.res === 'success') {
 							window.location.reload();
 						}
@@ -282,7 +280,7 @@
 					if (data.res === 'failed') {
 						$(".ajax_succ_div,.ajax_err_div").hide();
 						$(".ajax_res_err").text(data.msg);
-						$(".ajax_err_div").fadeIn().delay("6000").fadeOut();
+						$(".ajax_err_div").fadeIn();
 					} else if (data.res === 'success') {
 
 						if (uact === '0') {
@@ -300,7 +298,7 @@
 
 						$(".ajax_err_div,ajax_succ_div").hide();
 						$(".ajax_res_succ").text($resmsg);
-						$(".ajax_succ_div").fadeIn().delay("6000").fadeOut();
+						$(".ajax_succ_div").fadeIn();
 					}
 
 					$('.csrf-token').val(data.token);

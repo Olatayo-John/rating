@@ -1,104 +1,90 @@
-i.fas{
-	cursor: pointer;
-	margin: auto;
-	position: 0;
-}
-.search-input{
-	border:none;
-	border-bottom:1px solid #294a63;
-}
-.btn-md{
-	background:#294a63 !important;
+.usersDiv,
+.adduserDiv {
+	/* padding: 0 21px 21px 21px; */
+	padding: 14px;
 }
 
-.tab_div{
+i.closevuserbtn {
+	cursor: pointer;
+	position: 0;
+	font-size: 16px;
+}
+
+.closemodalbtndiv {
+	display: flex;
+	justify-content: space-between;
+	padding-bottom: 27px;
+}
+
+.h_userName {
+	text-transform: uppercase;
+	color: #294a63;
+	font-weight: bolder;
+}
+
+
+.tab_div {
 	display: flex;
 	flex-direction: column;
 	background: #294a63;
-	padding-left: 15px;
 }
-.tab_div a.prof_a{
+
+.tab_div a.prof_a {
+	background: #fff;
+	color: #294a63;
+	font-weight: 500;
+}
+
+.tab_link {
 	color: #fff;
-	font-weight: bold;
+	padding: 15px;
 }
-.tab_link{
-	color: #fff;
-	padding:10px 0;
-}
-.tab_link:hover{
+
+.tab_link:hover {
 	text-decoration: none;
 	color: #fff;
-	font-weight: bold;
 }
-.info_div{
-	background:white;
+
+.info_div {
+	background: white;
 }
-div.web_div,div.ls_div,div.rr_div,div.ac_div{
+
+div.web_div,
+div.ls_div,
+div.rr_div,
+div.ac_div {
 	display: none;
 }
-i.fa-eye,i.fa-eye-slash{
+
+i.fa-eye,
+i.fa-eye-slash {
 	display: none;
 	cursor: pointer;
 }
 
 /* common tab css */
-h4{
+h4 {
 	margin-bottom: 0 !important;
 }
-hr.p_i{
+
+hr.p_i {
 	margin: auto 0;
 	margin-bottom: 30px;
 	border-bottom: 3px solid #294a63;
 	width: 180px;
 }
-hr.account{
+
+hr.account {
 	margin: auto 0;
 	margin-bottom: 30px;
 	border-bottom: 3px solid #294a63;
 	width: 60px;
 }
 
-.acctbtngrp{
+.acctbtngrp {
 	display: flex;
 }
 
-
-/* stats div */
-.total-column {
-    word-break: break-all;
-    text-align: center;
-}
-.panel_s {
-	margin-bottom: 0 !important;
-    border: none;
-    -webkit-box-shadow: 0 1px 15px 1px rgb(90 90 90 / 8%);
-    box-shadow: 0 1px 15px 1px rgb(90 90 90 / 8%);
-}
-.panel-body {
-    background: #f9fafc;
-    padding: 10px 5px;
-	border: 1px solid #dce1ef;
-}
-h3._total {
-    font-weight: bold;
-    margin: 0;
-    font-size: 20px;
-	color:#294a63;
-}
-.total-column span {
-    word-break: break-word;
-}
-
-
-/* modal close btn */
-.closemodalbtndiv{
-    position: absolute;
-    right: 14px;
-    top: 14px;
-    padding: 3px;
-	cursor: pointer;
-}
-.closevuserbtn{
-	font-size: 15px;
-	color:#294a63;
+.editUserI {
+	color: #294a63;
 }

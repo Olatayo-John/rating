@@ -23,7 +23,7 @@ class Emailconfig
         $this->CI->email->set_newline("\r\n");
     }
 
-    //contact us email
+    //support us email
     public function support_mail($name, $user_mail, $bdy)
     {
         if ($user_mail) {
@@ -143,6 +143,7 @@ class Emailconfig
         }
     }
 
+    //new user under a company
     public function new_companyuser($email, $fulln, $cmpy, $act_key, $link, $uname, $pwd)
     {
         $body = "Hello " . $fulln . " of " . $cmpy . "\n\nYour verification code is " . $act_key . "\nEnter the above code to verify your account.Click here " . $link . "\n\nBelow are your login credentails.\nUsername:" . $uname . "\nPassword:" . $pwd . "\n\nIf you have any questions, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
@@ -150,6 +151,23 @@ class Emailconfig
         $this->CI->email->from('jvweedtest@gmail.com', 'Rating');
         $this->CI->email->to($email);
         $this->CI->email->subject("Your Verification Code");
+        $this->CI->email->message($body);
+
+        if ($this->CI->email->send()) {
+            return true;
+        } else {
+            return $this->CI->email->print_debugger();
+        }
+    }
+
+    //new user by sAdmin
+    public function new_user_by_sadmin($email, $fulln, $act_key, $link, $uname, $pwd)
+    {
+        $body = "Hello " . $fulln . "\n\nYour verification code is " . $act_key . "\nEnter the above code to verify your account.\nClick here " . $link . "\n\nBelow are your login credentails.\nUsername:" . $uname . "\nPassword:" . $pwd . "\n\nIf you have any questions, send us an email at info@nktech.in.\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+
+        $this->CI->email->from('jvweedtest@gmail.com', 'Rating');
+        $this->CI->email->to($email);
+        $this->CI->email->subject("Verification Code");
         $this->CI->email->message($body);
 
         if ($this->CI->email->send()) {

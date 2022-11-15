@@ -34,7 +34,8 @@
 
 <style>
     .wrapperDiv {
-        padding: 0 21px 21px 21px;
+        /* padding: 0 21px 21px 21px; */
+        padding: 14px;
     }
 </style>
 

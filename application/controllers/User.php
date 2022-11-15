@@ -38,24 +38,24 @@ class User extends User_Controller
 			$validate = $this->Usermodel->login();
 			if ($validate == FALSE) {
 				$this->Logmodel->log_act($type = "login_false");
-				$this->session->set_flashdata('invalid', 'Username or Password provided is wrong!');
+				$this->setFlashMsg('error', lang('wrong_pwd_uname'));
 				redirect('user');
 			}
 			if ($validate == "inactive_access_by_cmpyAdmin") {
 				$this->Logmodel->log_act($type = "inactive_access");
-				$this->session->set_flashdata('invalid', 'Your account has been de-activated. Please Contact your Company Admin');
+				$this->setFlashMsg('error', lang('acct_deact_by_cmpy_admin'));
 				redirect('/');
 			}
 			if ($validate == "inactive_access") {
 				$this->Logmodel->log_act($type = "inactive_access");
-				$this->session->set_flashdata('invalid', 'Your account has been de-activated. Please Contact support');
+				$this->setFlashMsg('error', lang('acct_deact'));
 				redirect('/');
 			}
 			if ($validate == "inactive") {
 				$this->Logmodel->log_act($type = "inactive");
 				$res_login = $this->Usermodel->login_get_key();
 				if ($res_login) {
-					$this->session->set_flashdata('invalid', 'Your account is not verified');
+					$this->setFlashMsg('error', 'Your account is not verified');
 					redirect('user/emailverify/' . $res_login);
 				}
 			}
@@ -67,6 +67,7 @@ class User extends User_Controller
 				$iscmpy = $validate->iscmpy;
 				$cmpyid = $validate->cmpyid;
 				$cmpy = $validate->cmpy;
+				$cmpy_logo = $validate->cmpyLogo;
 				$sub = $validate->sub;
 				$uname = $validate->uname;
 				$email = $validate->email;
@@ -74,6 +75,7 @@ class User extends User_Controller
 				$website_form = $validate->website_form;
 				$form_key = $validate->form_key;
 
+				//sessionData
 				$user_sess = array(
 					'mr_id' => $id,
 					'mr_sadmin' => $sadmin,
@@ -81,6 +83,7 @@ class User extends User_Controller
 					'mr_iscmpy' => $iscmpy,
 					'mr_cmpyid' => $cmpyid,
 					'mr_cmpy' => $cmpy,
+					'mr_cmpy_logo' => $cmpy_logo,
 					'mr_sub' => $sub,
 					'mr_uname' => $uname,
 					'mr_email' => $email,
@@ -123,7 +126,7 @@ class User extends User_Controller
 		$data['title'] = "register";
 
 		if ($this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Log out first.');
+			$this->setFlashMsg('error', 'Log out first.');
 			redirect('/');
 		}
 
@@ -162,7 +165,7 @@ class User extends User_Controller
 
 			if ($mail_res !== TRUE) {
 				$this->Logmodel->log_act($type = "newUser_verify_mail_err", $m = "User", $e = $mail_res);
-				$this->session->set_flashdata('invalid', $mail_res);
+				$this->setFlashMsg('error', $mail_res);
 				redirect('register');
 				exit();
 			} else {
@@ -178,12 +181,12 @@ class User extends User_Controller
 
 				if ($db_res !== TRUE) {
 					$this->Logmodel->log_act($type = "db_err");
-					$this->session->set_flashdata('invalid', 'Error saving your details. Please try again');
+					$this->setFlashMsg('error', 'Error saving your details. Please try again');
 					redirect('register');
 					exit();
 				} else {
 					$this->Logmodel->log_act($type = "newuser");
-					$this->session->set_flashdata('valid', 'Verification code sent to your mail.');
+					$this->setFlashMsg('success', 'Verification code sent to your mail.');
 					redirect('emailverify/' . $form_key);
 					exit();
 				}
@@ -194,16 +197,18 @@ class User extends User_Controller
 	//email verification after registration
 	public function emailverify($key)
 	{
+		$this->setTabUrl($mod = 'login');
+
 		$data['title'] = "Email Verification";
 
 		$check_res = $this->Usermodel->check_verification($key);
 		if ($check_res == false) {
-			$this->session->set_flashdata('invalid', 'Wrong credentials');
+			$this->setFlashMsg('error', 'Wrong credentials');
 			redirect('login');
 		} else {
 			$active = $check_res->active;
 			if ($active == '1') {
-				$this->session->set_flashdata('valid', 'Your account is verified.');
+				$this->setFlashMsg('success', 'Your account is verified.');
 				redirect('login');
 			}
 			$this->form_validation->set_rules('sentcode', 'Verification Code', 'required|trim|html_escape');
@@ -216,45 +221,16 @@ class User extends User_Controller
 			} else {
 				$validate = $this->Usermodel->emailverify($key);
 				if ($validate == false) {
-					$this->session->set_flashdata('invalid', 'Invalid code');
+					$this->setFlashMsg('error', 'Invalid code');
 					redirect('emailverify/' . $key);
 				} else {
 					if ($validate->active !== "1") {
-						$this->session->set_flashdata('invalid', 'Error activating your account. Please try again');
+						$this->setFlashMsg('error', 'Error activating your account. Please try again');
 						redirect('emailverify/' . $key);
 					} else if ($validate->active == "1") {
-						$id = $validate->id;
-						$sadmin = $validate->sadmin;
-						$admin = $validate->admin;
-						$iscmpy = $validate->iscmpy;
-						$cmpyid = $validate->cmpyid;
-						$cmpy = $validate->cmpy;
-						$sub = $validate->sub;
-						$uname = $validate->uname;
-						$email = $validate->email;
-						$mobile = $validate->mobile;
-						$website_form = $validate->website_form;
-						$form_key = $validate->form_key;
-
-						$user_sess = array(
-							'mr_id' => $id,
-							'mr_sadmin' => $sadmin,
-							'mr_admin' => $admin,
-							'mr_iscmpy' => $iscmpy,
-							'mr_cmpyid' => $cmpyid,
-							'mr_cmpy' => $cmpy,
-							'mr_sub' => $sub,
-							'mr_uname' => $uname,
-							'mr_email' => $email,
-							'mr_mobile' => $mobile,
-							'mr_website_form' => $website_form,
-							'mr_form_key' => $form_key,
-							'mr_logged_in' => TRUE,
-						);
-						$this->session->set_userdata($user_sess);
 						$this->Logmodel->log_act($type = "acctverified");
-						$this->session->set_flashdata('valid', 'Your account is active');
-						redirect('websites');
+						$this->setFlashMsg('success', 'Your account is active. Login with your credentials');
+						redirect('login');
 					}
 				}
 			}
@@ -265,13 +241,14 @@ class User extends User_Controller
 	public function resendemailverify($key)
 	{
 		$check_res = $this->Usermodel->check_verification($key);
+
 		if ($check_res == false) {
-			$this->session->set_flashdata('invalid', 'Wrong credentials');
+			$this->setFlashMsg('error', 'Wrong credentials');
 			redirect($_SERVER['HTTP_REFERRER']);
 		} else {
 			$active = $check_res->active;
 			if ($active == '1') {
-				$this->session->set_flashdata('valid', 'Your account is already verified and active.');
+				$this->setFlashMsg('success', 'Your account is already verified and active.');
 				redirect('login');
 			} else {
 				$res = $this->Usermodel->check_verification($key);
@@ -286,11 +263,11 @@ class User extends User_Controller
 
 				if ($mail_res !== TRUE) {
 					$this->Logmodel->log_act($type = "newUser_verify_mail_err", $m = "User", $e = $mail_res);
-					$this->session->set_flashdata('invalid', $mail_res);
+					$this->setFlashMsg('error', $mail_res);
 					redirect($link);
 				} else {
 					$this->Usermodel->code_verify_update($act_key, $key);
-					$this->session->set_flashdata('valid', 'Verification code sent to you mail.');
+					$this->setFlashMsg('success', 'Verification code sent to you mail.');
 					redirect($_SERVER['HTTP_REFERER']);
 				}
 			}
@@ -427,6 +404,7 @@ class User extends User_Controller
 		$data['user_info'] = $this->Usermodel->get_info();
 		$data['websites'] = $this->Usermodel->get_user_websites();
 		$data['quota'] = $this->Usermodel->get_userQuota();
+		$data['cmpyInfo'] = $this->Usermodel->get_companyInfo();
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('users/account_view', $data);
@@ -444,6 +422,7 @@ class User extends User_Controller
 		$data['user_info'] = $this->Usermodel->get_info();
 		$data['websites'] = $this->Usermodel->get_user_websites();
 		$data['quota'] = $this->Usermodel->get_userQuota();
+		$data['cmpyInfo'] = $this->Usermodel->get_companyInfo();
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('users/account_edit', $data);
@@ -456,13 +435,6 @@ class User extends User_Controller
 
 		$this->setTabUrl($mod = 'account');
 
-		$data['title'] = "edit account";
-
-		$data['user_info'] = $this->Usermodel->get_info();
-		$data['websites'] = $this->Usermodel->get_user_websites();
-		$data['quota'] = $this->Usermodel->get_userQuota();
-
-		// $this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape');
 		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
 		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
@@ -471,23 +443,22 @@ class User extends User_Controller
 		$this->form_validation->set_rules('dob', 'Date Of Birth', 'trim|html_escape');
 
 		if ($this->form_validation->run() === FALSE) {
-			$this->load->view('templates/header', $data);
-			$this->load->view('users/account_edit', $data);
-			$this->load->view('templates/footer');
+			$this->setFlashMsg('error', validation_errors());
 		} else {
 			$res = $this->Usermodel->personal_edit();
 			if ($res !== TRUE) {
 				$this->Logmodel->log_act($type = "prfileerr");
-				$this->session->set_flashdata('invalid', 'Update Failed');
+				$this->setFlashMsg('error', lang('update_failed'));
 			} else {
 				$this->Logmodel->log_act($type = "prfile");
-				$this->session->set_flashdata('valid', 'Profile Updated');
+				$this->setFlashMsg('success', lang('profile_updated'));
 
 				$this->session->set_userdata('mr_email', htmlentities($this->input->post('email')));
+				$this->session->set_userdata('mr_mobile', htmlentities($this->input->post('mobile')));
 			}
-
-			redirect('account');
 		}
+
+		redirect('account');
 	}
 
 	//check duplicate webName
@@ -545,10 +516,10 @@ class User extends User_Controller
 		$act_res = $this->Usermodel->delete_website($_POST['id']);
 		if ($act_res == false) {
 			$this->Logmodel->log_act($type = "webdel");
-			$this->session->set_flashdata('invalid', 'Error deleting this data! Please try again');
+			$this->setFlashMsg('error', 'Error deleting this data! Please try again');
 		} else {
 			$this->Logmodel->log_act($type = "webdelerr");
-			$this->session->set_flashdata('valid', 'Data deleted successfully!');
+			$this->setFlashMsg('success', 'Data deleted successfully!');
 		}
 	}
 	////
@@ -613,35 +584,88 @@ class User extends User_Controller
 		echo json_encode($data);
 	}
 
-	public function password_update()
+	//update company details
+	//only [admin]
+	public function company_edit()
 	{
 		$this->checklogin();
 
-		$data['title'] = "edit account";
-		$data['user_info'] = $this->Usermodel->get_info();
-		$data['websites'] = $this->Usermodel->get_user_websites();
-		$data['quota'] = $this->Usermodel->get_userQuota();
+		$this->setTabUrl($mod = 'account');
+
+		$this->form_validation->set_rules('cmpyName', 'Company Name', 'trim|required|html_escape');
+		$this->form_validation->set_rules('cmpyEmail', 'Company Email', 'trim|valid_email|html_escape');
+		$this->form_validation->set_rules('cmpyMobile', 'Company Mobile', 'trim|exact_length[10]|html_escape');
+		$this->form_validation->set_rules('cmpyLogo', 'Company Logo', 'trim|html_escape');
+
+		if ($this->form_validation->run() === FALSE) {
+			$this->setFlashMsg('error', validation_errors());
+		} else {
+			$cmpyLogo = $this->session->userdata('mr_cmpy_logo');
+
+			if ($_FILES['cmpyLogo']['name']) {
+
+				$file_name = strtolower($this->session->userdata('mr_cmpy') . '_logo');
+
+				$config['upload_path'] = './uploads';
+				$config['allowed_types'] = 'jpg|jpeg|png';
+				$config['max_size'] = '2048';
+				$config['max_height'] = '3000';
+				$config['max_width'] = '3000';
+				$config['file_name'] = $file_name;
+				$config['overwrite'] = true;
+				$config['remove_spaces'] = true;
+
+				$this->load->library('upload', $config);
+				if (!$this->upload->do_upload('cmpyLogo')) {
+					$upload_error = array('error' => $this->upload->display_errors());
+					$this->setFlashMsg('error', $this->upload->display_errors());
+					redirect('account');
+				} else {
+					$logo_uploaded = $_FILES['cmpyLogo']['name'];
+					$logo_ext = htmlentities(strtolower(pathinfo($logo_uploaded, PATHINFO_EXTENSION)));
+					$upload_data = array('upload_data' => $this->upload->data());
+					$cmpyLogo = $file_name . "." . $logo_ext;
+					$this->session->set_userdata('mr_cmpy_logo', $cmpyLogo);
+				}
+			}
+
+			$data = array(
+				'cmpyName' => htmlentities($this->input->post('cmpyName')),
+				'cmpyMobile' => htmlentities($this->input->post('cmpyMobile')),
+				'cmpyEmail' => htmlentities($this->input->post('cmpyEmail')),
+				'cmpyLogo' => $cmpyLogo
+			);
+			$this->Usermodel->company_edit($data);
+			$this->setFlashMsg('success', lang('cmpy_updated'));
+
+			$this->session->set_userdata('mr_cmpy', htmlentities($this->input->post('cmpyName')));
+		}
+
+		redirect('account');
+	}
+
+	public function password_update()
+	{
+		$this->checklogin();
 
 		$this->form_validation->set_rules('c_pwd', 'Current Password', 'required|trim');
 		$this->form_validation->set_rules('n_pwd', 'New Password', 'required|trim|min_length[6]');
 		$this->form_validation->set_rules('rtn_pwd', 'Re-type Password', 'required|trim|min_length[6]|matches[n_pwd]');
 
 		if ($this->form_validation->run() == false) {
-			$this->load->view('templates/header', $data);
-			$this->load->view('users/account_edit', $data);
-			$this->load->view('templates/footer');
+			$this->setFlashMsg('error', validation_errors());
 		} else {
 			$pwd_res = $this->Usermodel->check_pwd();
 			if ($pwd_res == false) {
 				$this->Logmodel->log_act($type = "userpwderr");
-				$this->session->set_flashdata('invalid', 'Incorrect password provided');
+				$this->setFlashMsg('error', lang('incorrect_pwd_provided'));
 			} else {
 				$this->Logmodel->log_act($type = "userpwd");
-				$this->session->set_flashdata('valid', 'Password changed');
+				$this->setFlashMsg('success', lang('pwd_updated'));
 			}
-
-			redirect('account');
 		}
+
+		redirect('account');
 	}
 
 	//send verification code to user email
@@ -738,7 +762,7 @@ class User extends User_Controller
 		$act_res = $this->Usermodel->deact_account();
 		if ($act_res == false) {
 			$this->Logmodel->log_act($type = "userdact");
-			$this->session->set_flashdata('invalid', 'Error performing this operation');
+			$this->setFlashMsg('error', 'Error performing this operation');
 		}
 	}
 
@@ -754,14 +778,12 @@ class User extends User_Controller
 
 		$data['rr'] = $this->Usermodel->allrrbyuser();
 		$data['ls'] = $this->Usermodel->allsentlinksbyuser();
-		$data['ud'] = $this->Usermodel->userdetails();
+		$data['web'] = $this->Usermodel->get_user_websites();
 
 		$data['t_mail'] = $this->Usermodel->total_email();
 		$data['t_sms'] = $this->Usermodel->total_sms();
 		$data['t_wp'] = $this->Usermodel->total_wapp();
 
-		// print_r($data['ud']->total_email);
-		// die;
 		$this->load->view('templates/header', $data);
 		$this->load->view('users/logs', $data);
 		$this->load->view('templates/footer');
@@ -945,7 +967,7 @@ class User extends User_Controller
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
 
-				$this->session->set_flashdata('invalid', $sessmsg);
+				$this->setFlashMsg('error', $sessmsg);
 			} else if ($cq_res !== false) { //invalid quota (quota expired)
 				$usermail_expire = $cq_res;
 				if (filter_var($usermail_expire, FILTER_VALIDATE_EMAIL)) {
@@ -954,11 +976,11 @@ class User extends User_Controller
 				}
 
 				$this->Logmodel->log_act($type = "quota_expire");
-				$this->session->set_flashdata('invalid', 'Quota has expired');
+				$this->setFlashMsg('error', 'Quota has expired');
 			} else if ($cq_res === false) { //valid quota
 				//check given email is valid
 				if (!filter_var($this->input->post('email'), FILTER_VALIDATE_EMAIL)) {
-					$this->session->set_flashdata('invalid', '(' . $this->input->post('email') . ') is an invalid email');
+					$this->setFlashMsg('error', '(' . $this->input->post('email') . ') is an invalid email');
 				} else {
 					$email = htmlentities($this->input->post('email'));
 					$subj = htmlentities($this->input->post('subj'));
@@ -970,13 +992,13 @@ class User extends User_Controller
 					if ($mail_res !== true) {
 						$this->Logmodel->log_act($type = "mail_err");
 
-						$this->session->set_flashdata('invalid', $mail_res);
+						$this->setFlashMsg('error', $mail_res);
 					} else {
 						$this->Logmodel->log_act($type = "smail_sent");
 
 						//save to DB and deduct from quota
 						$this->Usermodel->email_saveinfo();
-						$this->session->set_flashdata('valid', 'Link sent successfully');
+						$this->setFlashMsg('success', 'Link sent successfully');
 					}
 				}
 			}
@@ -1013,7 +1035,7 @@ class User extends User_Controller
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
 
-				$this->session->set_flashdata('invalid', $sessmsg);
+				$this->setFlashMsg('error', $sessmsg);
 			} else if ($cq_res !== false) { //invalid quota (expired)
 				$usermail_expire = $cq_res;
 				if (filter_var($usermail_expire, FILTER_VALIDATE_EMAIL)) {
@@ -1022,7 +1044,7 @@ class User extends User_Controller
 				}
 
 				$this->Logmodel->log_act($type = "quota_expire");
-				$this->session->set_flashdata('invalid', 'Quota has expired');
+				$this->setFlashMsg('error', 'Quota has expired');
 			} else if ($cq_res === false) { //valid quota
 				$mobile = $this->input->post('mobile');
 				$bdy = $this->input->post('smsbdy');
@@ -1038,13 +1060,13 @@ class User extends User_Controller
 				$Jresult = json_decode($result, true);
 
 				if ($httpCode !== 200) {
-					$this->session->set_flashdata('invalid', $httpCode . " - SERVER ERROR");
+					$this->setFlashMsg('error', $httpCode . " - SERVER ERROR");
 				} else {
 					if ($Jresult['STATUS'] == "ERROR") {
-						$this->session->set_flashdata('invalid', $Jresult['RESPONSE']['CODE'] . ' - ' . $Jresult['RESPONSE']['INFO']);
+						$this->setFlashMsg('error', $Jresult['RESPONSE']['CODE'] . ' - ' . $Jresult['RESPONSE']['INFO']);
 					} else {
 						$this->Usermodel->sms_saveinfo();
-						$this->session->set_flashdata('valid', 'SMS sent successfully');
+						$this->setFlashMsg('success', 'SMS sent successfully');
 					}
 				}
 
@@ -1069,7 +1091,7 @@ class User extends User_Controller
 				$data['redirect'] = base_url("logout");
 			} else if ($this->session->userdata('mr_sub') == '0') {
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
-					$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
+					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
@@ -1096,7 +1118,7 @@ class User extends User_Controller
 				$data['status'] = true;
 				$data['msg'] = 'Shared';
 
-				$this->session->set_flashdata('valid', $data['msg']);
+				$this->setFlashMsg('success', $data['msg']);
 			}
 		}
 
@@ -1118,7 +1140,7 @@ class User extends User_Controller
 				$data['redirect'] = base_url("logout");
 			} else if ($this->session->userdata('mr_sub') == '0') {
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
-					$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
+					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
@@ -1186,7 +1208,7 @@ class User extends User_Controller
 							$data['status'] = true;
 							$data['msg'] = 'All emails sent successfully';
 
-							$this->session->set_flashdata('valid', $data['msg']);
+							$this->setFlashMsg('success', $data['msg']);
 						}
 					}
 				}
@@ -1211,7 +1233,7 @@ class User extends User_Controller
 				$data['redirect'] = base_url("logout");
 			} else if ($this->session->userdata('mr_sub') == '0') {
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
-					$sessmsg = 'Your company subscriptiontion isn\'t active. Contact your company Admin!';
+					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
@@ -1294,7 +1316,7 @@ class User extends User_Controller
 							$data['status'] = true;
 							$data['msg'] = 'All SMS sent successfully';
 
-							$this->session->set_flashdata('valid', $data['msg']);
+							$this->setFlashMsg('success', $data['msg']);
 						}
 					}
 				}

@@ -6,6 +6,7 @@
 
 body {
 	/* background: linear-gradient(to right, #243B55, #294a63); */
+	background:#eceff4 !important;
 }
 
 
@@ -46,7 +47,8 @@ a.btn {
 }
 
 .bg-light-custom {
-	background: #eceff4;
+	/* background: #eceff4; */
+	background: #fff;
 }
 
 input.form-control[readonly]:focus,
@@ -95,7 +97,7 @@ span.company {
 	font-weight: bolder;
 }
 
-td.date{
+td.date {
 	color: #dc3545;
 	font-weight: 500;
 }
@@ -112,7 +114,44 @@ span.err,
 	background: #294a63 !important;
 }
 
+/* stats box */
+.total-column {
+	word-break: break-all;
+	text-align: center;
+}
+
+.panel_s {
+	margin-bottom: 0 !important;
+	border: none;
+	-webkit-box-shadow: 0 10px 15px #294a63;
+	box-shadow: 0 10px 15px #294a63;
+}
+
+.panel-body {
+	background: #f9fafc;
+	/* background: #294a63; */
+	padding: 10px 5px;
+	border: 1px solid #dce1ef;
+}
+
+h3._total {
+	font-weight: 400;
+	margin: 0;
+	font-size: 20px;
+	color: #294a63;
+}
+
+.total-column span {
+	color: #007bff;
+	word-break: break-word;
+}
+
 /*  */
+
+/*  */
+
+
+
 
 
 /* spinner */
@@ -205,7 +244,8 @@ div.alertsuccess,
 
 /* navbar */
 nav {
-	background-color: white;
+	background-color: #294a63;
+	color: #fff;
 	height: 60px;
 	max-height: 60px;
 }
@@ -226,7 +266,8 @@ div.logoimg {
 }
 
 .p_icon {
-	color: #294a63;
+	/* color: #294a63; */
+	color: #fff;
 	font-size: 15px;
 }
 

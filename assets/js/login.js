@@ -7,18 +7,10 @@ $(document).ready(function() {
 		var err= null;
 
 		if (name == "" || name == null) {
-			err = true;
-		}else{
-			err = "";
+			return false;
 		}
 
 		if (pass == "" || pass == null) {
-			err = true;
-		}else{
-			err = "";
-		}
-
-		if(err === true){
 			return false;
 		}
 	});

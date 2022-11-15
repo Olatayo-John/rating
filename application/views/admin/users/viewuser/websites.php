@@ -9,17 +9,12 @@
     </div>
 </div>
 
-<table id="webtable" data-search="true" data-show-export="true" data-show-columns="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-pagination="true">
+<table id="webtable" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="right" data-pagination="true">
     <thead class="text-light" style="background:#294a63">
         <tr>
             <th data-field="web_name" data-sortable="true">Website Name</th>
             <th data-field="web_link" data-sortable="true">Website Link</th>
             <th data-field="total_ratings" data-sortable="true">Total Ratings</th>
-            <th data-field="five_star" data-sortable="true" data-visible="false">Total Five Star</th>
-            <th data-field="four_star" data-sortable="true" data-visible="false">Total Four Star</th>
-            <th data-field="three_star" data-sortable="true" data-visible="false">Total Three Star</th>
-            <th data-field="two_star" data-sortable="true" data-visible="false">Total Two Star</th>
-            <th data-field="one_star" data-sortable="true" data-visible="false">Total One Star</th>
             <th data-field="active" data-sortable="true">Active</th>
         </tr>
     </thead>

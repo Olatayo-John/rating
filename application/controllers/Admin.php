@@ -10,260 +10,314 @@ class Admin extends Admin_Controller
 {
 	public function index()
 	{
-		if ($this->session->userdata('mr_logged_in')) {
-			if ($this->session->userdata('mr_website_form') === "0") {
-				redirect('websites');
-			} else {
-				redirect('share');
-			}
-		} else {
-			$data['title'] = "login";
-			$this->load->view('templates/header', $data);
-			$this->load->view('users/login');
-			$this->load->view('templates/footer');
-		}
+		$this->is_sadmin();
+
+		redirect('users');
 	}
 
-
-
-	public function adduser_cmpy()
+	public function users()
 	{
-		$data['title'] = "add user";
-		$data['adminusers'] = $this->Adminmodel->get_adminusers();
+		$this->is_bothadmin();
 
-		if ($data['adminusers']->num_rows() >= $this->session->userdata("mr_userspace")) {
-			$this->session->set_flashdata('invalid', "You have reached the number of users you can create (" . $this->session->userdata("mr_userspace") . ")");
-			redirect('users');
-		}
+		$this->setTabUrl($mod = 'users');
 
-		$this->is_admin() === false ? redirect('users') : '';
-
-		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
-		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
-		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
-		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
-		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape|is_unique[users.uname]', array('is_unique' => 'This username is taken'));
-		$this->form_validation->set_rules('pwd', 'Password', 'required|trim|html_escape');
-
-		if (!$this->form_validation->run()) {
-			$this->load->view('templates/header', $data);
-			$this->load->view('admin/users/adduser_cmpy');
-			$this->load->view('templates/footer');
-		} else {
-			$fullname = htmlentities($this->input->post('fname')) . " " . htmlentities($this->input->post('lname'));
-			$uname = htmlentities($this->input->post('uname'));
-			$uname_form = str_replace([" ", ".", ",", "?", "&"], "_", strtolower(substr($uname, 0, 5)));
-			$form_key =  $uname_form . mt_rand(0, 100000);
-
-			$email = htmlentities($this->input->post('email'));
-			if (isset($fullname) && !empty($fullname) && $fullname !== "") {
-				$fulln = $fullname;
-			} else {
-				$fulln = $uname;
-			}
-			$cmpy = $this->session->userdata("mr_cmpy");
-			$act_key =  mt_rand(0, 1000000);
-			$link = base_url() . "emailverify/" . $form_key;
-			$pwd = htmlentities($this->input->post('pwd'));
-
-			$mail_res = true;
-			if (isset($_POST['logincred'])) {
-				$this->load->library('emailconfig');
-				$mail_res = $this->emailconfig->new_companyuser($email, $fulln, $cmpy, $act_key, $link, $uname, $pwd);
-			}
-
-			if ($mail_res !== TRUE) {
-				$this->Logmodel->log_act($type = "mail_err");
-				$this->session->set_flashdata('invalid', $mail_res);
-				redirect('adduser');
-				exit();
-			} else {
-				$db_res = $this->Adminmodel->adduser($act_key, $form_key);
-				if ($db_res !== TRUE) {
-					$this->Logmodel->log_act($type = "db_err");
-					$this->session->set_flashdata('invalid', 'Error saving user details. Please try again');
-					redirect('adduser');
-					exit();
-				} else {
-					$this->Logmodel->log_act($type = "newuser");
-					$this->session->set_flashdata('valid', 'User created.');
-					redirect('users');
-					exit();
-				}
-			}
-		}
-	}
-
-	public function users($offset = 0)
-	{
 		$data['title'] = "users";
-
-		$this->is_bothadmin() === false ? redirect('share') : '';
-
-		$data['admininfo'] = $this->Adminmodel->get_admininfo();
-		$data['adminusers'] = $this->Adminmodel->get_adminusers();
 
 		$data['allusers'] = $this->Adminmodel->get_allusers();
 
-		$data['quota'] = $this->Usermodel->user_totalquota();
-		$data['total_ratings'] = $this->Adminmodel->total_ratings();
-		$data['total_sms'] = $this->Adminmodel->total_sms();
-		$data['total_email'] = $this->Adminmodel->total_email();
+		$data['adminusers'] = $this->Adminmodel->get_adminusers();
 
-		// print_r($data['total_ratings']);die;
 		$this->load->view('templates/header', $data);
 		$this->load->view('admin/users', $data);
 		$this->load->view('templates/footer');
 	}
 
-	//disabled
-	public function change_userstatus()
+	//create new user
+	public function add()
 	{
+		$this->is_bothadmin();
 
-		if ($this->is_admin() === false) return false;
+		$this->setTabUrl($mod = 'users');
 
-		$res = $this->Adminmodel->change_userstatus($_POST['uact'], $_POST['uid'], $_POST['formkey']);
+		$data['title'] = "new User";
 
-		if ($res !== true) {
-			$this->Logmodel->log_act($type = "admin_userstatuserr");
-			$data['res'] = "failed";
-			$data['msg'] = "Unable to activate user account!";
+		$data['allusers'] = $this->Adminmodel->get_allusers();
+
+		$data['adminusers'] = $this->Adminmodel->get_adminusers();
+
+		$this->load->view('templates/header', $data);
+		if ($this->session->userdata('mr_sadmin') === "1") {
+			$this->load->view('admin/users/adduser_sadmin', $data);
+		}
+		if ($this->session->userdata('mr_admin') === "1") {
+			$this->load->view('admin/users/adduser_cmpy', $data);
+		}
+		$this->load->view('templates/footer');
+	}
+
+	//create a new user by a companyAdmin
+	public function adduser_admin()
+	{
+		$this->is_admin();
+
+		$this->setTabUrl($mod = 'users');
+
+		$data['title'] = "new user";
+
+		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
+		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
+		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
+		$this->form_validation->set_rules('mobile', 'Mobile', 'required|exact_length[10]|trim|html_escape');
+		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape|is_unique[users.uname]', array('is_unique' => 'This username is taken'));
+		$this->form_validation->set_rules('pwd', 'Password', 'required|trim|html_escape');
+
+		if ($this->form_validation->run() === FALSE) {
+			$this->setFlashMsg('error', validation_errors());
+			redirect('add');
 		} else {
-			$this->Logmodel->log_act($type = "admin_userstatus");
-			$data['res'] = "success";
-			$data['msg'] = "User account changed!";
+			$fullname = htmlentities($this->input->post('fname')) . " " . htmlentities($this->input->post('lname'));
+			$uname = htmlentities($this->input->post('uname'));
+			$uname_form = str_replace([" ", ".", ",", "?", "&"], "_", strtolower(substr($uname, 0, 5)));
+			$pwd = htmlentities($this->input->post('pwd'));
+			$email = htmlentities($this->input->post('email'));
+
+			if (isset($fullname) && !empty($fullname) && $fullname !== "") {
+				$fulln = $fullname;
+			} else {
+				$fulln = $uname;
+			}
+
+			$cmpy = $this->session->userdata("mr_cmpy");
+			$act_key =  mt_rand(0, 1000000);
+			$form_key =  $uname_form . mt_rand(0, 100000);
+			$link = base_url() . "emailverify/" . $form_key;
+
+			//try sending email before inserting to DB
+			if (isset($_POST['logincred'])) {
+				$this->load->library('emailconfig');
+				$mail_res = $this->emailconfig->new_companyuser($email, $fulln, $cmpy, $act_key, $link, $uname, $pwd);
+			}
+			// $mail_res = true;
+
+			if ($mail_res !== TRUE) {
+				$this->Logmodel->log_act($type = "mail_err");
+				$this->setFlashMsg('error', $mail_res);
+			} else {
+				$db_res = $this->Adminmodel->adminadduser($act_key, $form_key);
+				if ($db_res !== TRUE) {
+					$this->Logmodel->log_act($type = "db_err");
+					$this->setFlashMsg('error', 'Error saving user details. Please try again');
+				} else {
+					$this->Logmodel->log_act($type = "newuser");
+					$this->setFlashMsg('success', 'User created.');
+					redirect('users');
+				}
+			}
 		}
 
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
+		redirect('add');
 	}
 
-	//disabled
-	public function admin_deleteuser()
+	//create a new user by sAdmin
+	public function adduser_sadmin()
 	{
-		if ($this->is_admin() === false) return false;
+		$this->is_sadmin();
 
-		// $res = $this->Adminmodel->admin_deleteuser($_POST['uid'], $_POST['formkey']);
-		$res = true;
-		if ($res !== true) {
-			$this->Logmodel->log_act($type = "admin_deleteusererr");
-			$data['res'] = "error";
-			$data['msg'] = "Error deleting this user data";
+		$this->setTabUrl($mod = 'users');
+
+		$data['title'] = "new user";
+
+		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
+		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
+		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
+		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|exact_length[10]|html_escape');
+		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape|is_unique[users.uname]', array('is_unique' => 'This username is taken'));
+		$this->form_validation->set_rules('pwd', 'Password', 'required|trim|html_escape');
+		$this->form_validation->set_rules('sms_quota', 'Quota', 'required|trim|html_escape');
+		$this->form_validation->set_rules('email_quota', 'Quota', 'required|trim|html_escape');
+		$this->form_validation->set_rules('whatsapp_quota', 'Quota', 'trim|html_escape');
+		$this->form_validation->set_rules('web_quota', 'Quota', 'trim|html_escape');
+		$this->form_validation->set_rules('cmpy', 'Company Name', 'trim|html_escape|is_unique[users.cmpy]', array('is_unique' => 'This Company already exist'));
+
+		if (!$this->form_validation->run()) {
+			$this->setFlashMsg('error', validation_errors());
+			redirect('add');
 		} else {
-			$this->Logmodel->log_act($type = "admin_deleteuser");
-			$data['res'] = "success";
-			$data['msg'] = "User data deleted!";
-			$this->session->set_flashdata('valid', 'User data deleted!');
+			$fullname = htmlentities($this->input->post('fname')) . " " . htmlentities($this->input->post('lname'));
+			$uname = htmlentities($this->input->post('uname'));
+			$uname_form = str_replace([" ", ".", ",", "?", "&"], "_", strtolower(substr($uname, 0, 5)));
+			$pwd = htmlentities($this->input->post('pwd'));
+			$email = htmlentities($this->input->post('email'));
+
+			if (isset($fullname) && !empty($fullname) && $fullname !== "") {
+				$fulln = $fullname;
+			} else {
+				$fulln = $uname;
+			}
+
+			$act_key =  mt_rand(0, 1000000);
+			$form_key =  $uname_form . mt_rand(0, 100000);
+			$link = base_url() . "emailverify/" . $form_key;
+
+			if (isset($_POST['logincred'])) {
+				$this->load->library('emailconfig');
+				$mail_res = $this->emailconfig->new_user_by_sadmin($email, $fulln, $act_key, $link, $uname, $pwd);
+			}
+			// $mail_res = true;
+
+			if ($mail_res !== true) {
+				$this->Logmodel->log_act($type = "mail_err");
+				$this->setFlashMsg('error', $mail_res);
+			} else {
+				//default for users not a company
+				$admin = $iscmpy = 0;
+
+				if (isset($_POST['cmpychkb'])) {
+					$admin = $iscmpy = 1;
+				}
+
+				$db_res = $this->Adminmodel->sadminadduser($act_key, $form_key, $admin, $iscmpy);
+				if ($db_res !== TRUE) {
+					$this->Logmodel->log_act($type = "db_err");
+					$this->setFlashMsg('error', 'Error saving user details. Please try again');
+				} else {
+					$this->Logmodel->log_act($type = "newuser");
+					$this->setFlashMsg('success', 'User created.');
+				}
+			}
 		}
 
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
+		redirect('add');
 	}
 
-	public function admin_viewuser()
+	//get user details [companyAdmin]
+	public function viewuser_admin()
 	{
-		if ($this->is_bothadmin() === false) return false;
-
-		$data['uinfos'] = $this->Adminmodel->get_userinfo($_POST['user_id'], $_POST['form_key']);
-		$data['udetails'] = $this->Adminmodel->get_userdetails($_POST['user_id'], $_POST['form_key']);
-		$data['uquota'] = $this->Adminmodel->get_userquota($_POST['user_id'], $_POST['form_key'], $_POST['iscmpy'], $_POST['cmpyid']);
-		$data['uwebs'] = $this->Adminmodel->get_userwebsites($_POST['user_id'], $_POST['form_key']);
-		$data['uratings'] = $this->Adminmodel->get_userratings($_POST['form_key']);
-		$data['ulinks'] = $this->Adminmodel->get_userlinks($_POST['user_id']);
-
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
-	}
-
-	public function admin_updateuserprofile()
-	{
-		if ($this->is_admin() === false) return false;
-
-		$res = $this->Adminmodel->admin_updateuserprofile($_POST['user_id'], $_POST['form_key'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile']);
-		// $res = true;
-		if ($res !== true) {
-			$this->Logmodel->log_act($type = "admin_upuerr");
+		if ($this->ajax_is_admin() === false) {
 			$data['status'] = false;
-			$data['msg'] = "Error updating user details!";
+			$data['msg'] = lang('acc_denied');
 		} else {
-			$this->Logmodel->log_act($type = "admin_upu");
 			$data['status'] = true;
-			$data['msg'] = "User profile updated!";
-			$data['refdata'] = $this->Adminmodel->get_adminusers()->result();
+			$data['uinfos'] = $this->Adminmodel->get_userinfo($_POST['user_id'], $_POST['form_key']);
+			$data['uquota'] = $this->Adminmodel->admin_get_userQuota($_POST['user_id'], $_POST['form_key'], $_POST['iscmpy'], $_POST['cmpyid']);
+			$data['uwebs'] = $this->Adminmodel->get_userwebsites($_POST['user_id'], $_POST['form_key']);
+			$data['uratings'] = $this->Adminmodel->get_userratings($_POST['form_key']);
+			$data['ulinks'] = $this->Adminmodel->get_userlinks($_POST['user_id']);
+
+			$data['temail'] = $this->Adminmodel->get_usertotalemail($_POST['user_id']);
+			$data['tsms'] = $this->Adminmodel->get_usertotalsms($_POST['user_id']);
+			$data['twhp'] = $this->Adminmodel->get_usertotalwhp($_POST['user_id']);
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
 	}
 
-	function admin_deactivateaccount()
+	//update profile details
+	public function updateprofile_admin()
 	{
-		if ($this->is_admin() === false) return false;
-
-		$res = $this->Adminmodel->admin_deactivateaccount($_POST['user_id'], $_POST['form_key']);
-		// $res = true;
-		if ($res !== true) {
-			$this->Logmodel->log_act($type = "admin_deauerr");
+		if ($this->ajax_is_admin() === false) {
 			$data['status'] = false;
-			$data['msg'] = "Failed to de-activate user account!!";
+			$data['msg'] = lang('acc_denied');
 		} else {
-			$this->Logmodel->log_act($type = "admin_deau");
-			$data['status'] = true;
-			$data['msg'] = "User account de-activated!";
+			$res = $this->Adminmodel->updateprofile_admin($_POST['user_id'], $_POST['form_key'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile'], $_POST['gender'], $_POST['dob']);
+			// $res = true;
+			if ($res !== true) {
+				$this->Logmodel->log_act($type = "admin_upuerr");
+				$data['status'] = false;
+				$data['msg'] = "Error updating user details!";
+			} else {
+				$this->Logmodel->log_act($type = "admin_upu");
+				$data['status'] = true;
+				$data['msg'] = "User profile updated!";
+				// $data['refdata'] = $this->Adminmodel->get_adminusers()->result();
+			}
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
 	}
 
-	function admin_activateaccount()
+	//de-activate user account
+	function deactivateaccount_admin()
 	{
-		if ($this->is_admin() === false) return false;
-
-		$res = $this->Adminmodel->admin_activateaccount($_POST['user_id'], $_POST['form_key']);
-		// $res = true;
-		if ($res !== true) {
-			$this->Logmodel->log_act($type = "admin_auerr");
+		if ($this->ajax_is_admin() === false) {
 			$data['status'] = false;
-			$data['msg'] = "Failed to activate user account!!";
+			$data['msg'] = lang('acc_denied');
 		} else {
-			$this->Logmodel->log_act($type = "admin_au");
-			$data['status'] = true;
-			$data['msg'] = "User account activated!";
-		}
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
-	}
-
-	function admin_deactivatesub()
-	{
-		if ($this->is_admin() === false) return false;
-
-		$res = $this->Adminmodel->admin_deactivatesub($_POST['user_id'], $_POST['form_key']);
-		// $res = true;
-		if ($res !== true) {
-			$this->Logmodel->log_act($type = "admin_unvusuberr");
-			$data['status'] = false;
-			$data['msg'] = "Unable to de-activate user subscription!";
-		} else {
-			$this->Logmodel->log_act($type = "admin_unvusub");
-			$data['status'] = true;
-			$data['msg'] = "User subscription de-activated!";
+			$res = $this->Adminmodel->deactivateaccount_admin($_POST['user_id'], $_POST['form_key']);
+			// $res = true;
+			if ($res !== true) {
+				$this->Logmodel->log_act($type = "admin_deauerr");
+				$data['status'] = false;
+				$data['msg'] = "Failed to de-activate user account!!";
+			} else {
+				$this->Logmodel->log_act($type = "admin_deau");
+				$data['status'] = true;
+				$data['msg'] = "User account de-activated!";
+			}
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
 	}
 
-	function admin_activatesub()
+	//activate user account
+	function activateaccount_admin()
 	{
-		if ($this->is_admin() === false) return false;
-
-		if ($this->session->userdata("mr_sub") === "0") {
+		if ($this->ajax_is_admin() === false) {
 			$data['status'] = false;
-			$data['msg'] = "Unable to activate user subscription. You have an in-active subscription as all user quota & subscription are tied to your account";
+			$data['msg'] = lang('acc_denied');
 		} else {
-			$res = $this->Adminmodel->admin_activatesub($_POST['user_id'], $_POST['form_key']);
+			$res = $this->Adminmodel->activateaccount_admin($_POST['user_id'], $_POST['form_key']);
+			// $res = true;
+			if ($res !== true) {
+				$this->Logmodel->log_act($type = "admin_auerr");
+				$data['status'] = false;
+				$data['msg'] = "Failed to activate user account!!";
+			} else {
+				$this->Logmodel->log_act($type = "admin_au");
+				$data['status'] = true;
+				$data['msg'] = "User account activated!";
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//de-activate user sub
+	function deactivatesub_admin()
+	{
+		if ($this->ajax_is_admin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			$res = $this->Adminmodel->deactivatesub_admin($_POST['user_id'], $_POST['form_key']);
+			// $res = true;
+			if ($res !== true) {
+				$this->Logmodel->log_act($type = "admin_unvusuberr");
+				$data['status'] = false;
+				$data['msg'] = "Unable to de-activate user subscription!";
+			} else {
+				$this->Logmodel->log_act($type = "admin_unvusub");
+				$data['status'] = true;
+				$data['msg'] = "User subscription de-activated!";
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//activate user sub
+	function activatesub_admin()
+	{
+		if ($this->ajax_is_admin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			$res = $this->Adminmodel->activatesub_admin($_POST['user_id'], $_POST['form_key']);
 			// $res = true;
 			if ($res !== true) {
 				$this->Logmodel->log_act($type = "admin_vusuberr");
@@ -280,101 +334,43 @@ class Admin extends Admin_Controller
 		echo json_encode($data);
 	}
 
-	function admin_updateuserpwd()
+	//update user password
+	function updatepassword_admin()
 	{
-		if ($this->is_admin() === false) return false;
+		if ($this->ajax_is_admin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			if ($_POST['logincred'] === "true") {
+				$this->load->library('emailconfig');
+				$mail_res = $this->emailconfig->resetpassword($_POST['user_email'], $_POST['rspwd'], $_POST['user_name']);
+				// $mail_res = true;
 
-		if ($_POST['logincred'] === "true") {
-			$this->load->library('emailconfig');
-			$mail_res = $this->emailconfig->resetpassword($_POST['user_email'], $_POST['rspwd'], $_POST['user_name']);
-			// $mail_res = true;
-
-			if ($mail_res == true) {
-				$res = $this->Adminmodel->admin_updateuserpwd($_POST['user_id'], $_POST['rspwd']);
-				// $res = true;
-				if ($res !== true) {
-					$this->Logmodel->log_act($type = "admin_upassuerr");
-					$data['status'] = false;
-					$data['msg'] = "Error updating user password";
+				if ($mail_res == true) {
+					$res = $this->Adminmodel->updatepassword_admin($_POST['user_id'], $_POST['rspwd']);
+					// $res = true;
+					if ($res !== true) {
+						$this->Logmodel->log_act($type = "admin_upassuerr");
+						$data['status'] = false;
+						$data['msg'] = "Error updating user password";
+					} else {
+						$this->Logmodel->log_act($type = "admin_upassu");
+						$data['status'] = true;
+						$data['msg'] = "User password updated";
+					}
 				} else {
-					$this->Logmodel->log_act($type = "admin_upassu");
-					$data['status'] = true;
-					$data['msg'] = "User password updated";
+					$this->Logmodel->log_act($type = "mail_err");
+					$data['status'] = false;
+					$data['msg'] = "Error sending mail";
 				}
 			} else {
-				$this->Logmodel->log_act($type = "mail_err");
 				$data['status'] = false;
-				$data['msg'] = "Error sending mail";
+				$data['msg'] = "Please check the box";
 			}
-		} else {
-			$data['status'] = false;
-			$data['msg'] = "Please check the box";
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
-	}
-
-	public function adduser_sadmin()
-	{
-		$data['title'] = "new user";
-
-		$this->is_sadmin() === false ? redirect('users') : '';
-
-		$this->form_validation->set_rules('fname', 'First Name', 'trim|html_escape');
-		$this->form_validation->set_rules('lname', 'Last Name', 'trim|html_escape');
-		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
-		$this->form_validation->set_rules('mobile', 'Mobile', 'required|trim|html_escape');
-		$this->form_validation->set_rules('uname', 'Username', 'required|trim|html_escape|is_unique[users.uname]', array('is_unique' => 'This username is taken'));
-		$this->form_validation->set_rules('pwd', 'Password', 'required|trim|html_escape');
-
-		if (!$this->form_validation->run()) {
-			$this->load->view('templates/header', $data);
-			$this->load->view('admin/users/adduser_sadmin');
-			$this->load->view('templates/footer');
-		} else {
-			$fullname = htmlentities($this->input->post('fname')) . " " . htmlentities($this->input->post('lname'));
-			$uname = htmlentities($this->input->post('uname'));
-			$uname_form = str_replace([" ", ".", ",", "?", "&"], "_", strtolower(substr($uname, 0, 5)));
-			$form_key =  $uname_form . mt_rand(0, 100000);
-
-			$email = htmlentities($this->input->post('email'));
-			if (isset($fullname) && !empty($fullname) && $fullname !== "") {
-				$fulln = $fullname;
-			} else {
-				$fulln = $uname;
-			}
-			$cmpy = $this->session->userdata("mr_cmpy");
-			$act_key =  mt_rand(0, 1000000);
-			$link = base_url() . "emailverify/" . $form_key;
-			$pwd = htmlentities($this->input->post('pwd'));
-
-			$mail_res = true;
-			if (isset($_POST['logincred'])) {
-				$this->load->library('emailconfig');
-				$mail_res = $this->emailconfig->new_companyuser($email, $fulln, $cmpy, $act_key, $link, $uname, $pwd);
-			}
-
-			if ($mail_res !== TRUE) {
-				$this->Logmodel->log_act($type = "mail_err");
-				$this->session->set_flashdata('invalid', $mail_res);
-				redirect('adduser');
-				exit();
-			} else {
-				$db_res = $this->Adminmodel->adduser($act_key, $form_key);
-				if ($db_res !== TRUE) {
-					$this->Logmodel->log_act($type = "db_err");
-					$this->session->set_flashdata('invalid', 'Error saving user details. Please try again');
-					redirect('adduser');
-					exit();
-				} else {
-					$this->Logmodel->log_act($type = "newuser");
-					$this->session->set_flashdata('valid', 'User created.');
-					redirect('users');
-					exit();
-				}
-			}
-		}
 	}
 
 
@@ -383,11 +379,11 @@ class Admin extends Admin_Controller
 		$data['title'] = "payments";
 
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('/');
 		}
 		if ($this->session->userdata('mr_sadmin') == "0") {
-			$this->session->set_flashdata('acces_denied', 'Access Denied.');
+			$this->setFlashMsg('error', lang('acc_denied'));
 			redirect('/');
 		}
 
@@ -400,7 +396,7 @@ class Admin extends Admin_Controller
 	public function pick_plan()
 	{
 		if (!$this->session->userdata('mr_logged_in')) {
-			$this->session->set_flashdata('invalid', 'Please login first');
+			$this->setFlashMsg('error', lang('login_first'));
 			redirect('user');
 		}
 		$this->load->view('templates/header');
@@ -484,18 +480,18 @@ class Admin extends Admin_Controller
 						$this->notifyadmin($admin_mail, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status);
 					}
 
-					$this->session->set_flashdata('valid', 'Payment Done. Please wait while we verify your payment');
+					$this->setFlashMsg('success', 'Payment Done. Please wait while we verify your payment');
 					$this->load->view('templates/header');
 					$this->load->view('admin/pay_status', ['userData' => $userData]);
 					$this->load->view('templates/footer');
 				} else {
-					$this->session->set_flashdata('invalid', 'Payment Failed.');
+					$this->setFlashMsg('error', 'Payment Failed.');
 					$this->load->view('templates/header');
 					$this->load->view('admin/pay_status', ['userData' => $userData]);
 					$this->load->view('templates/footer');
 				}
 			} else {
-				$this->session->set_flashdata('invalid', 'Payment Failed.');
+				$this->setFlashMsg('error', 'Payment Failed.');
 				$this->load->view('templates/header');
 				$this->load->view('admin/pay_status', ['userData' => $userData]);
 				$this->load->view('templates/footer');
@@ -566,10 +562,10 @@ class Admin extends Admin_Controller
 			$res = $this->Adminmodel->clear_logs();
 
 			if ($res !== true) {
-				$this->session->set_flashdata('invalid', 'Error clearing data');
+				$this->setFlashMsg('error', 'Error clearing data');
 			} else {
 				$this->Logmodel->log_act($type = "logsclear");
-				$this->session->set_flashdata('valid', 'Activity Logs Data cleared!');
+				$this->setFlashMsg('success', 'Activity Logs Data cleared!');
 			}
 		}
 
@@ -598,21 +594,21 @@ class Admin extends Admin_Controller
 			$res = $this->Adminmodel->clear_feedbacks();
 
 			if ($res !== true) {
-				$this->session->set_flashdata('invalid', 'Error clearing data');
+				$this->setFlashMsg('error', 'Error clearing data');
 			} else {
 				$this->Logmodel->log_act($type = "feedbckclear");
-				$this->session->set_flashdata('valid', 'Feedback Data cleared!');
+				$this->setFlashMsg('success', 'Feedback Data cleared!');
 			}
 		}
 
 		redirect('feedbacks');
 	}
 
-	public function contact()
+	public function support()
 	{
-		$data['title'] = "contact us";
+		$data['title'] = "support";
 
-		$this->setTabUrl($mod = 'contact');
+		$this->setTabUrl($mod = 'support');
 
 		$this->form_validation->set_rules('name', 'Full Name', 'required|trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
@@ -648,17 +644,17 @@ class Admin extends Admin_Controller
 
 				if ($mail_res !== true) {
 					$this->Logmodel->log_act($type = "mail_err");
-					$this->session->set_flashdata('invalid', 'Error sending your message');
+					$this->setFlashMsg('error', 'Error sending your message');
 				} else {
 					$res = $this->Adminmodel->contact();
 					$this->Logmodel->log_act($type = "cnt_us");
-					$this->session->set_flashdata('valid', 'Message sent. We will get back to you as soon as possible');
+					$this->setFlashMsg('success', 'Message sent. We will get back to you as soon as possible');
 				}
 			} else {
-				$this->session->set_flashdata('invalid', 'Google Recaptcha Unsuccessfull');
+				$this->setFlashMsg('error', 'Google Recaptcha Unsuccessfull');
 			}
 
-			redirect('contact');
+			redirect('support');
 		}
 	}
 
@@ -666,19 +662,16 @@ class Admin extends Admin_Controller
 
 	public function testCase()
 	{
-		// $res= $this->Adminmodel->testCase();
-		$this->load->model('Log_model');
-		$res = $this->Log_model->log_act($type = "logoutttt");
+		$data['title'] = "test case";
 
-		if ($res !== true) {
-			$data['status'] = false;
-			$data['msg'] = "Error Logging...";
-		} else {
-			$data['status'] = true;
-			$data['msg'] = "Logged!";
-		}
+		$this->setTabUrl($mod = 'test');
 
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
+		// $this->is_sadmin();
+
+		// $data['feedbacks'] = $this->Adminmodel->get_feedbacks();
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('templates/testCase', $data);
+		$this->load->view('templates/footer');
 	}
 }

@@ -11,3 +11,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |	https://codeigniter.com/user_guide/general/hooks.html
 |
 */
+
+$hook['post_controller'] = function()
+{
+    $this->CI = &get_instance();
+    $this->CI->session->unset_userdata('FlashMsg');
+};

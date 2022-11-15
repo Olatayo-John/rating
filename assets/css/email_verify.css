@@ -1,20 +1,13 @@
-label{
-	color: #294a63;
-	font-weight: bold;
+.verifyDiv {
+	/* padding: 0 21px 21px 21px; */
+	padding: 14px;
 }
-.email_verify_form{
-	padding: 20px;
-}
-input.form-control{
-	border-radius: 30px
-}
-a.rsendcodebtn{
+
+a.rsendcodebtn {
 	text-decoration: none;
 }
-a.rsendcodebtn:hover{
+
+a.rsendcodebtn:hover {
 	transform: scale(1.1);
 	transition: transform .2s;
-}
-@media only screen and (max-width: 500px) {
-
 }

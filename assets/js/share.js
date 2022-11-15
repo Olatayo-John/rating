@@ -20,16 +20,16 @@ $(document).ready(function () {
 		$('form.'+tabFormName+'').show();
 	});
 
-	$('button.close_EmailModalBtn').click(function (e) {
+	$('.close_EmailModalBtn').click(function (e) {
 		e.preventDefault();
 
-		$('.emailmodal').hide();
+		$('.emailmodal').modal('hide');
 	});
 
-	$('button.close_SmsModalBtn').click(function (e) {
+	$('.close_SmsModalBtn').click(function (e) {
 		e.preventDefault();
 
-		$('.smsmodal').hide();
+		$('.smsmodal').modal('hide');
 	});
 
 });

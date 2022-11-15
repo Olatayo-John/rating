@@ -8,9 +8,12 @@ class MY_Controller extends CI_Controller
     {
         parent::__construct();
 
+        $this->load->helper('language');
+        $this->lang->load('system');
+
         date_default_timezone_set("Asia/Kolkata");
 
-        error_reporting(0);
+        // error_reporting(0);
 
         $this->setTabUrl($mod = null);
     }
@@ -18,22 +21,28 @@ class MY_Controller extends CI_Controller
     //set tab_div
     public function setTabUrl($mod)
     {
-        $this->session->set_userdata('url', $mod);
+        $this->session->set_userdata('url', $mod); //set
     }
 
-    //checks if user is loggedIn before accessing any page
-    //via page refresh
+    //set session_flash-message
+    public function setFlashMsg($s, $m)
+    {
+        $this->session->set_userdata('FlashMsg', array('status' => $s, 'msg' => $m)); //set
+    }
+
+    //checks if user is loggedIn before accessing any page/function
+    //via page refresh/on-load
     public function checklogin()
     {
         if (!$this->session->userdata('mr_logged_in')) {
-            $this->session->set_flashdata('invalid', 'Please login first');
+            $this->setFlashMsg('error', lang('login_first'));
             redirect('logout');
         } else {
             return true;
         }
     }
 
-    //checks if user is loggedIn before accessing any page
+    //checks if user is loggedIn before accessing any page/function
     //via ajax calls
     public function ajax_checklogin()
     {
@@ -65,11 +74,13 @@ class MY_Controller extends CI_Controller
         $this->session->unset_userdata('mr_logged_in');
         // $this->session->sess_destroy();
 
-        $this->session->set_flashdata('valid', 'Logged out');
+        $this->setFlashMsg('error', 'Logged out');
         redirect('/');
     }
 }
 
+
+// class User_Controller extends MY_Controller
 class User_Controller extends MY_Controller
 {
     public function __construct()
@@ -78,6 +89,7 @@ class User_Controller extends MY_Controller
     }
 }
 
+
 class Admin_Controller extends MY_Controller
 {
     public function __construct()
@@ -85,88 +97,97 @@ class Admin_Controller extends MY_Controller
         parent::__construct();
     }
 
+    //checks if user is loggedIn and is superAdmin before accessing any page/function
+    //via page refresh/on-load
     public function is_sadmin()
     {
         if (!$this->session->userdata('mr_logged_in')) {
-            $this->session->set_flashdata('invalid', 'Please login first');
+            $this->setFlashMsg('error', lang('login_first'));
             redirect('logout');
         } else {
             if ($this->session->userdata('mr_sadmin') === "1") {
                 return true;
-            } else if ($this->session->userdata('mr_sadmin') === "0"){
-                $this->session->set_flashdata('acces_denied', 'Access Denied.');
+            } else {
+                $this->setFlashMsg('error', lang('acc_denied'));
                 redirect($_SERVER['HTTP_REFERER']);
             }
         }
     }
+    //via ajax calls
     public function ajax_is_sadmin()
     {
         if (!$this->session->userdata('mr_logged_in')) {
-            $this->session->set_flashdata('invalid', 'Please login first');
+            // $this->setFlashMsg('error', lang('login_first'));
             return false;
         } else {
             if ($this->session->userdata('mr_sadmin') === "1") {
                 return true;
-            } else if ($this->session->userdata('mr_sadmin') === "0"){
-                $this->session->set_flashdata('acces_denied', 'Access Denied.');
+            } else if ($this->session->userdata('mr_sadmin') === "0") {
+                // $this->setFlashMsg('error', lang('acc_denied'));
                 return false;
             }
         }
     }
 
+    //checks if user is loggedIn and is a companyAdmin before accessing any page/function
+    //via page refresh/on-load
     public function is_admin()
     {
         if (!$this->session->userdata('mr_logged_in')) {
-            $this->session->set_flashdata('invalid', 'Please login first');
+            $this->setFlashMsg('error', lang('login_first'));
             redirect('logout');
         } else {
             if ($this->session->userdata('mr_admin') === "1") {
                 return true;
-            } else if ($this->session->userdata('mr_admin') === "0"){
-                $this->session->set_flashdata('acces_denied', 'Access Denied.');
+            } else if ($this->session->userdata('mr_admin') === "0") {
+                $this->setFlashMsg('error', lang('acc_denied'));
                 redirect($_SERVER['HTTP_REFERER']);
             }
         }
     }
+    //via ajax calls
     public function ajax_is_admin()
     {
         if (!$this->session->userdata('mr_logged_in')) {
-            $this->session->set_flashdata('invalid', 'Please login first');
+            // $this->setFlashMsg('error', lang('login_first'));
             return false;
         } else {
             if ($this->session->userdata('mr_admin') === "1") {
                 return true;
-            } else if ($this->session->userdata('mr_admin') === "0"){
-                $this->session->set_flashdata('acces_denied', 'Access Denied.');
+            } else if ($this->session->userdata('mr_admin') === "0") {
+                // $this->setFlashMsg('error', lang('acc_denied'));
                 return false;
             }
         }
     }
 
+    //checks if user is loggedIn and is both companyAdmin and superAdmin before accessing any page/function
+    //via page refresh/on-load
     public function is_bothadmin()
     {
         if (!$this->session->userdata('mr_logged_in')) {
-            $this->session->set_flashdata('invalid', 'Please login first');
+            $this->setFlashMsg('error', lang('login_first'));
             redirect('logout');
         } else {
             if ($this->session->userdata('mr_sadmin') === "1" || $this->session->userdata('mr_admin') === "1") {
                 return true;
             } else {
-                $this->session->set_flashdata('acces_denied', 'Access Denied.');
+                $this->setFlashMsg('error', lang('acc_denied'));
                 redirect($_SERVER['HTTP_REFERER']);
             }
         }
     }
+    //via ajax calls
     public function ajax_is_bothadmin()
     {
         if (!$this->session->userdata('mr_logged_in')) {
-            $this->session->set_flashdata('invalid', 'Please login first');
+            // $this->setFlashMsg('error', lang('login_first'));
             return false;
         } else {
             if ($this->session->userdata('mr_sadmin') === "1" || $this->session->userdata('mr_admin') === "1") {
                 return true;
             } else {
-                $this->session->set_flashdata('acces_denied', 'Access Denied.');
+                // $this->setFlashMsg('error', lang('acc_denied'));
                 return false;
             }
         }

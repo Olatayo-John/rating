@@ -71,6 +71,14 @@ $route['remove-website'] = 'user/removewebsite';
 //Admins- [sadmin ,admin]
 $route['users'] = 'admin/users';
 $route['add'] = 'admin/add';
+$route['update-profile'] = 'admin/updateprofile';
+$route['update-user-company'] = 'admin/updatecompany';
+$route['update-user-quota'] = 'admin/updatequota';
+$route['deactivate-user-account'] = 'admin/deactivateaccount';
+$route['activate-user-account'] = 'admin/activateaccount';
+$route['deactivate-user-sub'] = 'admin/deactivatesub';
+$route['activate-user-sub'] = 'admin/activatesub';
+$route['update-user-password'] = 'admin/updatepassword';
 
 //SAdmin
 $route['sadmin-add-user'] = 'admin/adduser_sadmin';
@@ -79,15 +87,6 @@ $route['sadmin-view-user'] = 'admin/viewuser_sadmin';
 //companyAdmin
 $route['admin-add-user'] = 'admin/adduser_admin';
 $route['admin-view-user'] = 'admin/viewuser_admin';
-$route['admin-update-profile'] = 'admin/updateprofile_admin';
-$route['admin-deactivate-account'] = 'admin/deactivateaccount_admin';
-$route['admin-activate-account'] = 'admin/activateaccount_admin';
-$route['admin-deactivate-sub'] = 'admin/deactivatesub_admin';
-$route['admin-activate-sub'] = 'admin/activatesub_admin';
-$route['admin-update-password'] = 'admin/updatepassword_admin';
-
-$route['updateuserprofile'] = 'admin/admin_updateuserprofile';
-$route['updateuserpwd'] = 'admin/admin_updateuserpwd';
 
 
 //plan

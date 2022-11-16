@@ -1,6 +1,6 @@
 <!-- <h4 class="text-dark">Personal Information</h4>
 <hr class="p_i"> -->
-<form action="<?php echo base_url('admin-update-profile'); ?>" method="post" id="userprofile_adminForm">
+<form action="<?php echo base_url('update-profile'); ?>" method="post" id="userprofile_Form">
     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
     <div class="row">
@@ -72,8 +72,7 @@
     }
 
     $(document).ready(function() {
-        // $('.save_pinfo_btn').click(function(e) {
-        $('form#userprofile_adminForm').submit(function(e) {
+        $('form#userprofile_Form').submit(function(e) {
             e.preventDefault();
 
             var fname = $('.fname').val();
@@ -97,7 +96,7 @@
             }
 
             $.ajax({
-                url: "<?php echo base_url('admin-update-profile'); ?>",
+                url: "<?php echo base_url('update-profile'); ?>",
                 method: "post",
                 data: {
                     user_id: user_id,
@@ -111,6 +110,11 @@
                     [csrfName]: csrfHash
                 },
                 dataType: "json",
+                beforeSend: function() {
+                    clearAlert();
+                    
+                    $('.save_pinfo_btn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
+                },
                 error: function(res) {
                     var con = confirm('Some error occured. Refresh?');
                     if (con === true) {
@@ -135,6 +139,7 @@
                         });
                     }
 
+                    $('.save_pinfo_btn').removeAttr('disabled').html('Update').css('cursor', 'pointer');
                     $('.csrf-token').val(res.token);
                 }
             })

@@ -4,24 +4,6 @@
 	padding: 14px;
 }
 
-i.closevuserbtn {
-	cursor: pointer;
-	position: 0;
-	font-size: 16px;
-}
-
-.closemodalbtndiv {
-	display: flex;
-	justify-content: space-between;
-	padding-bottom: 27px;
-}
-
-.h_userName {
-	text-transform: uppercase;
-	color: #294a63;
-	font-weight: bolder;
-}
-
 
 .tab_div {
 	display: flex;
@@ -47,13 +29,6 @@ i.closevuserbtn {
 
 .info_div {
 	background: white;
-}
-
-div.web_div,
-div.ls_div,
-div.rr_div,
-div.ac_div {
-	display: none;
 }
 
 i.fa-eye,
@@ -87,4 +62,19 @@ hr.account {
 
 .editUserI {
 	color: #294a63;
+}
+
+td span {
+	font-weight: 500;
+	color: #dc3545;
+}
+
+.cmpyLogoDiv {
+	margin: auto;
+	text-align: center;
+}
+
+.cmpyLogoImg {
+	max-width: 56px;
+	max-height: 50px;
 }

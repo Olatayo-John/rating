@@ -48,10 +48,12 @@
 <div class="modal edit_web_modal fade" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close close_editweb_modal" aria-hidden="true">&times;</button>
-            </div>
             <div class="modal-body">
+                <div class="modalcloseDiv">
+                    <h6></h6>
+                    <i class="fas fa-times close_editweb_modal text-danger"></i>
+                </div>
+
                 <form method='post' id="edit_web_modal_form">
                     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <input type="hidden" class="web_id form-control" name="web_id" value="">
@@ -87,11 +89,12 @@
 <div class="modal fade add_web_modal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-top">
         <div class="modal-content">
-            <div class="modal-header text-danger justify-content-center font-weight-bolder">
-                You can't change or remove any of this information after
-                <button type="button" class="close closewebmodal_btn" aria-hidden="true">&times;</button>
-            </div>
             <div class="modal-body">
+                <div class="modalcloseDiv">
+                    <h6></h6>
+                    <i class="fas fa-times closewebmodal_btn text-danger"></i>
+                </div>
+
                 <form method="post" action="<?php echo base_url("user/user_new_website") ?>" class="add_web_modal_form">
                     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
@@ -137,6 +140,9 @@
                     [csrfName]: csrfHash
                 },
                 dataType: "json",
+                beforeSend: function() {
+                    clearAlert();
+                },
                 success: function(data) {
                     $('.csrf_token').val(data.token);
 
@@ -168,7 +174,7 @@
             $('.add_web_modal').modal("show");
         });
 
-        $(document).on('click', 'button.closewebmodal_btn', function(e) {
+        $(document).on('click', '.closewebmodal_btn', function(e) {
             e.preventDefault();
             $('.add_web_modal').modal("hide");
 
@@ -297,6 +303,9 @@
                     web_name_new: web_name_new,
                     web_link_new: web_link_new
                 },
+                beforeSend: function() {
+                    clearAlert();
+                },
                 success: function(data) {
                     $(".csrf_token").val(data.token);
 
@@ -340,6 +349,9 @@
                     id: id,
                 },
                 dataType: "json",
+                beforeSend: function() {
+                    clearAlert();
+                },
                 success: function(data) {
                     if (data.status === false) {
                         $(".ajax_succ_div,.ajax_err_div").hide();
@@ -361,14 +373,14 @@
             });
         });
 
-        $(document).on('click', 'button.close_editweb_modal', function(e) {
+        $(document).on('click', '.close_editweb_modal', function(e) {
             e.preventDefault();
             $('.edit_web_modal').modal('hide');
             $('select#web_act option').removeAttr("selected");
         });
 
         // change website status
-        $(document).on('click', 'button.submit_editweb_modal', function(e) {
+        $(document).on('click', '.submit_editweb_modal', function(e) {
             e.preventDefault();
             var csrfName = $('.csrf_token').attr('name');
             var csrfHash = $('.csrf_token').val();
@@ -384,6 +396,9 @@
                     webstatus: webstatus,
                 },
                 dataType: 'json',
+                beforeSend: function() {
+                    clearAlert();
+                },
                 success: function(data) {
                     if (data.status === false) {
                         $(".ajax_succ_div,.ajax_err_div").hide();
@@ -394,7 +409,7 @@
                         $(".ajax_res_succ").text(data.msg);
                         $(".ajax_succ_div").fadeIn();
 
-                        $('.edit_web_modal').fadeOut();
+                        $('.edit_web_modal').modal('hide');
 
                     }
 

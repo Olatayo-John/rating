@@ -184,29 +184,29 @@
 
 	<div class="container">
 		<!-- testing div -->
-		<!-- <div class="alerterror">
+		<!-- <div class="alerterror alertWrapper">
 			<strong>Test notification Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequatur, ratione repudiandae esse repellendus est expedita, quod aut at odio odit ipsam vel! Lorem, ipsum dolor sitss amet consectetur adipisicing elit. Consequatur, ratione repudiandae esse repellendus est expedita, quod aut at odio odit ipsam vel! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequatur, ratione repudiandae esse repellendus est expedita, quod aut at odio odit ipsam vel!</strong>
 		</div> -->
 
 		<!-- ajax-failed -->
-		<div class="ajax_alert_div ajax_err_div" style="padding:8px;display:none;z-index: 9999;">
+		<div class="alertWrapper ajax_alert_div ajax_err_div" style="padding:8px;display:none;z-index: 9999;">
 			<strong class="ajax_res_err text-dark"></strong>
 		</div>
 
 		<!-- ajax-success -->
-		<div class="ajax_alert_div ajax_succ_div" style="padding:8px;display:none;z-index: 9999;">
+		<div class="alertWrapper ajax_alert_div ajax_succ_div" style="padding:8px;display:none;z-index: 9999;">
 			<strong class="ajax_res_succ text-dark"></strong>
 		</div>
 
 		<!-- session-flashMsg-function -->
 		<?php if ($this->session->userdata('FlashMsg')) : ?>
-			<div class="alert<?php echo $this->session->userdata('FlashMsg')['status'] ?>">
+			<div class="alertWrapper alert<?php echo $this->session->userdata('FlashMsg')['status'] ?>">
 				<strong><?php echo $this->session->userdata('FlashMsg')['msg'] ?></strong>
 			</div>
 		<?php endif; ?>
 
 		<?php if (validation_errors()) : ?>
-			<div class="alerterror">
+			<div class="alerterror alertWrapper">
 				<strong><?php echo validation_errors(); ?></strong>
 			</div>
 		<?php endif; ?>

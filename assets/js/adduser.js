@@ -11,14 +11,7 @@ $(document).ready(function () {
 	});
 
 	$("button.genpwdbtn").click(function () {
-		var length = 10;
-		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		var val = "";
-
-		for (var i = 0, n = charset.length; i < length; ++i) {
-			val += charset.charAt(Math.floor(Math.random() * n));
-		}
-		var pwd = $('.pwd').val(val);
+		$('.pwd').val(returnPassword());
 		$('i.fa-eye').show();
 		$('i.fa-eye-slash').hide();
 	});
@@ -70,7 +63,7 @@ $(document).ready(function () {
 		}
 
 		$.ajax({
-			beforSend: function () {
+			beforeSend: function () {
 				$('.registerbtn').attr('disabled', 'disabled');
 				$('.registerbtn').html('Processing...');
 				$('.registerbtn').css('cursor', 'not-allowed');
@@ -142,7 +135,7 @@ $(document).ready(function () {
 		}
 
 		$.ajax({
-			beforSend: function () {
+			beforeSend: function () {
 				$('.registerbtn').attr('disabled', 'disabled');
 				$('.registerbtn').html('Processing...');
 				$('.registerbtn').css('cursor', 'not-allowed');

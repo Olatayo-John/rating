@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/account.css'); ?>">
 
 <div class="set_wrapper">
-	<div class="tab_div">
+	<div class="tab_div bg-light-custom">
 		<a href="#profile" class="tab_link" id="profile">Profile</a>
 		<a href="#websites" class="tab_link" id="websites">Websites</a>
 		<?php if ($this->session->userdata('mr_cmpyid') == null) : ?>

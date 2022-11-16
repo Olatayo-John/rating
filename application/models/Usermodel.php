@@ -18,17 +18,13 @@ class Usermodel extends CI_Model
 			exit();
 		}
 		if ($user->active == "2") {
-			if ($user->active == "2" && $user->iscmpy == "1") {
-				return "inactive_access_by_cmpyAdmin";
-			} elseif ($user->active == "2" && $user->iscmpy == "0") {
-				return "inactive_access";
-			}
+			return "inactive_access";
 
 			exit();
 		}
 		//verify passwords
 		if (password_verify($pwd, $user->password)) {
-			
+
 			//companyAdmin and companyUsers
 			if ($user->iscmpy == '1') {
 				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,cd.cmpyLogo')->from('users u');
@@ -42,7 +38,6 @@ class Usermodel extends CI_Model
 				$this->db->where('u.uname', $uname);
 				$userinfo = $this->db->get()->row();
 			} else {
-				echo "not cmpy";
 				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key')->from('users u');
 				$this->db->where('u.uname', $uname);
 				$userinfo = $this->db->get()->row();
@@ -146,7 +141,7 @@ class Usermodel extends CI_Model
 	public function insert_company_details($lastid)
 	{
 		$data = array(
-			'cmpyid' => $lastid,
+			'userid' => $lastid,
 			'cmpyName' => htmlentities($this->input->post('cmpy')),
 			'cmpyMobile' => '',
 			'cmpyEmail' => '',

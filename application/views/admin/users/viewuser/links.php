@@ -62,12 +62,16 @@
 
 <table id="lstable" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="right" data-pagination="true">
     <thead class="text-light" style="background:#294a63">
-        <tr>
-            <th data-field="type" data-sortable="true">Type</th>
-            <th data-field="sentto" data-sortable="true">Sent to</th>
-            <th data-field="subj" data-sortable="true">Subject</th>
-            <th data-field="msg" data-sortable="true">Message</th>
-            <th data-field="date" data-sortable="true">Date</th>
+        <tr class="tr-class-1">
+            <th data-field="link_for" rowspan="2" data-valign="middle" data-sortable="true">Type</th>
+            <th colspan="2">Sent To</th>
+            <th data-field="subj" rowspan="2" data-valign="middle" data-sortable="true">Subject</th>
+            <th data-field="body" rowspan="2" data-valign="middle" data-sortable="true">Message</th>
+            <th data-field="sent_at" rowspan="2" data-valign="middle" data-sortable="true">Date</th>
+        </tr>
+        <tr class="tr-class-2">
+            <th data-field="sent_to_email" data-sortable="true">Email</th>
+            <th data-field="sent_to_sms" data-sortable="true">Mobile</th>
         </tr>
     </thead>
 </table>

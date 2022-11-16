@@ -1,7 +1,7 @@
 <!-- <h4 class="text-dark">Account</h4>
 <hr class="account"> -->
 
-<form action="<?php echo base_url('profile-edit'); ?>" method="post" id="useraccount_adminForm">
+<form action="<?php echo base_url(''); ?>" method="post" id="useraccount_Form">
     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
     <div class="form-group">
@@ -53,7 +53,7 @@
                 var form_key = $('#currentUserId').attr("form_key");
 
                 $.ajax({
-                    url: "<?php echo base_url('admin-deactivate-account'); ?>",
+                    url: "<?php echo base_url('deactivate-user-account'); ?>",
                     method: "post",
                     dataType: "json",
                     data: {
@@ -63,6 +63,9 @@
                     },
                     error: function(res) {
                         window.location.reload();
+                    },
+                    beforeSend: function() {
+                        clearAlert();
                     },
                     success: function(res) {
                         if (res.status === false) {
@@ -95,7 +98,7 @@
                 var form_key = $('#currentUserId').attr("form_key");
 
                 $.ajax({
-                    url: "<?php echo base_url('admin-activate-account'); ?>",
+                    url: "<?php echo base_url('activate-user-account'); ?>",
                     method: "post",
                     dataType: "json",
                     data: {
@@ -105,6 +108,9 @@
                     },
                     error: function(res) {
                         window.location.reload();
+                    },
+                    beforeSend: function() {
+                        clearAlert();
                     },
                     success: function(res) {
                         if (res.status === false) {
@@ -137,7 +143,7 @@
                 var form_key = $('#currentUserId').attr("form_key");
 
                 $.ajax({
-                    url: "<?php echo base_url('admin-deactivate-sub'); ?>",
+                    url: "<?php echo base_url('deactivate-user-sub'); ?>",
                     method: "post",
                     dataType: "json",
                     data: {
@@ -147,6 +153,9 @@
                     },
                     error: function(res) {
                         window.location.reload();
+                    },
+                    beforeSend: function() {
+                        clearAlert();
                     },
                     success: function(res) {
                         if (res.status === false) {
@@ -180,7 +189,7 @@
                 var form_key = $('#currentUserId').attr("form_key");
 
                 $.ajax({
-                    url: "<?php echo base_url('admin-activate-sub'); ?>",
+                    url: "<?php echo base_url('activate-user-sub'); ?>",
                     method: "post",
                     dataType: "json",
                     data: {
@@ -190,6 +199,9 @@
                     },
                     error: function(res) {
                         window.location.reload();
+                    },
+                    beforeSend: function() {
+                        clearAlert();
                     },
                     success: function(res) {
                         if (res.status === false) {
@@ -212,7 +224,7 @@
             }
         });
 
-        $('form#useraccount_adminForm').submit(function(e) {
+        $('form#useraccount_Form').submit(function(e) {
             e.preventDefault();
 
             var rspwd = $('.rspwd').val();
@@ -230,7 +242,7 @@
             }
 
             $.ajax({
-                url: "<?php echo base_url('admin-update-password'); ?>",
+                url: "<?php echo base_url('update-user-password'); ?>",
                 method: "post",
                 data: {
                     user_id: user_id,
@@ -241,6 +253,8 @@
                     [csrfName]: csrfHash
                 },
                 beforeSend: function() {
+                    clearAlert();
+
                     $('.updatepwdbtn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
                 },
                 dataType: "json",

@@ -1,42 +1,56 @@
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf-token">
 
 
-<div class="modal vusermodal">
+<div class="modal vusermodal fade" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog modal-xl">
 		<div class="modal-content">
-			<div class="modal-header">
+			<!-- <div class="modal-header">
 				<button type="button" class="close close_SmsModalBtn" aria-hidden="true">&times;</button>
-			</div>
+			</div> -->
 			<div class="modal-body p-0">
 				<div class="row set_wrapper m-0">
-					<div class="tab_div col-md-2">
-						<a href="" class="tab_link prof_a">Profile</a>
-						<a href="" class="tab_link web_a">Websites</a>
-						<a href="" class="tab_link rr_a">Ratings</a>
-						<a href="" class="tab_link ls_a">Links</a>
-						<a href="" class="tab_link ac_a text-danger font-weight-bolder">Account</a>
+					<div class="tab_div col-md-2 p-0">
+						<a href="" class="tab_link prof_a" tabDivN="prof_div">Profile</a>
+						<a href="" class="tab_link cmpy_a" tabDivN="cmpy_div">Company</a>
+						<a href="" class="tab_link qt_a" tabDivN="qt_div">Quota</a>
+						<a href="" class="tab_link web_a" tabDivN="web_div">Websites</a>
+						<a href="" class="tab_link rr_a" tabDivN="rr_div">Ratings</a>
+						<a href="" class="tab_link ls_a" tabDivN="ls_div">Links</a>
+						<a href="" class="tab_link ac_a text-danger font-weight-bolder" tabDivN="ac_div">Account</a>
 					</div>
+
 					<div class="info_div col-md-10 p-3">
-						<div class="closemodalbtndiv">
-							<i class="fas fa-times closevuserbtn"></i>
+						<div class="modalcloseDiv">
+							<h6 class="h_userName"></h6>
+							<i class="fas fa-times closevuserbtn text-danger"></i>
 						</div>
-						<div class="prof_div">
-							<?php include("viewuser/profile_edit.php") ?>
+						<input type="hidden" id="currentUserId" user_id="" form_key="" user_email="" user_name="" user_iscmpy="" user_cmpyid="" user_isadmin="">
+
+						<div class="prof_div einfoDiv">
+							<?php include("viewuser/profile.php") ?>
 						</div>
 
-						<div class="web_div pb-5">
+						<div class="cmpy_div einfoDiv">
+							<?php include("viewuser/company.php") ?>
+						</div>
+
+						<div class="qt_div einfoDiv">
+							<?php include("viewuser/quota.php") ?>
+						</div>
+
+						<div class="web_div einfoDiv pb-5">
 							<?php include("viewuser/websites.php") ?>
 						</div>
 
-						<div class="rr_div pb-5">
+						<div class="rr_div einfoDiv pb-5">
 							<?php include("viewuser/ratings.php") ?>
 						</div>
 
-						<div class="ls_div pb-5">
+						<div class="ls_div einfoDiv pb-5">
 							<?php include("viewuser/links.php") ?>
 						</div>
 
-						<div class="ac_div">
+						<div class="ac_div einfoDiv">
 							<?php include("viewuser/account.php") ?>
 						</div>
 					</div>
@@ -52,26 +66,24 @@
 		<!-- <h4><?php echo $this->session->userdata("mr_cmpy") ?> Users</h4> -->
 	</div>
 	<div>
-		<a href="<?php echo base_url('newuser'); ?>" class="btn text-light" style="background:#294a63;">
+		<a href="<?php echo base_url('add'); ?>" title="New User" class="btn text-light" style="background:#294a63;">
 			<i class="fas fa-user-plus pr-2"></i>New User
 		</a>
 	</div>
 </div>
 
 
-<table id="admintable" data-toggle="table" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="right" data-pagination="true" class="table-sm">
+<table id="admintable" data-toggle="table" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="right" data-pagination="true">
 	<thead class="text-light" style="background:#294a63">
 		<tr>
-			<th data-field="name" data-sortable="true">Full Name / Username</th>
-			<th data-field="email" data-sortable="true">Email</th>
-			<th data-field="mobile" data-sortable="true">Mobile</th>
-			<th data-field="cmpy" data-sortable="true">Company</th>
-			<th data-field="active" data-sortable="true">Active</th>
+			<th data-field="name" data-sortable="true">User</th>
+			<th data-field="type" data-sortable="true">Type</th>
+			<th data-field="action" scope="col">Action</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php foreach ($allusers->result() as $user) : ?>
-			<tr id="<?php echo $user->uid ?>" data-formkey="<?php echo $user->form_key ?>" data-iscmpy="<?php echo $user->iscmpy ?>" data-cmpyid="<?php echo $user->cmpyid ?>" class="classroone">
+			<tr id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>" data-iscmpy="<?php echo $user->iscmpy ?>" data-cmpyid="<?php echo $user->cmpyid ?>">
 				<td>
 					<?php if (!empty($user->fname) || !empty($user->lname)) : ?>
 						<?php echo $user->fname . " " . $user->lname ?>
@@ -79,10 +91,28 @@
 						<?php echo $user->uname ?>
 					<?php endif; ?>
 				</td>
-				<td><a href="mailto:<?php echo $user->email ?>"><?php echo $user->email ?></a></td>
-				<td><?php echo $user->mobile ?></td>
-				<td><?php echo $user->cmpy ?></td>
-				<td><?php echo ($user->active === '0') ? '<i title="Account not verified" class="fas fa-circle text-warning acti"></i>' : ($user->active === '1' ? '<i title="Account active" class="fas fa-circle text-success acti"></i>' : ($user->active === '2' ? '<i title="Account not activate" class="fas fa-circle text-danger acti"></i>' : "undefined")) ?></td>
+				<td class="w-25">
+					<?php if ($user->admin === '1') : ?>
+						<?php echo strtoupper($user->cmpy) ?><span> Admin</span>
+					<?php elseif (!empty($user->cmpyid) && $user->iscmpy === '1') : ?>
+						<?php echo ucwords($user->cmpy) ?><span> User</span>
+					<?php else : ?>
+						<span>Regular User</span>
+					<?php endif; ?>
+				</td>
+				<td class="w-25">
+					<div>
+						<a href="">
+							<i class="fa fa-reorder editUserI" title="Show" id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>" data-iscmpy="<?php echo $user->iscmpy ?>" data-cmpyid="<?php echo $user->cmpyid ?>" data-admin="<?php echo $user->admin ?>"></i>
+						</a>
+						<?php if ($user->active == '0') : ?>
+							<span class="text-warning"> Unverified</span>
+						<?php endif; ?>
+						<?php if ($user->active == '2') : ?>
+							<span> Deactivated</span>
+						<?php endif; ?>
+					</div>
+				</td>
 			</tr>
 		<?php endforeach; ?>
 	</tbody>
@@ -93,217 +123,192 @@
 	var csrfName = $('.csrf-token').attr('name');
 	var csrfHash = $('.csrf-token').val();
 
-	function detailFormatter(index, row) {
-		var html = []
-		html.push('<div><a href="" id="' + row._id + '" formkey="' + row._data.formkey + '" iscmpy="' + row._data.iscmpy + '" cmpyid="' + row._data.cmpyid + '" class="vuser pr-1" style="color:#294a63">View</a></div>');
-		return html.join('');
-	}
-
 	$(document).ready(function() {
-		$(document).on('click', '.vuser', function(e) {
+		//view and get user details
+		$(document).on('click', 'i.editUserI', function(e) {
 			e.preventDefault();
 
 			var user_id = $(this).attr("id");
-			var form_key = $(this).attr("formkey");
-			var iscmpy = $(this).attr("iscmpy");
-			var cmpyid = $(this).attr("cmpyid");
+			var form_key = $(this).attr("data-formkey");
+			var iscmpy = $(this).attr("data-iscmpy");
+			var cmpyid = $(this).attr("data-cmpyid");
+			var isadmin = $(this).attr("data-admin");
 
-			$.ajax({
-				url: "<?php echo base_url("viewuser"); ?>",
-				method: "post",
-				dataType: "json",
-				data: {
-					[csrfName]: csrfHash,
-					user_id: user_id,
-					form_key: form_key,
-					iscmpy: iscmpy,
-					cmpyid: cmpyid,
-				},
-				error: function(res) {
-					window.location.reload();
-				},
-				success: function(res) {
-					//depopulate field
-
-					$('.rspwd').val("");
-					$('.rspwd,.email,.mobile').css('border', '1px solid #ced4da');
-					$('.pwderr,i.fa-eye,i.fa-eye-slash').hide("");
-
-					$('#webtable,#lstable,#rrtable').bootstrapTable('destroy');
-
-					$('div.prof_div').show();
-					$('div.web_div,div.ls_div,div.rr_div,div.ac_div').hide();
-					$('.tab_link').css('font-weight', 'initial');
-					$("a.prof_a").css('font-weight', 'bold');
-
-					//populate profile
-					$(".fname").val(res.uinfos.fname);
-					$(".lname").val(res.uinfos.lname);
-					$(".email").val(res.uinfos.email);
-					$(".mobile").val(res.uinfos.mobile);
-					$(".uname").val(res.uinfos.uname);
-					if (res.uinfos.iscmpy === "1") {
-						$(".cmpydiv").show();
-						$(".cmpy").val(res.uinfos.cmpy);
-					} else {
-						$(".cmpydiv").hide();
-						$(".cmpy").val("");
-					}
-					var seg = $(".linkshare").attr("data-host");
-					$(".linkshare").val(seg + res.uinfos.form_key);
-
-					//populate web
-					$(".webt").text(res.uwebs.length);
-					$(function() {
-						var data = res.uwebs;
-						$('#webtable').bootstrapTable({
-							data: data
-						});
-
-					});
-
-					//populate profileratings
-					$(".rrt").text(res.uratings.length);
-					$(function() {
-						var data = res.uratings;
-						$('#rrtable').bootstrapTable({
-							data: data
-						});
-
-					});
-
-					//populate linkssent
-					$(".lst").text(res.ulinks.length);
-					$(".emailt").text(res.udetails.total_email);
-					$(".smst").text(res.udetails.total_sms);
-					$(function() {
-						var data = res.ulinks;
-						$('#lstable').bootstrapTable({
-							data: data
-						});
-
-					});
-
-					//populate account
-					if (res.uinfos.active == "0") {
-						$(".act_btn").show();
-						$(".deact_btn").hide();
-					} else if (res.uinfos.active == "1") {
-						$(".act_btn").hide();
-						$(".deact_btn").show();
-					} else if (res.uinfos.active == "2") {
-						$(".act_btn").show();
-						$(".deact_btn").hide();
-					}
-
-					if (res.uinfos.sub == "0") {
-						$(".subact_btn").show();
-						$(".subdeact_btn").hide();
-					} else if (res.uinfos.sub == "1") {
-						$(".subact_btn").hide();
-						$(".subdeact_btn").show();
-					}
-
-					$(".deact_btn,.act_btn,.updatepwdbtn,.subdeact_btn,.subact_btn,.save_pinfo_btn").attr('user_id', res.uinfos.id);
-					$(".save_pinfo_btn,.subdeact_btn,.subact_btn,.deact_btn,.act_btn").attr('form_key', res.uinfos.form_key);
-					$(".updatepwdbtn").attr('user_email', res.uinfos.email);
-					$(".updatepwdbtn").attr('user_name', res.uinfos.uname);
-
-
-					$(".vusermodal").modal("show");
-
-					$('.csrf-token').val(res.token);
-				}
-			});
-		});
-
-		$(document).on('click', '.closevuserbtn', function() {
-			$(".vusermodal").modal("hide");
-		});
-
-		//disabled
-		$(document).on('click', '.duser', function(e) {
-			e.preventDefault();
-			var uid = $(this).attr("id");
-			var formkey = $(this).attr("formkey");
-			var con = confirm("Are you sure you want to delete this user along with its data? Quota used by this user will not be refunded");
-			if (con === false) {
-				return false;
+			if (user_id == 'undefined' || form_key == 'undefined') {
+				var vvv = "<?php echo base_url('/logs') ?>";
+				window.location.assign(vvv);
 			} else {
 				$.ajax({
-					url: "<?php echo base_url("deleteuser"); ?>",
+					url: "<?php echo base_url("sadmin-view-user"); ?>",
 					method: "post",
 					dataType: "json",
 					data: {
 						[csrfName]: csrfHash,
-						uid: uid,
-						formkey: formkey,
+						user_id: user_id,
+						form_key: form_key,
+						iscmpy: iscmpy,
+						cmpyid: cmpyid,
+						isadmin: isadmin
 					},
-					error: function(data) {
-						window.location.reload();
+					beforeSend: function(res) {
+						clearAlert();
+
+						$('#userprofile_Form,#usercmpy_sadminForm,#userquota_sadminForm,#useraccount_Form').trigger("reset");
+
+						$('.pwderr,i.fa-eye,i.fa-eye-slash').hide("");
 					},
-					success: function(data) {
-						if (data.res === 'error') {
-							$(".ajax_succ_div,.ajax_err_div").hide();
-							$(".ajax_res_err").text(data.msg);
+					success: function(res) {
+						if (res.status === 'error') {
+							window.location.assign(res.redirect);
+						} else if (res.status === false) {
+							$(".ajax_res_err").append(res.msg);
 							$(".ajax_err_div").fadeIn();
-						} else if (data.res === 'success') {
+						} else if (res.status === true) {
+							//destroy tables
+							$('#webtable,#lstable,#rrtable').bootstrapTable('destroy');
+
+							//hide un-selected tabs
+							$('div.einfoDiv').hide();
+							$('div.prof_div').show();
+
+							$('.tab_link').css({
+								'font-weight': 'initial',
+								'background': 'transparent',
+								'color': '#fff',
+							});
+							$('a.prof_a').css({
+								'font-weight': '500',
+								'background': '#fff',
+								'color': '#294a63',
+							});
+
+							//populate profile
+							$(".fname").val(res.uinfos.fname);
+							$(".lname").val(res.uinfos.lname);
+							$(".email").val(res.uinfos.email);
+							$(".mobile").val(res.uinfos.mobile);
+							$(".uname").val(res.uinfos.uname);
+							$('#userprofile_Form').find('select[name=gender] option[value=' + res.uinfos.gender + ']').attr('selected', 'selected').end();
+							$(".dob").val(res.uinfos.dob);
+							var seg = $(".linkshare").attr("data-host");
+							$(".linkshare").val(seg + res.uinfos.form_key);
+
+							//populate company
+							if (res.uinfos.admin !== '1') {
+								$(".cmpyLogoImg").attr('src', '');
+
+								$('.cmpy_a').hide();
+							} else {
+								$(".cmpyName").val(res.uinfos.cmpyName);
+								$(".cmpyEmail").val(res.uinfos.cmpyEmail);
+								$(".cmpyMobile").val(res.uinfos.cmpyMobile);
+								var logoPath = '<?php echo base_url('uploads/') ?>' + res.uinfos.cmpyLogo;
+								$(".cmpyLogoImg").attr('src', logoPath);
+
+								$('.cmpy_a').show();
+							}
+
+							//populate quota
+							if (res.uinfos.cmpyid !== null) {
+								$('.company').text('');
+
+								$('.qt_a').hide();
+							} else {
+								$(".email_quota").val(res.uquota.email_quota);
+								$(".sms_quota").val(res.uquota.sms_quota);
+								$(".whatsapp_quota").val(res.uquota.whatsapp_quota);
+								$(".web_quota").val(res.uquota.web_quota);
+								$('.company').text(res.uinfos.cmpyName);
+
+								if (res.uinfos.admin !== '1') {
+									$('.cmpy_qt_info').hide();
+								} else {
+									$('.cmpy_qt_info').show();
+								}
+
+								$('.qt_a').show();
+							}
+
+
+							//populate web
+							$(".webt").text(res.uwebs.length);
+							$(function() {
+								var data = res.uwebs;
+								$('#webtable').bootstrapTable({
+									data: data
+								});
+
+							});
+
+							//populate profileratings
+							$(".rrt").text(res.uratings.length);
+							$(function() {
+								var data = res.uratings;
+								$('#rrtable').bootstrapTable({
+									data: data
+								});
+
+							});
+
+							//populate linkssent
+							$(".lst").text(res.ulinks.length);
+							$(".emailt").text(res.temail.length);
+							$(".smst").text(res.tsms.length);
+							$(".whpt").text(res.twhp.length);
+							$(function() {
+								var data = res.ulinks;
+								$('#lstable').bootstrapTable({
+									data: data
+								});
+
+							});
+
+							//populate account
+							//activate and de-activate acct
+							if (res.uinfos.active == "1") {
+								$(".act_btn").hide();
+								$(".deact_btn").show();
+							} else if (res.uinfos.active == "0" || res.uinfos.active == "2") {
+								$(".act_btn").show();
+								$(".deact_btn").hide();
+							}
+
+							//activate and de-activate user sub
+							if (res.uinfos.sub == "0") {
+								$(".subact_btn").show();
+								$(".subdeact_btn").hide();
+							} else if (res.uinfos.sub == "1") {
+								$(".subact_btn").hide();
+								$(".subdeact_btn").show();
+							}
+
+							$("#currentUserId").attr({
+								'user_id': res.uinfos.id,
+								'form_key': res.uinfos.form_key,
+								'user_email': res.uinfos.email,
+								'user_name': res.uinfos.uname,
+								'user_iscmpy': res.uinfos.iscmpy,
+								'user_cmpyid': res.uinfos.cmpyid,
+								'user_isadmin': res.uinfos.admin
+							});
+							$('.h_userName').text(res.uinfos.uname);
+
+
+							$(".vusermodal").modal("show");
+						}
+
+						$('.csrf-token').val(res.token);
+					},
+					error: function(res) {
+						var con = confirm('Some error occured. Refresh?');
+						if (con === true) {
 							window.location.reload();
+						} else if (con === false) {
+							return false;
 						}
-
-						$('.csrf-token').val(data.token);
-					}
-				})
+					},
+				});
 			}
-		});
-
-		//disabled
-		$(document).on('click', '.acti_', function(e) {
-			var uact = $(this).attr("uact");
-			var uid = $(this).attr("uid");
-			var formkey = $(this).attr("uformkey");
-
-			$.ajax({
-				url: "<?php echo base_url("userstatus"); ?>",
-				method: "post",
-				dataType: "json",
-				data: {
-					[csrfName]: csrfHash,
-					uact: uact,
-					uid: uid,
-					formkey: formkey,
-				},
-				error: function(data) {
-					window.location.reload();
-				},
-				success: function(data) {
-					if (data.res === 'failed') {
-						$(".ajax_succ_div,.ajax_err_div").hide();
-						$(".ajax_res_err").text(data.msg);
-						$(".ajax_err_div").fadeIn();
-					} else if (data.res === 'success') {
-
-						if (uact === '0') {
-							$('i[uid=' + uid + ']').removeClass("text-warning").addClass("text-success").attr("uact", "1");
-							$resmsg = "User account verified by you!";
-						}
-						if (uact === '1') {
-							$('i[uid=' + uid + ']').removeClass("text-success").addClass("text-danger").attr("uact", "2");
-							$resmsg = "User account de-activated!";
-						}
-						if (uact === '2') {
-							$('i[uid=' + uid + ']').removeClass("text-danger").addClass("text-success").attr("uact", "1");
-							$resmsg = "User account activated!";
-						}
-
-						$(".ajax_err_div,ajax_succ_div").hide();
-						$(".ajax_res_succ").text($resmsg);
-						$(".ajax_succ_div").fadeIn();
-					}
-
-					$('.csrf-token').val(data.token);
-				}
-			});
 		});
 	});
 </script>

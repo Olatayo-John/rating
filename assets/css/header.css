@@ -6,7 +6,7 @@
 
 body {
 	/* background: linear-gradient(to right, #243B55, #294a63); */
-	background:#eceff4 !important;
+	background: #eceff4 !important;
 }
 
 
@@ -47,7 +47,6 @@ a.btn {
 }
 
 .bg-light-custom {
-	/* background: #eceff4; */
 	background: #fff;
 }
 
@@ -114,6 +113,7 @@ span.err,
 	background: #294a63 !important;
 }
 
+
 /* stats box */
 .total-column {
 	word-break: break-all;
@@ -147,6 +147,25 @@ h3._total {
 }
 
 /*  */
+
+.borderDiv,.bg-light-custom  {
+	border: 1px solid #c5d6de;
+}
+.modalcloseDiv {
+	display: flex;
+	justify-content: space-between;
+	padding-bottom: 27px;
+}
+.modalcloseDiv h6 {
+	text-transform: uppercase;
+	color: #294a63;
+	font-weight: bolder;
+}
+.modalcloseDiv i {
+	cursor: pointer;
+	position: 0;
+	font-size: 16px;
+}
 
 /*  */
 
@@ -182,6 +201,10 @@ div.spinner-border {
 
 
 /* alert */
+.alertWrapper {
+	cursor: pointer;
+}
+
 .alerterror strong p {
 	margin: 0;
 }
@@ -273,8 +296,6 @@ div.logoimg {
 
 div.side-nav {
 	background: #294a63;
-	/* background: -webkit-linear-gradient(to right, #294a63, #294a63); */
-	/* background: linear-gradient(to right, #294a63, #294a63); */
 	position: fixed;
 	/* overflow-x: hidden; */
 	left: 0;

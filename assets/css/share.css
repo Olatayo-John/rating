@@ -5,17 +5,25 @@
 
 .tab_div {
 	display: flex;
-	justify-content: space-between;
-	background: #294a63;
-	padding: 8px 14px;
+	/* justify-content: space-between; */
+	padding: 0;
+	margin-bottom: 14px;
+}
+
+.tab_div a.mail_a {
+	color: #294a63;
+	font-weight: 500;
+	border-bottom: 2px solid #294a63;
 }
 
 .tab_link {
-	color: #fff;
+	color: #294a63;
+	padding: 5px 20px;
 }
 
 .tab_link:hover {
-	color: #fff !important
+	color: #294a63 !important;
+	text-decoration: none;
 }
 
 .smsForm,

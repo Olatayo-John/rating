@@ -199,7 +199,7 @@ class Admin extends Admin_Controller
 		} else {
 			$data['status'] = true;
 			$data['uinfos'] = $this->Adminmodel->get_userinfo($_POST['user_id'], $_POST['form_key']);
-			$data['uquota'] = $this->Adminmodel->admin_get_userQuota($_POST['user_id'], $_POST['form_key'], $_POST['iscmpy'], $_POST['cmpyid']);
+			// $data['uquota'] = $this->Adminmodel->admin_get_userQuota($_POST['user_id'], $_POST['form_key'], $_POST['iscmpy'], $_POST['cmpyid']);
 			$data['uwebs'] = $this->Adminmodel->get_userwebsites($_POST['user_id'], $_POST['form_key']);
 			$data['uratings'] = $this->Adminmodel->get_userratings($_POST['form_key']);
 			$data['ulinks'] = $this->Adminmodel->get_userlinks($_POST['user_id']);
@@ -214,13 +214,24 @@ class Admin extends Admin_Controller
 	}
 
 	//update profile details
-	public function updateprofile_admin()
+	public function updateprofile()
 	{
-		if ($this->ajax_is_admin() === false) {
+		if ($this->ajax_is_bothadmin() === false) {
 			$data['status'] = false;
 			$data['msg'] = lang('acc_denied');
 		} else {
-			$res = $this->Adminmodel->updateprofile_admin($_POST['user_id'], $_POST['form_key'], $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['mobile'], $_POST['gender'], $_POST['dob']);
+			$profileData = array(
+				'fname' => htmlentities($_POST['fname']),
+				'lname' => htmlentities($_POST['lname']),
+				'email' => htmlentities($_POST['email']),
+				'mobile' => htmlentities($_POST['mobile']),
+				'gender' => htmlentities($_POST['gender']),
+				'dob' => htmlentities($_POST['dob']),
+			);
+			$user_id = $_POST['user_id'];
+			$form_key = $_POST['form_key'];
+
+			$res = $this->Adminmodel->updateprofile($user_id, $form_key, $profileData);
 			// $res = true;
 			if ($res !== true) {
 				$this->Logmodel->log_act($type = "admin_upuerr");
@@ -239,13 +250,13 @@ class Admin extends Admin_Controller
 	}
 
 	//de-activate user account
-	function deactivateaccount_admin()
+	function deactivateaccount()
 	{
-		if ($this->ajax_is_admin() === false) {
+		if ($this->ajax_is_bothadmin() === false) {
 			$data['status'] = false;
 			$data['msg'] = lang('acc_denied');
 		} else {
-			$res = $this->Adminmodel->deactivateaccount_admin($_POST['user_id'], $_POST['form_key']);
+			$res = $this->Adminmodel->deactivateaccount($_POST['user_id'], $_POST['form_key']);
 			// $res = true;
 			if ($res !== true) {
 				$this->Logmodel->log_act($type = "admin_deauerr");
@@ -263,13 +274,13 @@ class Admin extends Admin_Controller
 	}
 
 	//activate user account
-	function activateaccount_admin()
+	function activateaccount()
 	{
-		if ($this->ajax_is_admin() === false) {
+		if ($this->ajax_is_bothadmin() === false) {
 			$data['status'] = false;
 			$data['msg'] = lang('acc_denied');
 		} else {
-			$res = $this->Adminmodel->activateaccount_admin($_POST['user_id'], $_POST['form_key']);
+			$res = $this->Adminmodel->activateaccount($_POST['user_id'], $_POST['form_key']);
 			// $res = true;
 			if ($res !== true) {
 				$this->Logmodel->log_act($type = "admin_auerr");
@@ -287,13 +298,13 @@ class Admin extends Admin_Controller
 	}
 
 	//de-activate user sub
-	function deactivatesub_admin()
+	function deactivatesub()
 	{
-		if ($this->ajax_is_admin() === false) {
+		if ($this->ajax_is_bothadmin() === false) {
 			$data['status'] = false;
 			$data['msg'] = lang('acc_denied');
 		} else {
-			$res = $this->Adminmodel->deactivatesub_admin($_POST['user_id'], $_POST['form_key']);
+			$res = $this->Adminmodel->deactivatesub($_POST['user_id'], $_POST['form_key']);
 			// $res = true;
 			if ($res !== true) {
 				$this->Logmodel->log_act($type = "admin_unvusuberr");
@@ -311,13 +322,13 @@ class Admin extends Admin_Controller
 	}
 
 	//activate user sub
-	function activatesub_admin()
+	function activatesub()
 	{
-		if ($this->ajax_is_admin() === false) {
+		if ($this->ajax_is_bothadmin() === false) {
 			$data['status'] = false;
 			$data['msg'] = lang('acc_denied');
 		} else {
-			$res = $this->Adminmodel->activatesub_admin($_POST['user_id'], $_POST['form_key']);
+			$res = $this->Adminmodel->activatesub($_POST['user_id'], $_POST['form_key']);
 			// $res = true;
 			if ($res !== true) {
 				$this->Logmodel->log_act($type = "admin_vusuberr");
@@ -335,9 +346,9 @@ class Admin extends Admin_Controller
 	}
 
 	//update user password
-	function updatepassword_admin()
+	function updatepassword()
 	{
-		if ($this->ajax_is_admin() === false) {
+		if ($this->ajax_is_bothadmin() === false) {
 			$data['status'] = false;
 			$data['msg'] = lang('acc_denied');
 		} else {
@@ -346,8 +357,8 @@ class Admin extends Admin_Controller
 				$mail_res = $this->emailconfig->resetpassword($_POST['user_email'], $_POST['rspwd'], $_POST['user_name']);
 				// $mail_res = true;
 
-				if ($mail_res == true) {
-					$res = $this->Adminmodel->updatepassword_admin($_POST['user_id'], $_POST['rspwd']);
+				if ($mail_res === true) {
+					$res = $this->Adminmodel->updatepassword($_POST['user_id'], $_POST['rspwd']);
 					// $res = true;
 					if ($res !== true) {
 						$this->Logmodel->log_act($type = "admin_upassuerr");
@@ -366,6 +377,112 @@ class Admin extends Admin_Controller
 			} else {
 				$data['status'] = false;
 				$data['msg'] = "Please check the box";
+			}
+		}
+
+		$data['mail_res'] = $mail_res;
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//get user details [companyAdmin]
+	public function viewuser_sadmin()
+	{
+		if ($this->ajax_is_sadmin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			$user_id = $_POST['user_id'];
+			$form_key = $_POST['form_key'];
+			$iscmpy = $_POST['iscmpy'];
+			$cmpyid = $_POST['cmpyid'];
+			$isadmin = $_POST['isadmin'];
+
+			$data['status'] = true;
+			$data['uinfos'] = $this->Adminmodel->sadmin_get_userinfo($user_id, $form_key, $iscmpy, $isadmin);
+			$data['uquota'] = $this->Adminmodel->sadmin_get_userQuota($user_id, $form_key, $iscmpy, $cmpyid);
+
+			$data['uwebs'] = $this->Adminmodel->get_userwebsites($user_id, $form_key);
+			$data['uratings'] = $this->Adminmodel->get_userratings($form_key);
+			$data['ulinks'] = $this->Adminmodel->get_userlinks($user_id);
+
+			$data['temail'] = $this->Adminmodel->get_usertotalemail($user_id);
+			$data['tsms'] = $this->Adminmodel->get_usertotalsms($user_id);
+			$data['twhp'] = $this->Adminmodel->get_usertotalwhp($user_id);
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//update company details
+	public function updatecompany()
+	{
+		if ($this->ajax_is_sadmin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			$cmpyData = array(
+				'cmpyName' => htmlentities($_POST['cmpyName']),
+				'cmpyEmail' => htmlentities($_POST['cmpyEmail']),
+				'cmpyMobile' => htmlentities($_POST['cmpyMobile']),
+				'cmpyLogo' => htmlentities($_POST['cmpyLogo'])
+			);
+			$user_id = $_POST['user_id'];
+			$form_key = $_POST['form_key'];
+
+			$res = $this->Adminmodel->updatecompany($user_id, $form_key, $cmpyData);
+			// $res = true;
+			if ($res !== true) {
+				// $this->Logmodel->log_act($type = "");
+				$data['status'] = false;
+				$data['msg'] = "Error updating user details!";
+			} else {
+				// $this->Logmodel->log_act($type = "");
+				$data['status'] = true;
+				$data['msg'] = "User profile updated!";
+				// $data['refdata'] = $this->Adminmodel->get_adminusers()->result();
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//update quota details
+	public function updatequota()
+	{
+		if ($this->ajax_is_sadmin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			$user_isadmin = $_POST['user_isadmin'];
+			$user_iscmpy = $_POST['user_iscmpy'];
+
+			if ($user_isadmin !== '1' || $user_iscmpy !== '1') {
+				$data['status'] = false;
+				$data['msg'] = lang('acc_denied');
+			} elseif ($user_isadmin === '1' && $user_iscmpy === '1') {
+				$qtData = array(
+					'email_quota' => htmlentities($_POST['email_quota']),
+					'sms_quota' => htmlentities($_POST['sms_quota']),
+					'whatsapp_quota' => htmlentities($_POST['whatsapp_quota']),
+					'web_quota' => htmlentities($_POST['web_quota']),
+				);
+				$user_id = $_POST['user_id'];
+				$form_key = $_POST['form_key'];
+
+				$res = $this->Adminmodel->updatequota($user_id, $form_key, $qtData);
+				// $res = true;
+				if ($res !== true) {
+					// $this->Logmodel->log_act($type = "");
+					$data['status'] = false;
+					$data['msg'] = "Error updating";
+				} else {
+					// $this->Logmodel->log_act($type = "");
+					$data['status'] = true;
+					$data['msg'] = "Quota updated";
+				}
 			}
 		}
 

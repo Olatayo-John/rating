@@ -19,10 +19,15 @@
         <div class="err mobileerr">Invalid mobile length</div>
     </div>
 
-    <div class="form-group">
-        <label>Company Logo</label>
-        <span>Max size: 2MB</span>
-        <input type="file" name="cmpyLogo" class="form-control cmpyLogo">
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Company Logo</label>
+            <span>Max size: 2MB</span>
+            <input type="file" name="cmpyLogo" class="form-control cmpyLogo">
+        </div>
+        <div class="form-group col-md-6 cmpyLogoDiv">
+            <img src="<?php echo base_url('uploads/') . $this->session->userdata('mr_cmpy_logo'); ?>" alt="" class="cmpyLogoImg">
+        </div>
     </div>
 
     <hr>

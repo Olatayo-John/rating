@@ -5,15 +5,16 @@
 	<div class="emailmodal modal fade" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close close_EmailModalBtn" aria-hidden="true">&times;</button>
-				</div>
 				<div class="modal-body">
+					<div class="modalcloseDiv">
+						<h6>CSV must have header of only "Email"</h6>
+						<i class="fas fa-times close_EmailModalBtn text-danger"></i>
+					</div>
+
 					<form enctype="multipart/form-data" method="post" id="emailForm_csvUpload">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
 
 						<div class="form-group">
-							<label for="">CSV must have header of only "Email"</label>
 							<input type="file" name="email_csv_file" id="email_csv_file" accept=".csv" class="" style="border:none">
 						</div>
 
@@ -29,15 +30,16 @@
 	<div class="smsmodal modal fade" data-backdrop="static" data-keyboard="false">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close close_SmsModalBtn" aria-hidden="true">&times;</button>
-				</div>
 				<div class="modal-body">
+					<div class="modalcloseDiv">
+						<h6>CSV must have header of only "Phonenumber"</h6>
+						<i class="fas fa-times close_SmsModalBtn text-danger"></i>
+					</div>
+
 					<form enctype="multipart/form-data" method="post" id="smsForm_csvUpload">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
 
 						<div class="form-group">
-							<label for="">CSV must have header of only "Phonenumber"</label>
 							<input type="file" name="sms_csv_file" id="sms_csv_file" accept=".csv" class="" style="border:none">
 						</div>
 
@@ -51,15 +53,18 @@
 	</div>
 
 	<!-- tabLinks -->
-	<div class="tab_div">
+	<div class="tab_div bg-light-custom">
 		<a href="#as-email" class="tab_link mail_a sndasmailbtn" id="as-email" tabFormName="emailForm">
-			<i class="fas fa-envelope mr-2"></i>Email
+			<!-- <i class="fas fa-envelope mr-2"></i> -->
+			Email
 		</a>
 		<a href="#as-sms" class="tab_link sms_a sndassmsbtn" id="as-sms" tabFormName="smsForm">
-			<i class="fas fa-comment-dots mr-2"></i>SMS
+			<!-- <i class="fas fa-comment-dots mr-2"></i> -->
+			SMS
 		</a>
 		<a href="#as-whatsapp" class="tab_link whatsapp_a sndaswhpbtn" id="as-whatsapp" tabFormName="whatsappForm">
-			<i class="fa-brands fa-whatsapp mr-2"></i>Whatsapp
+			<!-- <i class="fa-brands fa-whatsapp mr-2"></i> -->
+			Whatsapp
 		</a>
 	</div>
 	<!--  -->
@@ -179,6 +184,9 @@
 				[csrfName]: csrfHash
 			},
 			dataType: "json",
+			beforeSend: function(){
+				clearAlert();
+			},
 			success: function(data) {
 				$('.csrf_hash').val(data.token);
 
@@ -283,8 +291,7 @@
 				beforeSend: function(data) {
 					$('.email_SendMultipleBtn').attr('disabled', 'disabled').html('Importing...').css('cursor', 'not-allowed');
 
-					$(".ajax_succ_div,.ajax_err_div").hide();
-					$(".ajax_res_err,.ajax_res_succ").empty();
+					clearAlert();
 				},
 				success: function(data) {
 					if (data.status === false) {
@@ -353,8 +360,7 @@
 				beforeSend: function(data) {
 					$('.sms_SendMultipleBtn').attr('disabled', 'disabled').html('Importing...').css('cursor', 'not-allowed');
 
-					$(".ajax_succ_div,.ajax_err_div").hide();
-					$(".ajax_res_err,.ajax_res_succ").empty();
+					clearAlert();
 				},
 				success: function(data) {
 					if (data.status === false) {
@@ -460,10 +466,10 @@
 			var whpbdy = $('.whpbdy').val();
 
 			if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
-				$('.e_whpMobile err').show();
+				$('.e_whpMobile').show();
 				return false;
 			} else {
-				$('.e_whpMobile err').hide();
+				$('.e_whpMobile').hide();
 			}
 
 			if (whpbdy == "" || whpbdy == null) {
@@ -482,8 +488,7 @@
 				beforeSend: function() {
 					$('.whp_sendBtn').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
 
-					$(".ajax_succ_div,.ajax_err_div").hide();
-					$(".ajax_res_err,.ajax_res_succ").empty();
+					clearAlert();
 				},
 				success: function(data) {
 					if (data.status === false) {
@@ -507,7 +512,6 @@
 			});
 
 		});
-
 
 		//send multiple email
 		$('.email_sendBtn_m').click(function(e) {
@@ -549,8 +553,7 @@
 				beforeSend: function() {
 					$('.email_sendBtn_m').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
 
-					$(".ajax_succ_div,.ajax_err_div").hide();
-					$(".ajax_res_err,.ajax_res_succ").empty();
+					clearAlert();
 				},
 				success: function(data) {
 					if (data.status === false) {
@@ -582,7 +585,6 @@
 				}
 			})
 		});
-
 
 		//send multiple sms
 		$('.sms_sendBtn_m').click(function(e) {
@@ -619,8 +621,7 @@
 				beforeSend: function() {
 					$('.sms_sendBtn_m').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
 
-					$(".ajax_succ_div,.ajax_err_div").hide();
-					$(".ajax_res_err,.ajax_res_succ").empty();
+					clearAlert();
 				},
 				success: function(data) {
 					if (data.status === false) {

@@ -18,7 +18,7 @@ $lang['users'] = 'Users';
 $lang['manage_users'] = 'Manage users';
 
 $lang['wrong_pwd_uname'] = 'Username or Password provided is wrong!';
-$lang['acct_deact'] = 'Your account has been de-activated. Contact support';
+$lang['acct_deact'] = 'Your account has been de-activated';
 $lang['acct_deact_by_cmpy_admin'] = 'Your account has been de-activated. Contact your Company Admin';
 $lang['contact_cmpy_admin'] = 'Contact your Company Admin';
 $lang['update_failed'] = 'Update failed';

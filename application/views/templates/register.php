@@ -35,7 +35,6 @@
 
 		<div class="form-group">
 			<label>Password</label> <span>*</span>
-			<i class="fas fa-question-circle ml-2" title="Password must be over 6 characters long"></i>
 			<input type="password" name="auto-pwd" style="opacity: 0; position: absolute">
 			<input type="password" name="pwd" class="form-control pwd" placeholder="Password must be over 6 characters long" id="pwd" minlength="6">
 			<span class="err pwderr">Password is too short</span>
@@ -62,7 +61,7 @@
 		<?php include(APPPATH.'views/templates/plans.php') ?>
 
 
-		<div class="btngrp bg-light-custom pt-3 pb-3">
+		<div class="btngrp pt-3 pb-3">
 			<button class="btn text-light registerbtn" type="submit" style="background:#294a63">Create Account</button>
 			<a href="<?php echo base_url('login'); ?>" class="loginbtn text-danger" style="colosr:#294a63">
 				Already a user?</a>
@@ -77,8 +76,6 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/register.js'); ?>"></script>
 <script>
 	$(document).ready(function() {
-		$('[data-toggle="tooltip"]').tooltip();
-
 		//check for duplicate username
 		$(".uname").keyup(function() {
 			var uname_val = $(".uname").val();

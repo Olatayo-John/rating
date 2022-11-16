@@ -36,7 +36,6 @@
 
 			<div class="form-group">
 				<label>Password</label> <span>*</span>
-				<i class="fas fa-question-circle ml-2" title="Password must be over 6 characters long"></i>
 				<input type="password" name="auto-pwd" style="opacity: 0; position: absolute">
 				<input type="password" name="pwd" class="form-control pwd" placeholder="Password must be over 6 characters long" id="pwd" minlength="6">
 				<span class="err pwderr">Password is too short</span>
@@ -50,7 +49,7 @@
 
 			<hr>
 			<div class="form-group mb-3 d-flex">
-				<div style="color:#294a63;" class="font-weight-bolder">Are you a company?</div>
+				<div style="color:#294a63;" class="font-weight-bolder">A company?</div>
 				<input type="checkbox" class="cmpychkb form" id="cmpychkb" name="cmpychkb" style="margin:auto 0 auto 3px;">
 			</div>
 			<div class="form-group cmpydiv">
@@ -77,8 +76,6 @@
 <script type="text/javascript" src="<?php echo base_url('assets/js/adduser.js'); ?>"></script>
 <script>
 	$(document).ready(function() {
-		$('[data-toggle="tooltip"]').tooltip();
-
 		$(".uname").keyup(function() {
 			var uname_val = $(".uname").val();
 			var csrfName = $(".csrf_token").attr("name");
@@ -96,11 +93,9 @@
 					$(".csrf_token").val(data.token);
 					if (data.user_data > 0) {
 						$('.unameerr').show();
-						$(".uname").css('border', '2px solid red');
 						$(".registerbtn").attr("type", "button");
 					} else {
 						$('.unameerr').hide();
-						$(".uname").css('border', '1px solid #ced4da');
 						$(".registerbtn").attr("type", "submit");
 					}
 				},
@@ -138,11 +133,9 @@
 					$(".csrf_token").val(data.token);
 					if (data.user_data > 0) {
 						$('.cmpyerr').show();
-						$(".cmpy").css('border', '2px solid red');
 						$(".registerbtn").attr("type", "button");
 					} else {
 						$('.cmpyerr').hide();
-						$(".cmpy").css('border', '1px solid #ced4da');
 						$(".registerbtn").attr("type", "submit");
 					}
 				},

@@ -5,16 +5,8 @@
 
 label,
 .fa-eye,
-.fa-eye-slash,
-.fa-question-circle,
-.fas-question-circle {
+.fa-eye-slash {
 	color: #294a63;
-}
-
-.fa-question-circle,
-.fas-question-circle {
-	color: #294a63;
-	cursor: pointer;
 }
 
 i.fa-eye,

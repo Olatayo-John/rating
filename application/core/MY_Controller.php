@@ -72,6 +72,7 @@ class MY_Controller extends CI_Controller
         $this->session->unset_userdata('mr_website_form');
         $this->session->unset_userdata('mr_form_key');
         $this->session->unset_userdata('mr_logged_in');
+        $this->session->unset_userdata('mr_cmpy_logo');
         // $this->session->sess_destroy();
 
         $this->setFlashMsg('error', 'Logged out');

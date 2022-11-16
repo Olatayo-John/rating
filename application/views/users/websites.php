@@ -82,8 +82,6 @@
 
 <script>
     $(document).ready(function() {
-        $('[data-toggle="tooltip"]').tooltip();
-
         get_userQuota();
 
         //hide or show necessary data

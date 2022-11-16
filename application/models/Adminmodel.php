@@ -81,8 +81,6 @@ class Adminmodel extends CI_Model
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
 		);
-		print_r($data);
-		die;
 		$this->db->insert('users', $data);
 		$lastid = $this->db->insert_id();
 
@@ -98,7 +96,7 @@ class Adminmodel extends CI_Model
 	public function insert_company_details($lastid)
 	{
 		$data = array(
-			'cmpyid' => $lastid,
+			'userid' => $lastid,
 			'cmpyName' => htmlentities($this->input->post('cmpy')),
 			'cmpyMobile' => '',
 			'cmpyEmail' => '',
@@ -201,24 +199,15 @@ class Adminmodel extends CI_Model
 		return $query->result_array();
 	}
 
-	public function updateprofile_admin($user_id, $form_key, $fname, $lname, $email, $mobile,$gender,$dob)
+	public function updateprofile($user_id, $form_key, $profileData)
 	{
-		$data = array(
-			'fname' => htmlentities($fname),
-			'lname' => htmlentities($lname),
-			'email' => htmlentities($email),
-			'mobile' => htmlentities($mobile),
-			'gender' => htmlentities($gender),
-			'dob' => htmlentities($dob),
-		);
-
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
-		$this->db->update("users", $data);
+		$this->db->update("users", $profileData);
 
 		return true;
 	}
 
-	public function deactivateaccount_admin($user_id, $form_key)
+	public function deactivateaccount($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$query = $this->db->set('active', "2");
@@ -226,7 +215,7 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function activateaccount_admin($user_id, $form_key)
+	public function activateaccount($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$query = $this->db->set('active', "1");
@@ -234,15 +223,15 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function deactivatesub_admin($user_id, $form_key)
+	public function deactivatesub($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
-		$query = $this->db->set('sub', "0");
+		$this->db->set('sub', "0");
 		$query = $this->db->update("users");
 		return true;
 	}
 
-	public function activatesub_admin($user_id, $form_key)
+	public function activatesub($user_id, $form_key)
 	{
 		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
 		$this->db->set('sub', "1");
@@ -250,13 +239,68 @@ class Adminmodel extends CI_Model
 		return true;
 	}
 
-	public function updatepassword_admin($user_id, $rspwd)
+	public function updatepassword($user_id, $rspwd)
 	{
 		$this->db->set('password', password_hash($rspwd, PASSWORD_DEFAULT));
 		$this->db->where('id', $user_id);
 		$this->db->update("users");
 		return true;
 	}
+
+	public function sadmin_get_userinfo($id, $form_key, $iscmpy, $isadmin)
+	{
+		if ($iscmpy == '1') {
+			$this->db->select('u.*,cd.id as cmpydetailID,cd.userid,cd.cmpyName,cd.cmpyEmail,cd.cmpyMobile,cd.cmpyLogo')->from('users u');
+
+			if ($isadmin == '1') {
+				$this->db->join('company_details cd', 'cd.userid = u.id');
+			} elseif ($isadmin == '0') {
+				$this->db->join('company_details cd', 'cd.userid = u.cmpyid');
+			}
+
+			$this->db->where(array('u.id' => $id, 'u.form_key' => $form_key));
+			$userinfo = $this->db->get()->row();
+		} else {
+			$this->db->select('u.*')->from('users u');
+			$this->db->where(array('u.id' => $id, 'u.form_key' => $form_key));
+			$userinfo = $this->db->get()->row();
+		}
+
+		return $userinfo;
+	}
+
+	public function sadmin_get_userQuota($id, $form_key, $iscmpy, $cmpyid)
+	{
+		if ($iscmpy == "1" && !empty($cmpyid) && $cmpyid !== "" && $cmpyid !== null) {
+			$wherearray = array('by_user_id' => $cmpyid);
+		} else {
+			$wherearray = array('by_user_id' => $id, 'by_form_key' => $form_key);
+		}
+
+		$this->db->where($wherearray);
+		$quotaInfo = $this->db->get("quota")->row();
+		return $quotaInfo;
+	}
+
+	public function updatecompany($user_id, $form_key, $cmpyData)
+	{
+		print_r($cmpyData);die;
+		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
+		$this->db->update("users", $cmpyData);
+
+		return true;
+	}
+
+	public function updatequota($user_id, $form_key, $qtData)
+	{
+		$this->db->where(array('by_user_id' => $user_id, 'by_form_key' => $form_key));
+		$this->db->update("quota", $qtData);
+
+		return true;
+	}
+
+
+
 
 	//disabled
 	public function admin_deleteuser($user_id, $form_key)

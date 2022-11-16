@@ -162,6 +162,7 @@ class User extends User_Controller
 			//try sending email before inserting to DB
 			$this->load->library('emailconfig');
 			$mail_res = $this->emailconfig->send_email_code($email, $uname, $act_key, $link);
+			// $mail_res = false;
 
 			if ($mail_res !== TRUE) {
 				$this->Logmodel->log_act($type = "newUser_verify_mail_err", $m = "User", $e = $mail_res);
@@ -564,6 +565,7 @@ class User extends User_Controller
 				$wb = $_POST['webstatus'];
 
 				$act_res = $this->Usermodel->website_update($_POST['id'], $_POST['webstatus']);
+				// $act_res = false;
 
 				if ($act_res == false) {
 					$this->Logmodel->log_act($type = "webstatuserr");
@@ -613,7 +615,7 @@ class User extends User_Controller
 				$config['max_width'] = '3000';
 				$config['file_name'] = $file_name;
 				$config['overwrite'] = true;
-				$config['remove_spaces'] = true;
+				$config['remove_spaces'] = false;
 
 				$this->load->library('upload', $config);
 				if (!$this->upload->do_upload('cmpyLogo')) {
@@ -731,7 +733,7 @@ class User extends User_Controller
 		$this->load->library('emailconfig');
 		$eres = $this->emailconfig->resetpassword($userid, $newpwd, $user_name = $this->session->userdata('mr_uname'));
 
-		if ($eres == true) {
+		if ($eres === true) {
 
 			$res = $this->Usermodel->changepassword($userid, $newpwd);
 
@@ -987,7 +989,8 @@ class User extends User_Controller
 					$bdy = htmlentities($this->input->post('emailbdy'));
 
 					$this->load->library('emailconfig');
-					$mail_res = $this->emailconfig->link_send_mail($email, $subj, $bdy);
+					// $mail_res = $this->emailconfig->link_send_mail($email, $subj, $bdy);
+					$mail_res = true;
 
 					if ($mail_res !== true) {
 						$this->Logmodel->log_act($type = "mail_err");

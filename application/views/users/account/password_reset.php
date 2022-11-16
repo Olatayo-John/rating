@@ -41,13 +41,15 @@
     <hr>
 </form>
 
-<div class="modal fade forgotpass_modal">
-    <div class="modal-dialog modal-dialog-top">
+<div class="modal fade forgotpass_modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close close_forgotpass_modal" aria-hidden="true">&times;</button>
-            </div>
             <div class="modal-body">
+                <div class="modalcloseDiv">
+                    <h6></h6>
+                    <i class="fas fa-times close_forgotpass_modal text-danger"></i>
+                </div>
+
                 <form action="<?php echo base_url('password-update'); ?>" method="post">
                     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
@@ -92,17 +94,6 @@
 
 
 <script>
-    function randonpassword() {
-        var length = 10;
-        var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        var val = "";
-
-        for (var i = 0, n = charset.length; i < length; ++i) {
-            val += charset.charAt(Math.floor(Math.random() * n));
-        }
-        return val;
-    }
-
     $(document).ready(function() {
         $('form#pwdForm').submit(function(e) {
             // e.preventDefault();
@@ -141,18 +132,19 @@
             }
         });
 
-        // forgot password
+        // forgot password modal
         $(document).on('click', 'button.pwd_f', function() {
             $('.forgotpass_modal').modal("show");
         });
 
         $(document).on('click', 'button.sendcodebtn,button.rsendcodebtn', function(e) {
             e.preventDefault();
+
             var csrfHash = $('.csrf_token').val();
             var csrfName = $('.csrf_token').attr("name");
             var userid = "<?php echo $this->session->userdata('mr_id') ?>";
             var useremail = $(".fp_email").val();
-            var vcode_init = randonpassword();
+            var vcode_init = returnPassword();
 
             $.ajax({
                 url: "<?php echo base_url('resetpassword_vcode'); ?>",
@@ -165,8 +157,9 @@
                 },
                 dataType: "json",
                 beforeSend: function(data) {
-                    $(".sendcodebtn").html("Sending...");
-                    $(".rsendcodebtn").html("Sending...").attr("disabled", "disabled").css("cursor", "not-allowed");
+                    clearAlert();
+
+                    $(".sendcodebtn,.rsendcodebtn ").html("Sending...").attr("disabled", "disabled").css("cursor", "not-allowed");
                 },
                 success: function(data) {
                     if (data.status === false) {
@@ -174,7 +167,7 @@
                         $(".ajax_res_err").text(data.msg);
                         $(".ajax_err_div").fadeIn();
 
-                        $(".sendcodebtn").html("Send Verfication Code");
+                        $(".sendcodebtn,.rsendcodebtn ").html("Send Verfication Code").removeAttr("disabled").css("cursor", "pointer");;
 
                     } else if (data.status === true) {
                         $(".ajax_err_div,.ajax_succ_div").hide();
@@ -204,6 +197,7 @@
 
         $(document).on('click', 'button.vcodebtn', function(e) {
             e.preventDefault();
+
             var csrfHash = $('.csrf_token').val();
             var csrfName = $('.csrf_token').attr("name");
             var vecode = $('.vcode').val();
@@ -228,6 +222,9 @@
                     [csrfName]: csrfHash
                 },
                 dataType: "json",
+                beforeSend: function(data) {
+                    clearAlert();
+                },
                 success: function(data) {
                     if (data.status === false) {
                         $(".ajax_succ_div,.ajax_err_div").hide();
@@ -244,7 +241,7 @@
                         //rsendcode btn
                         $(".rsendcodebtn").css({
                             'cursor': 'not-allowed',
-                        }).attr('disabled', 'disabled');
+                        }).attr('disabled', 'disabled').fadeOut();
 
                         //vcode input
                         $('.vcode').css({
@@ -256,7 +253,7 @@
                         //vcode btn
                         $(".vcodebtn").css({
                             'cursor': 'not-allowed',
-                        }).addClass("bg-success").attr('disabled', 'disabled').html("Verified!");
+                        }).addClass("bg-success").attr('disabled', 'disabled').html("Verified!").fadeOut();
 
 
                         $(".fp_pwddiv,.fp_newpwdbtndiv").fadeIn();
@@ -296,6 +293,9 @@
                     [csrfName]: csrfHash
                 },
                 dataType: "json",
+                beforeSend: function() {
+                    clearAlert();
+                },
                 success: function(data) {
                     if (data.status === false) {
                         $(".ajax_succ_div,.ajax_err_div").hide();
@@ -326,7 +326,7 @@
             });
         });
 
-        $(document).on('click', 'button.close_forgotpass_modal', function(e) {
+        $(document).on('click', '.close_forgotpass_modal', function(e) {
             e.preventDefault();
 
             var inproc = $(".close_forgotpass_modal").attr("proc");
@@ -359,7 +359,7 @@
 
                     return true;
                 }
-            } else if (inproc === "false" || inproc === undefined) {
+            } else if (inproc === "false" || inproc === undefined || inproc === null || inproc === "") {
                 $('.forgotpass_modal').modal("hide");
             }
 

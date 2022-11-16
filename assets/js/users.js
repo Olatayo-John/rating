@@ -30,14 +30,7 @@ $(document).ready(function () {
 	});
 
 	$("button.genpwdbtn").click(function () {
-		var length = 10;
-		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		var val = "";
-
-		for (var i = 0, n = charset.length; i < length; ++i) {
-			val += charset.charAt(Math.floor(Math.random() * n));
-		}
-		var pwd = $('.rspwd').val(val);
+		$('.rspwd').val(returnPassword());
 		$('i.fa-eye').show();
 		$('i.fa-eye-slash').hide();
 	});

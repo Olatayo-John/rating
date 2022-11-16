@@ -11,19 +11,7 @@ $(document).ready(function () {
 	});
 
 	$("button.genpwdbtn").click(function () {
-		// var randpwd = Math.floor((Math.random() * 10000000) + 1);
-		// var pwd = $('.pwd').val(randpwd);
-		// $('i.fa-eye').show();
-		// $('i.fa-eye-slash').hide();
-
-		var length = 10;
-		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		var val = "";
-
-		for (var i = 0, n = charset.length; i < length; ++i) {
-			val += charset.charAt(Math.floor(Math.random() * n));
-		}
-		var pwd = $('.pwd').val(val);
+		$('.pwd').val(returnPassword());
 		$('i.fa-eye').show();
 		$('i.fa-eye-slash').hide();
 	});
@@ -55,8 +43,7 @@ $(document).ready(function () {
 		var whatsapp_quota = $(".whatsapp_quota").val();
 		var web_quota = $(".web_quota").val();
 
-		$(".ajax_res_err,.ajax_res_succ").text("");
-		$(".ajax_err_div,ajax_succ_div").hide();
+		clearAlert();
 
 		if (email == "" || email == null) {
 			document.getElementById("email").scrollIntoView(false);
@@ -67,6 +54,8 @@ $(document).ready(function () {
 			document.getElementById("mobile").scrollIntoView(false);
 			$('.mobileerr').show();
 			return false;
+		}else{
+			$('.mobileerr').hide();
 		}
 
 		var chl = $('#cmpychkb').is(":checked");
@@ -98,10 +87,8 @@ $(document).ready(function () {
 
 
 		$.ajax({
-			beforSend: function () {
-				$('.registerbtn').attr('disabled', 'disabled');
-				$('.registerbtn').html('Processing...');
-				$('.registerbtn').css('cursor', 'not-allowed');
+			beforeSend: function () {
+				$('.registerbtn').attr('disabled', 'disabled').html('Processing...').css('cursor', 'not-allowed');
 			}
 		});
 	});

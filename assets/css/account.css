@@ -38,41 +38,28 @@ label {
 	background: #fff;
 }
 
-/* tbody tr :nth-child(1) {
-	color: #294a63;
-	font-weight: 500;
-}
-tbody tr td a.webA{
-	color: #007bff !important;
-} */
-/*  */
 
 
 /* side nav_links */
 .tab_div {
 	display: flex;
-	/* justify-content: space-between; */
 	padding: 0;
-	background-color: #294a63;
+	margin-bottom: 14px;
 }
 
 .tab_div a.prof_a {
-	color: #fff;
-	font-weight: bold;
+	color: #294a63;
+	font-weight: 500;
 }
 
 .tab_link {
-	color: #fff;
-	padding: 8px 20px;
+	color: #294a63;
+	padding: 5px 20px;
 }
 
 .tab_link:hover {
 	text-decoration: none;
-	color: #fff;
-}
-
-.info_div {
-	/* background: white; */
+	color: #294a63;
 }
 
 /* common tab css */
@@ -228,10 +215,20 @@ h3._total {
 	border: none;
 	outline: none;
 	text-align: center;
-	border-bottom: 2px solid #294a63;
+	/* border-bottom: 2px solid #294a63; */
 	height: 33.5px;
 	margin-left: 10px;
 	background: transparent;
+}
+
+.cmpyLogoDiv {
+	margin: auto;
+	text-align: center;
+}
+
+.cmpyLogoImg {
+	max-width: 56px;
+	max-height: 50px;
 }
 
 
@@ -274,3 +271,4 @@ h3._total {
 		text-align: left !important
 	}
 }
+

@@ -16,6 +16,9 @@ $(document).ready(function () {
 
 		var tabFormName = $(this).attr("tabFormName");
 
+		$('.tab_link').css({'font-weight': 'initial','border-bottom':'initial'});
+		$(this).css({ 'font-weight': '500', 'border-bottom': '2px solid #294a63' });
+
 		$('.genform').hide();
 		$('form.'+tabFormName+'').show();
 	});

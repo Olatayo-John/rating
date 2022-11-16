@@ -18,7 +18,7 @@
 					</div>
 
 					<div class="info_div col-md-10 p-3">
-						<div class="closemodalbtndiv">
+						<div class="modalcloseDiv">
 							<h6 class="h_userName"></h6>
 							<i class="fas fa-times closevuserbtn text-danger"></i>
 						</div>
@@ -56,8 +56,8 @@
 		<h4><?php echo $this->session->userdata("mr_cmpy") ?></h4>
 	</div>
 	<div>
-		<a href="<?php echo base_url('add'); ?>" class="btn text-light" style="background:#294a63;">
-			<i class="fas fa-user-plus pr-2"></i>Add New User
+		<a href="<?php echo base_url('add'); ?>" title="New User" class="btn text-light" style="background:#294a63;">
+			<i class="fas fa-user-plus pr-2"></i>New User
 		</a>
 	</div>
 </div>
@@ -81,12 +81,17 @@
 					<?php endif; ?>
 				</td>
 				<td class="w-25">
-					<a href="">
-						<i class="fa-solid fa-user-pen editUserI" id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>" data-iscmpy="<?php echo $user->iscmpy ?>" data-cmpyid="<?php echo $user->cmpyid ?>"></i>
-					</a>
-					<?php if ($user->active == '0') : ?>
-						<span class="text-danger font-weight-bold"> (Account unverified)</span>
-					<?php endif; ?>
+					<div class="">
+						<a href="">
+							<i class="fa fa-reorder editUserI" title="Show" id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>" data-iscmpy="<?php echo $user->iscmpy ?>" data-cmpyid="<?php echo $user->cmpyid ?>"></i>
+						</a>
+						<?php if ($user->active == '0') : ?>
+							<span class="text-warning"> Unverified</span>
+						<?php endif; ?>
+						<?php if ($user->active == '2') : ?>
+							<span> Deactivated</span>
+						<?php endif; ?>
+					</div>
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -126,10 +131,9 @@
 						cmpyid: cmpyid,
 					},
 					beforeSend: function(res) {
-						$(".ajax_succ_div,.ajax_err_div").hide();
-						$(".ajax_res_err,.ajax_res_succ").empty();
+						clearAlert();
 
-						$('#userprofile_adminForm').trigger("reset");
+						$('#userprofile_Form,#usercmpy_sadminForm,#userquota_sadminForm,#useraccount_Form').trigger("reset");
 
 						$('.pwderr,i.fa-eye,i.fa-eye-slash').hide("");
 					},
@@ -164,7 +168,7 @@
 							$(".email").val(res.uinfos.email);
 							$(".mobile").val(res.uinfos.mobile);
 							$(".uname").val(res.uinfos.uname);
-							$('#userprofile_adminForm').find('select[name=gender] option[value=' + res.uinfos.gender + ']').attr('selected', 'selected').end();
+							$('#userprofile_Form').find('select[name=gender] option[value=' + res.uinfos.gender + ']').attr('selected', 'selected').end();
 							$(".dob").val(res.uinfos.dob);
 							var seg = $(".linkshare").attr("data-host");
 							$(".linkshare").val(seg + res.uinfos.form_key);

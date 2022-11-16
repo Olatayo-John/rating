@@ -3,7 +3,7 @@ $(document).ready(function () {
 	$('button.verifycodebtn').click(function () {
 		//e.preventDefault();
 		$.ajax({
-			beforSend: function () {
+			beforeSend: function () {
 				$('.verifybtn').attr('disabled', 'disabled');
 				$('.verifybtn').html('Verifying...');
 				$('.verifybtn').css('cursor', 'not-allowed');
@@ -15,7 +15,7 @@ $(document).ready(function () {
 	$(document).on("click", 'a.rsendcodebtn', function () {
 		//e.preventDefault();
 		$.ajax({
-			beforSend: function () {
+			beforeSend: function () {
 				$('#rsendcodebtn').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
 			}
 		});

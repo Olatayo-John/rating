@@ -282,13 +282,22 @@ class Adminmodel extends CI_Model
 		return $quotaInfo;
 	}
 
-	public function updatecompany($user_id, $form_key, $cmpyData)
+	public function updatecompany($user_id, $form_key, $cmpyID, $cmpyData)
 	{
-		print_r($cmpyData);die;
-		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
-		$this->db->update("users", $cmpyData);
-
+		$this->db->where(array('id' => $cmpyID, 'userid' => $user_id));
+		$this->db->update("company_details", $cmpyData);
 		return true;
+	}
+
+	public function updatecompany_users($cmpyName, $user_id)
+	{
+		$data = array(
+			'cmpy' => $cmpyName
+		);
+
+		$this->db->where('id', $user_id);
+		$this->db->or_where('cmpyid', $user_id);
+		$this->db->update('users', $data);
 	}
 
 	public function updatequota($user_id, $form_key, $qtData)

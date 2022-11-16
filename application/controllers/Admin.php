@@ -422,26 +422,60 @@ class Admin extends Admin_Controller
 			$data['status'] = false;
 			$data['msg'] = lang('acc_denied');
 		} else {
+			$cmpyLogo = htmlentities($_POST['h_cmpyLogoName']); //default
+
+			if ($_FILES['cmpyLogo']['name']) {
+
+				$file_name = strtolower(htmlentities($_POST['cmpyName']) . '_logo');
+
+				$config['upload_path'] = './uploads';
+				$config['allowed_types'] = 'jpg|jpeg|png';
+				$config['max_size'] = '2048';
+				$config['max_height'] = '3000';
+				$config['max_width'] = '3000';
+				$config['file_name'] = $file_name;
+				$config['overwrite'] = true;
+				$config['remove_spaces'] = false;
+
+				$this->load->library('upload', $config);
+				if (!$this->upload->do_upload('cmpyLogo')) {
+					$upload_error = array('error' => $this->upload->display_errors());
+
+					$data['status'] = false;
+					$data['msg'] = $this->upload->display_errors();
+					echo json_encode($data);
+					exit;
+				} else {
+					$logo_uploaded = $_FILES['cmpyLogo']['name'];
+					$logo_ext = htmlentities(strtolower(pathinfo($logo_uploaded, PATHINFO_EXTENSION)));
+					$upload_data = array('upload_data' => $this->upload->data());
+					$cmpyLogo = $file_name . "." . $logo_ext;
+				}
+			}
+
 			$cmpyData = array(
 				'cmpyName' => htmlentities($_POST['cmpyName']),
 				'cmpyEmail' => htmlentities($_POST['cmpyEmail']),
 				'cmpyMobile' => htmlentities($_POST['cmpyMobile']),
-				'cmpyLogo' => htmlentities($_POST['cmpyLogo'])
+				'cmpyLogo' => $cmpyLogo,
 			);
-			$user_id = $_POST['user_id'];
-			$form_key = $_POST['form_key'];
+			$user_id = $_POST['h_userid'];
+			$form_key = $_POST['h_form_key'];
+			$cmpyID = $_POST['h_cmpydetailID'];
+			$cmpyName = htmlentities($_POST['cmpyName']);
 
-			$res = $this->Adminmodel->updatecompany($user_id, $form_key, $cmpyData);
-			// $res = true;
+			$res = $this->Adminmodel->updatecompany($user_id, $form_key, $cmpyID, $cmpyData);
 			if ($res !== true) {
 				// $this->Logmodel->log_act($type = "");
 				$data['status'] = false;
 				$data['msg'] = "Error updating user details!";
 			} else {
+				$this->Adminmodel->updatecompany_users($cmpyName, $user_id);
+
 				// $this->Logmodel->log_act($type = "");
 				$data['status'] = true;
-				$data['msg'] = "User profile updated!";
-				// $data['refdata'] = $this->Adminmodel->get_adminusers()->result();
+				$data['msg'] = "Updated!";
+				$data['logopath'] = base_url('uploads/').$cmpyLogo;
 			}
 		}
 

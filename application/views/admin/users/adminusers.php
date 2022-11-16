@@ -89,7 +89,7 @@
 							<span class="text-warning"> Unverified</span>
 						<?php endif; ?>
 						<?php if ($user->active == '2') : ?>
-							<span> Deactivated</span>
+							<span class="text-danger"> Deactivated</span>
 						<?php endif; ?>
 					</div>
 				</td>

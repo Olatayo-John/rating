@@ -1,0 +1,104 @@
+<!-- <h4 class="text-dark">Personal Information</h4>
+<hr class="p_i"> -->
+<form action="<?php echo base_url('update-user-quota'); ?>" method="post" id="userquota_sadminForm">
+    <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
+    <div class="form-group">
+        <label>Current Email Quota</label> <span>*</span>
+        <input type="number" name="email_quota" class="form-control email_quota" value="" required>
+    </div>
+
+    <div class="form-group">
+        <label>Current SMS Quota</label> <span>*</span>
+        <input type="number" name="sms_quota" class="form-control sms_quota" value="" required>
+    </div>
+
+    <div class="form-group">
+        <label>Current Whatsapp Quota</label> <span>*</span>
+        <input type="number" name="whatsapp_quota" class="form-control whatsapp_quota" value="" required>
+    </div>
+
+    <div class="form-group">
+        <label>Current Web Quota</label> <span>*</span>
+        <input type="number" name="web_quota" class="form-control web_quota" value="" required>
+    </div>
+
+    <div class="text-right form-group cmpy_qt_info">
+        <p>Quota is shared by all users under <span class="company"></span> Company</p>
+    </div>
+
+
+    <hr>
+    <div class="form-group text-right">
+        <button class="btn text-light save_qt_btn" type="submit" style="background-color:#294a63">Update</button>
+    </div>
+    <hr>
+</form>
+
+
+<script>
+    $(document).ready(function() {
+        $('form#userquota_sadminForm').submit(function(e) {
+            e.preventDefault();
+
+            var email_quota = $('.email_quota').val();
+            var sms_quota = $('.sms_quota').val();
+            var whatsapp_quota = $('.whatsapp_quota').val();
+            var web_quota = $('.web_quota').val();
+            var user_id = $('#currentUserId').attr("user_id");
+            var form_key = $('#currentUserId').attr("form_key");
+            var user_isadmin = $('#currentUserId').attr("user_isadmin");
+            var user_iscmpy = $('#currentUserId').attr("user_iscmpy");
+
+            if (email_quota == "" || email_quota == null || sms_quota == "" || sms_quota == null || whatsapp_quota == "" || whatsapp_quota == null || web_quota == "" || web_quota == null) {
+                return false;
+            }
+
+            $.ajax({
+                url: "<?php echo base_url('update-user-quota'); ?>",
+                method: "post",
+                data: {
+                    user_id: user_id,
+                    form_key: form_key,
+                    user_isadmin: user_isadmin,
+                    user_iscmpy: user_iscmpy,
+                    email_quota: email_quota,
+                    sms_quota: sms_quota,
+                    whatsapp_quota: whatsapp_quota,
+                    web_quota: web_quota,
+                    [csrfName]: csrfHash
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    clearAlert();
+                    
+                    $('.save_qt_btn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
+                },
+                error: function(res) {
+                    var con = confirm('Some error occured. Refresh?');
+                    if (con === true) {
+                        window.location.reload();
+                    } else if (con === false) {
+                        return false;
+                    }
+                },
+                success: function(res) {
+                    if (res.status === false) {
+                        $(".ajax_succ_div,.ajax_err_div").hide();
+                        $(".ajax_res_err").text(res.msg);
+                        $(".ajax_err_div").fadeIn();
+
+                    } else if (res.status === true) {
+                        $(".ajax_err_div,ajax_succ_div").hide();
+                        $(".ajax_res_succ").text(res.msg);
+                        $(".ajax_succ_div").fadeIn();
+                    }
+
+                    $('.save_qt_btn').removeAttr('disabled').html('Update').css('cursor', 'pointer');
+                    $('.csrf-token').val(res.token);
+                }
+            })
+        });
+
+    });
+</script>

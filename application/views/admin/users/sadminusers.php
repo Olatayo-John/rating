@@ -93,9 +93,9 @@
 				</td>
 				<td class="w-25">
 					<?php if ($user->admin === '1') : ?>
-						<?php echo strtoupper($user->cmpy) ?><span> Admin</span>
+						<span><?php echo strtoupper($user->cmpy) ?> Admin</span>
 					<?php elseif (!empty($user->cmpyid) && $user->iscmpy === '1') : ?>
-						<?php echo ucwords($user->cmpy) ?><span> User</span>
+						<span><?php echo ucwords($user->cmpy) ?> User</span>
 					<?php else : ?>
 						<span>Regular User</span>
 					<?php endif; ?>
@@ -109,7 +109,7 @@
 							<span class="text-warning"> Unverified</span>
 						<?php endif; ?>
 						<?php if ($user->active == '2') : ?>
-							<span> Deactivated</span>
+							<span class="text-danger"> Deactivated</span>
 						<?php endif; ?>
 					</div>
 				</td>
@@ -204,6 +204,11 @@
 								$(".cmpyMobile").val(res.uinfos.cmpyMobile);
 								var logoPath = '<?php echo base_url('uploads/') ?>' + res.uinfos.cmpyLogo;
 								$(".cmpyLogoImg").attr('src', logoPath);
+
+								$(".h_cmpyLogoName").val(res.uinfos.cmpyLogo);
+								$(".h_userid").val(res.uinfos.userid);
+								$(".h_form_key").val(res.uinfos.form_key);
+								$(".h_cmpydetailID").val(res.uinfos.cmpydetailID);
 
 								$('.cmpy_a').show();
 							}

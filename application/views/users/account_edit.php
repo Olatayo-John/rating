@@ -3,7 +3,7 @@
 <div class="set_wrapper">
 	<div class="tab_div bg-light-custom">
 		<a href="#profile" class="tab_link" id="profile">Profile</a>
-		<a href="#websites" class="tab_link" id="websites">Websites</a>
+		<a href="#platforms" class="tab_link" id="platforms">Platforms</a>
 		<?php if ($this->session->userdata('mr_cmpyid') == null) : ?>
 			<a href="#plan" class="tab_link" id="plan">Plan</a>
 		<?php endif; ?>
@@ -22,7 +22,7 @@
 			<?php include("account/profile_edit.php") ?>
 		</div>
 
-		<div class="info_inner" id="websites">
+		<div class="info_inner" id="platforms">
 			<?php include("account/websites.php") ?>
 		</div>
 

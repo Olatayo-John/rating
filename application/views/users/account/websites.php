@@ -8,7 +8,7 @@
     <div>
 
         <button type="button" class="text-light btn addwebmodal_btn" style="background:#294a63">
-            <i class="fas fa-plus-circle mr-2"></i>Add Website
+            <i class="fas fa-plus-circle mr-2"></i>Add Platform
         </button>
     </div>
 </div>
@@ -16,7 +16,7 @@
 
 <div class="eachwebwrapper" id="eachwebwrapper">
     <?php if ($websites->num_rows() === 0) : ?>
-        <h6 class="text-center pt-4 pb-3 noweb text-danger">No website(s) created</h6>
+        <h6 class="text-center pt-4 pb-3 noweb text-danger">No Platform(s) created</h6>
     <?php endif; ?>
 
     <?php if ($websites->num_rows() > 0) : ?>
@@ -24,10 +24,10 @@
             <div class="col-md-12 p-0 d-flex eachwebinfo">
                 <div class="form-group" style="margin:0">
                     <?php if ($web['active'] == "1") : ?>
-                        <span class="web_stati text-success" id="<?php echo $web['id'] ?>"><i class="fas fa-circle" title="Website is active"></i></span>
+                        <span class="web_stati text-success" id="<?php echo $web['id'] ?>"><i class="fas fa-circle" title="Platform is active"></i></span>
                     <?php endif; ?>
                     <?php if ($web['active'] == "0") : ?>
-                        <span class="web_stati text-danger" id="<?php echo $web['id'] ?>"><i class="fas fa-circle" title="Website is not active"></i></span>
+                        <span class="web_stati text-danger" id="<?php echo $web['id'] ?>"><i class="fas fa-circle" title="Platform is not active"></i></span>
                     <?php endif; ?>
                 </div>
                 <div class="form-group col pr-0">
@@ -59,12 +59,12 @@
                     <input type="hidden" class="web_id form-control" name="web_id" value="">
 
                     <div class="form-group">
-                        <label>Web Name</label>
-                        <input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Name of the webiste" required disabled readonly>
+                        <label>Platform Name</label>
+                        <input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Platform Name" required disabled readonly>
                     </div>
                     <div class="form-group">
-                        <label>Web Link</label>
-                        <input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Website link" required disabled readonly>
+                        <label>Platform Link</label>
+                        <input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Platform Link" required disabled readonly>
                     </div>
                     <div class="form-group">
                         <label>Status</label>
@@ -99,12 +99,12 @@
                     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
                     <div class="form-group">
-                        <label class="mb-0">Website Name</label>
-                        <input type="text" name="web_name_new" class="web_name_new form-control" placeholder="Name of the webisite" required>
+                        <label class="mb-0">Platform Name</label>
+                        <input type="text" name="web_name_new" class="web_name_new form-control" placeholder="Platform Name" required>
                         <div class="text-danger mt-0 web_name_err"></div>
                     </div>
                     <div class="form-group">
-                        <label class="mb-0">Website Link</label>
+                        <label class="mb-0">Platform Link</label>
                         <input type="url" name="web_link_new" class="web_link_new form-control" placeholder="e.g https://domainname.com" required>
                         <div class="text-danger mt-0 web_link_err"></div>
                     </div>
@@ -202,7 +202,7 @@
                     $(".csrf_token").val(data.token);
 
                     if (data.webdata > 0) {
-                        $('.web_name_err').html("You already have a website with this name").show();
+                        $('.web_name_err').html("You already have a platform with this name").show();
                         $(".web_name_new").css('border-bottom', '2px solid #dc3545');
                         $(".add_web_modal_btn").attr({
                             type: "button",
@@ -239,7 +239,7 @@
                     $(".csrf_token").val(data.token);
 
                     if (data.webdata > 0) {
-                        $('.web_link_err').html("You already have a website with this Link").show();
+                        $('.web_link_err').html("You already have a platform with this Link").show();
                         $(".web_link_new").css('border-bottom', '2px solid #dc3545');
                         $(".add_web_modal_btn").attr({
                             type: "button",
@@ -320,7 +320,7 @@
 
                         $(".noweb").hide();
 
-                        $(".eachwebwrapper").append('<div class="col-md-12 p-0 d-flex eachwebinfo"><div class="form-group" style="margin:0"><span class="web_stati text-success" id="' + data.insert_id + '"><i class="fas fa-circle" title="Website is active"></i></span></div><div class="form-group col pr-0"><label class="webnamelabel" id="webnamelabel">' + web_name_new + '</label><div class="d-flex"><input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="' + web_link_new + '" readonly required style="cursor:not-allowed"><div class="col"><i class="fa-solid fa-pen-to-square viewweb_btn" id="' + data.insert_id + '" style="color:#294a63"></i></div></div></div></div>');
+                        $(".eachwebwrapper").append('<div class="col-md-12 p-0 d-flex eachwebinfo"><div class="form-group" style="margin:0"><span class="web_stati text-success" id="' + data.insert_id + '"><i class="fas fa-circle" title="Platform is active"></i></span></div><div class="form-group col pr-0"><label class="webnamelabel" id="webnamelabel">' + web_name_new + '</label><div class="d-flex"><input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="' + web_link_new + '" readonly required style="cursor:not-allowed"><div class="col"><i class="fa-solid fa-pen-to-square viewweb_btn" id="' + data.insert_id + '" style="color:#294a63"></i></div></div></div></div>');
 
                         var webscreated = $('.eachwebinfo').length;
                         var webspaceleftText = $('.webspaceleft').text();
@@ -415,11 +415,11 @@
 
                     if (webstatus == 1) {
                         $("span#" + id + "").removeClass("text-danger").addClass("text-success");
-                        $("span#" + id + " i").attr('title', 'Website is active');
+                        $("span#" + id + " i").attr('title', 'Platform is active');
                         $("button[attrid='" + id + "']").attr('status', '0').html("Deactivate");
                     } else if (webstatus == 0) {
                         $("span#" + id + "").removeClass("text-success").addClass("text-danger");
-                        $("span#" + id + " i").attr('title', 'Website is not active');
+                        $("span#" + id + " i").attr('title', 'Platform is not active');
                         $("button[attrid='" + id + "']").attr('status', '1').html("Activate");
                     }
 

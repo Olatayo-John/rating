@@ -360,12 +360,12 @@ class Usermodel extends CI_Model
 		} else {
 			$dupname = $this->check_duplicate_webname($web_name_new);
 			if ($dupname > 0) {
-				return "You have an existing website with the name [" . $web_name_new . "]";
+				return "You have an existing platform with the name [" . $web_name_new . "]";
 				exit;
 			} else {
 				$duplink = $this->check_duplicate_weblink($web_link_new);
 				if ($duplink > 0) {
-					return "You have an existing website with the link [" . $web_link_new . "]";
+					return "You have an existing platform with the link [" . $web_link_new . "]";
 					exit;
 				} else {
 					$this->update_webquota($type = "web_quota-1");

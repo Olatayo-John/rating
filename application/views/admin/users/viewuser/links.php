@@ -67,7 +67,7 @@
             <th colspan="2">Sent To</th>
             <th data-field="subj" rowspan="2" data-valign="middle" data-sortable="true">Subject</th>
             <th data-field="body" rowspan="2" data-valign="middle" data-sortable="true">Message</th>
-            <th data-field="sent_at" rowspan="2" data-valign="middle" data-sortable="true">Date</th>
+            <th data-field="sent_at" rowspan="2" data-valign="middle" data-sortable="true" class="text-danger">Date</th>
         </tr>
         <tr class="tr-class-2">
             <th data-field="sent_to_email" data-sortable="true">Email</th>

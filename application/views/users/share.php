@@ -121,12 +121,18 @@
 					<i class="fas fa-file-csv mr-2"></i>Download sample</a>
 			</div>
 
-			<div class=" form-group">
+			<div class="form-group">
 				<label class="phonelabel">Phonenumber</label>
-				<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile" required value="1234567890">
-				<span class="e_mobile">Invalid mobile length</span>
-				<select class="form-control sms_select" name="sms_select" id="sms_select" style="display: none;" readonly conn="false">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">+91</span>
+					</div>
+
+					<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile" required value="1234567890">
+					<select class="form-control sms_select" name="sms_select" id="sms_select" style="display: none;" readonly conn="false">
 				</select>
+				</div>
+				<span class="e_mobile">Invalid mobile length</span>
 			</div>
 
 			<div class="form-group">
@@ -148,7 +154,13 @@
 
 			<div class="form-group">
 				<label class="phonelabel">Whatsapp Number</label>
-				<input type="number" name="whpMobile" class="form-control whpMobile" placeholder="Whatsapp number" required value="1234567890">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">+91</span>
+					</div>
+
+					<input type="number" name="whpMobile" class="form-control whpMobile" placeholder="Whatsapp number" required value="1234567890">
+				</div>
 				<span class="e_whpMobile err">Invalid mobile length</span>
 			</div>
 
@@ -184,7 +196,7 @@
 				[csrfName]: csrfHash
 			},
 			dataType: "json",
-			beforeSend: function(){
+			beforeSend: function() {
 				clearAlert();
 			},
 			success: function(data) {
@@ -300,7 +312,7 @@
 
 					} else if (data.status === true) {
 						if (parseInt(data.EmailArray.length) > 0) {
-							$('.emailmodal').hide();
+							$('.emailmodal').modal('hide');
 
 							$('#email_csv_file').val("");
 							for (i = 0; i < data.EmailArray.length; i++) {
@@ -369,7 +381,7 @@
 
 					} else if (data.status === true) {
 						if (parseInt(data.MobileArray.length) > 0) {
-							$('.smsmodal').hide();
+							$('.smsmodal').modal('hide');
 
 							$('#sms_csv_file').val("");
 							for (i = 0; i < data.MobileArray.length; i++) {

@@ -37,7 +37,7 @@
 
 			<div class="web_wrapper">
 				<div class="web_header" id="toggleHeader" inview="hidden" iName="web_i" tabName="web_innerwrapper">
-					<h4>Websites</h4>
+					<h4>Platforms</h4>
 					<i class="fas fa-caret-up web_i"></i>
 				</div>
 				<div class="web_innerwrapper">
@@ -72,7 +72,7 @@
 
 				<div class="users_web_wrapper">
 					<div class="users_web_header" id="toggleHeader" inview="hidden" iName="users_web_i" tabName="users_web_innerwrapper">
-						<h4>User Websites</h4>
+						<h4>User Platforms</h4>
 						<i class="fas fa-caret-up users_web_i"></i>
 					</div>
 					<div class="users_web_innerwrapper">

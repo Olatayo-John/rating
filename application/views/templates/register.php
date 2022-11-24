@@ -22,7 +22,13 @@
 
 		<div class="form-group">
 			<label>Mobile</label> <span>*</span>
-			<input type="number" name="mobile" class="form-control mobile" placeholder="0123456789" id="mobile" value="<?php echo set_value('mobile'); ?>" required>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">+91</span>
+				</div>
+
+				<input type="number" name="mobile" class="form-control mobile" placeholder="0123456789" id="mobile" value="<?php echo set_value('mobile'); ?>" required>
+			</div>
 			<div class="err mobileerr">Invalid mobile length</div>
 		</div>
 
@@ -58,7 +64,7 @@
 		</div>
 		<hr>
 
-		<?php include(APPPATH.'views/templates/plans.php') ?>
+		<?php include(APPPATH . 'views/templates/plans.php') ?>
 
 
 		<div class="btngrp pt-3 pb-3">

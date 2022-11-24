@@ -23,7 +23,13 @@
 
 			<div class="form-group">
 				<label>Mobile</label> <span>*</span>
-				<input type="number" name="mobile" class="form-control mobile" placeholder="0123456789" required id="mobile" value="<?php echo set_value('mobile'); ?>">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">+91</span>
+					</div>
+
+					<input type="number" name="mobile" class="form-control mobile" placeholder="0123456789" required id="mobile" value="<?php echo set_value('mobile'); ?>">
+				</div>
 				<div class="err mobileerr">Invalid mobile length</div>
 			</div>
 

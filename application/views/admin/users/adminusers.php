@@ -11,7 +11,7 @@
 				<div class="row set_wrapper m-0">
 					<div class="tab_div col-md-2 p-0">
 						<a href="" class="tab_link prof_a" tabDivN="prof_div">Profile</a>
-						<a href="" class="tab_link web_a" tabDivN="web_div">Websites</a>
+						<a href="" class="tab_link web_a" tabDivN="web_div">Platform</a>
 						<a href="" class="tab_link rr_a" tabDivN="rr_div">Ratings</a>
 						<a href="" class="tab_link ls_a" tabDivN="ls_div">Links</a>
 						<a href="" class="tab_link ac_a text-danger font-weight-bolder" tabDivN="ac_div">Account</a>
@@ -29,7 +29,7 @@
 						</div>
 
 						<div class="web_div einfoDiv pb-5">
-							<?php include("viewuser/websites.php") ?>
+							<?php include("viewuser/platform.php") ?>
 						</div>
 
 						<div class="rr_div einfoDiv pb-5">

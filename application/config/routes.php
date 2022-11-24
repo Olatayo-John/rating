@@ -61,7 +61,7 @@ $route['emailverify/(:any)'] = 'user/emailverify/$1';
 $route['verifyemail/(:any)'] = 'user/emailverify/$1';
 
 //creating web after reg
-$route['websites'] = 'user/websites';
+$route['platform'] = 'user/platform';
 $route['get-user-quota'] = 'user/get_userQuota';
 $route['add-website'] = 'user/addwebsite';
 $route['remove-website'] = 'user/removewebsite';

@@ -7,7 +7,7 @@ class User extends User_Controller
 	{
 		if ($this->session->userdata('mr_logged_in')) {
 			if ($this->session->userdata('mr_website_form') === "0") {
-				redirect('websites');
+				redirect('platform');
 			} else {
 				redirect('share');
 			}
@@ -275,11 +275,11 @@ class User extends User_Controller
 		}
 	}
 
-	//user can creat n number of websites according to their packages
+	//user can creat n number of platform according to their packages
 	//this is done after registration
-	public function websites()
+	public function platform()
 	{
-		$data['title'] = "add websites";
+		$data['title'] = "add platform";
 
 		$this->checklogin();
 
@@ -295,7 +295,7 @@ class User extends User_Controller
 			redirect("/");
 		} else {
 			$this->load->view('templates/header', $data);
-			$this->load->view('users/websites', $data);
+			$this->load->view('users/platforms', $data);
 			$this->load->view('templates/footer');
 		}
 	}
@@ -350,7 +350,7 @@ class User extends User_Controller
 		} else if (gettype($res) === "integer") {
 			$this->Logmodel->log_act($type = "websitenew");
 			$data['status'] = true;
-			$data['msg'] = "Website created";
+			$data['msg'] = "Platform created";
 			$data['webID'] = $res;
 		}
 
@@ -380,13 +380,13 @@ class User extends User_Controller
 
 			$data['status'] = "error";
 			$data['redirect'] = "";
-			$data['msg'] = 'Error removing this website';
+			$data['msg'] = 'Error removing this Platform';
 		} else {
 			$this->Logmodel->log_act($type = "webdel");
 
 			$data['status'] = true;
 			$data['redirect'] = "";
-			$data['msg'] = 'Website Removed';
+			$data['msg'] = 'Platform Removed';
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
@@ -498,7 +498,7 @@ class User extends User_Controller
 				} else if (gettype($res) === "integer") {
 					$this->Logmodel->log_act($type = "webnew");
 					$data['status'] = true;
-					$data['msg'] = "Website created";
+					$data['msg'] = "Platform created";
 					$data['insert_id'] = $res;
 				}
 			} else {
@@ -570,11 +570,11 @@ class User extends User_Controller
 				if ($act_res == false) {
 					$this->Logmodel->log_act($type = "webstatuserr");
 					$data['status'] = false;
-					$data['msg'] = ($wb == 0) ? "Error de-activating this website" : "Error activating this website";
+					$data['msg'] = ($wb == 0) ? "Error de-activating this platform" : "Error activating this platform";
 				} else {
 					$this->Logmodel->log_act($type = "webstatus");
 					$data['status'] = true;
-					$data['msg'] = ($wb == 0) ? "Website de-activated!" : "Website is active!";
+					$data['msg'] = ($wb == 0) ? "Platform de-activated!" : "Platform is active!";
 				}
 			} else {
 				$data['status'] = false;
@@ -809,7 +809,7 @@ class User extends User_Controller
 			$data['redirect'] = base_url("logout");
 		} else {
 			$myfile = fopen("body.txt", "w") or die("Unable to open file!");
-			$txt = "Click the link below, to rate any of my websites\n";
+			$txt = "Click the link below, to rate any of my platforms\n";
 			fwrite($myfile, $txt);
 			$txt = base_url() . "wtr/" . $this->session->userdata("mr_form_key") . "\n\n";
 			fwrite($myfile, $txt);

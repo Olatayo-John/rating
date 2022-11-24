@@ -21,7 +21,13 @@
 
     <div class="form-group">
         <label>Mobile</label> <span>*</span>
-        <input type="number" name="mobile" class="form-control mobile" placeholder="0123456789" required>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">+91</span>
+            </div>
+
+            <input type="number" name="mobile" class="form-control mobile" placeholder="0123456789" required>
+        </div>
         <div class="text-danger font-weight-bolder mobileerr" style="display: none;">Invalid mobile length</div>
     </div>
 
@@ -112,7 +118,7 @@
                 dataType: "json",
                 beforeSend: function() {
                     clearAlert();
-                    
+
                     $('.save_pinfo_btn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
                 },
                 error: function(res) {

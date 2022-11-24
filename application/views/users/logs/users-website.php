@@ -3,7 +3,7 @@
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total"><?php echo $allweb->num_rows() ?></h3>
-                <span>Websites</span>
+                <span>Platforms</span>
             </div>
         </div>
     </div>
@@ -13,8 +13,8 @@
     <thead class="text-light" style="background:#294a63">
         <tr>
             <th data-field="uname" data-sortable="true">User</th>
-            <th data-field="web_name" data-sortable="true">Website Name</th>
-            <th data-field="web_link" data-sortable="true">Website Link</th>
+            <th data-field="web_name" data-sortable="true">Platform Name</th>
+            <th data-field="web_link" data-sortable="true">Platform Link</th>
             <th data-field="total_ratings" data-sortable="true">Total Ratings</th>
             <th data-field="active" data-sortable="true">Active</th>
         </tr>

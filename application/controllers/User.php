@@ -786,6 +786,16 @@ class User extends User_Controller
 		$data['t_sms'] = $this->Usermodel->total_sms();
 		$data['t_wp'] = $this->Usermodel->total_wapp();
 
+		if ($this->session->userdata('mr_sadmin') === '1' || $this->session->userdata('mr_admin') === '1') {
+			$data['allrr'] = $this->Usermodel->allrr();
+			$data['allls'] = $this->Usermodel->allsentlinks();
+			$data['allweb'] = $this->Usermodel->allwebsites();
+
+			$data['allt_mail'] = $this->Usermodel->allemail();
+			$data['allt_sms'] = $this->Usermodel->allsms();
+			$data['allt_wp'] = $this->Usermodel->allwapp();
+		}
+
 		$this->load->view('templates/header', $data);
 		$this->load->view('users/logs', $data);
 		$this->load->view('templates/footer');

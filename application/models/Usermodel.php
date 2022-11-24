@@ -559,6 +559,84 @@ class Usermodel extends CI_Model
 		return $query;
 	}
 
+	public function get_cmpyUsersId()
+	{
+		$this->db->select('id');
+		$this->db->where(array('cmpyid' => $this->session->userdata("mr_id")));
+		$q = $this->db->get('users');
+		return $q;
+	}
+
+	public function allrr()
+	{
+		$this->db->order_by('id', 'desc');
+		$this->db->where('form_key', $this->session->userdata("mr_form_key"));
+		$query = $this->db->get('all_ratings');
+		return $query;
+	}
+	public function allsentlinks()
+	{
+		$this->db->order_by('id', 'desc');
+		$this->db->where('user_id', $this->session->userdata("mr_id"));
+		$query = $this->db->get('sent_links');
+		return $query;
+	}
+	public function allwebsites()
+	{
+		if ($this->session->userdata('mr_admin') === '1') {
+			$cmpy_users_id = $this->get_cmpyUsersId();
+
+			$uidArr = array();
+			foreach ($cmpy_users_id->result_array() as $uid) {
+				array_push($uidArr, $uid['id']);
+			}
+		}
+
+		// $this->db->order_by('id', 'desc');
+		$this->db->select('w.*,u.uname')->from('websites w');
+		$this->db->join('users u', 'u.id = w.user_id');
+
+		if ($this->session->userdata('mr_sadmin') === '1') {
+			$this->db->where(array('w.user_id !=' => $this->session->userdata('mr_id')));
+		}
+
+		if ($this->session->userdata('mr_admin') === '1') {
+
+			if (!empty($uidArr)) {
+				$this->db->where_in('w.user_id', $uidArr);
+			} else {
+				$this->db->where(array('w.user_id' => $this->session->userdata('mr_id')));
+			}
+		}
+
+		$query = $this->db->get();
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
+	}
+
+	public function allemail()
+	{
+		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'link_for' => 'email'));
+		$query = $this->db->get('sent_links');
+		return $query;
+	}
+	public function allsms()
+	{
+		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'link_for' => 'sms'));
+		$query = $this->db->get('sent_links');
+		return $query;
+	}
+	public function allwapp()
+	{
+		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'link_for' => 'whatsapp'));
+		$query = $this->db->get('sent_links');
+		return $query;
+	}
+
 	public function is_userquotaexpired($qType)
 	{
 		$user_id = $this->session->userdata("mr_id");

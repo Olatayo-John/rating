@@ -35,7 +35,7 @@ class Adminmodel extends CI_Model
 			'mobile' => htmlentities($this->input->post('mobile')),
 			'active' => "0",
 			'website_form' => "0",
-			'sub' => '1',
+			'sub' => '0',
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
@@ -76,7 +76,7 @@ class Adminmodel extends CI_Model
 			'mobile' => htmlentities($this->input->post('mobile')),
 			'active' => "0",
 			'website_form' => "0",
-			'sub' => '1',
+			'sub' => '0',
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
@@ -135,6 +135,14 @@ class Adminmodel extends CI_Model
 		$this->db->where($wherearray);
 		$quotaInfo = $this->db->get("quota")->row();
 		return $quotaInfo;
+	}
+
+	public function user_sub($user_sub, $user_id, $user_formKey)
+	{
+		$this->db->where(array('id' => $user_id, 'form_key' => $user_formKey));
+		$this->db->set('sub', $user_sub);
+		$query = $this->db->update("users");
+		return true;
 	}
 
 	public function get_userinfo($id, $form_key)
@@ -304,6 +312,28 @@ class Adminmodel extends CI_Model
 	{
 		$this->db->where(array('by_user_id' => $user_id, 'by_form_key' => $form_key));
 		$this->db->update("quota", $qtData);
+
+		return true;
+	}
+
+	public function getplan($planid)
+	{
+		$this->db->where(array('id' => $planid));
+		$query = $this->db->get('plans');
+		return $query->row();
+	}
+
+	public function updateplan($planid, $pData)
+	{
+		$this->db->where('id', $planid);
+		$this->db->update("plans", $pData);
+
+		return true;
+	}
+
+	public function addplan($pData)
+	{
+		$this->db->insert("plans", $pData);
 
 		return true;
 	}

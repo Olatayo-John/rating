@@ -197,7 +197,7 @@
 			},
 			dataType: "json",
 			beforeSend: function() {
-				clearAlert();
+				// clearAlert();
 			},
 			success: function(data) {
 				$('.csrf_hash').val(data.token);

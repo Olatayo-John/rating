@@ -67,7 +67,7 @@
 	</div>
 	<div>
 		<a href="<?php echo base_url('add'); ?>" title="New User" class="btn text-light" style="background:#294a63;">
-			<i class="fas fa-user-plus pr-2"></i>New User
+			<i class="fas fa-plus pr-2"></i>New User
 		</a>
 	</div>
 </div>
@@ -78,6 +78,7 @@
 		<tr>
 			<th data-field="name" data-sortable="true">User</th>
 			<th data-field="type" data-sortable="true">Type</th>
+			<th data-field="sub" data-sortable="true">Subscription</th>
 			<th data-field="action" scope="col">Action</th>
 		</tr>
 	</thead>
@@ -98,6 +99,13 @@
 						<span><?php echo ucwords($user->cmpy) ?> User</span>
 					<?php else : ?>
 						<span>Regular User</span>
+					<?php endif; ?>
+				</td>
+				<td class="w-25">
+					<?php if ($user->sub === '1') : ?>
+						<i class="fa-solid fa-toggle-on text-success subI" mod='active' sub="<?php echo $user->sub ?>" sub_id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>"></i>
+					<?php elseif ($user->sub === '0') : ?>
+						<i class="fa-solid fa-toggle-off text-danger subI" mod='not_active' sub="<?php echo $user->sub ?>" sub_id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>"></i>
 					<?php endif; ?>
 				</td>
 				<td class="w-25">
@@ -314,6 +322,64 @@
 					},
 				});
 			}
+		});
+
+		//activate or deactivate sub
+		$(document).on('click', 'i.subI', function(e) {
+			e.preventDefault();
+
+			var user_sub = $(this).attr("sub");
+			var user_id = $(this).attr("sub_id");
+			var user_formKey = $(this).attr("data-formkey");
+			var mod = $(this).attr("mod");
+
+			$.ajax({
+				url: "<?php echo base_url("user-subscription"); ?>",
+				method: "post",
+				dataType: "json",
+				data: {
+					[csrfName]: csrfHash,
+					user_sub: user_sub,
+					user_id: user_id,
+					user_formKey: user_formKey,
+				},
+				beforeSend: function(res) {
+					clearAlert();
+				},
+				success: function(res) {
+					if (res.status === 'error') {
+						window.location.assign(res.redirect);
+					} else if (res.status === false) {
+						$(".ajax_res_err").append(res.msg);
+						$(".ajax_err_div").fadeIn();
+					} else if (res.status === true) {
+						$(".ajax_res_succ").append(res.msg);
+						$(".ajax_succ_div").fadeIn();
+
+						if (mod === 'not_active') {
+							$('i.subI[sub_id="' + user_id + '"]').removeClass('fa-toggle-off text-danger').addClass("fa-toggle-on text-success").attr({
+								'mod': 'active',
+								'sub': '1'
+							});
+						} else if (mod === 'active') {
+							$('i.subI[sub_id="' + user_id + '"]').removeClass("fa-toggle-on text-success").addClass("fa-toggle-off text-danger").attr({
+								'mod': 'not_active',
+								'sub': '0'
+							});
+						}
+					}
+
+					$('.csrf-token').val(res.token);
+				},
+				error: function(res) {
+					var con = confirm('Some error occured. Refresh?');
+					if (con === true) {
+						window.location.reload();
+					} else if (con === false) {
+						return false;
+					}
+				},
+			});
 		});
 	});
 </script>

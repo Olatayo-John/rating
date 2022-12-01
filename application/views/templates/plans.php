@@ -13,66 +13,29 @@
 	</div>
 
 	<div class="plansDiv row">
-		<div class="col-md-4 planone" plan="planone">
-			<div class="planDetails">
-				<h5>Free Plan</h5>
-				<h6>
-					<span>Rs </span>
-					<b>0.00 /per month</b>
-				</h6>
+		<?php foreach ($plans->result_array() as $p) : ?>
+			<?php if ($p['active'] === '1') : ?>
+				<div class="col" planID="plan<?php echo $p['id'] ?>">
+					<div class="planDetails">
+						<h5><?php echo $p['name'] ?></h5>
+						<h6>
+							<span>Rs </span>
+							<b><?php echo $p['amount'] ?></b>
+						</h6>
 
-				<button type="button" class='btn chooseplanbtn' sms_quota="5" email_quota="100" whatsapp_quota="5" web_quota="5" plan="planthree">Choose Plan</button>
+						<button type="button" class='btn chooseplanbtn' sms_quota="<?php echo $p['sms_quota'] ?>" email_quota="<?php echo $p['email_quota'] ?>" whatsapp_quota="<?php echo $p['whatsapp_quota'] ?>" web_quota="<?php echo $p['web_quota'] ?>" plan="planthree">Choose Plan</button>
 
-				<ul>
-					<li>5 SMS Quota</li>
-					<li>100 Email Quota</li>
-					<li>5 WhatsApp Quota</li>
-					<li>1 Website Quota</li>
-					<li class="cmp_fet">Unlimited Users</li>
-				</ul>
-			</div>
-		</div>
-
-		<div class="col-md-4 plantwo" plan="plantwo">
-			<div class="planDetails">
-				<h5>Basic Plan</h5>
-				<h6>
-					<span>Rs </span>
-					<b>1.00 /per month</b>
-				</h6>
-
-				<button type="button" class='btn chooseplanbtn' sms_quota="5" email_quota="100" whatsapp_quota="5" web_quota="5" plan="planthree">Choose Plan</button>
-
-				<ul>
-					<li>5 SMS Quota</li>
-					<li>100 Email Quota</li>
-					<li>5 WhatsApp Quota</li>
-					<li>5 Website Quota</li>
-					<li class="cmp_fet">Unlimited Users</li>
-				</ul>
-			</div>
-		</div>
-
-		<div class="col-md-4 planthree" plan="planthree">
-			<div class="planDetails">
-				<h5>Regular Plan</h5>
-				<h6>
-					<span>Rs </span>
-					<b>2.00 /per month</b>
-				</h6>
-
-				<button type="button" class='btn chooseplanbtn' sms_quota="5" email_quota="100" whatsapp_quota="5" web_quota="5" plan="planthree">Choose Plan</button>
-
-				<ul>
-					<li>5 SMS Quota</li>
-					<li>100 Email Quota</li>
-					<li>5 WhatsApp Quota</li>
-					<li>5 Website Quota</li>
-					<li class="cmp_fet">Unlimited Users</li>
-				</ul>
-			</div>
-		</div>
-
+						<ul>
+							<li><?php echo $p['sms_quota'] ?> SMS Quota</li>
+							<li><?php echo $p['email_quota'] ?> Email Quota</li>
+							<li><?php echo $p['whatsapp_quota'] ?> WhatsApp Quota</li>
+							<li><?php echo $p['web_quota'] ?> Website Quota</li>
+							<li class="cmp_fet">Unlimited Users</li>
+						</ul>
+					</div>
+				</div>
+			<?php endif; ?>
+		<?php endforeach; ?>
 	</div>
 
 </div>

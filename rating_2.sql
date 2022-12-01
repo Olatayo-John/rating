@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2021 at 01:56 PM
+-- Generation Time: Dec 01, 2022 at 01:20 PM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.4.8
 
@@ -38,47 +38,13 @@ CREATE TABLE `activity` (
 --
 
 INSERT INTO `activity` (`id`, `msg`, `act_time`) VALUES
-(1, 'Logs table cleared. [ID: 44, Name: cdssa]', 'Tuesday, 09-Nov-2021 06:30:17 CET'),
-(2, 'Failed to update password | User. [ID: 54]', 'Tuesday, 09-Nov-2021 06:41:09 CET'),
-(3, 'Logged Out. [ID: 54, Name: jvweed]', 'Tuesday, 09-Nov-2021 07:21:15 CET'),
-(4, 'Failed Login Attempt- Inactive Account | User. [Name: jvweed]', 'Tuesday, 09-Nov-2021 07:23:08 CET'),
-(5, 'Failed Login Attempt- Inactive Access | User. [Name: jvweed]', 'Tuesday, 09-Nov-2021 07:24:06 CET'),
-(6, 'Failed Login Attempt- Inactive Access | User. [Name: jvweed]', 'Tuesday, 09-Nov-2021 07:25:10 CET'),
-(7, 'Logged In | User. [ID: 52, Name: hhhhh]', 'Tuesday, 09-Nov-2021 07:25:44 CET'),
-(8, 'Failed to update password | User. [ID: 52]', 'Tuesday, 09-Nov-2021 08:43:27 CET'),
-(9, 'Failed to update password | User. [ID: 52]', 'Tuesday, 09-Nov-2021 08:45:42 CET'),
-(10, 'Failed to update password | User. [ID: 52]', 'Tuesday, 09-Nov-2021 08:46:03 CET'),
-(11, 'Website status changed | User. [ID: 52, WebID: 23, Status: 0]', 'Tuesday, 09-Nov-2021 08:46:19 CET'),
-(12, 'Website status changed | User. [ID: 52, WebID: 23, Status: 1]', 'Tuesday, 09-Nov-2021 08:46:35 CET'),
-(13, 'Website status changed | User. [ID: 52, WebID: 29, Status: 1]', 'Tuesday, 09-Nov-2021 09:01:33 CET'),
-(14, 'Logged Out. [ID: 52, Name: hhhhh]', 'Tuesday, 09-Nov-2021 10:49:01 CET'),
-(15, 'Logged In | User. [ID: 52, Name: hhhhh]', 'Tuesday, 09-Nov-2021 10:49:09 CET'),
-(16, 'SMS couldn\'t be sent | User. [ID: 52, Name: hhhhh]', 'Tuesday, 09-Nov-2021 11:17:56 CET'),
-(17, 'Failed to update password | User. [ID: 52]', 'Tuesday, 09-Nov-2021 11:48:12 CET'),
-(18, 'Profile Updated | User. [ID: 52]', 'Tuesday, 09-Nov-2021 11:50:41 CET'),
-(19, 'Failed to update password | User. [ID: 52]', 'Tuesday, 09-Nov-2021 11:50:49 CET'),
-(20, 'Logged Out. [ID: 52, Name: hhhhh]', 'Tuesday, 09-Nov-2021 12:06:13 CET'),
-(21, 'Logged Out. [ID: , Name: ]', 'Tuesday, 09-Nov-2021 12:09:29 CET'),
-(22, 'Logged In | User. [ID: 52, Name: hhhhh]', 'Tuesday, 09-Nov-2021 12:09:36 CET'),
-(23, 'Logged Out. [ID: , Name: ]', 'Tuesday, 09-Nov-2021 12:11:45 CET'),
-(24, 'New Website created | User. [ID: 52, WebName: test test, WebLink: https://ggg.com]', 'Tuesday, 09-Nov-2021 12:12:43 CET'),
-(25, 'Logged Out. [ID: 52, Name: hhhhh]', 'Tuesday, 09-Nov-2021 12:15:03 CET'),
-(26, 'Logged In | User. [ID: 53, Name: john.nktech.test]', 'Tuesday, 09-Nov-2021 12:15:46 CET'),
-(27, 'Logged Out. [ID: , Name: ]', 'Tuesday, 09-Nov-2021 12:19:13 CET'),
-(28, 'Logged In | User. [ID: 52, Name: hhhhh]', 'Tuesday, 09-Nov-2021 12:19:25 CET'),
-(29, 'Logged Out. [ID: 52, Name: hhhhh]', 'Tuesday, 09-Nov-2021 12:19:38 CET'),
-(30, 'Website status changed | User. [ID: 53, WebID: 20, Status: 0]', 'Tuesday, 09-Nov-2021 12:20:34 CET'),
-(31, 'Website status changed | User. [ID: 53, WebID: 20, Status: 1]', 'Tuesday, 09-Nov-2021 12:20:38 CET'),
-(32, 'Logged In | User. [ID: 49, Name: cdssatest]', 'Tuesday, 09-Nov-2021 12:20:51 CET'),
-(33, 'Logged Out. [ID: 53, Name: john.nktech.test]', 'Tuesday, 09-Nov-2021 12:47:45 CET'),
-(34, 'User account Activated | Admin. [ID: 49, UserID: 54]', 'Tuesday, 09-Nov-2021 12:49:05 CET'),
-(35, 'User account Deactivated | Admin. [ID: 49, UserID: 54]', 'Tuesday, 09-Nov-2021 12:49:18 CET'),
-(36, 'Logged Out. [ID: 49, Name: cdssatest]', 'Tuesday, 09-Nov-2021 13:22:10 CET'),
-(37, 'Logged In | User. [ID: 49, Name: cdssatest]', 'Tuesday, 09-Nov-2021 13:22:13 CET'),
-(38, 'Logged Out. [ID: 49, Name: cdssatest]', 'Tuesday, 09-Nov-2021 13:22:43 CET'),
-(39, 'Logged In | User. [ID: 49, Name: cdssatest]', 'Tuesday, 09-Nov-2021 13:22:45 CET'),
-(40, 'Logged Out. [ID: 49, Name: cdssatest]', 'Tuesday, 09-Nov-2021 13:23:34 CET'),
-(41, 'Logged In | User. [ID: 49, Name: cdssatest]', 'Tuesday, 09-Nov-2021 13:23:36 CET');
+(1, 'Logs table cleared. [ID: 44, Name: cdssa]', 'Thursday, 01-Dec-2022 13:31:21 IST'),
+(2, 'User subscription Deactivated | Admin | [ID: 44, UserID: 56]', 'Thursday, 01-Dec-2022 14:21:26 IST'),
+(3, 'Logged In | User | [ID: 49, Name: cdssatest]', 'Thursday, 01-Dec-2022 14:22:23 IST'),
+(4, 'Logged Out. [ID: , Name: ]', 'Thursday, 01-Dec-2022 16:30:59 IST'),
+(5, 'Failed Login Attempt- Inactive Account | User | [Name: xyz]', 'Thursday, 01-Dec-2022 16:31:11 IST'),
+(6, 'Logged In | User | [ID: 59, Name: xyz]', 'Thursday, 01-Dec-2022 16:31:31 IST'),
+(7, 'New Website created | User | [ID: 59, WebName: xyzplatform, WebLink: xyzplatform.com]', 'Thursday, 01-Dec-2022 16:33:27 IST');
 
 -- --------------------------------------------------------
 
@@ -89,28 +55,38 @@ INSERT INTO `activity` (`id`, `msg`, `act_time`) VALUES
 CREATE TABLE `all_ratings` (
   `id` int(11) NOT NULL,
   `user_ip` varchar(45) NOT NULL,
-  `star` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `mobile` bigint(255) NOT NULL,
+  `star` int(11) DEFAULT NULL,
+  `review` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `mobile` bigint(255) DEFAULT NULL,
   `web_name` varchar(255) NOT NULL,
+  `web_link` varchar(255) NOT NULL,
   `form_key` varchar(32) NOT NULL,
   `rated_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `all_ratings`
+-- Table structure for table `company_details`
 --
 
-INSERT INTO `all_ratings` (`id`, `user_ip`, `star`, `name`, `mobile`, `web_name`, `form_key`, `rated_at`) VALUES
-(1, '::1', 5, 'Test', 5667643456, 'testwebnamelength', 'cdssa52180', '2021-02-28 08:53:41'),
-(2, '::1', 4, 'Test', 6573837485, 'testwebnamelength', 'cdssa52180', '2021-03-05 08:59:25'),
-(3, '::1', 4, 'Test', 4665647337, 'testwebnamelength', 'cdssa52180', '2021-03-05 09:00:34'),
-(4, '::1', 4, 'name name', 8474657464, 'webthree', 'cdssa52180', '2021-03-05 09:56:37'),
-(5, '::1', 5, 'Test Ticket Dept.', 6447364543, 'webthree', 'cdssa52180', '2021-03-05 10:07:07'),
-(6, '::1', 5, 'hhhhh John', 4663762733, 'testwebnamelength', 'cdssa52180', '2021-03-05 10:09:34'),
-(7, '::1', 4, 'etname', 5665654365, 'webone', 'john.17184', '2021-03-05 10:09:34'),
-(8, '::1', 5, 'namename', 6767865604, 'webone', 'john.17184', '2021-03-05 10:09:34'),
-(9, '::1', 5, 'namenamename', 6767865604, 'webone', 'john.17184', '2021-03-05 10:09:34');
+CREATE TABLE `company_details` (
+  `id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `cmpyName` varchar(255) NOT NULL,
+  `cmpyMobile` varchar(255) DEFAULT NULL,
+  `cmpyEmail` text DEFAULT NULL,
+  `cmpyLogo` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `company_details`
+--
+
+INSERT INTO `company_details` (`id`, `userid`, `cmpyName`, `cmpyMobile`, `cmpyEmail`, `cmpyLogo`) VALUES
+(1, 49, 'ABCD', '', 'abc@gmail.com', 'abc_logo.jpg'),
+(2, 59, 'XYZ', '', 'abc@gmail.com', 'xyz_logo.jpg');
 
 -- --------------------------------------------------------
 
@@ -122,7 +98,8 @@ CREATE TABLE `contact` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `user_mail` varchar(255) NOT NULL,
-  `bdy` varchar(255) NOT NULL
+  `bdy` varchar(255) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -152,34 +129,61 @@ CREATE TABLE `payment` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `plans`
+--
+
+CREATE TABLE `plans` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `amount` varchar(255) NOT NULL,
+  `sms_quota` varchar(255) NOT NULL,
+  `email_quota` varchar(255) NOT NULL,
+  `whatsapp_quota` varchar(255) NOT NULL,
+  `web_quota` varchar(255) NOT NULL,
+  `orderBy` int(11) NOT NULL DEFAULT 1,
+  `active` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `plans`
+--
+
+INSERT INTO `plans` (`id`, `name`, `amount`, `sms_quota`, `email_quota`, `whatsapp_quota`, `web_quota`, `orderBy`, `active`) VALUES
+(1, 'Free Plan', '0.00 /per month', '5', '100', '25', '1', 1, 1),
+(2, 'Basic Plan', '1.00 /per month', '5', '100', '50', '2', 2, 1),
+(3, 'Regular Plan', '2.00 /per month', '5', '100', '100', '3', 3, 0),
+(4, 'Test Plan', '500 /per month', '50', '50', '50', '10', 4, 1),
+(5, 'ggg', '55', '5', '5', '5', '5', 4, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `quota`
 --
 
 CREATE TABLE `quota` (
   `id` int(11) NOT NULL,
   `by_user_id` int(11) NOT NULL,
-  `bought` bigint(20) NOT NULL,
-  `used` bigint(20) NOT NULL,
-  `bal` bigint(20) NOT NULL,
-  `webspace` int(255) NOT NULL,
-  `webspace_left` int(255) NOT NULL,
-  `userspace` int(255) NOT NULL,
-  `userspace_left` int(255) NOT NULL,
-  `by_form_key` varchar(255) NOT NULL,
-  `bought_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `sms_quota` int(255) NOT NULL,
+  `email_quota` int(255) NOT NULL,
+  `whatsapp_quota` int(255) NOT NULL,
+  `web_quota` int(255) NOT NULL,
+  `by_form_key` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `quota`
 --
 
-INSERT INTO `quota` (`id`, `by_user_id`, `bought`, `used`, `bal`, `webspace`, `webspace_left`, `userspace`, `userspace_left`, `by_form_key`, `bought_at`) VALUES
-(19, 44, 100, 12, 88, 15, 15, 0, 0, 'cdssa97667', '2021-02-13 07:08:06'),
-(25, 49, 50, 18, 32, 10, 7, 5, 2, 'cdssa52180', '2021-09-07 08:23:53'),
-(28, 52, 100, 0, 100, 15, 12, 0, 0, 'hhhhh74672', '2021-09-20 12:22:17'),
-(29, 53, 0, 0, 0, 0, 0, 0, 0, 'john.17184', '2021-09-22 07:22:43'),
-(30, 54, 0, 0, 0, 0, 0, 0, 0, 'jvwee88603', '2021-09-22 07:27:10'),
-(31, 55, 0, 0, 0, 0, 0, 0, 0, 'usero40541', '2021-09-22 12:29:01');
+INSERT INTO `quota` (`id`, `by_user_id`, `sms_quota`, `email_quota`, `whatsapp_quota`, `web_quota`, `by_form_key`) VALUES
+(19, 44, 1000000, 1000000, 1000000, 99999, 'cdssa97667'),
+(25, 49, 5, 97, 3, 3, 'cdssa52180'),
+(28, 52, 1, 91, 1, 3, 'hhhhh74672'),
+(31, 55, 0, 0, 0, 0, 'usero40541'),
+(32, 56, 0, 0, 0, 0, 'usert73279'),
+(33, 57, 0, 0, 0, 0, 'usert13336'),
+(34, 58, 5, 100, 5, 5, 'vvvvv94484'),
+(35, 59, 5, 100, 5, 4, 'xyz78253');
 
 -- --------------------------------------------------------
 
@@ -189,6 +193,7 @@ INSERT INTO `quota` (`id`, `by_user_id`, `bought`, `used`, `bal`, `webspace`, `w
 
 CREATE TABLE `sent_links` (
   `id` int(11) NOT NULL,
+  `link_for` varchar(255) NOT NULL,
   `sent_to_sms` longtext DEFAULT NULL,
   `sent_to_email` varchar(255) DEFAULT NULL,
   `subj` text DEFAULT NULL,
@@ -201,14 +206,29 @@ CREATE TABLE `sent_links` (
 -- Dumping data for table `sent_links`
 --
 
-INSERT INTO `sent_links` (`id`, `sent_to_sms`, `sent_to_email`, `subj`, `body`, `user_id`, `sent_at`) VALUES
-(1, NULL, 'olatayoefficient@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating/wtr/jvwee41944\r\n\r\nJVweed\r\njohn.nktech@gmail.com\r\nRegards', 49, '2021-03-05 08:56:15'),
-(2, '5334325142', NULL, 'Rating', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating/wtr/jvwee41944\r\n\r\nJVweed\r\njohn.nktech@gmail.com\r\nRegards Click the link below, to rate any of my websites\r\nhttp://localhost/rating/wtr/jvwee41944\r\n\r\nJVweed\r\njohn.nktech@gmail.com\r\nRegards', 49, '2021-03-05 08:56:15'),
-(4, NULL, 'a@gmail.com,b@gmail.com,c@gmail.com,olatayoefficient@gmail.com,johnnktech@gmail.com,olatayojohn10@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/cdssa97667\n\ncdssa\nolatayoefficient@gmail.com\nRegards', 44, '2021-09-21 06:58:02'),
-(5, NULL, 'cdssa@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating2/wtr/cdssa97667\r\n\r\ncdssa\r\nolatayoefficient@gmail.com\r\nRegards', 44, '2021-09-21 07:07:37'),
-(9, NULL, ',,,,', 'Rating', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/cdssa97667\n\ncdssa\nolatayoefficient@gmail.com\nRegards', 44, '2021-09-21 09:57:17'),
-(10, NULL, 'cdssamail@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating2/wtr/john.17184\r\n\r\njohn.nktech.test\r\njohn.nktech.test@gmail.com\r\nRegards', 53, '2021-09-27 08:29:45'),
-(11, NULL, 'a@gmail.com,b@gmail.com,c@gmail.com,olatayoefficient@gmail.com,johnnktech@gmail.com,olatayojohn10@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/john.17184\n\njohn.nktech.test\njohn.nktech.test@gmail.com\nRegards', 53, '2021-09-27 08:37:21');
+INSERT INTO `sent_links` (`id`, `link_for`, `sent_to_sms`, `sent_to_email`, `subj`, `body`, `user_id`, `sent_at`) VALUES
+(1, 'email', '', 'olatayojohn10@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating2/wtr/hhhhh74672\r\n\r\nhhhhh\r\nhhhhh@gmail.com\r\nRegards', 52, '2022-11-08 07:19:03'),
+(2, 'email', '', 'testmail@gmail.com', 'Rating', 'hhhhh\r\nhhhhh@gmail.com\r\nRegards', 52, '2022-11-08 07:52:15'),
+(3, 'email', '', 'olatayojohn10@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating2/wtr/hhhhh74672\r\n\r\nhhhhh\r\nhhhhh@gmail.com\r\nRegards', 52, '2022-11-08 07:52:52'),
+(4, 'email', '', 'olatayojohn10@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating2/wtr/hhhhh74672\r\n\r\nhhhhh\r\nhhhhh@gmail.com\r\nRegards', 52, '2022-11-08 07:52:57'),
+(5, 'sms', '7556435678', '', '', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating2/wtr/hhhhh74672\r\n\r\nhhhhh\r\nhhhhh@gmail.com\r\nRegards', 52, '2022-11-08 07:53:09'),
+(12, 'email', '', 'a@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-09 06:27:00'),
+(13, 'email', '', 'b@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-09 06:27:00'),
+(14, 'email', '', 'c@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-09 06:27:00'),
+(15, 'email', '', 'olatayoefficient@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-09 06:27:00'),
+(16, 'email', '', 'johnnktech@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-09 06:27:00'),
+(20, 'sms', '5887736459', '', '', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-09 07:33:10'),
+(21, 'sms', '5887736459', '', '', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-09 07:33:10'),
+(22, 'sms', '5887736459', '', '', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-09 07:33:11'),
+(23, 'whatsapp', '7556435678', '', '', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-09 08:10:58'),
+(24, 'email', '', 'testmail@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating2/wtr/usero40541\r\n\r\nuserone\r\nuserone@nktech.com\r\nRegards', 55, '2022-11-15 11:38:28'),
+(25, 'email', '', 'janedoe@nktech.in', 'test subject', 'test body test test test', 55, '2022-11-15 11:40:16'),
+(26, 'email', '', 'abc@gmail.com', 'Rating', 'Click the link below, to rate any of my websites\r\nhttp://localhost/rating2/wtr/cdssa52180\r\n\r\ncdssatest\r\ncompanyadmin@gmail.com\r\nRegards', 49, '2022-11-15 11:40:49'),
+(27, 'whatsapp', '1234567890', '', '', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/cdssa52180\n\ncdssatest\ncompanyadmin@gmail.com\nRegards', 49, '2022-11-15 11:41:31'),
+(28, 'whatsapp', '6665432346', '', '', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/cdssa52180\n\ncdssatest\ncompanyadmin@gmail.com\nRegards', 49, '2022-11-15 11:43:37'),
+(29, 'whatsapp', '1234567890', '', '', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-16 10:56:02'),
+(30, 'whatsapp', '1234567890', '', '', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-16 10:57:48'),
+(31, 'whatsapp', '1234567890', '', '', 'Click the link below, to rate any of my websites\nhttp://localhost/rating2/wtr/hhhhh74672\n\nhhhhh\nhhhhh@gmail.com\nRegards', 52, '2022-11-16 10:58:30');
 
 -- --------------------------------------------------------
 
@@ -228,6 +248,8 @@ CREATE TABLE `users` (
   `lname` longtext DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `mobile` bigint(20) DEFAULT NULL,
+  `gender` varchar(255) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
   `active` int(1) NOT NULL DEFAULT 0,
   `website_form` int(1) NOT NULL DEFAULT 0,
   `sub` int(1) NOT NULL DEFAULT 0,
@@ -242,46 +264,15 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `sadmin`, `admin`, `iscmpy`, `cmpy`, `cmpyid`, `uname`, `fname`, `lname`, `email`, `mobile`, `active`, `website_form`, `sub`, `act_key`, `form_key`, `password`, `latest_activity`, `created_at`) VALUES
-(44, 1, 0, 0, NULL, NULL, 'cdssa', '', '', 'cdssa@gmail.com', 5446765456, 1, 0, 1, '$2y$10$0GGLzdfF9MRsV/kzrF7YleV0tNfC.Z6XZh2hRSixA/TNWqfUtoBjq', 'cdssa97667', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Tuesday, 09-Nov-2021 05:14:53 CET', '2021-02-13 07:08:05'),
-(49, 0, 1, 1, 'NKTECH', NULL, 'cdssatest', '', '', 'john.nktech@gmail.com', 7456034855, 1, 1, 0, '$2y$10$qP2l7Rk7L.MAxWMiyZCTRe1BAa4/5m17qaBNtKGBuQSUxbzDZKrTq', 'cdssa52180', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Tuesday, 09-Nov-2021 13:23:36 CET', '2021-09-07 08:23:52'),
-(52, 0, 0, 0, NULL, NULL, 'hhhhh', 'normal', 'user', 'normaluser@gmail.com', 4555565675, 1, 1, 0, '$2y$10$y72Ebn/wRjQfKitj7vlZgea3ZRKF4elOXM18CkeCUKR8PzNaVB.yy', 'hhhhh74672', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Tuesday, 09-Nov-2021 12:19:25 CET', '2021-09-20 12:22:17'),
-(53, 0, 0, 1, 'NKTECH', 49, 'john.nktech.test', 'john', 'nktech', 'john.nktech@gmail.com', 7456034859, 1, 1, 0, '$2y$10$PJ0KJm6pZt1GB2G4zB6gT.jTebyIlWlZZxQLU9TGb.N0oNn6JTIL.', 'john.17184', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Tuesday, 09-Nov-2021 12:15:46 CET', '2021-09-22 07:22:43'),
-(54, 0, 0, 1, 'NKTECH', 49, 'jvweed', 'olatayo', 'john', 'olatayojohn@gmail.com', 7456034856, 2, 0, 0, '$2y$10$jz0zNLgOuzYG6hJoSRI/d.201FXXF/JvwF6BW3YvkSIKa/gQU6CIa', 'jvwee88603', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Tuesday, 09-Nov-2021 06:16:47 CET', '2021-09-22 07:27:10'),
-(55, 0, 0, 1, 'NKTECH', 49, 'userone', 'user', 'one', 'userone@gmail.com', 4665748334, 2, 0, 0, '$2y$10$gsb7trlrsjT74VvcDje3b.wKDEmX3FKV.PyWFB90looi8tGYtgzgS', 'usero40541', '$2y$10$uEMYCbG9G2C.tEFMGOWhLu4G2O3YbXGfc378dFlRLrTU/S9SRqH/S', '', '2021-09-22 12:29:01');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_details`
---
-
-CREATE TABLE `user_details` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `form_key` varchar(255) NOT NULL,
-  `uname` varchar(255) NOT NULL,
-  `total_ratings` bigint(20) NOT NULL,
-  `total_sms` int(11) NOT NULL,
-  `total_email` int(11) NOT NULL,
-  `total_one` bigint(20) NOT NULL,
-  `total_two` bigint(20) NOT NULL,
-  `total_three` bigint(20) NOT NULL,
-  `total_four` bigint(20) NOT NULL,
-  `total_five` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `user_details`
---
-
-INSERT INTO `user_details` (`id`, `user_id`, `form_key`, `uname`, `total_ratings`, `total_sms`, `total_email`, `total_one`, `total_two`, `total_three`, `total_four`, `total_five`) VALUES
-(40, 44, 'cdssa97667', 'cdssa', 0, 0, 12, 0, 0, 0, 0, 0),
-(45, 49, 'cdssa52180', 'cdssatest', 6, 1, 1, 0, 0, 0, 3, 3),
-(48, 52, 'hhhhh74672', 'hhhhh', 0, 0, 0, 0, 0, 0, 0, 0),
-(49, 53, 'john.17184', 'john.nktech', 3, 0, 7, 0, 0, 0, 1, 2),
-(50, 54, 'jvwee88603', 'jvweed', 0, 0, 0, 0, 0, 0, 0, 0),
-(51, 55, 'usero40541', 'userone', 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `users` (`id`, `sadmin`, `admin`, `iscmpy`, `cmpy`, `cmpyid`, `uname`, `fname`, `lname`, `email`, `mobile`, `gender`, `dob`, `active`, `website_form`, `sub`, `act_key`, `form_key`, `password`, `latest_activity`, `created_at`) VALUES
+(44, 1, 0, 0, NULL, NULL, 'cdssa', 'super', 'Admin', 'superadmin@gmail.com', 5446765456, 'Male', '0000-00-00', 1, 1, 1, '$2y$10$SduzKFtU4KB.gKlV3jH.meDSQAjx2kG83/riCR4ZV/yS0p4SBC.kC', 'cdssa97667', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Thursday, 01-Dec-2022 12:06:23 IST', '2021-02-13 07:08:05'),
+(49, 0, 1, 1, 'ABCD', NULL, 'cdssatest', 'abc-name', '', 'companyadmin@gmail.com', 1234567890, 'Other', '2022-11-01', 1, 1, 1, '$2y$10$qP2l7Rk7L.MAxWMiyZCTRe1BAa4/5m17qaBNtKGBuQSUxbzDZKrTq', 'cdssa52180', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Thursday, 01-Dec-2022 14:22:22 IST', '2021-09-07 08:23:52'),
+(52, 0, 0, 0, NULL, NULL, 'hhhhh', 'hhhhh', '', 'hhhhh@gmail.com', 4555565675, 'Female', '2022-11-16', 1, 1, 1, '$2y$10$L7DVvCO4pvpEQEw3yLSeaebFkYFOt1nvHDMsGtWCTRFmNXz7zmHPm', 'hhhhh74672', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Thursday, 24-Nov-2022 16:10:31 IST', '2021-09-20 12:22:17'),
+(55, 0, 0, 1, 'ABCD', 49, 'userone', 'userone', '', 'userone@nktech.com', 8663524345, 'Female', '1998-03-20', 1, 1, 0, '$2y$10$gsb7trlrsjT74VvcDje3b.wKDEmX3FKV.PyWFB90looi8tGYtgzgS', 'usero40541', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Tuesday, 15-Nov-2022 17:07:41 IST', '2021-09-22 12:29:01'),
+(56, 0, 0, 1, 'ABCD', 49, 'usertwo', 'usertwo', '', 'usertwo@nktech.com', 7353529180, 'Female', '0000-00-00', 0, 0, 0, '$2y$10$vmPAs3SiANi3cFjTCHKlmeSwGNoEeB/wyk6hXQH2OVUz5dFJMxExi', 'usert73279', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Thursday, 01-Dec-2022 11:53:38 IST', '2022-11-14 06:51:47'),
+(57, 0, 0, 1, 'ABCD', 49, 'userthree', 'userthree', '', 'userthree@nktech.com', 5665323457, 'Female', '0000-00-00', 0, 0, 0, '$2y$10$q6aMNjt1Nkj.eXqkpQfLkOG6.pMywa0jdsjla2BGQuV2BfOSmmMDa', 'usert13336', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', '', '2022-11-14 07:15:21'),
+(58, 0, 0, 0, '', NULL, 'vvvvv', 'john', '', 'john@gmail.com', 5664723823, 'Male', '1998-03-29', 0, 0, 0, '$2y$10$nAVkPXdk8zFp/1kWn0BoqegzDBlWIXpf.8cYhj8FHizBNgoB70/Km', 'vvvvv94484', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Tuesday, 15-Nov-2022 15:32:05 IST', '2022-11-15 08:37:40'),
+(59, 0, 1, 1, 'XYZ', NULL, 'xyz', 'xyz-name', '', 'companyadmin@gmail.com', 1234567890, 'Male', '0000-00-00', 1, 0, 0, '$2y$10$qC2ja0lIapOGVWQK6NN3Su8Z9m3/FEHkLPE62UXKEtOdDGmZ.vmkm', 'xyz78253', '$2y$10$W4k87xr1ysG3gSSFcJQCGOh3igPrFgSzRqT8HepawwbSkKOB/..1G', 'Thursday, 01-Dec-2022 16:31:31 IST', '2022-11-15 08:40:44');
 
 -- --------------------------------------------------------
 
@@ -297,24 +288,20 @@ CREATE TABLE `websites` (
   `web_link` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL,
   `total_ratings` bigint(20) NOT NULL,
-  `five_star` bigint(20) NOT NULL,
-  `four_star` bigint(20) NOT NULL,
-  `three_star` bigint(20) NOT NULL,
-  `two_star` bigint(20) NOT NULL,
-  `one_star` bigint(20) NOT NULL
+  `star_rating` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `websites`
 --
 
-INSERT INTO `websites` (`id`, `user_id`, `form_key`, `web_name`, `web_link`, `active`, `total_ratings`, `five_star`, `four_star`, `three_star`, `two_star`, `one_star`) VALUES
-(16, 49, 'cdssa52180', 'webthree', 'webthree.com', 1, 2, 1, 1, 0, 0, 0),
-(17, 49, 'cdssa52180', 'testwebnamelength', 'testweb.com', 1, 4, 2, 2, 0, 0, 0),
-(20, 53, 'john.17184', 'webone', 'webone.com', 1, 3, 2, 1, 0, 0, 0),
-(23, 52, 'hhhhh74672', 'myweb', 'myweb.com', 1, 0, 0, 0, 0, 0, 0),
-(29, 52, 'hhhhh74672', 'myweb_', 'mywebb.com', 1, 0, 0, 0, 0, 0, 0),
-(30, 52, 'hhhhh74672', 'test test', 'https://ggg.com', 1, 0, 0, 0, 0, 0, 0);
+INSERT INTO `websites` (`id`, `user_id`, `form_key`, `web_name`, `web_link`, `active`, `total_ratings`, `star_rating`) VALUES
+(10, 52, 'hhhhh74672', 'testWeb', 'https://google.com', 1, 0, 0),
+(15, 55, 'usero40541', 'nnn', 'http://localhost/rating2/websites', 1, 0, 0),
+(20, 49, 'cdssa52180', 'my-website', 'mywebsite.com', 0, 0, 0),
+(21, 52, 'hhhhh74672', 'website-two', 'websitetwo.com', 1, 0, 0),
+(22, 44, 'cdssa97667', 'mywebsite', 'somelink.com', 1, 0, 0),
+(24, 59, 'xyz78253', 'xyzplatform', 'xyzplatform.com', 1, 0, 0);
 
 --
 -- Indexes for dumped tables
@@ -333,6 +320,12 @@ ALTER TABLE `all_ratings`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `company_details`
+--
+ALTER TABLE `company_details`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `contact`
 --
 ALTER TABLE `contact`
@@ -342,6 +335,12 @@ ALTER TABLE `contact`
 -- Indexes for table `payment`
 --
 ALTER TABLE `payment`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `plans`
+--
+ALTER TABLE `plans`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -363,12 +362,6 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_details`
---
-ALTER TABLE `user_details`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `websites`
 --
 ALTER TABLE `websites`
@@ -382,13 +375,19 @@ ALTER TABLE `websites`
 -- AUTO_INCREMENT for table `activity`
 --
 ALTER TABLE `activity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `all_ratings`
 --
 ALTER TABLE `all_ratings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `company_details`
+--
+ALTER TABLE `company_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `contact`
@@ -403,34 +402,34 @@ ALTER TABLE `payment`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `plans`
+--
+ALTER TABLE `plans`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `quota`
 --
 ALTER TABLE `quota`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `sent_links`
 --
 ALTER TABLE `sent_links`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
-
---
--- AUTO_INCREMENT for table `user_details`
---
-ALTER TABLE `user_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `websites`
 --
 ALTER TABLE `websites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

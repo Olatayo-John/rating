@@ -8,7 +8,7 @@
     <div>
 
         <button type="button" class="text-light btn addwebmodal_btn" style="background:#294a63">
-            <i class="fas fa-plus-circle mr-2"></i>Add Platform
+            <i class="fas fa-plus pr-2"></i>Add Platform
         </button>
     </div>
 </div>
@@ -35,7 +35,7 @@
                     <div class="d-flex">
                         <input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="<?php echo $web['web_link'] ?>" readonly required style="cursor:not-allowed">
                         <div class="col">
-                            <i class="fa-solid fa-pen-to-square viewweb_btn" id="<?php echo $web['id'] ?>" style="color:#294a63"></i>
+                            <i class="fa fa-reorder viewweb_btn" id="<?php echo $web['id'] ?>" style="color:#294a63"></i>
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
 
                     <hr>
                     <div class="text-right">
-                        <button type="button" class="btn text-light submit_editweb_modal" style="background-color:#294a63">Submit</button>
+                        <button type="button" class="btn text-light submit_editweb_modal" style="background-color:#294a63">Update</button>
                     </div>
                 </form>
             </div>
@@ -320,7 +320,7 @@
 
                         $(".noweb").hide();
 
-                        $(".eachwebwrapper").append('<div class="col-md-12 p-0 d-flex eachwebinfo"><div class="form-group" style="margin:0"><span class="web_stati text-success" id="' + data.insert_id + '"><i class="fas fa-circle" title="Platform is active"></i></span></div><div class="form-group col pr-0"><label class="webnamelabel" id="webnamelabel">' + web_name_new + '</label><div class="d-flex"><input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="' + web_link_new + '" readonly required style="cursor:not-allowed"><div class="col"><i class="fa-solid fa-pen-to-square viewweb_btn" id="' + data.insert_id + '" style="color:#294a63"></i></div></div></div></div>');
+                        $(".eachwebwrapper").append('<div class="col-md-12 p-0 d-flex eachwebinfo"><div class="form-group" style="margin:0"><span class="web_stati text-success" id="' + data.insert_id + '"><i class="fas fa-circle" title="Platform is active"></i></span></div><div class="form-group col pr-0"><label class="webnamelabel" id="webnamelabel">' + web_name_new + '</label><div class="d-flex"><input type="url" name="weblinkinput" class="form-control weblinkinput" id="weblinkinput" value="' + web_link_new + '" readonly required style="cursor:not-allowed"><div class="col"><i class="fa fa-reorder viewweb_btn" id="' + data.insert_id + '" style="color:#294a63"></i></div></div></div></div>');
 
                         var webscreated = $('.eachwebinfo').length;
                         var webspaceleftText = $('.webspaceleft').text();

@@ -71,8 +71,10 @@
 	font-size: 20px;
 }
 
+.rr_innerwrapper,
 .ls_innerwrapper,
 .web_innerwrapper,
+.users_rr_innerwrapper,
 .users_ls_innerwrapper,
 .users_web_innerwrapper{
 	display: none;

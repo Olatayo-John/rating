@@ -84,12 +84,10 @@
                 },
                 success: function(res) {
                     if (res.status === false) {
-                        $(".ajax_succ_div,.ajax_err_div").hide();
                         $(".ajax_res_err").text(res.msg);
                         $(".ajax_err_div").fadeIn();
 
                     } else if (res.status === true) {
-                        $(".ajax_err_div,ajax_succ_div").hide();
                         $(".ajax_res_succ").text(res.msg);
                         $(".ajax_succ_div").fadeIn();
                     }

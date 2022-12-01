@@ -55,7 +55,7 @@
 			<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
 		</div>
 
-		<?php print_r($_SESSION) ?>
+		<!-- <?php print_r($_SESSION) ?> -->
 
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>
 			<?php if ($this->session->userdata('mr_sub') == "0") : ?>
@@ -147,10 +147,10 @@
 				<?php endif; ?>
 
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
-					<!-- feedbacksFromContactUs -->
+					<!-- plans -->
 					<li class="nav-item">
-						<a href="<?php echo base_url('feedbacks') ?>" class="nav-link" style="<?php echo ($url == 'feedbacks') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-comment"></i><b>Feedbacks</b>
+						<a href="<?php echo base_url('plans') ?>" class="nav-link" style="<?php echo ($url == 'plans') ? 'background:white;color:#294a63' : '' ?>">
+							<i class="fas fa-file-invoice"></i><b>Plans</b>
 						</a>
 					</li>
 
@@ -158,6 +158,13 @@
 					<li class="nav-item">
 						<a href="<?php echo base_url('activity') ?>" class="nav-link" style="<?php echo ($url == 'activity') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-clipboard-check"></i><b>Activity Log</b>
+						</a>
+					</li>
+
+					<!-- feedbacksFromContactUs -->
+					<li class="nav-item">
+						<a href="<?php echo base_url('feedbacks') ?>" class="nav-link" style="<?php echo ($url == 'feedbacks') ? 'background:white;color:#294a63' : '' ?>">
+							<i class="fas fa-comment"></i><b>Feedbacks</b>
 						</a>
 					</li>
 				<?php endif; ?>

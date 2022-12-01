@@ -94,6 +94,18 @@ class Usermodel extends CI_Model
 		}
 	}
 
+	public function get_plans()
+	{
+		$this->db->order_by('orderBy', 'asc');
+		$query = $this->db->get('plans');
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
+	}
+
 	public function register($admin, $iscmpy, $act_key, $form_key)
 	{
 		$data = array(
@@ -108,7 +120,7 @@ class Usermodel extends CI_Model
 			'mobile' => htmlentities($this->input->post('mobile')),
 			'active' => "0",
 			'website_form' => "0",
-			'sub' => "1",
+			'sub' => "0",
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
@@ -559,9 +571,9 @@ class Usermodel extends CI_Model
 		return $query;
 	}
 
-	public function get_cmpyUsersId()
+	public function get_cmpyUsers_type($type)
 	{
-		$this->db->select('id');
+		$this->db->select($type);
 		$this->db->where(array('cmpyid' => $this->session->userdata("mr_id")));
 		$q = $this->db->get('users');
 		return $q;
@@ -569,24 +581,76 @@ class Usermodel extends CI_Model
 
 	public function allrr()
 	{
-		$this->db->order_by('id', 'desc');
-		$this->db->where('form_key', $this->session->userdata("mr_form_key"));
-		$query = $this->db->get('all_ratings');
-		return $query;
+		if ($this->session->userdata('mr_admin') === '1') {
+			$cmpy_users_fk = $this->get_cmpyUsers_type($type = 'form_key');
+
+			$ufkArr = array($this->session->userdata('mr_form_key'));
+			foreach ($cmpy_users_fk->result_array() as $ufk) {
+				array_push($ufkArr, $ufk['form_key']);
+			}
+		}
+
+		$this->db->select('ar.*,u.uname')->from('all_ratings ar');
+		$this->db->join('users u', 'u.form_key = ar.form_key');
+
+		if ($this->session->userdata('mr_sadmin') === '1') {
+			$this->db->where('ar.form_key >', '0');
+		}
+
+		if ($this->session->userdata('mr_admin') === '1') {
+
+			if (!empty($uidArr)) {
+				$this->db->where_in('ar.form_key', $ufkArr);
+			}
+		}
+
+		$query = $this->db->get();
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
 	}
 	public function allsentlinks()
 	{
-		$this->db->order_by('id', 'desc');
-		$this->db->where('user_id', $this->session->userdata("mr_id"));
-		$query = $this->db->get('sent_links');
-		return $query;
+		if ($this->session->userdata('mr_admin') === '1') {
+			$cmpy_users_id = $this->get_cmpyUsers_type($type = 'id');
+
+			$uidArr = array($this->session->userdata('mr_id'));
+			foreach ($cmpy_users_id->result_array() as $uid) {
+				array_push($uidArr, $uid['id']);
+			}
+		}
+
+		$this->db->select('sl.*,u.uname')->from('sent_links sl');
+		$this->db->join('users u', 'u.id = sl.user_id');
+
+		if ($this->session->userdata('mr_sadmin') === '1') {
+			$this->db->where('sl.user_id >', '0');
+		}
+
+		if ($this->session->userdata('mr_admin') === '1') {
+
+			if (!empty($uidArr)) {
+				$this->db->where_in('sl.user_id', $uidArr);
+			}
+		}
+
+		$query = $this->db->get();
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
 	}
 	public function allwebsites()
 	{
 		if ($this->session->userdata('mr_admin') === '1') {
-			$cmpy_users_id = $this->get_cmpyUsersId();
+			$cmpy_users_id = $this->get_cmpyUsers_type($type = 'id');
 
-			$uidArr = array();
+			$uidArr = array($this->session->userdata('mr_id'));
 			foreach ($cmpy_users_id->result_array() as $uid) {
 				array_push($uidArr, $uid['id']);
 			}
@@ -597,15 +661,13 @@ class Usermodel extends CI_Model
 		$this->db->join('users u', 'u.id = w.user_id');
 
 		if ($this->session->userdata('mr_sadmin') === '1') {
-			$this->db->where(array('w.user_id !=' => $this->session->userdata('mr_id')));
+			$this->db->where('w.user_id >', '0');
 		}
 
 		if ($this->session->userdata('mr_admin') === '1') {
 
 			if (!empty($uidArr)) {
 				$this->db->where_in('w.user_id', $uidArr);
-			} else {
-				$this->db->where(array('w.user_id' => $this->session->userdata('mr_id')));
 			}
 		}
 
@@ -620,21 +682,105 @@ class Usermodel extends CI_Model
 
 	public function allemail()
 	{
-		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'link_for' => 'email'));
-		$query = $this->db->get('sent_links');
-		return $query;
+		if ($this->session->userdata('mr_admin') === '1') {
+			$cmpy_users_id = $this->get_cmpyUsers_type($type = 'id');
+
+			$uidArr = array($this->session->userdata('mr_id'));
+			foreach ($cmpy_users_id->result_array() as $uid) {
+				array_push($uidArr, $uid['id']);
+			}
+		}
+
+		$this->db->select('sl.*,u.uname')->from('sent_links sl');
+		$this->db->join('users u', 'u.id = sl.user_id');
+
+		if ($this->session->userdata('mr_sadmin') === '1') {
+			$this->db->where(array('sl.user_id >' => '0', 'sl.link_for' => 'email'));
+		}
+
+		if ($this->session->userdata('mr_admin') === '1') {
+
+			if (!empty($uidArr)) {
+				$this->db->where_in('sl.user_id', $uidArr);
+				$this->db->where(array('sl.link_for' => 'email'));
+			}
+		}
+
+		$query = $this->db->get();
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
 	}
 	public function allsms()
 	{
-		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'link_for' => 'sms'));
-		$query = $this->db->get('sent_links');
-		return $query;
+		if ($this->session->userdata('mr_admin') === '1') {
+			$cmpy_users_id = $this->get_cmpyUsers_type($type = 'id');
+
+			$uidArr = array($this->session->userdata('mr_id'));
+			foreach ($cmpy_users_id->result_array() as $uid) {
+				array_push($uidArr, $uid['id']);
+			}
+		}
+
+		$this->db->select('sl.*,u.uname')->from('sent_links sl');
+		$this->db->join('users u', 'u.id = sl.user_id');
+
+		if ($this->session->userdata('mr_sadmin') === '1') {
+			$this->db->where(array('sl.user_id >' => '0', 'sl.link_for' => 'sms'));
+		}
+
+		if ($this->session->userdata('mr_admin') === '1') {
+
+			if (!empty($uidArr)) {
+				$this->db->where_in('sl.user_id', $uidArr);
+				$this->db->where(array('sl.link_for' => 'sms'));
+			}
+		}
+
+		$query = $this->db->get();
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
 	}
 	public function allwapp()
 	{
-		$this->db->where(array('user_id' => $this->session->userdata("mr_id"), 'link_for' => 'whatsapp'));
-		$query = $this->db->get('sent_links');
-		return $query;
+		if ($this->session->userdata('mr_admin') === '1') {
+			$cmpy_users_id = $this->get_cmpyUsers_type($type = 'id');
+
+			$uidArr = array($this->session->userdata('mr_id'));
+			foreach ($cmpy_users_id->result_array() as $uid) {
+				array_push($uidArr, $uid['id']);
+			}
+		}
+
+		$this->db->select('sl.*,u.uname')->from('sent_links sl');
+		$this->db->join('users u', 'u.id = sl.user_id');
+
+		if ($this->session->userdata('mr_sadmin') === '1') {
+			$this->db->where(array('sl.user_id >' => '0', 'sl.link_for' => 'whatsapp'));
+		}
+
+		if ($this->session->userdata('mr_admin') === '1') {
+
+			if (!empty($uidArr)) {
+				$this->db->where_in('sl.user_id', $uidArr);
+				$this->db->where(array('sl.link_for' => 'whatsapp'));
+			}
+		}
+
+		$query = $this->db->get();
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
 	}
 
 	public function is_userquotaexpired($qType)

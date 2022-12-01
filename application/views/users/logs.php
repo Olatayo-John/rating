@@ -7,7 +7,9 @@
 	<div class="tab_div bg-light-custom">
 		<a href="#myLogs" class="tab_link" id="myLogs" tabFormName="myLogs"><?php echo ($this->session->userdata('mr_uname')); ?></a>
 		<?php if ($this->session->userdata('mr_sadmin') === '1' || $this->session->userdata('mr_admin') === '1') : ?>
-			<a href="#userLogs" class="tab_link" id="userLogs" tabFormName="userLogs">Users</a>
+			<a href="#userLogs" class="tab_link" id="userLogs" tabFormName="userLogs">
+				<?php echo ($this->session->userdata('mr_sadmin') === '1') ? 'All' : 'Users' ?>
+			</a>
 		<?php endif; ?>
 	</div>
 	<!--  -->
@@ -16,9 +18,9 @@
 	<div class="info_div bg-light-custom myLogs_outer">
 		<div class="myLogs p-3" id="myLogs">
 			<div class="rr_wrapper">
-				<div class="rr_header" id="toggleHeader" inview="showing" iName="rr_i" tabName="rr_innerwrapper">
+				<div class="rr_header" id="toggleHeader" inview="hidden" iName="rr_i" tabName="rr_innerwrapper">
 					<h4>Ratings</h4>
-					<i class="fas fa-caret-down rr_i"></i>
+					<i class="fas fa-caret-up rr_i"></i>
 				</div>
 				<div class="rr_innerwrapper">
 					<?php include("logs/ratings-received.php"); ?>
@@ -51,9 +53,9 @@
 		<div class="info_div bg-light-custom userLogs_outer" style="display:none;">
 			<div class="userLogs p-3" id="userLogs">
 				<div class="users_rr_wrapper">
-					<div class="users_rr_header" id="toggleHeader" inview="showing" iName="users_rr_i" tabName="users_rr_innerwrapper">
-						<h4>User Ratings</h4>
-						<i class="fas fa-caret-down users_rr_i"></i>
+					<div class="users_rr_header" id="toggleHeader" inview="hidden" iName="users_rr_i" tabName="users_rr_innerwrapper">
+						<h4>Ratings</h4>
+						<i class="fas fa-caret-up users_rr_i"></i>
 					</div>
 					<div class="users_rr_innerwrapper">
 						<?php include("logs/users-ratings-received.php"); ?>
@@ -62,7 +64,7 @@
 
 				<div class="users_ls_wrapper">
 					<div class="users_ls_header" id="toggleHeader" inview="hidden" iName="users_ls_i" tabName="users_ls_innerwrapper">
-						<h4>User Links</h4>
+						<h4>Links</h4>
 						<i class="fas fa-caret-up users_ls_i"></i>
 					</div>
 					<div class="users_ls_innerwrapper">
@@ -72,7 +74,7 @@
 
 				<div class="users_web_wrapper">
 					<div class="users_web_header" id="toggleHeader" inview="hidden" iName="users_web_i" tabName="users_web_innerwrapper">
-						<h4>User Platforms</h4>
+						<h4>Platforms</h4>
 						<i class="fas fa-caret-up users_web_i"></i>
 					</div>
 					<div class="users_web_innerwrapper">

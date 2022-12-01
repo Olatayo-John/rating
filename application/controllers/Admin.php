@@ -45,6 +45,8 @@ class Admin extends Admin_Controller
 
 		$data['adminusers'] = $this->Adminmodel->get_adminusers();
 
+		$data['plans'] = $this->Usermodel->get_plans();
+
 		$this->load->view('templates/header', $data);
 		if ($this->session->userdata('mr_sadmin') === "1") {
 			$this->load->view('admin/users/adduser_sadmin', $data);
@@ -190,7 +192,37 @@ class Admin extends Admin_Controller
 		redirect('add');
 	}
 
-	//get user details [companyAdmin]
+	//activate, de-activate user subscription
+	function user_sub()
+	{
+		if ($this->ajax_is_bothadmin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			$sub = $_POST['user_sub'];
+			($sub === '0') ? $user_sub = '1' : $user_sub = '0';
+			$user_id = $_POST['user_id'];
+			$user_formKey = $_POST['user_formKey'];
+
+			$res = $this->Adminmodel->user_sub($user_sub,$user_id, $user_formKey);
+			// $res = false;
+			if ($res !== true) {
+				// $this->Logmodel->log_act($type = "admin_deauerr");
+				$data['status'] = false;
+				$data['msg'] = ($sub === '1') ? 'Failed to de-activate subscription' : 'Failed to activate subscription';
+			} else {
+				// $this->Logmodel->log_act($type = "admin_deau");
+				$data['status'] = true;
+				$data['msg'] = ($sub === '1') ? 'Subscription de-activated' : 'Subscription activated';
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+
+	//get user details [Sadmin,companyAdmin]
 	public function viewuser_admin()
 	{
 		if ($this->ajax_is_admin() === false) {
@@ -475,7 +507,7 @@ class Admin extends Admin_Controller
 				// $this->Logmodel->log_act($type = "");
 				$data['status'] = true;
 				$data['msg'] = "Updated!";
-				$data['logopath'] = base_url('uploads/').$cmpyLogo;
+				$data['logopath'] = base_url('uploads/') . $cmpyLogo;
 			}
 		}
 
@@ -517,6 +549,122 @@ class Admin extends Admin_Controller
 					$data['status'] = true;
 					$data['msg'] = "Quota updated";
 				}
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//plans for new users
+	public function plans()
+	{
+		$this->is_sadmin();
+
+		$this->setTabUrl($mod = 'plans');
+
+		$data['title'] = "plans";
+
+		$data['plans'] = $this->Usermodel->get_plans();
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('admin/plans');
+		$this->load->view('templates/footer');
+	}
+
+	//get plan details
+	public function getplan()
+	{
+		//check login
+		if ($this->ajax_is_sadmin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			//check postdata
+			if ($_POST['planid']) {
+				$res = $this->Adminmodel->getplan($_POST['planid']);
+				if ($res == false) {
+					// $this->Logmodel->log_act($type = "webstatuserr");
+					$data['status'] = false;
+					$data['msg'] = "Error retrieving data";
+				} else {
+					$data['status'] = true;
+					$data['details'] = $res;
+				}
+			} else {
+				$data['status'] = false;
+				$data['msg'] = "Missing parameters";
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//update plans details
+	public function updateplan()
+	{
+		if ($this->ajax_is_sadmin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			$pData = array(
+				'name' => htmlentities($_POST['name']),
+				'amount' => htmlentities($_POST['amount']),
+				'sms_quota' => htmlentities($_POST['sms_quota']),
+				'email_quota' => htmlentities($_POST['email_quota']),
+				'whatsapp_quota' => htmlentities($_POST['whatsapp_quota']),
+				'web_quota' => htmlentities($_POST['web_quota']),
+				'orderBy' => htmlentities($_POST['orderBy']),
+				'active' => htmlentities($_POST['active']),
+			);
+			$planid = $_POST['planid'];
+
+			$res = $this->Adminmodel->updateplan($planid, $pData);
+			// $res = true;
+			if ($res !== true) {
+				// $this->Logmodel->log_act($type = "");
+				$data['status'] = false;
+				$data['msg'] = "Error updating";
+			} else {
+				// $this->Logmodel->log_act($type = "");
+				$data['status'] = true;
+				$data['msg'] = "Plan updated";
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//add new plan
+	public function addplan()
+	{
+		if ($this->ajax_is_sadmin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			$pData = array(
+				'name' => htmlentities($_POST['name']),
+				'amount' => htmlentities($_POST['amount']),
+				'sms_quota' => htmlentities($_POST['sms_quota']),
+				'email_quota' => htmlentities($_POST['email_quota']),
+				'whatsapp_quota' => htmlentities($_POST['whatsapp_quota']),
+				'web_quota' => htmlentities($_POST['web_quota']),
+				'orderBy' => htmlentities($_POST['orderBy']),
+				'active' => htmlentities($_POST['active']),
+			);
+
+			$res = $this->Adminmodel->addplan($pData);
+			// $res = true;
+			if ($res !== true) {
+				// $this->Logmodel->log_act($type = "");
+				$data['status'] = false;
+				$data['msg'] = "Error creating plan";
+			} else {
+				// $this->Logmodel->log_act($type = "");
+				$data['status'] = true;
+				$data['msg'] = "Plan created";
 			}
 		}
 
@@ -677,7 +825,7 @@ class Admin extends Admin_Controller
 			$quota = "2000";
 		}
 
-		$body = "Dear Admin.\n\n New user subscribtion for a new quota using PAYTM. Below are the payment details\n\nMerchant ID: " . $m_id . "\nTax ID: " . $txn_id . "\nOrder ID: " . $order_id . "\nAmount Paid: " . $user_amt . "\Quota Paid For: " . $quota . "\nPayment Mode: " . $payment_mode . "\nBank:" . $bank_name . "\nPayment Status: " . $status . "\n\nLogin " . base_url("/users") . " to verify payment and activate user subscription\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+		$body = "Dear Admin.\n\n New user Subscription for a new quota using PAYTM. Below are the payment details\n\nMerchant ID: " . $m_id . "\nTax ID: " . $txn_id . "\nOrder ID: " . $order_id . "\nAmount Paid: " . $user_amt . "\Quota Paid For: " . $quota . "\nPayment Mode: " . $payment_mode . "\nBank:" . $bank_name . "\nPayment Status: " . $status . "\n\nLogin " . base_url("/users") . " to verify payment and activate user subscription\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
 
 		$this->email->from('jvweedtest@gmail.com', 'Rating');
 		$this->email->to($admin_mail);

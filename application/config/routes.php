@@ -71,6 +71,7 @@ $route['remove-website'] = 'user/removewebsite';
 //Admins- [sadmin ,admin]
 $route['users'] = 'admin/users';
 $route['add'] = 'admin/add';
+$route['user-subscription'] = 'admin/user_sub';
 $route['update-profile'] = 'admin/updateprofile';
 $route['update-user-company'] = 'admin/updatecompany';
 $route['update-user-quota'] = 'admin/updatequota';
@@ -84,14 +85,19 @@ $route['update-user-password'] = 'admin/updatepassword';
 $route['sadmin-add-user'] = 'admin/adduser_sadmin';
 $route['sadmin-view-user'] = 'admin/viewuser_sadmin';
 
+$route['plans'] = 'admin/plans';
+$route['get-plan'] = 'admin/getplan';
+$route['update-plan'] = 'admin/updateplan';
+$route['add-plan'] = 'admin/addplan';
+
+// $route['pgResponses'] = 'admin/pgResponses';
+// $route['plan'] = 'admin/pick_plan';
+
+
 //companyAdmin
 $route['admin-add-user'] = 'admin/adduser_admin';
 $route['admin-view-user'] = 'admin/viewuser_admin';
 
-
-//plan
-// $route['pgResponses'] = 'admin/pgResponses';
-$route['plan'] = 'admin/pick_plan';
 
 //payments
 $route['payments'] = 'admin/payments';

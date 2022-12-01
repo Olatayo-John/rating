@@ -170,6 +170,11 @@
 
                             $(".subdeact_btn").hide();
                             $(".subact_btn").show();
+
+                            $('i.subI[sub_id="' + user_id + '"]').removeClass("fa-toggle-on text-success").addClass("fa-toggle-off text-danger").attr({
+								'mod': 'not_active',
+								'sub': '0'
+							});
                         }
 
                         $('.csrf-token').val(res.token);
@@ -216,6 +221,11 @@
 
                             $(".subact_btn").hide();
                             $(".subdeact_btn").show();
+
+                            $('i.subI[sub_id="' + user_id + '"]').removeClass("fa-toggle-off text-danger").addClass("fa-toggle-on text-success").attr({
+								'mod': 'active',
+								'sub': '1'
+							});
                         }
 
                         $('.csrf-token').val(res.token);

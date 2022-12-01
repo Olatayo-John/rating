@@ -124,6 +124,7 @@ class User extends User_Controller
 	public function register()
 	{
 		$data['title'] = "register";
+		$data['plans']= $this->Usermodel->get_plans();
 
 		if ($this->session->userdata('mr_logged_in')) {
 			$this->setFlashMsg('error', 'Log out first.');
@@ -511,6 +512,7 @@ class User extends User_Controller
 		echo json_encode($data);
 	}
 
+	//
 	// function not included
 	public function delete_website()
 	{
@@ -523,7 +525,8 @@ class User extends User_Controller
 			$this->setFlashMsg('success', 'Data deleted successfully!');
 		}
 	}
-	////
+	//
+	//
 
 	public function edit_website()
 	{
@@ -789,7 +792,7 @@ class User extends User_Controller
 		if ($this->session->userdata('mr_sadmin') === '1' || $this->session->userdata('mr_admin') === '1') {
 			$data['allrr'] = $this->Usermodel->allrr();
 			$data['allls'] = $this->Usermodel->allsentlinks();
-			$data['allweb'] = $this->Usermodel->allwebsites();
+			$data['allweb'] = $this->Usermodel->allwebsites(); //platforms
 
 			$data['allt_mail'] = $this->Usermodel->allemail();
 			$data['allt_sms'] = $this->Usermodel->allsms();

@@ -2,7 +2,7 @@
     <div class="col-lg-3 col-md-3 col-xs-12 total-column">
         <div class="panel_s">
             <div class="panel-body">
-                <h3 class="_total"><?php echo $ls->num_rows() ?></h3>
+                <h3 class="_total"><?php echo $allls->num_rows() ?></h3>
                 <span class="">Links</span>
             </div>
         </div>
@@ -37,6 +37,7 @@
 <table id="lstable" data-toggle="table" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="right" data-pagination="true">
     <thead class="text-light" style="background:#294a63">
         <tr>
+            <th data-field="uname" data-sortable="true">User</th>
             <th data-field="type" data-sortable="true">Type</th>
             <th data-field="sentto" data-sortable="true">Sent to</th>
             <th data-field="subj" data-sortable="true">Subject</th>
@@ -48,6 +49,7 @@
     <tbody>
         <?php foreach ($allls->result_array() as $als) : ?>
             <tr>
+                <td><?php echo $als['uname']; ?></td>
                 <td><?php echo strtoupper($als['link_for']) ?></td>
                 <td>
                     <?php if (!empty($als['sent_to_sms']) && $als['sent_to_sms'] !== null) : ?>

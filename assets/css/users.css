@@ -64,6 +64,10 @@ hr.account {
 	color: #294a63;
 }
 
+.subI{
+	cursor: pointer;
+}
+
 td span {
 	font-weight: 500;
 	color: #dc3545;

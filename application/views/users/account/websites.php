@@ -141,7 +141,7 @@
                 },
                 dataType: "json",
                 beforeSend: function() {
-                    clearAlert();
+                    // clearAlert();
                 },
                 success: function(data) {
                     $('.csrf_token').val(data.token);

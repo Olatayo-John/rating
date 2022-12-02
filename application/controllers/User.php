@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+require_once(APPPATH . "libraries/razorpay/Razorpay.php");
+
+use Razorpay\Api\Api;
+
 class User extends User_Controller
 {
 	public function index()
@@ -124,7 +128,7 @@ class User extends User_Controller
 	public function register()
 	{
 		$data['title'] = "register";
-		$data['plans']= $this->Usermodel->get_plans();
+		$data['plans'] = $this->Usermodel->get_plans();
 
 		if ($this->session->userdata('mr_logged_in')) {
 			$this->setFlashMsg('error', 'Log out first.');
@@ -425,6 +429,36 @@ class User extends User_Controller
 		$data['websites'] = $this->Usermodel->get_user_websites();
 		$data['quota'] = $this->Usermodel->get_userQuota();
 		$data['cmpyInfo'] = $this->Usermodel->get_companyInfo();
+
+		if ($data['quota']->balance !== '0' && $data['quota']->balance !== null) {
+
+			//use Testing keys if Live keys are empty from configFile
+			$key_id = $this->config->item('RZLive_key_id') ? $this->config->item('RZLive_key_id') : $this->config->item('RZTest_key_id');
+			$key_secret = $this->config->item('RZLive_key_secret') ? $this->config->item('RZLive_key_secret') : $this->config->item('RZTest_key_secret');
+
+			if ($key_id && $key_secret) {
+				//balance
+				$balance = ($data['quota']->balance) * 100;
+				$form_key = $data['quota']->by_form_key;
+				$user_id = $data['quota']->by_user_id;
+
+				try {
+					$api = new Api($key_id, $key_secret);
+					$order = $api->order->create(array('receipt' => 'OID' . mt_rand(0, 100000000) . '', 'amount' => $balance, 'currency' => 'INR', 'notes' => array('form_key' => $form_key, 'user_id' => $user_id)));
+
+					$data['error'] = false;
+					$data['order'] = $order;
+					$data['key_id'] = $key_id;
+					$data['key_secret'] = $key_secret;
+				} catch (Exception $e) {
+					$data['error'] = true;
+					$data['error_msg'] = "Razorpay Error : " . $e->getMessage();
+				}
+			} else {
+				$data['error'] = true;
+				$data['error_msg'] = "Missing/Invalid Razorpay API Keys";
+			}
+		}
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('users/account_edit', $data);
@@ -975,9 +1009,16 @@ class User extends User_Controller
 
 			if ($cq_res === "not_Found") {
 				$this->logout();
-			} else if ($this->session->userdata('mr_sub') == '0') { //check subscription
+			} else if ($cq_res === 'pending_balance') { //check payment
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
-					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
+					$this->setFlashMsg('error', 'Pending Payment. Contact your company Admin');
+				} else {
+					$this->setFlashMsg('error', 'Pending Payment');
+					redirect('account#plan');
+				}
+			} else if ($this->session->userdata('mr_sub') !== '1') { //check subscription
+				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin';
 				} else {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
@@ -1044,7 +1085,14 @@ class User extends User_Controller
 
 			if ($cq_res === "not_Found") {
 				$this->logout();
-			} else if ($this->session->userdata('mr_sub') == '0') { //check subscription
+			} else if ($cq_res === 'pending_balance') { //check payment
+				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+					$this->setFlashMsg('error', 'Pending Payment. Contact your company Admin');
+				} else {
+					$this->setFlashMsg('error', 'Pending Payment');
+					redirect('account#plan');
+				}
+			} else if ($this->session->userdata('mr_sub') !== '1') { //check subscription
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
@@ -1105,7 +1153,15 @@ class User extends User_Controller
 			if ($cq_res === "not_Found") {
 				$data['status'] = "error";
 				$data['redirect'] = base_url("logout");
-			} else if ($this->session->userdata('mr_sub') == '0') {
+			} else if ($cq_res === 'pending_balance') { //check payment
+				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+					$data['status'] = false;
+					$data['msg'] = 'Pending Payment. Contact your company Admin';
+				} else {
+					$data['status'] = "error";
+					$data['redirect'] = base_url("account#plan");
+				}
+			} else if ($this->session->userdata('mr_sub') !== '1') {
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
@@ -1154,7 +1210,15 @@ class User extends User_Controller
 			if ($cq_res === "not_Found") {
 				$data['status'] = "error";
 				$data['redirect'] = base_url("logout");
-			} else if ($this->session->userdata('mr_sub') == '0') {
+			} else if ($cq_res === 'pending_balance') { //check payment
+				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+					$data['status'] = false;
+					$data['msg'] = 'Pending Payment. Contact your company Admin';
+				} else {
+					$data['status'] = "error";
+					$data['redirect'] = base_url("account#plan");
+				}
+			} else if ($this->session->userdata('mr_sub') !== '1') {
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
@@ -1247,7 +1311,15 @@ class User extends User_Controller
 			if ($cq_res === "not_Found") {
 				$data['status'] = "error";
 				$data['redirect'] = base_url("logout");
-			} else if ($this->session->userdata('mr_sub') == '0') {
+			} else if ($cq_res === 'pending_balance') { //check payment
+				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
+					$data['status'] = false;
+					$data['msg'] = 'Pending Payment. Contact your company Admin';
+				} else {
+					$data['status'] = "error";
+					$data['redirect'] = base_url("account#plan");
+				}
+			} else if ($this->session->userdata('mr_sub') !== '1') {
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {

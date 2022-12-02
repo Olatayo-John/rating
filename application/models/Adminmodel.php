@@ -56,6 +56,9 @@ class Adminmodel extends CI_Model
 			'whatsapp_quota' => '0',
 			'web_quota' => '0',
 			'by_form_key' => $form_key,
+			'plan_id' => null,
+			'amount' => null,
+			'balance' => null,
 		);
 		$this->db->insert('quota', $data);
 		return true;
@@ -115,6 +118,9 @@ class Adminmodel extends CI_Model
 			'whatsapp_quota' => htmlentities($this->input->post('whatsapp_quota')),
 			'web_quota' => htmlentities($this->input->post('web_quota')),
 			'by_form_key' => $form_key,
+			'plan_id' => htmlentities($this->input->post('plan_id')),
+			'amount' => htmlentities($this->input->post('amount')),
+			'balance' => htmlentities($this->input->post('amount')),
 		);
 		$this->db->insert('quota', $data);
 		return true;
@@ -339,8 +345,7 @@ class Adminmodel extends CI_Model
 	}
 
 
-
-
+	//
 	//disabled
 	public function admin_deleteuser($user_id, $form_key)
 	{
@@ -380,175 +385,72 @@ class Adminmodel extends CI_Model
 	}
 	//
 
-	public function get_ratings($key)
-	{
-		$this->db->order_by('web_name', 'desc');
-		$this->db->where('form_key', $key);
-		$query = $this->db->get('all_ratings');
-		return $query->result_array();
-	}
 
-	public function getuserwebsites($key)
+	public function check_payID($pid)
 	{
-		$this->db->order_by("web_name", "ASC");
-		$query = $this->db->get_where('websites', array('form_key' => $key));
-		if (!$query) {
-			return false;
+		$query = $this->db->get_where('transactions', array('payment_id' => $pid));
+
+		//avoid duplicate entry
+		//occurs on page refresh after success on payment
+		if ($query->num_rows() > 0) {
+			return true;
 		} else {
-			return $query->result_array();
+			return false;
 		}
 	}
 
-	public function getuserotherwebsites($key)
+	public function savePaymentInfo($PaymentInfoData)
 	{
-		$this->db->order_by("web_name", "ASC");
-		$query = $this->db->get_where('websites', array('form_key' => $key));
-		if (!$query) {
-			return false;
-		} else {
-			return $query->result_array();
-		}
-	}
+		$this->db->insert('transactions', $PaymentInfoData);
 
-	public function getuserwebsites_wtr($key)
-	{
-		$this->db->order_by("web_name", "ASC");
-		$query = $this->db->get_where('websites', array('form_key' => $key));
-		if (!$query) {
-			return false;
-		} else {
-			return $query;
-		}
-	}
+		$amount = $PaymentInfoData['amount'];
+		$user_id = $PaymentInfoData['user_id'];
+		$form_key = $PaymentInfoData['form_key'];
 
-	public function is_user_active($key)
-	{
-		$query = $this->db->get_where('users', array('form_key' => $key))->row();
-		if (!$query) {
-			return false;
-		} else {
-			// print_r($query);
-			// die;
-			return $query;
-		}
-	}
+		$this->update_user_quota($user_id, $form_key, $amount);
+		$this->update_user_sub($user_id, $form_key, $amount);
 
-
-	public function save_payment($userData)
-	{
-		print_r($userData);
-		die;
-		$this->db->insert('payment', $userData);
-		// $quota_amount = round($userData['paid_amt']);
-		// $this->save_plan($quota_amount);
-		// $this->update_user_sub();
-		// $this->session->set_userdata('mr_sub', '1');
 		return true;
 	}
 
-	public function save_plan($quota_amount)
+	public function update_user_quota($user_id, $form_key, $amount)
 	{
-		$this->db->set('bought', 'bought+' . $quota_amount, FALSE);
-		$this->db->set('bal', 'bal+' . $quota_amount, FALSE);
-		$this->db->where('by_form_key', $this->session->userdata('mr_form_key'));
+		$this->db->where(array('by_user_id' => $user_id, 'by_form_key' => $form_key));
+		$this->db->set("balance", "balance-" . $amount . "");
 		$this->db->update("quota");
+
 		return true;
 	}
 
-	public function update_user_sub()
+	public function update_user_sub($user_id, $form_key, $amount)
 	{
-		$this->db->set('sub', '1', FALSE);
-		$this->db->set('sub_active', '0', FALSE);
-		$this->db->where('form_key', $this->session->userdata('mr_form_key'));
+		$this->db->where(array('id' => $user_id, 'form_key' => $form_key));
+		$this->db->set("sub", "1");
 		$this->db->update("users");
+
+		$this->session->set_userdata('mr_sub', '1');
 		return true;
 	}
 
-	public function getsadmin()
+	public function get_all_transactions()
 	{
-		$query = $this->db->get_where('users', array('s_admin' => '1'));
-		if ($query->num_rows() <= 0) {
-			return false;
-		} else {
-			return $query->row();
-		}
+		$this->db->order_by('t.date', 'desc');
+
+		$this->db->select('t.*,u.id,u.uname')->from('transactions t');
+		$this->db->join('users u', 'u.id = t.user_id');
+		$q = $this->db->get()->result_array();
+
+		return $q;
 	}
 
-	public function getuserbykey($form_key)
+	public function get_paymentsDetails($payID, $formkey, $userid)
 	{
-		$query = $this->db->get_where('users', array('form_key' => $form_key));
-		if ($query->num_rows() <= 0) {
-			return false;
-		} else {
-			return $query->row();
-		}
-	}
+		$this->db->select('t.*,u.id,u.uname')->from('transactions t');
+		$this->db->where(array('t.payment_id' => $payID, 't.form_key' => $formkey, 't.user_id' => $userid));
+		$this->db->join('users u', 'u.id = t.user_id');
+		$q = $this->db->get()->row();
 
-	public function all_total_ratings()
-	{
-		$query = $this->db->get_where('all_ratings');
-		return $query->num_rows();
-	}
-	public function tr5_total_ratings()
-	{
-		$query = $this->db->get_where('all_ratings', array("star" => "5"));
-		return $query->num_rows();
-	}
-	public function tr4_total_ratings()
-	{
-		$query = $this->db->get_where('all_ratings', array("star" => "4"));
-		return $query->num_rows();
-	}
-	public function tr3_total_ratings()
-	{
-		$query = $this->db->get_where('all_ratings', array("star" => "3"));
-		return $query->num_rows();
-	}
-	public function tr2_total_ratings()
-	{
-		$query = $this->db->get_where('all_ratings', array("star" => "2"));
-		return $query->num_rows();
-	}
-	public function tr1_total_ratings()
-	{
-		$query = $this->db->get_where('all_ratings', array('star' => '1'));
-		return $query->num_rows();
-	}
-
-	public function user_allsentlinks()
-	{
-		$this->db->order_by('id', 'desc');
-		$query = $this->db->get('sent_links');
-		return $query;
-	}
-
-	public function user_allsentlinkssms()
-	{
-		$this->db->where('sent_to_email', null);
-		$query = $this->db->get('sent_links');
-		return $query;
-	}
-
-	public function user_allsentlinksemail()
-	{
-		$this->db->where('sent_to_sms', null);
-		$query = $this->db->get('sent_links');
-		return $query;
-	}
-
-	public function emailsms_export_csv()
-	{
-		$this->db->order_by('id', 'desc');
-		$this->db->select('id,sent_to_sms,sent_to_email,subj,body,user_id,sent_at');
-		$query = $this->db->get('sent_links');
-		return $query->result_array();
-	}
-
-	public function get_all_payments()
-	{
-		$this->db->order_by('id', 'desc');
-		$query = $this->db->get('payment');
-		return $query;
+		return $q;
 	}
 
 	public function get_all_logs()

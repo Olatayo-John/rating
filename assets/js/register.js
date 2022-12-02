@@ -38,10 +38,12 @@ $(document).ready(function () {
 		var cmpychkb = $('.cmpychkb').val();
 		var uname = $('.uname').val();
 		var pwd = $('.pwd').val();
-		var sms_quota = $(".sms_quota").val();
-		var email_quota = $(".email_quota").val();
-		var whatsapp_quota = $(".whatsapp_quota").val();
-		var web_quota = $(".web_quota").val();
+		var sms_quota = $("#sms_quota").val();
+		var email_quota = $("#email_quota").val();
+		var whatsapp_quota = $("#whatsapp_quota").val();
+		var web_quota = $("#web_quota").val();
+		var plan_id = $("#plan_id").val();
+		var amount = $("#amount").val();
 
 		clearAlert();
 
@@ -54,7 +56,7 @@ $(document).ready(function () {
 			document.getElementById("mobile").scrollIntoView(false);
 			$('.mobileerr').show();
 			return false;
-		}else{
+		} else {
 			$('.mobileerr').hide();
 		}
 
@@ -79,7 +81,7 @@ $(document).ready(function () {
 			$('.pwderr').hide();
 		}
 
-		if (sms_quota == "" || sms_quota == null || email_quota == "" || email_quota == null || whatsapp_quota == "" || whatsapp_quota == null || web_quota == "" || web_quota == null) {
+		if (sms_quota == "" || sms_quota == null || email_quota == "" || email_quota == null || whatsapp_quota == "" || whatsapp_quota == null || web_quota == "" || web_quota == null || plan_id == "" || plan_id == null || amount == "" || amount == null) {
 			$(".ajax_res_err").text("Please pick a plan");
 			$(".ajax_err_div").fadeIn();
 			return false;

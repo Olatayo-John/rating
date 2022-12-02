@@ -2,10 +2,12 @@
 <div class="pt-4">
 	<!-- <h4 class="text-dark">Subscriptions</h4> -->
 	<!-- <hr class="sub"> -->
-	<input type="hidden" name="sms_quota" class="sms_quota" id="sms_quota">
-	<input type="hidden" name="email_quota" class="email_quota" id="email_quota">
-	<input type="hidden" name="whatsapp_quota" class="whatsapp_quota" id="whatsapp_quota">
-	<input type="hidden" name="web_quota" class="web_quota" id="web_quota">
+	<input type="hidden" name="sms_quota" id="sms_quota">
+	<input type="hidden" name="email_quota" id="email_quota">
+	<input type="hidden" name="whatsapp_quota" id="whatsapp_quota">
+	<input type="hidden" name="web_quota" id="web_quota">
+	<input type="hidden" name="plan_id" id="plan_id">
+	<input type="hidden" name="amount" id="amount">
 
 	<div class="text-center">
 		<h3>Simple Pricing for Everyone!</h3>
@@ -20,10 +22,10 @@
 						<h5><?php echo $p['name'] ?></h5>
 						<h6>
 							<span>Rs </span>
-							<b><?php echo $p['amount'] ?></b>
+							<b><?php echo $p['amount'].' '. $p['per'] ?></b>
 						</h6>
 
-						<button type="button" class='btn chooseplanbtn' sms_quota="<?php echo $p['sms_quota'] ?>" email_quota="<?php echo $p['email_quota'] ?>" whatsapp_quota="<?php echo $p['whatsapp_quota'] ?>" web_quota="<?php echo $p['web_quota'] ?>" plan="planthree">Choose Plan</button>
+						<button type="button" class='btn chooseplanbtn' sms_quota="<?php echo $p['sms_quota'] ?>" email_quota="<?php echo $p['email_quota'] ?>" whatsapp_quota="<?php echo $p['whatsapp_quota'] ?>" web_quota="<?php echo $p['web_quota'] ?>" planid="<?php echo $p['id'] ?>" amount="<?php echo $p['amount'] ?>">Choose Plan</button>
 
 						<ul>
 							<li><?php echo $p['sms_quota'] ?> SMS Quota</li>
@@ -102,20 +104,25 @@
 <script>
 	$(document).ready(function() {
 		//on selecting any plan
-		$(document).on('click', '.chooseplanbtn', function() {
-			var plan = $(this).attr("plan");
+		$(document).on('click', '.chooseplanbtn', function(e) {
+			e.preventDefault();
+
 			var sms_quota = $(this).attr("sms_quota");
 			var email_quota = $(this).attr("email_quota");
 			var whatsapp_quota = $(this).attr("whatsapp_quota");
 			var web_quota = $(this).attr("web_quota");
+			var plan_id = $(this).attr("planid");
+			var amount = $(this).attr("amount");
 
 			$(".sms_quota,.email_quota,.whatsapp_quota,.web_quota").val("");
 
-			if (plan !== "" && sms_quota !== "" && email_quota !== "" && whatsapp_quota !== "" && web_quota !== "") {
-				$(".sms_quota").val(sms_quota);
-				$(".email_quota").val(email_quota);
-				$(".whatsapp_quota").val(whatsapp_quota);
-				$(".web_quota").val(web_quota);
+			if (plan_id !== "" && sms_quota !== "" && email_quota !== "" && whatsapp_quota !== "" && web_quota !== "" && amount !== "") {
+				$("#sms_quota").val(sms_quota);
+				$("#email_quota").val(email_quota);
+				$("#whatsapp_quota").val(whatsapp_quota);
+				$("#web_quota").val(web_quota);
+				$("#plan_id").val(plan_id);
+				$("#amount").val(amount);
 
 				$(".chooseplanbtn").html("Choose Plan").css({
 					background: '#fff',

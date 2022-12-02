@@ -5,7 +5,7 @@
     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
     <div class="form-group">
-        <label>Reset User Password</label> <span> *</span>
+        <label>Reset user password</label> <span> *</span>
         <input type="password" name="auto-pwd" style="opacity: 0; position: absolute">
         <input type="password" name="rspwd" class="form-control rspwd" placeholder="Password must be over 6 characters long" id="rspwd" minlength="6" required>
         <span class="err pwderr">Password is too short</span>

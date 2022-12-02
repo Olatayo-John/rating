@@ -96,6 +96,7 @@ class Admin_Controller extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        
     }
 
     //checks if user is loggedIn and is superAdmin before accessing any page/function

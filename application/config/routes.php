@@ -90,23 +90,20 @@ $route['get-plan'] = 'admin/getplan';
 $route['update-plan'] = 'admin/updateplan';
 $route['add-plan'] = 'admin/addplan';
 
-// $route['pgResponses'] = 'admin/pgResponses';
-// $route['plan'] = 'admin/pick_plan';
-
-
-//companyAdmin
-$route['admin-add-user'] = 'admin/adduser_admin';
-$route['admin-view-user'] = 'admin/viewuser_admin';
-
-
 //payments
+$route['payment-response'] = 'admin/paymentResponse';
 $route['payments'] = 'admin/payments';
-
+$route['get-payment-details'] = 'admin/get_paymentsDetails';
 
 $route['feedbacks'] = 'admin/feedbacks';
 $route['clear-feedbacks'] = 'admin/clearfeedbacks';
 $route['activity'] = 'admin/logs';
 $route['clear-activity-logs'] = 'admin/clearlogs';
+
+
+//companyAdmin
+$route['admin-add-user'] = 'admin/adduser_admin';
+$route['admin-view-user'] = 'admin/viewuser_admin';
 
 
 //user-account

@@ -23,8 +23,21 @@
         <input type="number" name="web_quota" class="form-control web_quota" value="" required>
     </div>
 
-    <div class="text-right form-group cmpy_qt_info">
-        <p>Quota is shared by all users under <span class="company"></span> Company</p>
+    <div class="form-group">
+        <label>Current Web Quota</label> <span>*</span>
+        <input type="number" name="web_quota" class="form-control web_quota" value="" required>
+    </div>
+
+    <hr>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Amount</label>
+            <input type="number" name="amount" class="form-control amount" readonly value="">
+        </div>
+        <div class="form-group col-md-6">
+            <label>Due Amount</label>
+            <input type="number" name="balance" class="form-control balance" readonly value="">
+        </div>
     </div>
 
 
@@ -71,7 +84,7 @@
                 dataType: "json",
                 beforeSend: function() {
                     clearAlert();
-                    
+
                     $('.save_qt_btn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
                 },
                 error: function(res) {

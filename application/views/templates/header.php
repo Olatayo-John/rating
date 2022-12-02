@@ -51,8 +51,9 @@
 		<!-- <button class="btn menubtn" onclick="opennav()">&#9776;</button> -->
 
 		<div class="logoimg mr-auto m-1">
-			<!-- <img src="<?php echo base_url("assets/images/logo_dark.png") ?>" class="navbar-label"> -->
-			<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
+			<!-- <a href="<?php echo base_url('account#cmpy') ?>" style="color:#fff"> -->
+				<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
+			<!-- </a> -->
 		</div>
 
 		<!-- <?php print_r($_SESSION) ?> -->
@@ -66,9 +67,6 @@
 
 			<div class="navbar-brand text-uppercase font-weight-bolder" style="display: nonee;">
 				<a href="<?php echo base_url('account') ?>" style="color:#fff">
-					<!-- <span>
-						<i class="fas fa-user p_icon"></i>
-					</span> -->
 					<?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : 'My Account') ?>
 				</a>
 			</div>
@@ -127,19 +125,11 @@
 							<i class="fas fa-chart-area"></i><b>Logs</b>
 						</a>
 					</li>
-
-					<!-- renewPlan disabled -->
-					<li class="nav-item" style="display: none;">
-						<a href="<?php echo base_url('plan') ?>" class="nav-link" style="<?php echo ($url == 'plan') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-retweet"></i><b>Renew Plan</b>
-						</a>
-					</li>
-					<!--  -->
 				<?php endif; ?>
 
 				<!-- payments disabled-->
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
-					<li class="nav-item" style="display:none">
+					<li class="nav-item">
 						<a href="<?php echo base_url('payments') ?>" class="nav-link" style="<?php echo ($url == 'payments') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-wallet"></i><b>Payments</b>
 						</a>

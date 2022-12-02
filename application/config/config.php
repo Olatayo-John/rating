@@ -27,6 +27,12 @@ $config['base_url'] = 'http://localhost/rating2/';
 
 $config['web_name'] = "Rating";
 
+$config['RZTest_key_id'] = 'rzp_test_uP60TO9iD0CFDe';
+$config['RZTest_key_secret'] = '8H2wF3AZSmbw2yCxCgdTBXXQ';
+
+$config['RZLive_key_id'] = '';
+$config['RZLive_key_secret'] = '';
+
 /*
 |--------------------------------------------------------------------------
 | Index File

@@ -13,7 +13,7 @@
 						<a href="" class="tab_link prof_a" tabDivN="prof_div">Profile</a>
 						<a href="" class="tab_link cmpy_a" tabDivN="cmpy_div">Company</a>
 						<a href="" class="tab_link qt_a" tabDivN="qt_div">Quota</a>
-						<a href="" class="tab_link web_a" tabDivN="web_div">Platform</a>
+						<a href="" class="tab_link web_a" tabDivN="web_div">Platforms</a>
 						<a href="" class="tab_link rr_a" tabDivN="rr_div">Ratings</a>
 						<a href="" class="tab_link ls_a" tabDivN="ls_div">Links</a>
 						<a href="" class="tab_link ac_a text-danger font-weight-bolder" tabDivN="ac_div">Account</a>
@@ -113,6 +113,7 @@
 						<a href="">
 							<i class="fa fa-reorder editUserI" title="Show" id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>" data-iscmpy="<?php echo $user->iscmpy ?>" data-cmpyid="<?php echo $user->cmpyid ?>" data-admin="<?php echo $user->admin ?>"></i>
 						</a>
+
 						<?php if ($user->active == '0') : ?>
 							<span class="text-warning"> Unverified</span>
 						<?php endif; ?>
@@ -232,6 +233,8 @@
 								$(".whatsapp_quota").val(res.uquota.whatsapp_quota);
 								$(".web_quota").val(res.uquota.web_quota);
 								$('.company').text(res.uinfos.cmpyName);
+								$('.amount').val(res.uquota.amount);
+								$('.balance').val(res.uquota.balance);
 
 								if (res.uinfos.admin !== '1') {
 									$('.cmpy_qt_info').hide();

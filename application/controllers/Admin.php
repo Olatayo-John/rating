@@ -1,10 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-header("Pragma: no-cache");
-header("Cache-Control: no-cache");
-header("Expires: 0");
-require_once(APPPATH . "libraries/paytm/config_paytm.php");
-require_once(APPPATH . "libraries/paytm/encdec_paytm.php");
+
+require_once(APPPATH . "libraries/razorpay/Razorpay.php");
+
+use Razorpay\Api\Api;
 
 class Admin extends Admin_Controller
 {
@@ -204,7 +203,7 @@ class Admin extends Admin_Controller
 			$user_id = $_POST['user_id'];
 			$user_formKey = $_POST['user_formKey'];
 
-			$res = $this->Adminmodel->user_sub($user_sub,$user_id, $user_formKey);
+			$res = $this->Adminmodel->user_sub($user_sub, $user_id, $user_formKey);
 			// $res = false;
 			if ($res !== true) {
 				// $this->Logmodel->log_act($type = "admin_deauerr");
@@ -611,6 +610,7 @@ class Admin extends Admin_Controller
 			$pData = array(
 				'name' => htmlentities($_POST['name']),
 				'amount' => htmlentities($_POST['amount']),
+				'per' => htmlentities($_POST['per']),
 				'sms_quota' => htmlentities($_POST['sms_quota']),
 				'email_quota' => htmlentities($_POST['email_quota']),
 				'whatsapp_quota' => htmlentities($_POST['whatsapp_quota']),
@@ -647,6 +647,7 @@ class Admin extends Admin_Controller
 			$pData = array(
 				'name' => htmlentities($_POST['name']),
 				'amount' => htmlentities($_POST['amount']),
+				'per' => htmlentities($_POST['per']),
 				'sms_quota' => htmlentities($_POST['sms_quota']),
 				'email_quota' => htmlentities($_POST['email_quota']),
 				'whatsapp_quota' => htmlentities($_POST['whatsapp_quota']),
@@ -672,173 +673,135 @@ class Admin extends Admin_Controller
 		echo json_encode($data);
 	}
 
-
-	public function payments()
+	//redircet to receipt or show error message
+	public function paymentResponse()
 	{
-		$data['title'] = "payments";
+		$this->setTabUrl($mod = 'account');
 
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->setFlashMsg('error', lang('login_first'));
-			redirect('/');
-		}
-		if ($this->session->userdata('mr_sadmin') == "0") {
-			$this->setFlashMsg('error', lang('acc_denied'));
-			redirect('/');
-		}
+		$data['title'] = "payment response";
 
-		$data['pays'] = $this->Adminmodel->get_all_payments();
-		$this->load->view('templates/header', $data);
-		$this->load->view('admin/payments');
-		$this->load->view('templates/footer');
-	}
+		if (count($_POST) > 0) {
+			if ($_POST['razorpay_payment_id'] && $_POST['razorpay_order_id'] && $_POST['razorpay_signature']) {
 
-	public function pick_plan()
-	{
-		if (!$this->session->userdata('mr_logged_in')) {
-			$this->setFlashMsg('error', lang('login_first'));
-			redirect('user');
-		}
-		$this->load->view('templates/header');
-		$this->load->view('admin/pick_plan');
-		$this->load->view('templates/footer');
-	}
+				//use Testing keys if Live keys are empty from configFile
+				$key_id = $this->config->item('RZLive_key_id') ? $this->config->item('RZLive_key_id') : $this->config->item('RZTest_key_id');
+				$key_secret = $this->config->item('RZLive_key_secret') ? $this->config->item('RZLive_key_secret') : $this->config->item('RZTest_key_secret');
+				$api = new Api($key_id, $key_secret);
 
-	public function save_plan()
-	{
-		$checkSum = "";
-		$data = array();
+				//verify RZPostdata and signature
+				try {
+					$attributes  = array('razorpay_signature'  => $_POST['razorpay_signature'],  'razorpay_payment_id'  => $_POST['razorpay_payment_id'],  'razorpay_order_id' => $_POST['razorpay_order_id']);
+					$order = $api->utility->verifyPaymentSignature($attributes); //return should be null
 
-		$data["MID"] = PAYTM_MERCHANT_MID;
-		$data["CUST_ID"] = $this->session->userdata('mr_id');
-		$data["ORDER_ID"] = mt_rand(0, 10000000);
-		$data["INDUSTRY_TYPE_ID"] = "Retail";
-		$data["CHANNEL_ID"] = "WEB";
-		$data["TXN_AMOUNT"] = $this->input->post('plan_amount');
-		$data["WEBSITE"] = PAYTM_MERCHANT_WEBSITE;
-		$data["CALLBACK_URL"] = base_url("admin/pgResponses");
+					//if signature is correct, fetch payment details and store in DB
+					try {
+						$PaymentInfo = $api->payment->fetch($_POST['razorpay_payment_id']);
 
-		$checkSum = getChecksumFromArray($data, PAYTM_MERCHANT_KEY);
+						// store in DB
+						$PaymentInfoData = array(
+							'user_id' =>	$PaymentInfo['notes']['user_id'],
+							'form_key' =>	$PaymentInfo['notes']['form_key'],
+							'payment_id' =>	$PaymentInfo['id'],
+							'order_id' =>	$PaymentInfo['order_id'],
+							'entity' =>	$PaymentInfo['entity'],
+							'amount' =>	$PaymentInfo['amount'] / 100,
+							'currency' =>	$PaymentInfo['currency'],
+							'status' =>	$PaymentInfo['status'],
+							'captured' =>	$PaymentInfo['captured'],
+							'mop' =>	$PaymentInfo['method'],
+							'card_id' =>	$PaymentInfo['card_id'],
+							'bank' =>	$PaymentInfo['bank'],
+							'wallet' =>	$PaymentInfo['wallet'],
+							'vpa' =>	$PaymentInfo['vpa'],
+							'description' =>	$PaymentInfo['description'],
+							'email' =>	$PaymentInfo['email'],
+							'mobile' =>	$PaymentInfo['contact'],
+							'date' =>	$PaymentInfo['created_at']
+						);
+						if ($PaymentInfo['bank']) {
+							$PaymentInfoData['transaction_id'] = $PaymentInfo['acquirer_data']['bank_transaction_id'];
+						} elseif ($PaymentInfo['card_id']) {
+							// 
+						} elseif ($PaymentInfo['wallet']) {
+							//
+						} elseif ($PaymentInfo['vpa']) {
+							$PaymentInfoData['transaction_id'] = $PaymentInfo['acquirer_data']['upi_transaction_id'];
+							$PaymentInfoData['rrn'] = $PaymentInfo['acquirer_data']['rrn'];
+						}
 
-		$this->load->view('templates/header');
-		$this->load->view('admin/pgresponse', ['paytm_info' => $data, 'checkSum' => $checkSum]);
-		$this->load->view('templates/footer');
-	}
+						if (($this->Adminmodel->check_payID($pid = $PaymentInfo['id']) === false)) {
+							$this->Adminmodel->savePaymentInfo($PaymentInfoData);
+						}
 
-	public function pgResponses()
-	{
-		$paytmChecksum = "";
-		$paramList = array();
-		$isValidChecksum = "FALSE";
-		$paramList = $_POST;
 
-		$paytmChecksum = isset($_POST["CHECKSUMHASH"]) ? $_POST["CHECKSUMHASH"] : "";
-		$isValidChecksum = verifychecksum_e($paramList, PAYTM_MERCHANT_KEY, $paytmChecksum);
-		$userData = array(
-			'm_id' => $_POST['MID'],
-			'txn_id' => "",
-			'order_id' => $_POST['ORDERID'],
-			'currency' => $_POST['CURRENCY'],
-			'paid_amt' => $_POST['TXNAMOUNT'],
-			'payment_mode' => "",
-			'gateway_name' => "",
-			'bank_txn_id' => "",
-			'bank_name' => "",
-			'status' => $_POST['STATUS'],
-		);
-		if ($isValidChecksum == "TRUE") {
-			if ($_POST["STATUS"] == "TXN_SUCCESS") {
-				if (isset($_POST) && count($_POST) > 0) {
-
-					$userData = array(
-						'm_id' => $_POST['MID'],
-						'txn_id' => $_POST['TXNID'],
-						'order_id' => $_POST['ORDERID'],
-						'currency' => $_POST['CURRENCY'],
-						'paid_amt' => $_POST['TXNAMOUNT'],
-						'payment_mode' => $_POST['PAYMENTMODE'],
-						'gateway_name' => $_POST['GATEWAYNAME'],
-						'bank_txn_id' => $_POST['BANKTXNID'],
-						'bank_name' => $_POST['BANKNAME'],
-						'check_sum_hash' => $_POST['CHECKSUMHASH'],
-						'status' => $_POST['STATUS'],
-					);
-
-					$this->Adminmodel->save_payment($userData);
-					$admin_res = $this->Adminmodel->getsadmin();
-
-					$admin_mail = $admin_res->email;
-					$m_id = $_POST['MID'];
-					$txn_id = $_POST['TXNID'];
-					$order_id = $_POST['ORDERID'];
-					$user_amt = $_POST['TXNAMOUNT'];
-					$payment_mode = $_POST['PAYMENTMODE'];
-					$bank_name = $_POST['BANKNAME'];
-					$status = $_POST['STATUS'];
-
-					if (isset($admin_mail)) {
-						$this->notifyadmin($admin_mail, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status);
+						$data['PaymentInfo'] = $PaymentInfo;
+						$data['PaymentInfoData'] = $PaymentInfoData;
+						$data['error'] = false;
+						$data['msg'] = "Payment Successfull";
+					} catch (Exception $p) {
+						$data['error'] = true;
+						$data['msg'] = $p->getMessage();
 					}
-
-					$this->setFlashMsg('success', 'Payment Done. Please wait while we verify your payment');
-					$this->load->view('templates/header');
-					$this->load->view('admin/pay_status', ['userData' => $userData]);
-					$this->load->view('templates/footer');
-				} else {
-					$this->setFlashMsg('error', 'Payment Failed.');
-					$this->load->view('templates/header');
-					$this->load->view('admin/pay_status', ['userData' => $userData]);
-					$this->load->view('templates/footer');
+				} catch (Exception $e) {
+					$data['error'] = true;
+					$data['msg'] = "Razorpay verification Error : " . $e->getMessage();
 				}
-			} else {
-				$this->setFlashMsg('error', 'Payment Failed.');
-				$this->load->view('templates/header');
-				$this->load->view('admin/pay_status', ['userData' => $userData]);
-				$this->load->view('templates/footer');
 			}
 		} else {
-			// $this->logout();
+			$data['error'] = true;
+			$data['msg'] = "No data to process";
 		}
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('admin/payment_res');
+		$this->load->view('templates/footer');
 	}
 
-	public function notifyadmin($admin_mail, $m_id, $txn_id, $order_id, $user_amt, $payment_mode, $bank_name, $status)
+	//payments made
+	public function payments()
 	{
-		$config['protocol']    = 'smtp';
-		$config['smtp_host']    = 'ssl://smtp.gmail.com';
-		$config['smtp_port']    = '465';
-		$config['smtp_timeout'] = '7';
-		$config['smtp_user']    = 'jvweedtest@gmail.com';
-		$config['smtp_pass']    = 'Jvweedtest9!';
-		$config['charset']    = 'iso-8859-1';
-		$config['mailtype'] = 'text';
-		$config['validation'] = TRUE;
+		$this->is_sadmin();
 
-		$this->load->library('email', $config);
-		$this->email->set_newline("\r\n");
+		$this->setTabUrl($mod = 'payments');
 
-		if ($user_amt == "500") {
-			$quota = "500";
-		} elseif ($user_amt == "1000") {
-			$quota = "1000";
-		} elseif ($user_amt == "1500") {
-			$quota = "1500";
-		} elseif ($user_amt == "2000") {
-			$quota = "2000";
-		}
+		$data['title'] = "payments";
 
-		$body = "Dear Admin.\n\n New user Subscription for a new quota using PAYTM. Below are the payment details\n\nMerchant ID: " . $m_id . "\nTax ID: " . $txn_id . "\nOrder ID: " . $order_id . "\nAmount Paid: " . $user_amt . "\Quota Paid For: " . $quota . "\nPayment Mode: " . $payment_mode . "\nBank:" . $bank_name . "\nPayment Status: " . $status . "\n\nLogin " . base_url("/users") . " to verify payment and activate user subscription\n\nBest Regards,\nNKTECH\nhttps://nktech.in";
+		$data['transactions'] = $this->Adminmodel->get_all_transactions();
 
-		$this->email->from('jvweedtest@gmail.com', 'Rating');
-		$this->email->to($admin_mail);
-		$this->email->subject('New Subscription');
-		$this->email->message($body);
-
-		if ($this->email->send()) {
-			return true;
-		} else {
-			return $this->email->print_debugger();
-		}
+		$this->load->view('templates/header', $data);
+		$this->load->view('admin/transactions');
+		$this->load->view('templates/footer');
 	}
 
+	//get a payment info
+	public function get_paymentsDetails()
+	{
+		if ($this->ajax_is_sadmin() === false) {
+			$data['status'] = false;
+			$data['msg'] = lang('acc_denied');
+		} else {
+			//check postdata
+			if ($_POST['payID'] && $_POST['formkey'] && $_POST['userid']) {
+				$res = $this->Adminmodel->get_paymentsDetails($_POST['payID'], $_POST['formkey'], $_POST['userid']);
+				if ($res == false) {
+					// $this->Logmodel->log_act($type = "webstatuserr");
+					$data['status'] = false;
+					$data['msg'] = "Error retrieving data";
+				} else {
+					$data['status'] = true;
+					$data['details'] = $res;
+				}
+			} else {
+				$data['status'] = false;
+				$data['msg'] = "Missing parameters";
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//activity logs
 	public function logs()
 	{
 		$this->is_sadmin();
@@ -871,6 +834,7 @@ class Admin extends Admin_Controller
 		redirect('activity');
 	}
 
+	//feedbacks from contact us form
 	public function feedbacks()
 	{
 		$data['title'] = "feedbacks";

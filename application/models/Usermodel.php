@@ -145,6 +145,9 @@ class Usermodel extends CI_Model
 			'whatsapp_quota' => htmlentities($this->input->post('whatsapp_quota')),
 			'web_quota' => htmlentities($this->input->post('web_quota')),
 			'by_form_key' => $form_key,
+			'plan_id' => htmlentities($this->input->post('plan_id')),
+			'amount' => htmlentities($this->input->post('amount')),
+			'balance' => htmlentities($this->input->post('amount')),
 		);
 		$this->db->insert('quota', $data);
 		return true;
@@ -802,6 +805,10 @@ class Usermodel extends CI_Model
 		$query = $this->db->get('quota')->row();
 
 		if ($query) {
+			if ($query->balance > '0'  || $query->balance !== '0') {
+				return "pending_balance";
+				exit;
+			}
 			if ($query->$qType == '0'  || $query->$qType < '0') {
 				$this->db->where($mwherearray);
 				$mquery = $this->db->get('users')->row();

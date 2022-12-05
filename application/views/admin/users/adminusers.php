@@ -81,6 +81,7 @@
 						<?php echo $user->uname ?>
 					<?php endif; ?>
 				</td>
+
 				<td class="w-25">
 					<?php if ($user->sub === '1') : ?>
 						<i class="fa-solid fa-toggle-on text-success subI" mod='active' sub="<?php echo $user->sub ?>" sub_id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>"></i>
@@ -88,6 +89,7 @@
 						<i class="fa-solid fa-toggle-off text-danger subI" mod='not_active' sub="<?php echo $user->sub ?>" sub_id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>"></i>
 					<?php endif; ?>
 				</td>
+
 				<td class="w-25">
 					<div class="">
 						<a href="">
@@ -153,7 +155,7 @@
 							$(".ajax_err_div").fadeIn();
 						} else if (res.status === true) {
 							//destroy tables
-							$('#webtable,#lstable,#rrtable').bootstrapTable('destroy');
+							$('#platformtable,#lstable,#rrtable,#adminuserstable').bootstrapTable('destroy');
 
 							//hide un-selected tabs
 							$('div.einfoDiv').hide();
@@ -183,9 +185,18 @@
 
 							//populate web
 							$(".webt").text(res.uwebs.length);
+
+							for (let index = 0; index < res.uwebs.length; index++) {
+								//account status
+								if (res.uwebs[index].active === '1') {
+									res.uwebs[index].active = '<i class="fas fa-circle text-success" title="Platform is active" aria-hidden="true"></i>';
+								} else {
+									res.uwebs[index].active = '<i class="fas fa-circle text-danger" title="Platform is not active" aria-hidden="true"></i>';
+								}
+							}
 							$(function() {
 								var data = res.uwebs;
-								$('#webtable').bootstrapTable({
+								$('#platformtable').bootstrapTable({
 									data: data
 								});
 

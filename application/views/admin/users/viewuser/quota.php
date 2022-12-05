@@ -23,11 +23,6 @@
         <input type="number" name="web_quota" class="form-control web_quota" value="" required>
     </div>
 
-    <div class="form-group">
-        <label>Current Web Quota</label> <span>*</span>
-        <input type="number" name="web_quota" class="form-control web_quota" value="" required>
-    </div>
-
     <hr>
     <div class="row">
         <div class="form-group col-md-6">

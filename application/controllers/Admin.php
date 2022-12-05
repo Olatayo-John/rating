@@ -436,6 +436,7 @@ class Admin extends Admin_Controller
 			$data['uwebs'] = $this->Adminmodel->get_userwebsites($user_id, $form_key);
 			$data['uratings'] = $this->Adminmodel->get_userratings($form_key);
 			$data['ulinks'] = $this->Adminmodel->get_userlinks($user_id);
+			$data['uusers'] = $this->Adminmodel->sadmin_get_adminusers($user_id, $form_key, $iscmpy, $cmpyid);
 
 			$data['temail'] = $this->Adminmodel->get_usertotalemail($user_id);
 			$data['tsms'] = $this->Adminmodel->get_usertotalsms($user_id);

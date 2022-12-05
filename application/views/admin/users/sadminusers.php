@@ -12,6 +12,7 @@
 					<div class="tab_div col-md-2 p-0">
 						<a href="" class="tab_link prof_a" tabDivN="prof_div">Profile</a>
 						<a href="" class="tab_link cmpy_a" tabDivN="cmpy_div">Company</a>
+						<a href="" class="tab_link users_a" tabDivN="users_div">Users</a>
 						<a href="" class="tab_link qt_a" tabDivN="qt_div">Quota</a>
 						<a href="" class="tab_link web_a" tabDivN="web_div">Platforms</a>
 						<a href="" class="tab_link rr_a" tabDivN="rr_div">Ratings</a>
@@ -32,6 +33,10 @@
 
 						<div class="cmpy_div einfoDiv">
 							<?php include("viewuser/company.php") ?>
+						</div>
+
+						<div class="users_div einfoDiv">
+							<?php include("viewuser/users.php") ?>
 						</div>
 
 						<div class="qt_div einfoDiv">
@@ -92,15 +97,15 @@
 						<?php echo $user->uname ?>
 					<?php endif; ?>
 				</td>
+
 				<td class="w-25">
 					<?php if ($user->admin === '1') : ?>
-						<span><?php echo strtoupper($user->cmpy) ?> Admin</span>
-					<?php elseif (!empty($user->cmpyid) && $user->iscmpy === '1') : ?>
-						<span><?php echo ucwords($user->cmpy) ?> User</span>
+						<span> Admin</span>
 					<?php else : ?>
 						<span>Regular User</span>
 					<?php endif; ?>
 				</td>
+
 				<td class="w-25">
 					<?php if ($user->sub === '1') : ?>
 						<i class="fa-solid fa-toggle-on text-success subI" mod='active' sub="<?php echo $user->sub ?>" sub_id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>"></i>
@@ -108,6 +113,7 @@
 						<i class="fa-solid fa-toggle-off text-danger subI" mod='not_active' sub="<?php echo $user->sub ?>" sub_id="<?php echo $user->id ?>" data-formkey="<?php echo $user->form_key ?>"></i>
 					<?php endif; ?>
 				</td>
+
 				<td class="w-25">
 					<div>
 						<a href="">
@@ -174,7 +180,7 @@
 							$(".ajax_err_div").fadeIn();
 						} else if (res.status === true) {
 							//destroy tables
-							$('#webtable,#lstable,#rrtable').bootstrapTable('destroy');
+							$('#platformtable,#lstable,#rrtable,#adminuserstable').bootstrapTable('destroy');
 
 							//hide un-selected tabs
 							$('div.einfoDiv').hide();
@@ -222,6 +228,43 @@
 								$('.cmpy_a').show();
 							}
 
+							//populate admin(company)-users
+							if (res.uinfos.admin !== '1') {
+								$('.users_a').hide();
+							} else {
+								$(".userst").text(res.uusers.length);
+								for (let index = 0; index < res.uusers.length; index++) {
+
+									//subscription
+									if (res.uusers[index].sub == '1') {
+										res.uusers[index].sub = '<i class="fa-solid fa-toggle-on text-success subI" mod="active" sub="' + res.uusers[index].sub + '" sub_id="' + res.uusers[index].id + '" data-formkey="' + res.uusers[index].form_key + '"></i>';
+									} else {
+										res.uusers[index].sub = '<i class="fa-solid fa-toggle-off text-danger subI" mod="not_active" sub="' + res.uusers[index].sub + '" sub_id="' + res.uusers[index].id + '" data-formkey="' + res.uusers[index].form_key + '"></i>';
+									}
+
+									//account status
+									if (res.uusers[index].active === '0') {
+										res.uusers[index].active = 'Unverified';
+									}
+									if (res.uusers[index].active === '1') {
+										res.uusers[index].active = 'Active';
+									}
+									if (res.uusers[index].active === '2') {
+										res.uusers[index].active = 'De activated';
+									}
+								}
+
+								$(function() {
+									var data = res.uusers;
+									$('#adminuserstable').bootstrapTable({
+										data: data
+									});
+
+								});
+
+								$('.users_a').show();
+							}
+
 							//populate quota
 							if (res.uinfos.cmpyid !== null) {
 								$('.company').text('');
@@ -248,9 +291,18 @@
 
 							//populate web
 							$(".webt").text(res.uwebs.length);
+
+							for (let index = 0; index < res.uwebs.length; index++) {
+								//account status
+								if (res.uwebs[index].active === '1') {
+									res.uwebs[index].active = '<i class="fas fa-circle text-success" title="Platform is active" aria-hidden="true"></i>';
+								}else{
+									res.uwebs[index].active = '<i class="fas fa-circle text-danger" title="Platform is not active" aria-hidden="true"></i>';
+								}
+							}
 							$(function() {
 								var data = res.uwebs;
-								$('#webtable').bootstrapTable({
+								$('#platformtable').bootstrapTable({
 									data: data
 								});
 

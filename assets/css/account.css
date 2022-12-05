@@ -45,6 +45,7 @@ label {
 	display: flex;
 	padding: 0;
 	margin-bottom: 14px;
+	flex-wrap: wrap;
 }
 
 .tab_div a.prof_a {

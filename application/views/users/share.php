@@ -2,51 +2,55 @@
 
 
 <div class="wrapper_div">
-	<div class="emailmodal modal fade" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body">
-					<div class="modalcloseDiv">
-						<h6>CSV must have header of only "Email"</h6>
-						<i class="fas fa-times close_EmailModalBtn text-danger"></i>
+
+	<!-- modals -->
+	<div class="">
+		<div class="emailmodal modal fade" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="modalcloseDiv">
+							<h6>CSV must have header of only "Email"</h6>
+							<i class="fas fa-times close_EmailModalBtn text-danger"></i>
+						</div>
+
+						<form enctype="multipart/form-data" method="post" id="emailForm_csvUpload">
+							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
+
+							<div class="form-group">
+								<input type="file" name="email_csv_file" id="email_csv_file" accept=".csv" class="" style="border:none">
+							</div>
+
+							<div class="text-right">
+								<button class="btn text-light email_SendMultipleBtn" type="submit" style="background-color:#294a63">Import CSV</button>
+							</div>
+						</form>
 					</div>
-
-					<form enctype="multipart/form-data" method="post" id="emailForm_csvUpload">
-						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
-
-						<div class="form-group">
-							<input type="file" name="email_csv_file" id="email_csv_file" accept=".csv" class="" style="border:none">
-						</div>
-
-						<div class="text-right">
-							<button class="btn text-light email_SendMultipleBtn" type="submit" style="background-color:#294a63">Import CSV</button>
-						</div>
-					</form>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="smsmodal modal fade" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body">
-					<div class="modalcloseDiv">
-						<h6>CSV must have header of only "Phonenumber"</h6>
-						<i class="fas fa-times close_SmsModalBtn text-danger"></i>
+		<div class="smsmodal modal fade" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="modalcloseDiv">
+							<h6>CSV must have header of only "Phonenumber"</h6>
+							<i class="fas fa-times close_SmsModalBtn text-danger"></i>
+						</div>
+
+						<form enctype="multipart/form-data" method="post" id="smsForm_csvUpload">
+							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
+
+							<div class="form-group">
+								<input type="file" name="sms_csv_file" id="sms_csv_file" accept=".csv" class="" style="border:none">
+							</div>
+
+							<div class="text-right">
+								<button class="btn text-light sms_SendMultipleBtn" type="submit" style="background-color:#294a63">Import CSV</button>
+							</div>
+						</form>
 					</div>
-
-					<form enctype="multipart/form-data" method="post" id="smsForm_csvUpload">
-						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
-
-						<div class="form-group">
-							<input type="file" name="sms_csv_file" id="sms_csv_file" accept=".csv" class="" style="border:none">
-						</div>
-
-						<div class="text-right">
-							<button class="btn text-light sms_SendMultipleBtn" type="submit" style="background-color:#294a63">Import CSV</button>
-						</div>
-					</form>
 				</div>
 			</div>
 		</div>
@@ -82,6 +86,22 @@
 
 				<a href="<?php echo base_url('email-sample-csv'); ?>" class="btn btn-danger">
 					<i class="fas fa-file-csv mr-2"></i>Download sample</a>
+			</div>
+
+			<div class="form-group">
+				<label class="labelplatform">Platform</label>
+				<select name="foremailplatform" id="platforms" platformTab="email" class="form-control" required>
+					<?php if ($platforms->num_rows() > 0) : ?>
+						<option value="">Select</option>
+						<?php foreach ($platforms->result_array() as $p) : ?>
+							<?php if ($p['active'] === '1') : ?>
+								<option value="<?php echo $p['id'] ?>"><?php echo $p['web_name'] ?></option>
+							<?php endif; ?>
+						<?php endforeach; ?>
+					<?php else : ?>
+						<option value="">No platform created</option>
+					<?php endif; ?>
+				</select>
 			</div>
 
 			<div class="form-group">
@@ -122,6 +142,22 @@
 			</div>
 
 			<div class="form-group">
+				<label class="labelplatform">Platform</label>
+				<select name="forsmsplatform" id="platforms" platformTab="sms" class="form-control" required>
+					<?php if ($platforms->num_rows() > 0) : ?>
+						<option value="">Select</option>
+						<?php foreach ($platforms->result_array() as $p) : ?>
+							<?php if ($p['active'] === '1') : ?>
+								<option value="<?php echo $p['id'] ?>"><?php echo $p['web_name'] ?></option>
+							<?php endif; ?>
+						<?php endforeach; ?>
+					<?php else : ?>
+						<option value="">No platform created</option>
+					<?php endif; ?>
+				</select>
+			</div>
+
+			<div class="form-group">
 				<label class="phonelabel">Phonenumber</label>
 				<div class="input-group">
 					<div class="input-group-prepend">
@@ -130,7 +166,7 @@
 
 					<input type="number" name="mobile" class="form-control mobile" placeholder="Your mobile number" id="mobile" required value="1234567890">
 					<select class="form-control sms_select" name="sms_select" id="sms_select" style="display: none;" readonly conn="false">
-				</select>
+					</select>
 				</div>
 				<span class="e_mobile">Invalid mobile length</span>
 			</div>
@@ -151,6 +187,22 @@
 		<form action="<?php echo base_url('share-whatsapp'); ?>" method="post" id="whatsappForm" class="whatsappForm as-whatsapp genform">
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf_hash">
 			<input type="hidden" name="userid" value="<?php echo $this->session->userdata('mr_id'); ?>" class="userid">
+
+			<div class="form-group">
+				<label class="labelplatform">Platform</label>
+				<select name="forwhpplatform" id="platforms" platformTab="whp" class="form-control" required>
+					<?php if ($platforms->num_rows() > 0) : ?>
+						<option value="">Select</option>
+						<?php foreach ($platforms->result_array() as $p) : ?>
+							<?php if ($p['active'] === '1') : ?>
+								<option value="<?php echo $p['id'] ?>"><?php echo $p['web_name'] ?></option>
+							<?php endif; ?>
+						<?php endforeach; ?>
+					<?php else : ?>
+						<option value="">No platform created</option>
+					<?php endif; ?>
+				</select>
+			</div>
 
 			<div class="form-group">
 				<label class="phonelabel">Whatsapp Number</label>
@@ -188,35 +240,84 @@
 		var csrfHash = $('.csrf_hash').val();
 
 		//load message body/file.txt
-		$.ajax({
-			url: "<?php echo base_url('getlink'); ?>",
-			method: "post",
-			data: {
-				id: id,
-				[csrfName]: csrfHash
-			},
-			dataType: "json",
-			beforeSend: function() {
-				// clearAlert();
-			},
-			success: function(data) {
-				$('.csrf_hash').val(data.token);
+		// $.ajax({
+		// 	url: "<?php echo base_url('getlink'); ?>",
+		// 	method: "post",
+		// 	data: {
+		// 		id: id,
+		// 		[csrfName]: csrfHash
+		// 	},
+		// 	dataType: "json",
+		// 	beforeSend: function() {
+		// 		// clearAlert();
+		// 	},
+		// 	success: function(data) {
+		// 		$('.csrf_hash').val(data.token);
 
-				if (data.status === true) {
-					$('.subj').val("Rating");
+		// 		if (data.status === true) {
+		// 			$('.subj').val("Rating");
 
-					$(".emailbdy,.smsbdy,.whpbdy").load("<?php echo base_url("body.txt"); ?>");
+		// 			$(".emailbdy,.smsbdy,.whpbdy").load("<?php echo base_url("body.txt"); ?>");
 
-				} else if (data.status == false) {
-					$(".ajax_succ_div,.ajax_err_div").fadeOut();
-					$('.ajax_res_err').html(data.msg);
-					$('.ajax_err_div').fadeIn();
-				} else if (data.status == "error") {
-					window.location.assign(data.redirect);
-				}
-			},
-			error: function(data) {
-				window.location.assign(data.redirect);
+		// 		} else if (data.status == false) {
+		// 			$(".ajax_succ_div,.ajax_err_div").fadeOut();
+		// 			$('.ajax_res_err').html(data.msg);
+		// 			$('.ajax_err_div').fadeIn();
+		// 		} else if (data.status == "error") {
+		// 			window.location.assign(data.redirect);
+		// 		}
+		// 	},
+		// 	error: function(data) {
+		// 		window.location.assign(data.redirect);
+		// 	}
+		// });
+
+		//n change of platform
+		$(document).on('change', '#platforms', function(e) {
+			e.preventDefault();
+
+			var csrfName = $('.csrf_hash').attr('name');
+			var csrfHash = $('.csrf_hash').val();
+			var platformid = $(this).val();
+			var platformTab = $(this).attr('platformTab');
+
+			if (platformid && platformid !== "" && platformid !== null && platformid !== undefined) {
+				$.ajax({
+					url: "<?php echo base_url('get-platform-link'); ?>",
+					method: "post",
+					data: {
+						[csrfName]: csrfHash,
+						platformid: platformid
+					},
+					dataType: "json",
+					beforeSend: function(data) {
+						clearAlert();
+					},
+					success: function(data) {
+						if (data.status === false) {
+							$(".ajax_res_err").append(data.msg);
+							$(".ajax_err_div").fadeIn();
+
+						} else if (data.status === true) {
+							//subject
+							if (data.res.subject) {
+								$('.subj').val(data.res.subject);
+							} else {
+								$('.subj').val('Reviews');
+							}
+							//message-body
+							$("." + platformTab + "bdy").val(data.body);
+						} else if (data.status === 'error') {
+							window.location.assign(data.redirect);
+						}
+
+						$('.csrf_hash').val(data.token);
+					},
+					error: function() {
+						alert('Error');
+						window.location.reload();
+					}
+				});
 			}
 		});
 
@@ -418,9 +519,14 @@
 		$('#emailForm').submit(function(e) {
 			// e.preventDefault();
 
+			var platform = $('select[name="foremailplatform"]').val();
 			var email = $('.email').val();
 			var sbj = $('.subj').val();
 			var body = $('.emailbdy').val();
+
+			if (platform == "" || platform == null) {
+				return false;
+			}
 
 			if (email == "" || email == null) {
 				return false;
@@ -447,8 +553,13 @@
 		$('form#smsForm').submit(function(e) {
 			// e.preventDefault();
 
+			var platform = $('select[name="forsmsplatform"]').val();
 			var mobile = $('.mobile').val();
 			var smsbdy = $('.smsbdy').val();
+
+			if (platform == "" || platform == null) {
+				return false;
+			}
 
 			if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
 				$('.e_mobile').show();
@@ -474,18 +585,32 @@
 		$('button.whp_sendBtn').click(function(e) {
 			e.preventDefault();
 
+			var platform = $('select[name="forwhpplatform"]').val();
 			var mobile = $('.whpMobile').val();
 			var whpbdy = $('.whpbdy').val();
 
+			if (platform == "" || platform == null) {
+				$('select[name="forwhpplatform"]').css('border-bottom', '2px solid #dc3545');
+				$('select[name="forwhpplatform"]').css('border-bottom', '2px solid #dc3545');
+				return false;
+			} else {
+				$('select[name="forwhpplatform"]').css('border-bottom', '1px solid #ced4da');
+			}
+
 			if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
+				$('.whpMobile').css('border-bottom', '2px solid #dc3545');
 				$('.e_whpMobile').show();
 				return false;
 			} else {
+				$('.whpMobile').css('border-bottom', '1px solid #ced4da');
 				$('.e_whpMobile').hide();
 			}
 
 			if (whpbdy == "" || whpbdy == null) {
+				$('.whpbdy').css('border-bottom', '2px solid #dc3545');
 				return false;
+			} else {
+				$('.whpbdy').css('border-bottom', '1px solid #ced4da');
 			}
 
 			$.ajax({
@@ -529,17 +654,31 @@
 		$('.email_sendBtn_m').click(function(e) {
 			e.preventDefault();
 
+			var platform = $('select[name="foremailplatform"]').val();
 			var subj = $('.subj').val();
 			var bdy = $('.emailbdy').val();
 			var csrfName = $('.csrf_hash').attr('name');
 			var csrfHash = $('.csrf_hash').val();
 
-			if (subj == "" || subj == null) {
+			if (platform == "" || platform == null) {
+				$('select[name="foremailplatform"]').css('border-bottom', '2px solid #dc3545');
 				return false;
+			} else {
+				$('select[name="foremailplatform"]').css('border-bottom', '1px solid #ced4da');
+			}
+
+			if (subj == "" || subj == null) {
+				$('.subj').css('border-bottom', '2px solid #dc3545');
+				return false;
+			} else {
+				$('.subj').css('border-bottom', '1px solid #ced4da');
 			}
 
 			if (bdy == "" || bdy == null) {
+				$('.emailbdy').css('border-bottom', '2px solid #dc3545');
 				return false;
+			} else {
+				$('.emailbdy').css('border-bottom', '1px solid #ced4da');
 			}
 
 			var emaildata = [];
@@ -602,13 +741,33 @@
 		$('.sms_sendBtn_m').click(function(e) {
 			e.preventDefault();
 
+			var platform = $('select[name="forsmsplatform"]').val();
 			var mobile = $('.mobile').val();
 			var smsbdy = $('.smsbdy').val();
 			var csrfName = $('.csrf_hash').attr('name');
 			var csrfHash = $('.csrf_hash').val();
 
-			if (smsbdy == "" || smsbdy == null) {
+			if (platform == "" || platform == null) {
+				$('select[name="forsmsplatform"]').css('border-bottom', '2px solid #dc3545');
 				return false;
+			} else {
+				$('select[name="forsmsplatform"]').css('border-bottom', '1px solid #ced4da');
+			}
+
+			if (smsbdy == "" || smsbdy == null) {
+				$('.smsbdy').css('border-bottom', '2px solid #dc3545');
+				return false;
+			} else {
+				$('.smsbdy').css('border-bottom', '1px solid #ced4da');
+			}
+
+			if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
+				$('.mobile').css('border-bottom', '2px solid #dc3545');
+				$('.e_mobile').show();
+				return false;
+			} else {
+				$('.mobile').css('border-bottom', '1px solid #ced4da');
+				$('.e_mobile').hide();
 			}
 
 			var mobiledata = [];

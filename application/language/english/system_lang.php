@@ -16,6 +16,7 @@ $lang['cmpy'] = 'Company';
 
 $lang['users'] = 'Users';
 $lang['manage_users'] = 'Manage users';
+$lang['mail_error'] = 'Failed to send mail';
 
 $lang['wrong_pwd_uname'] = 'Username or Password provided is wrong!';
 $lang['acct_deact'] = 'Your account has been de-activated';

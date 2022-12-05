@@ -40,8 +40,9 @@ class User extends User_Controller
 			$this->load->view('templates/footer');
 		} else {
 			$validate = $this->Usermodel->login();
+
 			if ($validate == FALSE) {
-				$this->Logmodel->log_act($type = "login_false");
+				$this->Logmodel->log_act($type = "false_login");
 				$this->setFlashMsg('error', lang('wrong_pwd_uname'));
 				redirect('user');
 			}
@@ -55,7 +56,7 @@ class User extends User_Controller
 				$this->setFlashMsg('error', lang('acct_deact'));
 				redirect('/');
 			}
-			if ($validate == "inactive") {
+			if ($validate == "inactive_account") {
 				$this->Logmodel->log_act($type = "inactive");
 				$res_login = $this->Usermodel->login_get_key();
 				if ($res_login) {
@@ -99,7 +100,7 @@ class User extends User_Controller
 				$this->session->set_userdata($user_sess);
 
 				$this->Usermodel->user_latestact();
-				$this->Logmodel->log_act($type = "login");
+				$this->Logmodel->log_act($type = "true_login");
 
 				redirect('/');
 			}
@@ -170,7 +171,7 @@ class User extends User_Controller
 			// $mail_res = false;
 
 			if ($mail_res !== TRUE) {
-				$this->Logmodel->log_act($type = "newUser_verify_mail_err", $m = "User", $e = $mail_res);
+				$this->Logmodel->log_act($type = "new_user_verify_mail_err", $e = $mail_res);
 				$this->setFlashMsg('error', $mail_res);
 				redirect('register');
 				exit();
@@ -186,7 +187,7 @@ class User extends User_Controller
 				$db_res = $this->Usermodel->register($admin, $iscmpy, $act_key, $form_key);
 
 				if ($db_res !== TRUE) {
-					$this->Logmodel->log_act($type = "db_err");
+					$this->Logmodel->log_act($type = "db_err", $e = 'User Registration');
 					$this->setFlashMsg('error', 'Error saving your details. Please try again');
 					redirect('register');
 					exit();
@@ -217,7 +218,9 @@ class User extends User_Controller
 				$this->setFlashMsg('success', 'Your account is verified.');
 				redirect('login');
 			}
+
 			$this->form_validation->set_rules('sentcode', 'Verification Code', 'required|trim|html_escape');
+
 			if ($this->form_validation->run() == false) {
 				$data['key'] = $key;
 				$data['email'] = $check_res->email;
@@ -231,10 +234,13 @@ class User extends User_Controller
 					redirect('emailverify/' . $key);
 				} else {
 					if ($validate->active !== "1") {
+						$this->Logmodel->log_act($type = "acct_verify_err");
+
 						$this->setFlashMsg('error', 'Error activating your account. Please try again');
 						redirect('emailverify/' . $key);
 					} else if ($validate->active == "1") {
-						$this->Logmodel->log_act($type = "acctverified");
+						$this->Logmodel->log_act($type = "acct_verify");
+
 						$this->setFlashMsg('success', 'Your account is active. Login with your credentials');
 						redirect('login');
 					}
@@ -268,11 +274,12 @@ class User extends User_Controller
 				$mail_res = $this->emailconfig->send_email_code($email, $uname, $act_key, $link);
 
 				if ($mail_res !== TRUE) {
-					$this->Logmodel->log_act($type = "newUser_verify_mail_err", $m = "User", $e = $mail_res);
+					$this->Logmodel->log_act($type = "new_user_verify_mail_err", $e = $mail_res);
 					$this->setFlashMsg('error', $mail_res);
 					redirect($link);
 				} else {
 					$this->Usermodel->code_verify_update($act_key, $key);
+
 					$this->setFlashMsg('success', 'Verification code sent to you mail.');
 					redirect($_SERVER['HTTP_REFERER']);
 				}
@@ -524,8 +531,10 @@ class User extends User_Controller
 			if ($_POST['web_name_new'] && $_POST['web_link_new']) {
 				$web_name_new = $_POST['web_name_new'];
 				$web_link_new = $_POST['web_link_new'];
+				$subject = $_POST['web_subject_new'];
+				$description = $_POST['web_desc_new'];
 
-				$res = $this->Usermodel->createwebsite($web_name_new, $web_link_new);
+				$res = $this->Usermodel->createwebsite($web_name_new, $web_link_new, $subject, $description);
 				if (gettype($res) === "string") {
 					$this->Logmodel->log_act($type = "webnewerr");
 					$data['status'] = false;
@@ -590,7 +599,7 @@ class User extends User_Controller
 		echo json_encode($data);
 	}
 
-	//change web status [true,false]
+	//change web details
 	public function website_update()
 	{
 		if ($this->ajax_checklogin() === false) {
@@ -601,7 +610,7 @@ class User extends User_Controller
 			if ($_POST['id'] && in_array($_POST['webstatus'], $webstatusArr)) {
 				$wb = $_POST['webstatus'];
 
-				$act_res = $this->Usermodel->website_update($_POST['id'], $_POST['webstatus']);
+				$act_res = $this->Usermodel->website_update($_POST['id'], $_POST['webstatus'], $_POST['subject'], $_POST['description']);
 				// $act_res = false;
 
 				if ($act_res == false) {
@@ -865,6 +874,42 @@ class User extends User_Controller
 		echo json_encode($data);
 	}
 
+	//message body to be shared asper plarform selected
+	public function getPlatformLink()
+	{
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
+		} else {
+
+			$id = htmlentities($_POST['platformid']);
+			$res = $this->Usermodel->edit_website($id);
+
+			if ($res == false) {
+				// $this->Logmodel->log_act($type = "webstatuserr");
+
+				$data['status'] = false;
+				$data['msg'] = "Error retrieving data";
+			} else {
+				$myfile = fopen("body.txt", "w") or die("Unable to open file!");
+				if (($res->description) && !empty($res->description)) {
+					$txt = $res->description . "\n";
+					fwrite($myfile, $txt);
+				}
+				$txt = base_url() . "wtr/" . $this->session->userdata("mr_form_key") . "/" . $res->id . "\n";
+				fwrite($myfile, $txt);
+				fclose($myfile);
+
+				$data['status'] = true;
+				$data['res'] = $res;
+				$data['body'] = file_get_contents(base_url('body.txt'));
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
 	//share index page
 	public function sendlink()
 	{
@@ -873,6 +918,8 @@ class User extends User_Controller
 		$this->setTabUrl($mod = 'share');
 
 		$data['title'] = "share";
+
+		$data['platforms'] = $this->Usermodel->get_user_websites();
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('users/share');
@@ -996,11 +1043,14 @@ class User extends User_Controller
 
 		$data['title'] = "share";
 
+		$this->form_validation->set_rules('foremailplatform', 'Platform', 'required|trim|html_escape');
 		$this->form_validation->set_rules('email', 'E-mail', 'required|trim|valid_email|html_escape');
 		$this->form_validation->set_rules('subj', 'Subject', 'required|trim|html_escape');
 		$this->form_validation->set_rules('emailbdy', 'Body', 'required|trim|html_escape');
 
 		if ($this->form_validation->run() == false) {
+			$data['platforms'] = $this->Usermodel->get_user_websites();
+
 			$this->load->view('templates/header', $data);
 			$this->load->view('users/share');
 			$this->load->view('templates/footer');
@@ -1043,13 +1093,13 @@ class User extends User_Controller
 					$bdy = htmlentities($this->input->post('emailbdy'));
 
 					$this->load->library('emailconfig');
-					// $mail_res = $this->emailconfig->link_send_mail($email, $subj, $bdy);
-					$mail_res = true;
+					$mail_res = $this->emailconfig->link_send_mail($email, $subj, $bdy);
+					// $mail_res = true;
 
 					if ($mail_res !== true) {
-						$this->Logmodel->log_act($type = "mail_err");
+						$this->Logmodel->log_act($type = "mail_err",$e=$mail_res);
 
-						$this->setFlashMsg('error', $mail_res);
+						$this->setFlashMsg('error', lang('mail_error'));
 					} else {
 						$this->Logmodel->log_act($type = "smail_sent");
 
@@ -1073,10 +1123,13 @@ class User extends User_Controller
 
 		$data['title'] = "share";
 
+		$this->form_validation->set_rules('forsmsplatform', 'Platform', 'required|trim|html_escape');
 		$this->form_validation->set_rules('mobile', 'Mobile', 'required|exact_length[10]|trim|html_escape');
 		$this->form_validation->set_rules('smsbdy', 'Body', 'required|trim|html_escape');
 
 		if ($this->form_validation->run() == FALSE) {
+			$data['platforms'] = $this->Usermodel->get_user_websites();
+
 			$this->load->view('templates/header', $data);
 			$this->load->view('users/share');
 			$this->load->view('templates/footer');

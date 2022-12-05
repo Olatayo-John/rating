@@ -62,10 +62,22 @@
                         <label>Platform Name</label>
                         <input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Platform Name" required disabled readonly>
                     </div>
+
                     <div class="form-group">
                         <label>Platform Link</label>
                         <input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Platform Link" required disabled readonly>
                     </div>
+
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="url" name="web_subject_edit" class="web_subject_edit form-control" placeholder="Subject">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="web_desc_edit" class="web_desc_edit form-control" cols="30" rows="5"></textarea>
+                    </div>
+
                     <div class="form-group">
                         <label>Status</label>
                         <select name="web_act" id="web_act" class="form-control" required>
@@ -103,13 +115,23 @@
                         <input type="text" name="web_name_new" class="web_name_new form-control" placeholder="Platform Name" required>
                         <div class="text-danger mt-0 web_name_err"></div>
                     </div>
+
                     <div class="form-group">
                         <label class="mb-0">Platform Link</label>
                         <input type="url" name="web_link_new" class="web_link_new form-control" placeholder="e.g https://domainname.com" required>
                         <div class="text-danger mt-0 web_link_err"></div>
                     </div>
 
-                    <hr>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="url" name="web_subject_new" class="web_subject_new form-control" placeholder="Subject">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="web_desc_new" class="web_desc_new form-control" cols="30" rows="5"></textarea>
+                    </div>
+
                     <div class="text-right">
                         <button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#294a63;">
                             Add</button>
@@ -266,6 +288,8 @@
             var csrfHash = $('.csrf_token').val();
             var web_name_new = $('.web_name_new').val();
             var web_link_new = $('.web_link_new').val();
+            var web_subject_new = $('.web_subject_new').val();
+            var web_desc_new = $('.web_desc_new').val();
 
             if (web_name_new == "" || web_name_new == null || web_name_new == undefined) {
                 $('.web_name_new').css('border-bottom', '2px solid #dc3545');
@@ -301,7 +325,9 @@
                 data: {
                     [csrfName]: csrfHash,
                     web_name_new: web_name_new,
-                    web_link_new: web_link_new
+                    web_link_new: web_link_new,
+                    web_subject_new: web_subject_new,
+                    web_desc_new: web_desc_new
                 },
                 beforeSend: function() {
                     clearAlert();
@@ -360,6 +386,8 @@
                     } else if (data.status === true) {
                         $('.web_name_edit').val(data.act_res.web_name);
                         $('.web_link_edit').val(data.act_res.web_link);
+                        $('.web_subject_edit').val(data.act_res.subject);
+                        $('.web_desc_edit').val(data.act_res.description);
                         $('select#web_act option[value=' + data.act_res.active + ']').attr('selected', 'selected');
                         $('.edit_web_modal').modal('show');
                         $('.web_id').val(id);
@@ -379,13 +407,15 @@
             $('select#web_act option').removeAttr("selected");
         });
 
-        // change website status
+        // change website details
         $(document).on('click', '.submit_editweb_modal', function(e) {
             e.preventDefault();
             var csrfName = $('.csrf_token').attr('name');
             var csrfHash = $('.csrf_token').val();
             var id = $(".web_id").val();
             var webstatus = $("#web_act").val();
+            var subject = $('.web_subject_edit').val();
+            var description = $('.web_desc_edit').val();
 
             $.ajax({
                 url: "<?php echo base_url('update-website'); ?>",
@@ -394,6 +424,8 @@
                     [csrfName]: csrfHash,
                     id: id,
                     webstatus: webstatus,
+                    subject: subject,
+                    description: description
                 },
                 dataType: 'json',
                 beforeSend: function() {

@@ -1,4 +1,4 @@
-<div class="bg-light-custom">
+<div class="bg-light-custom p-3">
 
     <!-- doc modal -->
     <div class="modal helpmodal">
@@ -29,8 +29,8 @@
         </div>
     </div>
 
-    <div class="text-right p-3 doc">
-        Documentation <i class="fas fa-hands-helping"></i>
+    <div class="text-right doc">
+        <!-- Documentation <i class="fas fa-hands-helping"></i> -->
     </div>
 
 

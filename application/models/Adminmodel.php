@@ -5,7 +5,8 @@ class Adminmodel extends CI_Model
 {
 	public function get_allusers()
 	{
-		$this->db->where('sadmin', '0');
+		// $this->db->where('sadmin', '0');
+		$this->db->where(array('sadmin' => '0', 'cmpyid' => null));
 		$userinfo = $this->db->get('users');
 		return $userinfo;
 	}
@@ -294,6 +295,15 @@ class Adminmodel extends CI_Model
 		$this->db->where($wherearray);
 		$quotaInfo = $this->db->get("quota")->row();
 		return $quotaInfo;
+	}
+
+	public function sadmin_get_adminusers($user_id, $form_key, $iscmpy, $cmpyid)
+	{
+		$wherearray = array('cmpyid' => $user_id);
+
+		$this->db->where($wherearray);
+		$q = $this->db->get("users")->result_array();
+		return $q;
 	}
 
 	public function updatecompany($user_id, $form_key, $cmpyID, $cmpyData)

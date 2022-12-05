@@ -131,6 +131,7 @@ $route['logs'] = 'user/logs';
 
 //share
 $route['getlink'] = 'user/getlink';
+$route['get-platform-link'] = 'user/getPlatformLink';
 $route['share'] = 'user/sendlink';
 
 $route['sms-sample-csv'] = 'user/smssample_csv';

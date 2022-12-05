@@ -366,7 +366,7 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function createwebsite($web_name_new, $web_link_new)
+	public function createwebsite($web_name_new, $web_link_new, $subject = null, $description = null)
 	{
 		$web_count = 1;
 		if ($this->get_webspacequota($web_count) === false) {
@@ -390,6 +390,8 @@ class Usermodel extends CI_Model
 						'form_key' => $this->session->userdata('mr_form_key'),
 						'web_name' => htmlentities($web_name_new),
 						'web_link' => htmlentities($web_link_new),
+						'subject' => htmlentities($subject),
+						'description' => htmlentities($description),
 						'active' => '1',
 						'total_ratings' => "0",
 						'star_rating' => "0"
@@ -427,11 +429,14 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function website_update($id, $webstatus)
+	public function website_update($id, $webstatus, $subject, $description)
 	{
 		$data = array(
 			'active' => $webstatus,
+			'subject' => htmlentities($subject),
+			'description' => htmlentities($description),
 		);
+
 		$id = $id;
 		$user_id = $this->session->userdata("mr_id");
 		$form_key = $this->session->userdata("mr_form_key");

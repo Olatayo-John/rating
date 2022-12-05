@@ -5,7 +5,6 @@
 
     <div class="form-group">
         <label>Current Password</label> <span>*</span>
-        <input type="password" name="auto-pwd" style="opacity: 0; position: absolute">
         <input type="password" name="c_pwd" class="form-control c_pwd" placeholder="Your current password" required>
     </div>
     <hr>

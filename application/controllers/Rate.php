@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Rate extends CI_Controller
+class Rate extends Rate_Controller
 {
-	public function index()
+	public function _index()
 	{
 		$w = $_GET['w'];
 		$k = $_GET['k'];
@@ -30,9 +30,9 @@ class Rate extends CI_Controller
 		}
 	}
 
-	public function get_key($key)
+	public function get_key($k)
 	{
-		$form_key = $this->Usermodel->get_key($key);
+		$form_key = $this->Ratemodel->get_key($k);
 		if (!$form_key) {
 			return false;
 		} else {
@@ -40,73 +40,117 @@ class Rate extends CI_Controller
 		}
 	}
 
-	public function wtr($key)
+	public function index($k, $w = null)
 	{
-		if (!$key) {
-			redirect($_SERVER['HTTP_REFERER']);
-			exit();
-		} else {
-			$form_key = $this->get_key($key);
-			if ($form_key !== $key) {
-				$this->setFlashMsg("error", "Invalid Link!");
-				$this->index();
-			} else if ($form_key === $key) {
-				$data['form_key'] = $form_key;
-				$data['web_data'] = $this->Adminmodel->getuserwebsites_wtr($form_key);
-				$data['active'] = $this->Adminmodel->is_user_active($form_key);
+		//if platform form_key exist in url
+		if ($k) {
+			$db_key = $this->get_key($k);
 
-				$this->load->view('templates/header');
-				$this->load->view('users/rate_option', $data);
-				$this->load->view('templates/footer');
-			}
-		}
-	}
+			if ($db_key === $k) {
 
-	public function check_cred()
-	{
-		$w = $_GET['w'];
-		$k = $_GET['k'];
+				//if website exist in url
+				if (empty($w) || $w == null) {
+					$data['platforms'] = $this->Ratemodel->get_platforms_by_key($k);
+					$data['k'] = $k;
 
-		if (!isset($w) || !isset($k)) {
-			// redirect($_SERVER['HTTP_REFERER']);
-			redirect("wtr/" . $k);
-			exit();
-		} else {
-			$res = $this->Usermodel->check_cred($w, $k);
-			if ($res == false) {
-				// $this->Logmodel->log_act($type = "invalidlink");
-				$this->setFlashMsg("error", "Invalid Link!");
-				redirect("wtr/" . $k);
-			} elseif ($res == true) {
-				redirect('rate?w=' . $w . '&k=' . $k);
-			}
-		}
-	}
+					$data['title'] = "select platform";
 
-	public function rating_store()
-	{
-		$cq_res = $this->Usermodel->check_quota_expire($_POST['form_key']);
-		if ($cq_res == true) {
+					$this->load->view('templates/header', $data);
+					$this->load->view('rate/pick_platform');
+					$this->load->view('templates/footer');
+				} else {
+					$res = $this->Ratemodel->is_valid_platform($k, $w);
 
-			// $this->load->library('emailconfig');
-			// $this->emailconfig->send_quota_expire_mail();
-			//$this->send_quota_expire_mail();
+					if ($res === false) {
+						$this->setFlashMsg("error", "Invalid Parameter!");
+						redirect('wtr/' . $k);
+					} else {
+						//check if platform is active
+						if ($res->active === '1') {
+							$data['platform'] = $res;
 
-			$this->Logmodel->log_act($type = "quota_expire");
-			$data['res'] = "failed";
-			$data['res_msg'] = "User quota expired. <a href='" . base_url("user/notifyuser_email/" . $_POST['form_key'] . "") . "' class='text-info'>Notify User?</a>";
-		} else {
-			$res = $this->Usermodel->rating_store($_POST['starv'], $_POST['name'], $_POST['mobile'], $_POST['form_key'], $_POST['for_link']);
-			if ($res) {
-				$this->Logmodel->log_act($type = "ratingstore");
-				$data['web_link'] = $res->web_link;
-				$data['res'] = "succ";
-				$data['res_msg'] = "Thanks for your feedback!";
+							$data['title'] = "submit review";
+
+							$this->load->view('templates/header', $data);
+							$this->load->view('rate/index');
+							$this->load->view('templates/footer');
+						} else {
+							$this->setFlashMsg("error", "Inactive Platform");
+							redirect('/');
+						}
+					}
+				}
 			} else {
-				$this->Logmodel->log_act($type = "db_err");
-				$data['res'] = "failed";
-				$data['res_msg'] = "Failed to store rating.";
+				$this->setFlashMsg("error", "Invalid Parameter!");
+				redirect('/');
 			}
+		} else {
+			$this->setFlashMsg("error", "Missing Parameter");
+			redirect('/');
+		}
+	}
+
+
+	public function saveRating()
+	{
+		if (count($_POST) > 0 && $_POST['form_key']) {
+
+			$k = $_POST['form_key'];
+			$web_id = $_POST['web_id'];
+			$q_res = $this->Ratemodel->is_userquotaexpired($k); //check all credentials
+			// $q_res = false;
+
+			if ($q_res === 'not_found') { //invalid data (not found in DB)
+
+				$data['status'] = false;
+				$data['msg'] = "Invalid Platform";
+			} else if ($q_res === 'pending_balance') { //pending balance
+
+				$data['status'] = false;
+				$data['msg'] = "Pending Balance";
+			} else if ($q_res !== false) { //quota expired
+
+				$data['status'] = false;
+				$data['msg'] = "Quota limit reached";
+			} else if ($q_res === false) { //all requirements are met //save to db
+
+				$rData = array(
+					'user_ip' => $_SERVER['REMOTE_ADDR'],
+					'star' => htmlentities($_POST['starv']),
+					'review' => htmlentities($_POST['review']),
+					'name' => htmlentities($_POST['name']),
+					'mobile' => htmlentities($_POST['mobile']),
+					'web_name' => htmlentities($_POST['web_name']),
+					'web_link' => htmlentities($_POST['web_link']),
+					'form_key' => htmlentities($_POST['form_key'])
+				);
+				// $res = $this->Ratemodel->saveRating($rData,$k,$web_id);
+				$res =true;
+
+				if ($res === true) {
+					// $this->Logmodel->log_act($type = "rating_store");
+
+					$pu = parse_url($_POST['web_link'], PHP_URL_SCHEME);
+					if (($pu === 'https') || ($pu === 'http')) {
+						$redirectLink = $_POST['web_link'];
+					} else {
+						$redirectLink = 'https://' . $_POST['web_link'];
+					}
+
+					$data['redirectLink'] = $redirectLink;
+					$data['status'] = $res;
+					$data['msg'] = "Thanks for your feedback!";
+				} else {
+					// $this->Logmodel->log_act($type = "rating_store_err");
+
+					$data['status'] = false;
+					$data['msg'] = "Failed to store rating";
+					$data['msg_notify'] = "User quota expired. <a href='" . base_url("user/notifyuser_email/" . $_POST['form_key'] . "") . "' class='text-info'>Notify User?</a>";
+				}
+			}
+		} else {
+			$data['status'] = false;
+			$data['msg'] = 'No data';
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();

@@ -14,8 +14,9 @@
         <tr>
         <th data-field="uname" data-sortable="true">User</th>
             <th data-field="webname" data-sortable="true">Platform Name</th>
+            <th data-field="star" data-sortable="true">Star</th>
+            <th data-field="name" data-sortable="true">Rated By</th>
             <th data-field="review" data-sortable="true">Review</th>
-            <th data-field="ratedby" data-sortable="true">Rated By</th>
             <th data-field="IP" data-sortable="true">IP</th>
             <th data-field="date" data-sortable="true">Date</th>
         </tr>
@@ -28,13 +29,10 @@
                     <a href="<?php echo $arr->web_link; ?>" target="_blank"><?php echo $arr->web_name; ?></a>
                 </td>
                 <td>
-                    <?php if (!empty($arr->review) && isset($arr->review) && $arr->review !== null) : ?>
-                        <?php echo $arr->review; ?>
-                    <?php else : ?>
                         <?php echo $arr->star . " Star"; ?>
-                    <?php endif; ?>
                 </td>
                 <td><?php echo $arr->name; ?></td>
+                <td><?php echo $arr->review; ?></td>
                 <td><?php echo $arr->user_ip; ?></td>
                 <td class="date"><?php echo $arr->rated_at; ?></td>
             </tr>

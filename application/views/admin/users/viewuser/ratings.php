@@ -13,8 +13,9 @@
     <thead class="text-light" style="background:#294a63">
         <tr>
             <th data-field="web_name" data-sortable="true">Platform Name</th>
-            <th data-field="mobile" data-sortable="true">Review</th>
-            <th data-field="ratedby" data-sortable="true">Rated By</th>
+            <th data-field="star" data-sortable="true">Star</th>
+            <th data-field="name" data-sortable="true">Rated By</th>
+            <th data-field="review" data-sortable="true">Review</th>
             <th data-field="user_ip" data-sortable="true" data-visible="false">IP</th>
             <th data-field="rated_at" data-sortable="true" class="text-danger">Date</th>
         </tr>

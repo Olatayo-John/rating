@@ -149,7 +149,10 @@ $route['share-sms-multiple'] = 'user/sendmultiplesms';
 
 
 //rate
-$route['wtr/(:any)'] = 'user/wtr/$1';
+// $route['wtr/(:any)'] = 'user/wtr/$1';
+$route['wtr/(:any)'] = 'rate/index/$1';
+$route['wtr/(:any)/(:num)'] = 'rate/index/$1/$2';
+$route['save-rating'] = 'rate/saveRating';
 
 
 

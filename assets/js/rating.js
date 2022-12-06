@@ -5,7 +5,7 @@ $(document).ready(function() {
 		if (con == 'false') {
 			$('.star1').removeClass('far').addClass('fas');
 			$('.star1').attr('con','true');
-			$('.submit').show();
+			$('.submit,.details').show();
 			$('.submitbtn').val('1');
 			$('.onestar').show();
 			$('.twostar,.threestar,.fourstar,.fivestar').hide();
@@ -34,7 +34,7 @@ $(document).ready(function() {
 			$('.star2').removeClass('far').addClass('fas');
 			$('.star1').attr('con','true');
 			$('.star2').attr('con','true');
-			$('.submit').show();
+			$('.submit,.details').show();
 			$('.twostar').show();
 			$('.submitbtn').val('2');
 			$('.onestar,.threestar,.fourstar,.fivestar').hide();
@@ -63,7 +63,7 @@ $(document).ready(function() {
 			$('.star1').attr('con','true');
 			$('.star2').attr('con','true');
 			$('.star3').attr('con','true');
-			$('.submit').show();
+			$('.submit,.details').show();
 			$('.submitbtn').val('3');
 			$('.threestar').show();
 			$('.onestar,.twostar,.fourstar,.fivestar').hide();
@@ -92,7 +92,7 @@ $(document).ready(function() {
 			$('.star2').attr('con','true');
 			$('.star3').attr('con','true');
 			$('.star4').attr('con','true');
-			$('.submit').show();
+			$('.submit,.details').show();
 			$('.submitbtn').val('4');
 			$('.fourstar').show();
 			$('span.star_value').text('4 Star');
@@ -121,17 +121,12 @@ $(document).ready(function() {
 			$('.star3').attr('con','true');
 			$('.star4').attr('con','true');
 			$('.star5').attr('con','true');
-			$('.submit').show();
+			$('.submit,.details').show();
 			$('.submitbtn').val('5');
 			$('.fivestar').show();
 			$('span.star_value').text('5 Star');
 			$('.onestar,.twostar,.threestar,.fourstar').hide();
 		}
-	});
-
-	$(document).on('click','.closemodalbtn',function() {
-		$('.e_mobile').hide();
-		$('.msgmodal').modal('hide');
 	});
 
 	

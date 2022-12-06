@@ -201,5 +201,11 @@ class Rate_Controller extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+
+        $this->load->model('Ratemodel');
+    }
+
+    public function __is_valid_key($k){
+
     }
 }

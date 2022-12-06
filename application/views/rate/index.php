@@ -11,38 +11,38 @@
 		<h4 class="comp text-uppercase" style=""><?php echo $platform->web_name ?></h4>
 
 		<div class="stars">
-			<i class="far fa-star star1" name="star1" con="false"></i>
-			<i class="far fa-star star2" name="star2" con="false"></i>
-			<i class="far fa-star star3" name="star3" con="false"></i>
-			<i class="far fa-star star4" name="star4" con="false"></i>
-			<i class="far fa-star star5" name="star5" con="false"></i>
+			<i class="far fa-star starI" star_value="1"></i>
+			<i class="far fa-star starI" star_value="2"></i>
+			<i class="far fa-star starI" star_value="3"></i>
+			<i class="far fa-star starI" star_value="4"></i>
+			<i class="far fa-star starI" star_value="5"></i>
 		</div>
 
 		<div>
-			<div class="onestar i_div">
+			<div class="i_div" star_value="1">
 				<i class="fas fa-frown text-danger"></i></i><br>
 				<strong>Very Bad!</strong>
-				<p>You rated us <span class="star_value font-weight-bolder"></span></p>
+				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
-			<div class="twostar i_div">
+			<div class="i_div" star_value="2">
 				<i class="fas fa-frown text-danger"></i><br>
 				<strong>Bad!</strong>
-				<p>You rated us <span class="star_value font-weight-bolder"></span></p>
+				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
-			<div class="threestar i_div">
+			<div class="i_div" star_value="3">
 				<i class="fas fa-meh text-warning"></i><br>
 				<strong>Good!</strong>
-				<p>You rated us <span class="star_value font-weight-bolder"></span></p>
+				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
-			<div class="fourstar i_div">
+			<div class="i_div" star_value="4">
 				<i class="fas fa-smile text-success"></i><br>
 				<strong>Very Good!</strong>
-				<p>You rated us <span class="star_value font-weight-bolder"></span></p>
+				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
-			<div class="fivestar i_div">
+			<div class="i_div" star_value="5">
 				<i class="fas fa-smile-wink text-success"></i><br>
 				<strong>Excellent!</strong>
-				<p>You rated us <span class="star_value font-weight-bolder"></span></p>
+				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
 		</div>
 
@@ -147,7 +147,7 @@
 						if (parseInt(starv) > 3) {
 							// window.open(data.redirectLink, '_blank');
 							window.location.assign(data.redirectLink);
-						}else{
+						} else {
 							window.location.reload();
 						}
 					}

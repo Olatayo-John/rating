@@ -1,0 +1,31 @@
+.adduserDiv {
+	/* padding: 0 21px 21px 21px; */
+	padding: 14px;
+}
+
+label,
+.fa-eye,
+.fa-eye-slash {
+	color: #294a63;
+}
+
+i.fa-eye,
+i.fa-eye-slash {
+	display: none;
+	cursor: pointer;
+}
+
+.genpwdbtn {
+	background: #294a63;
+}
+
+.cmpydiv {
+	display: none;
+}
+
+hr.sub {
+	margin: auto 0;
+	margin-bottom: 30px;
+	border-bottom: 3px solid #294a63;
+	width: 100px;
+}

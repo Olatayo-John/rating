@@ -1,0 +1,9 @@
+.set_wrapper {
+	padding: 14px;
+}
+h5,h6{
+	color:#294a63;
+	/* color:#000; */
+	font-weight: 500;
+	/* text-transform: uppercase; */
+}

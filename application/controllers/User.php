@@ -439,9 +439,9 @@ class User extends User_Controller
 
 		if ($data['quota']->balance !== '0' && $data['quota']->balance !== null) {
 
-			//use Testing keys if Live keys are empty from configFile
-			$key_id = $this->config->item('RZLive_key_id') ? $this->config->item('RZLive_key_id') : $this->config->item('RZTest_key_id');
-			$key_secret = $this->config->item('RZLive_key_secret') ? $this->config->item('RZLive_key_secret') : $this->config->item('RZTest_key_secret');
+			//use Testing keys if Live keys are empty from settings
+			$key_id = $this->st->rz_live_key_id ? $this->st->rz_live_key_id : $this->st->rz_test_key_id;
+			$key_secret = $this->st->rz_live_key_secret ? $this->st->rz_live_key_secret : $this->st->rz_test_key_secret;
 
 			if ($key_id && $key_secret) {
 				//balance
@@ -463,7 +463,7 @@ class User extends User_Controller
 				}
 			} else {
 				$data['error'] = true;
-				$data['error_msg'] = "Missing/Invalid Razorpay API Keys";
+				$data['error_msg'] = "Missing Razorpay API Keys";
 			}
 		}
 

@@ -684,9 +684,9 @@ class Admin extends Admin_Controller
 		if (count($_POST) > 0) {
 			if ($_POST['razorpay_payment_id'] && $_POST['razorpay_order_id'] && $_POST['razorpay_signature']) {
 
-				//use Testing keys if Live keys are empty from configFile
-				$key_id = $this->config->item('RZLive_key_id') ? $this->config->item('RZLive_key_id') : $this->config->item('RZTest_key_id');
-				$key_secret = $this->config->item('RZLive_key_secret') ? $this->config->item('RZLive_key_secret') : $this->config->item('RZTest_key_secret');
+				//use Testing keys if Live keys are empty from settings
+				$key_id = $this->st->rz_live_key_id ? $this->st->rz_live_key_id : $this->st->rz_test_key_id;
+				$key_secret = $this->st->rz_live_key_secret ? $this->st->rz_live_key_secret : $this->st->rz_test_key_secret;
 				$api = new Api($key_id, $key_secret);
 
 				//verify RZPostdata and signature
@@ -885,7 +885,7 @@ class Admin extends Admin_Controller
 		} else {
 			$recaptchaResponse = trim($this->input->post('g-recaptcha-response'));
 			$userIp = $this->input->ip_address();
-			$secret = "6Lec4E4aAAAAAE572v5dAT3Qwn9B-IreUdtlHgHi";
+			$secret = $this->st->captcha_secret_key;
 
 			$url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $secret . "&response=" . $recaptchaResponse . "&remoteip=" . $userIp;
 

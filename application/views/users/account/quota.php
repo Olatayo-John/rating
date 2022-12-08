@@ -99,7 +99,7 @@
 
                         <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
-                        <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="<?php echo $key_id; ?>" data-amount="<?php echo $order->amount ?>" data-currency="INR" data-order_id="<?php echo $order->id ?>" data-buttontext="Pay Now" data-name="NKTECH" data-description="Review Plan Payment" data-image="<?php echo base_url('assets/images/logo_dark.png') ?>" data-prefill.name="<?php echo $user_info->uname ?>" data-prefill.email="<?php echo $user_info->email ?>" data-prefill.contact="+91<?php echo $user_info->mobile ?>" data-theme.color="#294a63">
+                        <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="<?php echo $key_id; ?>" data-amount="<?php echo $order->amount ?>" data-currency="INR" data-order_id="<?php echo $order->id ?>" data-buttontext="Pay Now" data-name="NKTECH" data-description="Review Plan Payment" data-image="<?php echo base_url('assets/images/').$this->st->site_fav_icon ?>" data-prefill.name="<?php echo $user_info->uname ?>" data-prefill.email="<?php echo $user_info->email ?>" data-prefill.contact="+91<?php echo $user_info->mobile ?>" data-theme.color="#294a63">
                         </script>
 
                         <input type="hidden" custom="Hidden Element" name="hidden">

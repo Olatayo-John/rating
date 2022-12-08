@@ -124,8 +124,8 @@ class Rate extends Rate_Controller
 					'web_link' => htmlentities($_POST['web_link']),
 					'form_key' => htmlentities($_POST['form_key'])
 				);
-				// $res = $this->Ratemodel->saveRating($rData,$k,$web_id);
-				$res =true;
+				$res = $this->Ratemodel->saveRating($rData,$k,$web_id);
+				// $res =true;
 
 				if ($res === true) {
 					// $this->Logmodel->log_act($type = "rating_store");

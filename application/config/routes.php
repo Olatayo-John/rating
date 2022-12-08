@@ -101,6 +101,12 @@ $route['activity'] = 'admin/logs';
 $route['clear-activity-logs'] = 'admin/clearlogs';
 
 
+//settings
+$route['settings'] = 'settings/index';
+$route['save-settings'] = 'settings/save';
+
+
+
 //companyAdmin
 $route['admin-add-user'] = 'admin/adduser_admin';
 $route['admin-view-user'] = 'admin/viewuser_admin';

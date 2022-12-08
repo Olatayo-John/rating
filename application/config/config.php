@@ -25,13 +25,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 $config['base_url'] = 'http://localhost/rating2/';
 
-$config['web_name'] = "Rating";
-
-$config['RZTest_key_id'] = 'rzp_test_uP60TO9iD0CFDe';
-$config['RZTest_key_secret'] = '8H2wF3AZSmbw2yCxCgdTBXXQ';
-
-$config['RZLive_key_id'] = '';
-$config['RZLive_key_secret'] = '';
+// $config['web_name'] = "Rating";
+// $config['RZTest_key_id'] = 'rzp_test_uP60TO9iD0CFDe';
+// $config['RZTest_key_secret'] = '8H2wF3AZSmbw2yCxCgdTBXXQ';
+// $config['RZLive_key_id'] = '';
+// $config['RZLive_key_secret'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -461,7 +459,6 @@ $config['csrf_token_name'] = 'rating2_csrf_token_name';
 $config['csrf_cookie_name'] = 'rating2_csrf_cookie_name';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = FALSE;
-// $config['csrf_exclude_uris'] = array('user/importcsv_sms', 'user/importcsv_email', 'admin/votes_filter_param', 'admin/votes_search_user', 'admin/users_filter_param', 'admin/users_search_user', 'admin/indiv_votes_export_csv', 'admin/search_ind_votes', 'user/sms_send_link', 'admin/pgResponses', 'admin/reload_table', 'admin/votes_reload_table', 'admin/payments_search', 'admin/reload_table_payments');
 $config['csrf_exclude_uris'] = array('user/importcsv_sms', 'user/importcsv_email');
 
 /*

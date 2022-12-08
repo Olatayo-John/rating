@@ -3,11 +3,14 @@
 
 <head>
 	<title>
-
-		<?php echo (isset($title)) ? ucwords($title) :  $this->config->item('web_name'); ?>
+		<?php echo (isset($title) && !empty($title)) ? ucwords($title).' - '.$this->st->site_name : $this->st->site_name; ?>
 	</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="title" content="<?php echo $this->st->site_title ?>">
+	<meta name="description" content="<?php echo $this->st->site_desc ?>">
+	<meta name="keywords" content="<?php echo $this->st->site_keywords ?>">
+
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/header.css'); ?>">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<script src="https://kit.fontawesome.com/ca92620e44.js" crossorigin="anonymous"></script>
@@ -29,7 +32,7 @@
 
 	<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/print/bootstrap-table-print.min.js"></script>
 
-	<link rel="icon" href="<?php echo base_url('assets/images/logo_dark.png') ?>">
+	<link rel="icon" href="<?php echo base_url('assets/images/').$this->st->site_fav_icon ?>">
 	<script type="text/javascript">
 		document.onreadystatechange = function() {
 			if (document.readyState !== "complete") {
@@ -51,9 +54,7 @@
 		<!-- <button class="btn menubtn" onclick="opennav()">&#9776;</button> -->
 
 		<div class="logoimg mr-auto m-1">
-			<!-- <a href="<?php echo base_url('account#cmpy') ?>" style="color:#fff"> -->
-				<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/logo_dark.png") ?>" class="navbar-label">
-			<!-- </a> -->
+			<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/").$this->st->site_logo ?>" class="navbar-label">
 		</div>
 
 		<!-- <?php print_r($_SESSION) ?> -->
@@ -165,6 +166,15 @@
 						<i class="fas fa-question-circle"></i><b>Support</b>
 					</a>
 				</li>
+
+				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
+					<!-- settings -->
+					<li class="nav-item">
+						<a href="<?php echo base_url('settings') ?>" class="nav-link" style="<?php echo ($url == 'settings') ? 'background:white;color:#294a63' : '' ?>">
+							<i class="fa-solid fa-gear"></i><b>Settings</b>
+						</a>
+					</li>
+				<?php endif; ?>
 
 				<!-- logOUT -->
 				<?php if ($this->session->userdata('mr_logged_in')) : ?>

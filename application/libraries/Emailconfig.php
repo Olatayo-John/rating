@@ -9,12 +9,12 @@ class Emailconfig
     {
         $this->CI = &get_instance();
 
-        $config['protocol']    = 'smtp';
-        $config['smtp_host']    = 'ssl://smtp.gmail.com';
-        $config['smtp_port']    = '465';
+        $config['protocol']    =$this->CI->st->protocol;
+        $config['smtp_host']    = $this->CI->st->smtp_host;
+        $config['smtp_port']    = $this->CI->st->smtp_port;
         $config['smtp_timeout'] = '7';
-        $config['smtp_user']    = 'jvweedtest@gmail.com';
-        $config['smtp_pass']    = 'Jvweedtest9!';
+        $config['smtp_user']    = $this->CI->st->smtp_user;
+        $config['smtp_pass']    = $this->CI->st->smtp_pwd;
         $config['charset']    = 'iso-8859-1';
         $config['mailtype'] = 'text';
         $config['validation'] = TRUE;

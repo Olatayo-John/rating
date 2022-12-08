@@ -16,6 +16,19 @@ class MY_Controller extends CI_Controller
         // error_reporting(0);
 
         $this->setTabUrl($mod = null);
+        $this->st = $this->get_settings($s = null);
+    }
+
+    //get settings
+    public function get_settings($s = null)
+    {
+        if ($s !== null) {
+            // $this->db->where(array("id" => '1', '' => $s));
+        } else {
+            $this->db->where(array("id" => '1'));
+            $q = $this->db->get('settings');
+            return $q->row();
+        }
     }
 
     //set tab_div
@@ -96,7 +109,8 @@ class Admin_Controller extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        
+
+        $this->load->model('Settingsmodel');
     }
 
     //checks if user is loggedIn and is superAdmin before accessing any page/function
@@ -203,9 +217,5 @@ class Rate_Controller extends MY_Controller
         parent::__construct();
 
         $this->load->model('Ratemodel');
-    }
-
-    public function __is_valid_key($k){
-
     }
 }

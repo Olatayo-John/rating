@@ -124,11 +124,12 @@ class Rate extends Rate_Controller
 					'web_link' => htmlentities($_POST['web_link']),
 					'form_key' => htmlentities($_POST['form_key'])
 				);
-				$res = $this->Ratemodel->saveRating($rData,$k,$web_id);
-				// $res =true;
+				$res = $this->Ratemodel->saveRating($rData, $k, $web_id);
+				// $res =false;
 
 				if ($res === true) {
-					// $this->Logmodel->log_act($type = "rating_store");
+					$log = "Feedback recorded [ Platform: " . htmlentities($_POST['web_name']) . ", Form Key: " . htmlentities($_POST['form_key']) . " ]";
+					$this->log_act($log);
 
 					$pu = parse_url($_POST['web_link'], PHP_URL_SCHEME);
 					if (($pu === 'https') || ($pu === 'http')) {
@@ -141,10 +142,11 @@ class Rate extends Rate_Controller
 					$data['status'] = $res;
 					$data['msg'] = "Thanks for your feedback!";
 				} else {
-					// $this->Logmodel->log_act($type = "rating_store_err");
+					$log = "Failed to store feedback [ Platform: " . htmlentities($_POST['web_name']) . ", Form Key: " . htmlentities($_POST['form_key']) . " ]";
+					$this->log_act($log);
 
 					$data['status'] = false;
-					$data['msg'] = "Failed to store rating";
+					$data['msg'] = "Failed to store feedback";
 					$data['msg_notify'] = "User quota expired. <a href='" . base_url("user/notifyuser_email/" . $_POST['form_key'] . "") . "' class='text-info'>Notify User?</a>";
 				}
 			}
@@ -157,6 +159,8 @@ class Rate extends Rate_Controller
 		echo json_encode($data);
 	}
 
+	//
+	//still in limbo.....
 	public function notifyuser_email($form_key)
 	{
 		$data = $this->Usermodel->get_user_email($form_key);
@@ -164,16 +168,23 @@ class Rate extends Rate_Controller
 		$uemail = $data->email;
 		$uname = $data->uname;
 
-		// $res = $this->notifyuser_sendemail($uemail, $uname);
 		$this->load->library('emailconfig');
 		$res = $this->emailconfig->notifyuser_sendemail($uemail, $uname);
+
 		if ($res !== true) {
-			$this->Logmodel->log_act($type = "mail_err");
+			$log = "Error sending mail - Quota expired [ Email: " . $uemail . ", MailError: " . $res . " ]";
+			$this->log_act($log);
+
 			$this->setFlashMsg('error', $res);
 			redirect($_SERVER['HTTP_REFERER']);
 		} else {
+			$log = "Mail sent - Quota expired [ Email: " . $uemail . " ]";
+			$this->log_act($log);
+
 			$this->setFlashMsg('success', 'User has been notified');
 			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
+	//
+	//
 }

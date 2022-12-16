@@ -62,7 +62,7 @@
 
     <hr>
     <div class="form-group text-right">
-        <button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#294a63">Update</button>
+        <button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#294a63">Save</button>
     </div>
 </form>
 
@@ -87,6 +87,7 @@
             var mobile = $('.mobile').val();
             var gender = $('.gender').val();
             var dob = $('.dob').val();
+            var uname = $('.uname').val();
             var user_id = $('#currentUserId').attr("user_id");
             var form_key = $('#currentUserId').attr("form_key");
 
@@ -107,6 +108,7 @@
                 data: {
                     user_id: user_id,
                     form_key: form_key,
+                    uname:uname,
                     fname: fname,
                     lname: lname,
                     email: email,
@@ -119,7 +121,7 @@
                 beforeSend: function() {
                     clearAlert();
 
-                    $('.save_pinfo_btn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
+                    $('.save_pinfo_btn').html('Saving...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
                 },
                 error: function(res) {
                     var con = confirm('Some error occured. Refresh?');
@@ -131,12 +133,10 @@
                 },
                 success: function(res) {
                     if (res.status === false) {
-                        $(".ajax_succ_div,.ajax_err_div").hide();
                         $(".ajax_res_err").text(res.msg);
                         $(".ajax_err_div").fadeIn();
 
                     } else if (res.status === true) {
-                        $(".ajax_err_div,ajax_succ_div").hide();
                         $(".ajax_res_succ").text(res.msg);
                         $(".ajax_succ_div").fadeIn();
 
@@ -145,7 +145,7 @@
                         });
                     }
 
-                    $('.save_pinfo_btn').removeAttr('disabled').html('Update').css('cursor', 'pointer');
+                    $('.save_pinfo_btn').html('Save').removeAttr('disabled').css('cursor', 'pointer');
                     $('.csrf-token').val(res.token);
                 }
             })

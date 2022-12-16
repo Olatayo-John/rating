@@ -1,7 +1,7 @@
 <div id="wrapper">
     <div class="errorDiv bg-light-custom p-3">
-        <h1>404 Page Not Found</h1>
-        <p>The page you requested was not found.</p>
+        <h1>404 | Page Not Found</h1>
+        <p>The page you requested was not found</p>
     </div>
 </div>
 
@@ -9,15 +9,14 @@
 <style>
     #wrapper {
         /* padding: 0 21px 21px 21px; */
-        padding: 14px;
+        padding: 21px;
     }
 
     .errorDiv {
         box-shadow: 0 10px 15px #294a63;
     }
 
-    h1,
-    p {
+    h1 {
         color: #294a63;
     }
 
@@ -32,5 +31,6 @@
 
     p {
         margin: 12px 15px 12px 15px;
+        color: #dc3545
     }
 </style>

@@ -66,7 +66,7 @@
 
                             <hr>
                             <div class="form-group text-right">
-                                <button class="btn text-light save_plan_btn" type="submit" planid="" style="background-color:#294a63">Update</button>
+                                <button class="btn text-light save_plan_btn" type="submit" planid="" style="background-color:#294a63">Save</button>
                             </div>
                         </form>
                     </div>
@@ -140,7 +140,7 @@
 
                             <hr>
                             <div class="form-group text-right">
-                                <button class="btn text-light add_plan_btn" type="submit" style="background-color:#294a63">Add</button>
+                                <button class="btn text-light add_plan_btn" type="submit" style="background-color:#294a63">Save</button>
                             </div>
                         </form>
                     </div>
@@ -311,7 +311,7 @@
                     beforeSend: function(res) {
                         clearAlert();
 
-                        $('.save_plan_btn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
+                        $('.save_plan_btn').addClass('bg-danger').html('Saving...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
                     },
                     success: function(res) {
                         if (res.status === 'error') {
@@ -327,7 +327,7 @@
                             window.location.reload();
                         }
 
-                        $('.save_plan_btn').removeAttr('disabled').html('Update').css('cursor', 'pointer');
+                        $('.save_plan_btn').removeClass('bg-danger').html('Save').removeAttr('disabled').css('cursor', 'pointer');
                         $('.csrf-token').val(res.token);
                     },
                     error: function(res) {
@@ -392,7 +392,7 @@
                     beforeSend: function(res) {
                         clearAlert();
 
-                        $('.add_plan_btn').attr('disabled', 'disabled').html('Adding...').css('cursor', 'not-allowed');
+                        $('.add_plan_btn').addClass('bg-danger').html('Saving...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
                     },
                     success: function(res) {
                         if (res.status === 'error') {
@@ -408,7 +408,7 @@
                             window.location.reload();
                         }
 
-                        $('.add_plan_btn').removeAttr('disabled').html('Add').css('cursor', 'pointer');
+                        $('.add_plan_btn').removeClass('bg-danger').html('Save').removeAttr('disabled').css('cursor', 'pointer');
                         $('.csrf-token').val(res.token);
                     },
                     error: function(res) {

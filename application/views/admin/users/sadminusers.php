@@ -25,7 +25,7 @@
 							<h6 class="h_userName"></h6>
 							<i class="fas fa-times closevuserbtn text-danger"></i>
 						</div>
-						<input type="hidden" id="currentUserId" user_id="" form_key="" user_email="" user_name="" user_iscmpy="" user_cmpyid="" user_isadmin="">
+						<input type="hidden" id="currentUserId" user_id="" user_name="" form_key="" user_email="" user_name="" user_iscmpy="" user_cmpyid="" user_isadmin="">
 
 						<div class="prof_div einfoDiv">
 							<?php include("viewuser/profile.php") ?>
@@ -352,6 +352,7 @@
 
 							$("#currentUserId").attr({
 								'user_id': res.uinfos.id,
+								'user_name': res.uinfos.uname,
 								'form_key': res.uinfos.form_key,
 								'user_email': res.uinfos.email,
 								'user_name': res.uinfos.uname,

@@ -88,7 +88,7 @@
 
                     <hr>
                     <div class="text-right">
-                        <button type="button" class="btn text-light submit_editweb_modal" style="background-color:#294a63">Update</button>
+                        <button type="button" class="btn text-light submit_editweb_modal" style="background-color:#294a63">Save</button>
                     </div>
                 </form>
             </div>
@@ -134,7 +134,7 @@
 
                     <div class="text-right">
                         <button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#294a63;">
-                            Add</button>
+                            Save</button>
                     </div>
                 </form>
             </div>
@@ -198,6 +198,7 @@
 
         $(document).on('click', '.closewebmodal_btn', function(e) {
             e.preventDefault();
+
             $('.add_web_modal').modal("hide");
 
             $(".add_web_modal_btn").removeAttr("disabled readonly").attr("type", "submit").css("cursor", "pointer");
@@ -331,16 +332,18 @@
                 },
                 beforeSend: function() {
                     clearAlert();
+
+                    $('.add_web_modal_btn').addClass('bg-danger').html('Saving...').attr('disabled', 'disabled').css({
+                        'cursor': 'not-allowed',
+                    });
                 },
                 success: function(data) {
                     $(".csrf_token").val(data.token);
 
                     if (data.status === false) {
-                        $(".ajax_succ_div,.ajax_err_div").hide();
                         $(".ajax_res_err").text(data.msg);
                         $(".ajax_err_div").fadeIn();
                     } else if (data.status === true) {
-                        $(".ajax_err_div,.ajax_succ_div").hide();
                         $(".ajax_res_succ").text(data.msg);
                         $(".ajax_succ_div").fadeIn();
 
@@ -357,6 +360,8 @@
                     } else if (data.status === "error") {
                         window.location.assign(data.redirect);
                     }
+
+                    $(".add_web_modal_btn").removeClass('bg-danger').html('Save').removeAttr("disabled").css("cursor", "pointer");
                 }
             })
         });
@@ -430,19 +435,23 @@
                 dataType: 'json',
                 beforeSend: function() {
                     clearAlert();
+
+                    $('.submit_editweb_modal').addClass('bg-danger').html('Saving...').attr('disabled', 'disabled').css({
+                        'cursor': 'not-allowed',
+                    });
                 },
                 success: function(data) {
                     if (data.status === false) {
-                        $(".ajax_succ_div,.ajax_err_div").hide();
                         $(".ajax_res_err").text(data.msg);
                         $(".ajax_err_div").fadeIn();
                     } else if (data.status === true) {
-                        $(".ajax_err_div,ajax_succ_div").hide();
                         $(".ajax_res_succ").text(data.msg);
                         $(".ajax_succ_div").fadeIn();
 
                         $('.edit_web_modal').modal('hide');
 
+                    } else if (data.status == "error") {
+                        window.location.assign(data.redirect);
                     }
 
                     if (webstatus == 1) {
@@ -455,6 +464,7 @@
                         $("button[attrid='" + id + "']").attr('status', '1').html("Activate");
                     }
 
+                    $(".submit_editweb_modal").removeClass('bg-danger').html('Save').removeAttr("disabled").css("cursor", "pointer");
 
                     $('.csrf_token').val(data.token);
                 }

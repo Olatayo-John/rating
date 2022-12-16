@@ -2,7 +2,7 @@
 <!-- <hr class="account"> -->
 <hr>
 <div class="text-right">
-    <button class="btn btn-danger deact_btn" type="button" user_id="<?php echo $user_info->id ?>"><i class="fas fa-user-alt-slash mr-2"></i>De-activate account?</button>
+    <button class="btn btn-danger deact_btn" type="button" user_id="<?php echo $user_info->id ?>">De-activate account?</button>
 </div>
 <hr>
 
@@ -27,12 +27,30 @@
                         userid: userid,
                         [csrfName]: csrfHash
                     },
+                    dataType: 'json',
                     beforeSend: function(data) {
-                        $('button.deact_btn').html("Deactivating...");
+                        clearAlert();
+
+                        $('.deact_btn').html("Deactivating...").attr('disabled', 'disabled').css({
+                            'cursor': 'not-allowed',
+                        });
                     },
                     success: function(data) {
-                        var url = "<?php echo base_url('logout') ?>";
-                        window.location.assign(url);
+
+                        if (data.status === false) {
+                            $(".ajax_res_err").text(data.msg);
+                            $(".ajax_err_div").fadeIn();
+                        } else if (data.status === true) {
+                            $(".ajax_res_succ").text(data.msg);
+                            $(".ajax_succ_div").fadeIn();
+
+                            window.location.assign(data.redirect);
+
+                        } else if (data.status == "error") {
+                            window.location.assign(data.redirect);
+                        }
+
+                        $(".deact_btn").html('De-activate account?').removeAttr("disabled").css("cursor", "pointer");
                     }
                 })
             }

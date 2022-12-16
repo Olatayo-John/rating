@@ -72,7 +72,7 @@
 			</div>
 
 			<div class="form-group text-right">
-				<button class="btn text-light submitbtn" type="button" style="background: #294a63">Submit</button>
+				<button class="btn text-light submitbtn" type="button" style="background: #294a63">Save</button>
 			</div>
 		</div>
 
@@ -126,13 +126,13 @@
 					form_key: form_key,
 				},
 				beforeSend: function() {
-					$('.submitmodalbtn').attr('disabled', 'disabled').html('Submitting...').css('cursor', 'not-allowed');
+					$('.submitbtn').html('Saving...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
 
 					clearAlert();
 				},
 				success: function(data) {
 					$('.csrf_token').val(data.token);
-					$('.submitmodalbtn').removeAttr('disabled').html('Submit').css('cursor', 'pointer');
+					$('.submitbtn').html('Saving').removeAttr('disabled').css('cursor', 'pointer');
 
 					if (data.status === "error") {
 						window.location.assign(res.redirect);

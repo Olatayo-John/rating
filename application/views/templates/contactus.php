@@ -31,7 +31,7 @@
 
 		<div class="col-md-6 p-3">
 			<div class="imagediv text-center mb-5">
-				<img src="<?php echo base_url('assets/images/logo_dark.png') ?>" class="">
+				<img src="<?php echo base_url('assets/images/').$this->st->site_logo ?>" class="">
 			</div>
 			<div class="detailsdiv row">
 				<i class="fas fa-map-marker"></i>
@@ -67,7 +67,7 @@
 	$(document).ready(function() {
 		$('.contactform').on('submit', function(e) {
 			//  e.preventDefault();
-			$('.cnt_submit').attr('disabled', 'disabled').css('cursor', 'not-allowed').html("Submitting...");
+			$('.cnt_submit').addClass('bg-danger').html("Submitting...").attr('disabled', 'disabled').css('cursor', 'not-allowed');
 		});
 	})
 </script>

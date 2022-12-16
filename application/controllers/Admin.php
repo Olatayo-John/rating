@@ -97,20 +97,27 @@ class Admin extends Admin_Controller
 			if (isset($_POST['logincred'])) {
 				$this->load->library('emailconfig');
 				$mail_res = $this->emailconfig->new_companyuser($email, $fulln, $cmpy, $act_key, $link, $uname, $pwd);
+				// $mail_res = false;
 			}
-			// $mail_res = true;
 
-			if ($mail_res !== TRUE) {
-				$this->Logmodel->log_act($type = "mail_err");
-				$this->setFlashMsg('error', $mail_res);
+			if ($mail_res !== true) {
+				$log = "Error sending mail - New user by Admin [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('email')) . ", MailError: " . $mail_res . " ]";
+				$this->log_act($log);
+
+				$this->setFlashMsg('error', 'Error sending mail');
 			} else {
 				$db_res = $this->Adminmodel->adminadduser($act_key, $form_key);
+
 				if ($db_res !== TRUE) {
-					$this->Logmodel->log_act($type = "db_err");
-					$this->setFlashMsg('error', 'Error saving user details. Please try again');
+					$log = "Error saving to Database - New user by Admin [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($this->input->post('uname')) . " ]";
+					$this->log_act($log);
+
+					$this->setFlashMsg('error', 'Error saving to Database');
 				} else {
-					$this->Logmodel->log_act($type = "newuser");
-					$this->setFlashMsg('success', 'User created.');
+					$log = "New user by Admin [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('email')) . " ]";
+					$this->log_act($log);
+
+					$this->setFlashMsg('success', 'User created');
 					redirect('users');
 				}
 			}
@@ -163,12 +170,14 @@ class Admin extends Admin_Controller
 			if (isset($_POST['logincred'])) {
 				$this->load->library('emailconfig');
 				$mail_res = $this->emailconfig->new_user_by_sadmin($email, $fulln, $act_key, $link, $uname, $pwd);
+				// $mail_res = true;
 			}
-			// $mail_res = true;
 
 			if ($mail_res !== true) {
-				$this->Logmodel->log_act($type = "mail_err");
-				$this->setFlashMsg('error', $mail_res);
+				$log = "Error sending mail - New user by Admin [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('email')) . ", MailError: " . $mail_res . " ]";
+				$this->log_act($log);
+
+				$this->setFlashMsg('error', 'Error sending mail');
 			} else {
 				//default for users not a company
 				$admin = $iscmpy = 0;
@@ -178,11 +187,16 @@ class Admin extends Admin_Controller
 				}
 
 				$db_res = $this->Adminmodel->sadminadduser($act_key, $form_key, $admin, $iscmpy);
+
 				if ($db_res !== TRUE) {
-					$this->Logmodel->log_act($type = "db_err");
-					$this->setFlashMsg('error', 'Error saving user details. Please try again');
+					$log = "Error saving to Database - New user by Admin [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($this->input->post('uname')) . " ]";
+					$this->log_act($log);
+
+					$this->setFlashMsg('error', 'Error saving to Database');
 				} else {
-					$this->Logmodel->log_act($type = "newuser");
+					$log = "New user by Admin [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('email')) . " ]";
+					$this->log_act($log);
+
 					$this->setFlashMsg('success', 'User created.');
 				}
 			}
@@ -204,15 +218,23 @@ class Admin extends Admin_Controller
 			$user_formKey = $_POST['user_formKey'];
 
 			$res = $this->Adminmodel->user_sub($user_sub, $user_id, $user_formKey);
-			// $res = false;
+
 			if ($res !== true) {
-				// $this->Logmodel->log_act($type = "admin_deauerr");
+				$smsg = ($sub === '1') ? 'Failed to de-activate subscription' : 'Failed to activate subscription';
+
+				$log = $smsg . " [ Admin: " . $this->session->userdata('mr_uname') . ", UserID: " . $user_id .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
-				$data['msg'] = ($sub === '1') ? 'Failed to de-activate subscription' : 'Failed to activate subscription';
+				$data['msg'] = $smsg;
 			} else {
-				// $this->Logmodel->log_act($type = "admin_deau");
+				$smsg = ($sub === '1') ? 'Subscription de-activated' : 'Subscription activated';
+
+				$log = $smsg . " [ Admin: " . $this->session->userdata('mr_uname') . ", UserID: " . $user_id .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
-				$data['msg'] = ($sub === '1') ? 'Subscription de-activated' : 'Subscription activated';
+				$data['msg'] = $smsg;
 			}
 		}
 
@@ -263,15 +285,19 @@ class Admin extends Admin_Controller
 			$form_key = $_POST['form_key'];
 
 			$res = $this->Adminmodel->updateprofile($user_id, $form_key, $profileData);
-			// $res = true;
+
 			if ($res !== true) {
-				$this->Logmodel->log_act($type = "admin_upuerr");
+				$log = "Error updating profile [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['uname']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
-				$data['msg'] = "Error updating user details!";
+				$data['msg'] = "Error updating profile";
 			} else {
-				$this->Logmodel->log_act($type = "admin_upu");
+				$log = "Profile Updated [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['uname']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
-				$data['msg'] = "User profile updated!";
+				$data['msg'] = "Profile updated";
 				// $data['refdata'] = $this->Adminmodel->get_adminusers()->result();
 			}
 		}
@@ -288,15 +314,19 @@ class Admin extends Admin_Controller
 			$data['msg'] = lang('acc_denied');
 		} else {
 			$res = $this->Adminmodel->deactivateaccount($_POST['user_id'], $_POST['form_key']);
-			// $res = true;
+			
 			if ($res !== true) {
-				$this->Logmodel->log_act($type = "admin_deauerr");
+				$log = "Failed to deactivate account [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
-				$data['msg'] = "Failed to de-activate user account!!";
+				$data['msg'] = "Failed to deactivate account";
 			} else {
-				$this->Logmodel->log_act($type = "admin_deau");
+				$log = "Account deactivated [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
-				$data['msg'] = "User account de-activated!";
+				$data['msg'] = "Account deactivated";
 			}
 		}
 
@@ -312,15 +342,19 @@ class Admin extends Admin_Controller
 			$data['msg'] = lang('acc_denied');
 		} else {
 			$res = $this->Adminmodel->activateaccount($_POST['user_id'], $_POST['form_key']);
-			// $res = true;
+			
 			if ($res !== true) {
-				$this->Logmodel->log_act($type = "admin_auerr");
+				$log = "Failed to activate account [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
-				$data['msg'] = "Failed to activate user account!!";
+				$data['msg'] = "Failed to activate account";
 			} else {
-				$this->Logmodel->log_act($type = "admin_au");
+				$log = "Account activated [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
-				$data['msg'] = "User account activated!";
+				$data['msg'] = "Account activated";
 			}
 		}
 
@@ -336,15 +370,19 @@ class Admin extends Admin_Controller
 			$data['msg'] = lang('acc_denied');
 		} else {
 			$res = $this->Adminmodel->deactivatesub($_POST['user_id'], $_POST['form_key']);
-			// $res = true;
+			
 			if ($res !== true) {
-				$this->Logmodel->log_act($type = "admin_unvusuberr");
+				$log = "Failed to deactivate subscription [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
-				$data['msg'] = "Unable to de-activate user subscription!";
+				$data['msg'] = "Failed to deactivate subscription";
 			} else {
-				$this->Logmodel->log_act($type = "admin_unvusub");
+				$log = "Subscription deactivated [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
-				$data['msg'] = "User subscription de-activated!";
+				$data['msg'] = "Subscription deactivated";
 			}
 		}
 
@@ -360,15 +398,19 @@ class Admin extends Admin_Controller
 			$data['msg'] = lang('acc_denied');
 		} else {
 			$res = $this->Adminmodel->activatesub($_POST['user_id'], $_POST['form_key']);
-			// $res = true;
+			
 			if ($res !== true) {
-				$this->Logmodel->log_act($type = "admin_vusuberr");
+				$log = "Failed to activate subscription [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
-				$data['msg'] = "Unable to activate user subscription!";
+				$data['msg'] = "Failed to activate subscription";
 			} else {
-				$this->Logmodel->log_act($type = "admin_vusub");
+				$log = "Subscription activated [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
-				$data['msg'] = "User subscription activated";
+				$data['msg'] = "Subscription activated";
 			}
 		}
 
@@ -386,22 +428,27 @@ class Admin extends Admin_Controller
 			if ($_POST['logincred'] === "true") {
 				$this->load->library('emailconfig');
 				$mail_res = $this->emailconfig->resetpassword($_POST['user_email'], $_POST['rspwd'], $_POST['user_name']);
-				// $mail_res = true;
 
 				if ($mail_res === true) {
 					$res = $this->Adminmodel->updatepassword($_POST['user_id'], $_POST['rspwd']);
-					// $res = true;
+
 					if ($res !== true) {
-						$this->Logmodel->log_act($type = "admin_upassuerr");
+						$log = "Error updating password [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+						$this->log_act($log);
+
 						$data['status'] = false;
-						$data['msg'] = "Error updating user password";
+						$data['msg'] = "Error updating password";
 					} else {
-						$this->Logmodel->log_act($type = "admin_upassu");
+						$log = "Password updated [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+						$this->log_act($log);
+
 						$data['status'] = true;
-						$data['msg'] = "User password updated";
+						$data['msg'] = "Password updated";
 					}
 				} else {
-					$this->Logmodel->log_act($type = "mail_err");
+					$log = "Error sending mail - Password Reset [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) . ", Email: " . htmlentities($_POST['user_email']) . ", MailError: " . $mail_res . " ]";
+					$this->log_act($log);
+
 					$data['status'] = false;
 					$data['msg'] = "Error sending mail";
 				}
@@ -498,15 +545,19 @@ class Admin extends Admin_Controller
 
 			$res = $this->Adminmodel->updatecompany($user_id, $form_key, $cmpyID, $cmpyData);
 			if ($res !== true) {
-				// $this->Logmodel->log_act($type = "");
+				$log = "Error updating company [ Admin: " . $this->session->userdata('mr_uname') . ", Company: " . $cmpyName .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
-				$data['msg'] = "Error updating user details!";
+				$data['msg'] = "Error updating company";
 			} else {
 				$this->Adminmodel->updatecompany_users($cmpyName, $user_id);
 
-				// $this->Logmodel->log_act($type = "");
+				$log = "Company updated [ Admin: " . $this->session->userdata('mr_uname') . ", Company: " . $cmpyName .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
-				$data['msg'] = "Updated!";
+				$data['msg'] = "Company updated";
 				$data['logopath'] = base_url('uploads/') . $cmpyLogo;
 			}
 		}
@@ -539,13 +590,17 @@ class Admin extends Admin_Controller
 				$form_key = $_POST['form_key'];
 
 				$res = $this->Adminmodel->updatequota($user_id, $form_key, $qtData);
-				// $res = true;
+
 				if ($res !== true) {
-					// $this->Logmodel->log_act($type = "");
+					$log = "Error updating quota [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+					$this->log_act($log);
+
 					$data['status'] = false;
 					$data['msg'] = "Error updating";
 				} else {
-					// $this->Logmodel->log_act($type = "");
+					$log = "Quota updated [ Admin: " . $this->session->userdata('mr_uname') . ", Username: " . htmlentities($_POST['user_name']) .  " ]";
+					$this->log_act($log);
+
 					$data['status'] = true;
 					$data['msg'] = "Quota updated";
 				}
@@ -583,8 +638,8 @@ class Admin extends Admin_Controller
 			//check postdata
 			if ($_POST['planid']) {
 				$res = $this->Adminmodel->getplan($_POST['planid']);
+
 				if ($res == false) {
-					// $this->Logmodel->log_act($type = "webstatuserr");
 					$data['status'] = false;
 					$data['msg'] = "Error retrieving data";
 				} else {
@@ -622,13 +677,17 @@ class Admin extends Admin_Controller
 			$planid = $_POST['planid'];
 
 			$res = $this->Adminmodel->updateplan($planid, $pData);
-			// $res = true;
+
 			if ($res !== true) {
-				// $this->Logmodel->log_act($type = "");
+				$log = "Error updating plan [ Admin: " . $this->session->userdata('mr_uname') . ", Plan: " . htmlentities($_POST['name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
-				$data['msg'] = "Error updating";
+				$data['msg'] = "Error updating plan";
 			} else {
-				// $this->Logmodel->log_act($type = "");
+				$log = "Plan updated [ Admin: " . $this->session->userdata('mr_uname') . ", Plan: " . htmlentities($_POST['name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
 				$data['msg'] = "Plan updated";
 			}
@@ -658,13 +717,17 @@ class Admin extends Admin_Controller
 			);
 
 			$res = $this->Adminmodel->addplan($pData);
-			// $res = true;
+
 			if ($res !== true) {
-				// $this->Logmodel->log_act($type = "");
+				$log = "Error creating plan [ Admin: " . $this->session->userdata('mr_uname') . ", Plan: " . htmlentities($_POST['name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
 				$data['msg'] = "Error creating plan";
 			} else {
-				// $this->Logmodel->log_act($type = "");
+				$log = "Plan created [ Admin: " . $this->session->userdata('mr_uname') . ", Plan: " . htmlentities($_POST['name']) .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
 				$data['msg'] = "Plan created";
 			}
@@ -732,6 +795,9 @@ class Admin extends Admin_Controller
 
 						if (($this->Adminmodel->check_payID($pid = $PaymentInfo['id']) === false)) {
 							$this->Adminmodel->savePaymentInfo($PaymentInfoData);
+
+							$log = "Payment successfull [ Username: " . $this->session->userdata('mr_uname') .  ", Amount: " . $PaymentInfo['amount'] / 100 .  " ]";
+							$this->log_act($log);
 						}
 
 
@@ -740,10 +806,16 @@ class Admin extends Admin_Controller
 						$data['error'] = false;
 						$data['msg'] = "Payment Successfull";
 					} catch (Exception $p) {
+						$log = $p->getMessage() . " [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+						$this->log_act($log);
+
 						$data['error'] = true;
 						$data['msg'] = $p->getMessage();
 					}
 				} catch (Exception $e) {
+					$log = "Razorpay verification Error : " . $e->getMessage() . " [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+					$this->log_act($log);
+
 					$data['error'] = true;
 					$data['msg'] = "Razorpay verification Error : " . $e->getMessage();
 				}
@@ -784,8 +856,8 @@ class Admin extends Admin_Controller
 			//check postdata
 			if ($_POST['payID'] && $_POST['formkey'] && $_POST['userid']) {
 				$res = $this->Adminmodel->get_paymentsDetails($_POST['payID'], $_POST['formkey'], $_POST['userid']);
+
 				if ($res == false) {
-					// $this->Logmodel->log_act($type = "webstatuserr");
 					$data['status'] = false;
 					$data['msg'] = "Error retrieving data";
 				} else {
@@ -826,9 +898,14 @@ class Admin extends Admin_Controller
 
 			if ($res !== true) {
 				$this->setFlashMsg('error', 'Error clearing data');
+
+				$log = "Error clearing data - Activity Logs [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
 			} else {
-				$this->Logmodel->log_act($type = "logsclear");
-				$this->setFlashMsg('success', 'Activity Logs Data cleared!');
+				$this->setFlashMsg('success', 'Data cleared ');
+
+				$log = "Data cleared - Activity Logs [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
 			}
 		}
 
@@ -858,10 +935,15 @@ class Admin extends Admin_Controller
 			$res = $this->Adminmodel->clear_feedbacks();
 
 			if ($res !== true) {
+				$log = "Error clearing data - Support [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+
 				$this->setFlashMsg('error', 'Error clearing data');
 			} else {
-				$this->Logmodel->log_act($type = "feedbckclear");
-				$this->setFlashMsg('success', 'Feedback Data cleared!');
+				$log = "Data cleared - Support [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+
+				$this->setFlashMsg('success', 'Data cleared!');
 			}
 		}
 
@@ -907,11 +989,16 @@ class Admin extends Admin_Controller
 				// $mail_res = true;
 
 				if ($mail_res !== true) {
-					$this->Logmodel->log_act($type = "mail_err");
+					$log = "Error sending mail - Contact Us [ Name: " . htmlentities($this->input->post('name')) . ", Email: " . htmlentities($this->input->post('email')) . ", MailError: " . $mail_res . " ]";
+					$this->log_act($log);
+
 					$this->setFlashMsg('error', 'Error sending your message');
 				} else {
 					$res = $this->Adminmodel->contact();
-					$this->Logmodel->log_act($type = "cnt_us");
+
+					$log = "Mail sent - Contact Us [ Name: " . htmlentities($this->input->post('name')) . ", Email: " . htmlentities($this->input->post('email')) . " ]";
+					$this->log_act($log);
+
 					$this->setFlashMsg('success', 'Message sent. We will get back to you as soon as possible');
 				}
 			} else {

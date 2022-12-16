@@ -66,11 +66,23 @@ class MY_Controller extends CI_Controller
         }
     }
 
+    //log-activitypublic function log_act($log = null)
+	public function log_act($log = null)
+	{
+		$data = array(
+			'msg' => $log,
+			'act_time' => date(DATE_COOKIE),
+		);
+		$this->db->insert("activity", $data);
+		return true;
+	}
+
     //logout
     //clear all sessions and redirect to login page
     public function logout()
     {
-        $this->Logmodel->log_act($type = "logout");
+        $log = "Logged Out [ Username: " . $this->session->userdata('mr_uname') . " ]";
+        $this->log_act($log);
 
         $this->session->unset_userdata('mr_id');
         $this->session->unset_userdata('mr_sadmin');

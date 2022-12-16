@@ -123,8 +123,8 @@
 
 			<hr>
 			<div class="text-right">
-				<button class="btn email_sendBtn text-light" type="submit" style="background-color:#294a63">Send</button>
-				<button class="btn email_sendBtn_m text-light" type="submit" style="background-color:#294a63">Send</button>
+				<button class="btn email_sendBtn text-light" type="submit" style="background-color:#294a63">Share</button>
+				<button class="btn email_sendBtn_m text-light" type="submit" style="background-color:#294a63">Share</button>
 			</div>
 		</form>
 
@@ -178,8 +178,8 @@
 
 			<hr>
 			<div class="text-right">
-				<button class="btn text-light sms_sendBtn" type="submit" style="background-color:#294a63">Send</button>
-				<button class="btn text-light sms_sendBtn_m" type="submit" style="background-color:#294a63">Send</button>
+				<button class="btn text-light sms_sendBtn" type="submit" style="background-color:#294a63">Share</button>
+				<button class="btn text-light sms_sendBtn_m" type="submit" style="background-color:#294a63">Share</button>
 			</div>
 		</form>
 
@@ -223,7 +223,7 @@
 
 			<hr>
 			<div class="text-right">
-				<button class="btn text-light whp_sendBtn" type="submit" style="background-color:#294a63">Send</button>
+				<button class="btn text-light whp_sendBtn" type="submit" style="background-color:#294a63">Share</button>
 			</div>
 		</form>
 	</div>
@@ -368,7 +368,7 @@
 					$(".sms_SendSingleBtn,.sms_sendBtn_m").hide();
 					$(".sms_ImportMultipleBtn,.sms_sendBtn").show();
 
-					$('.emailmodal').modal('show');
+					$('.smsmodal').modal('show');
 				} else {
 					return false;
 				}
@@ -543,7 +543,7 @@
 
 			$.ajax({
 				success: function() {
-					$('.email_sendBtn').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
+					$('.email_sendBtn').addClass('bg-danger').html('Sharing...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
 				}
 			});
 
@@ -574,7 +574,7 @@
 
 			$.ajax({
 				success: function() {
-					$('.sms_sendBtn').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
+					$('.sms_sendBtn').addClass('bg-danger').html('Sharing...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
 				}
 			});
 
@@ -623,7 +623,7 @@
 					[csrfName]: csrfHash
 				},
 				beforeSend: function() {
-					$('.whp_sendBtn').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
+					$('.whp_sendBtn').addClass('bg-danger').html('Sharing...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
 
 					clearAlert();
 				},
@@ -702,9 +702,9 @@
 					[csrfName]: csrfHash,
 				},
 				beforeSend: function() {
-					$('.email_sendBtn_m').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
-
 					clearAlert();
+
+					$('.email_sendBtn_m').addClass('bg-danger').html('Sharing...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
 				},
 				success: function(data) {
 					if (data.status === false) {
@@ -790,9 +790,9 @@
 					[csrfName]: csrfHash,
 				},
 				beforeSend: function() {
-					$('.sms_sendBtn_m').attr('disabled', 'disabled').html('Sending...').css('cursor', 'not-allowed');
-
 					clearAlert();
+
+					$('.sms_sendBtn_m').addClass('bg-danger').html('Sharing...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
 				},
 				success: function(data) {
 					if (data.status === false) {

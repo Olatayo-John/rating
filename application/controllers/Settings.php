@@ -133,11 +133,13 @@ class Settings extends Admin_Controller
 			$res = $this->Settingsmodel->update_settings($sData);
 
 			if ($res !== TRUE) {
-				// $this->Logmodel->log_act($type = "db_err");
+				$log = "Error upating settings [ Username: " . htmlentities($this->input->post('uname')) . " ]";
+				$this->log_act($log);
 
 				$this->setFlashMsg('error', 'Error updating settings');
 			} else {
-				// $this->Logmodel->log_act($type = "newuser");
+				$log = "Updated settings [ Username: " . htmlentities($this->input->post('uname')) . " ]";
+				$this->log_act($log);
 
 				$this->setFlashMsg('success', 'Settings updated');
 			}

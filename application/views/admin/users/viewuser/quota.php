@@ -38,7 +38,7 @@
 
     <hr>
     <div class="form-group text-right">
-        <button class="btn text-light save_qt_btn" type="submit" style="background-color:#294a63">Update</button>
+        <button class="btn text-light save_qt_btn" type="submit" style="background-color:#294a63">Save</button>
     </div>
     <hr>
 </form>
@@ -54,6 +54,7 @@
             var whatsapp_quota = $('.whatsapp_quota').val();
             var web_quota = $('.web_quota').val();
             var user_id = $('#currentUserId').attr("user_id");
+            var user_name = $('#currentUserId').attr("user_name");
             var form_key = $('#currentUserId').attr("form_key");
             var user_isadmin = $('#currentUserId').attr("user_isadmin");
             var user_iscmpy = $('#currentUserId').attr("user_iscmpy");
@@ -67,6 +68,7 @@
                 method: "post",
                 data: {
                     user_id: user_id,
+                    user_name:user_name,
                     form_key: form_key,
                     user_isadmin: user_isadmin,
                     user_iscmpy: user_iscmpy,
@@ -80,7 +82,7 @@
                 beforeSend: function() {
                     clearAlert();
 
-                    $('.save_qt_btn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
+                    $('.save_qt_btn').html('Saving...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
                 },
                 error: function(res) {
                     var con = confirm('Some error occured. Refresh?');
@@ -100,7 +102,7 @@
                         $(".ajax_succ_div").fadeIn();
                     }
 
-                    $('.save_qt_btn').removeAttr('disabled').html('Update').css('cursor', 'pointer');
+                    $('.save_qt_btn').html('Save').removeAttr('disabled').css('cursor', 'pointer');
                     $('.csrf-token').val(res.token);
                 }
             })

@@ -83,7 +83,7 @@
                     </div>
                     <hr>
                     <div class="form-group text-right fp_newpwdbtndiv">
-                        <button class="btn text-light fp_newpwdbtn" type="button" style="background:#294a63">Confirm</button>
+                        <button class="btn text-light fp_newpwdbtn" type="button" style="background:#294a63">Save</button>
                     </div>
                 </form>
             </div>
@@ -226,14 +226,12 @@
                 },
                 success: function(data) {
                     if (data.status === false) {
-                        $(".ajax_succ_div,.ajax_err_div").hide();
                         $(".ajax_res_err").text(data.msg);
                         $(".ajax_err_div").fadeIn();
 
                         $(".sendcodebtn").html("Send Verfication Code");
 
                     } else if (data.status === true) {
-                        $(".ajax_err_div,ajax_succ_div").hide();
                         $(".ajax_res_succ").text(data.msg);
                         $(".ajax_succ_div").fadeIn();
 
@@ -294,15 +292,17 @@
                 dataType: "json",
                 beforeSend: function() {
                     clearAlert();
+
+                    $('.fp_newpwdbtn').addClass('bg-danger').html("Saving...").attr('disabled', 'disabled').css({
+                        'cursor': 'not-allowed',
+                    });
                 },
                 success: function(data) {
                     if (data.status === false) {
-                        $(".ajax_succ_div,.ajax_err_div").hide();
                         $(".ajax_res_err").text(data.msg);
                         $(".ajax_err_div").fadeIn();
 
                     } else if (data.status === true) {
-                        $(".ajax_err_div,ajax_succ_div").hide();
                         $(".ajax_res_succ").text(data.msg);
                         $(".ajax_succ_div").fadeIn();
 
@@ -313,13 +313,13 @@
                             'readonly': 'readonly',
                             'disabled': 'disabled'
                         });
+
                         //newpwd btn
-                        $(".fp_newpwdbtn").attr({
-                            'disabled': 'disabled',
-                            'readonly': 'readonly'
-                        }).css({
-                            'cursor': 'not-allowed'
-                        }).addClass("bg-success").html("Password Updated!");
+                        $(".fp_newpwdbtn").removeClass("bg-danger").html("Save").removeAttr('disabled').css({
+                            'cursor': 'pointer'
+                        });
+
+                        window.location.reload();
                     }
                 }
             });

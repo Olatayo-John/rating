@@ -14,6 +14,7 @@
 					<th data-field="name" data-sortable="true">Name</th>
 					<th data-field="mail" data-sortable="true">E-mail</th>
 					<th data-field="msg" data-sortable="true">Message</th>
+					<th data-field="date" data-sortable="true">Date</th>
 				</tr>
 			</thead>
 			<tbody>

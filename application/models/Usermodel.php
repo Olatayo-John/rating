@@ -168,7 +168,7 @@ class Usermodel extends CI_Model
 
 	public function check_verification($key)
 	{
-		$this->db->select('active,email,form_key');
+		$this->db->select('active,email,form_key,uname');
 		$this->db->where(array('form_key' => $key));
 		$query = $this->db->from('users');
 		if (!$query) {
@@ -540,6 +540,7 @@ class Usermodel extends CI_Model
 		$this->db->set('active', '2');
 		$this->db->where('id', $this->session->userdata('mr_id'));
 		$this->db->update('users');
+		
 		$this->session->set_userdata('mr_active', '2');
 		return true;
 	}

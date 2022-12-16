@@ -35,7 +35,7 @@
     </div>
     <hr>
     <div class="text-right">
-        <button class="btn text-light updatepwdbtn" type="submit" name="updatepwdbtn" style="background-color:#294a63">Update</button>
+        <button class="btn text-light updatepwdbtn" type="submit" name="updatepwdbtn" style="background-color:#294a63">Save</button>
     </div>
 </form>
 
@@ -51,6 +51,7 @@
             } else if (con == true) {
                 var user_id = $('#currentUserId').attr("user_id");
                 var form_key = $('#currentUserId').attr("form_key");
+                var user_name = $('#currentUserId').attr("user_name");
 
                 $.ajax({
                     url: "<?php echo base_url('deactivate-user-account'); ?>",
@@ -58,6 +59,7 @@
                     dataType: "json",
                     data: {
                         user_id: user_id,
+                        user_name:user_name,
                         form_key: form_key,
                         [csrfName]: csrfHash
                     },
@@ -69,12 +71,10 @@
                     },
                     success: function(res) {
                         if (res.status === false) {
-                            $(".ajax_succ_div,.ajax_err_div").hide();
                             $(".ajax_res_err").text(res.msg);
                             $(".ajax_err_div").fadeIn();
 
                         } else if (res.status === true) {
-                            $(".ajax_err_div,ajax_succ_div").hide();
                             $(".ajax_res_succ").text(res.msg);
                             $(".ajax_succ_div").fadeIn();
 
@@ -96,6 +96,7 @@
             } else if (con == true) {
                 var user_id = $('#currentUserId').attr("user_id");
                 var form_key = $('#currentUserId').attr("form_key");
+                var user_name = $('#currentUserId').attr("user_name");
 
                 $.ajax({
                     url: "<?php echo base_url('activate-user-account'); ?>",
@@ -103,6 +104,7 @@
                     dataType: "json",
                     data: {
                         user_id: user_id,
+                        user_name:user_name,
                         form_key: form_key,
                         [csrfName]: csrfHash
                     },
@@ -114,12 +116,10 @@
                     },
                     success: function(res) {
                         if (res.status === false) {
-                            $(".ajax_succ_div,.ajax_err_div").hide();
                             $(".ajax_res_err").text(res.msg);
                             $(".ajax_err_div").fadeIn();
 
                         } else if (res.status === true) {
-                            $(".ajax_err_div,ajax_succ_div").hide();
                             $(".ajax_res_succ").text(res.msg);
                             $(".ajax_succ_div").fadeIn();
 
@@ -141,6 +141,7 @@
             } else if (con == true) {
                 var user_id = $('#currentUserId').attr("user_id");
                 var form_key = $('#currentUserId').attr("form_key");
+                var user_name = $('#currentUserId').attr("user_name");
 
                 $.ajax({
                     url: "<?php echo base_url('deactivate-user-sub'); ?>",
@@ -148,6 +149,7 @@
                     dataType: "json",
                     data: {
                         user_id: user_id,
+                        user_name:user_name,
                         form_key: form_key,
                         [csrfName]: csrfHash
                     },
@@ -159,12 +161,10 @@
                     },
                     success: function(res) {
                         if (res.status === false) {
-                            $(".ajax_succ_div,.ajax_err_div").hide();
                             $(".ajax_res_err").text(res.msg);
                             $(".ajax_err_div").fadeIn();
 
                         } else if (res.status === true) {
-                            $(".ajax_err_div,ajax_succ_div").hide();
                             $(".ajax_res_succ").text(res.msg);
                             $(".ajax_succ_div").fadeIn();
 
@@ -172,9 +172,9 @@
                             $(".subact_btn").show();
 
                             $('i.subI[sub_id="' + user_id + '"]').removeClass("fa-toggle-on text-success").addClass("fa-toggle-off text-danger").attr({
-								'mod': 'not_active',
-								'sub': '0'
-							});
+                                'mod': 'not_active',
+                                'sub': '0'
+                            });
                         }
 
                         $('.csrf-token').val(res.token);
@@ -192,6 +192,7 @@
 
                 var user_id = $('#currentUserId').attr("user_id");
                 var form_key = $('#currentUserId').attr("form_key");
+                var user_name = $('#currentUserId').attr("user_name");
 
                 $.ajax({
                     url: "<?php echo base_url('activate-user-sub'); ?>",
@@ -199,6 +200,7 @@
                     dataType: "json",
                     data: {
                         user_id: user_id,
+                        user_name:user_name,
                         form_key: form_key,
                         [csrfName]: csrfHash
                     },
@@ -210,12 +212,10 @@
                     },
                     success: function(res) {
                         if (res.status === false) {
-                            $(".ajax_succ_div,.ajax_err_div").hide();
                             $(".ajax_res_err").text(res.msg);
                             $(".ajax_err_div").fadeIn();
 
                         } else if (res.status === true) {
-                            $(".ajax_err_div,ajax_succ_div").hide();
                             $(".ajax_res_succ").text(res.msg);
                             $(".ajax_succ_div").fadeIn();
 
@@ -223,9 +223,9 @@
                             $(".subdeact_btn").show();
 
                             $('i.subI[sub_id="' + user_id + '"]').removeClass("fa-toggle-off text-danger").addClass("fa-toggle-on text-success").attr({
-								'mod': 'active',
-								'sub': '1'
-							});
+                                'mod': 'active',
+                                'sub': '1'
+                            });
                         }
 
                         $('.csrf-token').val(res.token);
@@ -265,17 +265,15 @@
                 beforeSend: function() {
                     clearAlert();
 
-                    $('.updatepwdbtn').attr('disabled', 'disabled').html('Updating...').css('cursor', 'not-allowed');
+                    $('.updatepwdbtn').html('Saving...').attr('disabled', 'disabled').css('cursor', 'not-allowed');
                 },
                 dataType: "json",
                 success: function(res) {
                     if (res.status === false) {
-                        $(".ajax_succ_div,.ajax_err_div").hide();
                         $(".ajax_res_err").text(res.msg);
                         $(".ajax_err_div").fadeIn();
 
                     } else if (res.status === true) {
-                        $(".ajax_err_div,ajax_succ_div").hide();
                         $(".ajax_res_succ").text(res.msg);
                         $(".ajax_succ_div").fadeIn();
 
@@ -283,7 +281,7 @@
                         $('i.fa-eye,i.fa-eye-slash').hide();
                     }
 
-                    $('.updatepwdbtn').removeAttr('disabled').html('Update').css('cursor', 'pointer');
+                    $('.updatepwdbtn').html('Save').removeAttr('disabled').css('cursor', 'pointer');
                     $('.csrf_token').val(res.token);
                 },
                 error: function(res) {

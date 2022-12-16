@@ -42,22 +42,30 @@ class User extends User_Controller
 			$validate = $this->Usermodel->login();
 
 			if ($validate == FALSE) {
-				$this->Logmodel->log_act($type = "false_login");
+				$log = "Failed Login Attempt - Wrong Credentials [ Username: " . htmlentities($this->input->post('uname')) . " ]";
+				$this->log_act($log);
+
 				$this->setFlashMsg('error', lang('wrong_pwd_uname'));
 				redirect('user');
 			}
 			if ($validate == "inactive_access_by_cmpyAdmin") {
-				$this->Logmodel->log_act($type = "inactive_access");
+				$log = "Failed Login Attempt - Account deactivated by Company Admin [ Username: " . htmlentities($this->input->post('uname')) . " ]";
+				$this->log_act($log);
+
 				$this->setFlashMsg('error', lang('acct_deact_by_cmpy_admin'));
 				redirect('/');
 			}
 			if ($validate == "inactive_access") {
-				$this->Logmodel->log_act($type = "inactive_access");
+				$log = "Failed Login Attempt - Account deactivated [ Username: " . htmlentities($this->input->post('uname')) . " ]";
+				$this->log_act($log);
+
 				$this->setFlashMsg('error', lang('acct_deact'));
 				redirect('/');
 			}
-			if ($validate == "inactive_account") {
-				$this->Logmodel->log_act($type = "inactive");
+			if ($validate == "inactive") {
+				$log = "Failed Login Attempt - Account unverified [ Username: " . htmlentities($this->input->post('uname')) . " ]";
+				$this->log_act($log);
+
 				$res_login = $this->Usermodel->login_get_key();
 				if ($res_login) {
 					$this->setFlashMsg('error', 'Your account is not verified');
@@ -100,7 +108,9 @@ class User extends User_Controller
 				$this->session->set_userdata($user_sess);
 
 				$this->Usermodel->user_latestact();
-				$this->Logmodel->log_act($type = "true_login");
+
+				$log = "Logged In [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 
 				redirect('/');
 			}
@@ -171,8 +181,10 @@ class User extends User_Controller
 			// $mail_res = false;
 
 			if ($mail_res !== TRUE) {
-				$this->Logmodel->log_act($type = "new_user_verify_mail_err", $e = $mail_res);
-				$this->setFlashMsg('error', $mail_res);
+				$log = "Error sending mail - User Registration [ Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('email')) . ", MailError: " . $mail_res . " ]";
+				$this->log_act($log);
+
+				$this->setFlashMsg('error', 'Error sending mail');
 				redirect('register');
 				exit();
 			} else {
@@ -187,12 +199,16 @@ class User extends User_Controller
 				$db_res = $this->Usermodel->register($admin, $iscmpy, $act_key, $form_key);
 
 				if ($db_res !== TRUE) {
-					$this->Logmodel->log_act($type = "db_err", $e = 'User Registration');
+					$log = "Error saving to Database - User Registration [ Username: " . htmlentities($this->input->post('uname')) . " ]";
+					$this->log_act($log);
+
 					$this->setFlashMsg('error', 'Error saving your details. Please try again');
 					redirect('register');
 					exit();
 				} else {
-					$this->Logmodel->log_act($type = "newuser");
+					$log = "New user registration [ Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('email')) . " ]";
+					$this->log_act($log);
+
 					$this->setFlashMsg('success', 'Verification code sent to your mail.');
 					redirect('emailverify/' . $form_key);
 					exit();
@@ -229,19 +245,25 @@ class User extends User_Controller
 				$this->load->view('templates/footer');
 			} else {
 				$validate = $this->Usermodel->emailverify($key);
+
 				if ($validate == false) {
+					$log = "Invalid verfication code provided [ Username: " . $check_res->uname . " ]";
+					$this->log_act($log);
+
 					$this->setFlashMsg('error', 'Invalid code');
 					redirect('emailverify/' . $key);
 				} else {
 					if ($validate->active !== "1") {
-						$this->Logmodel->log_act($type = "acct_verify_err");
+						$log = "Error verifying account [ Username: " . $check_res->uname  . " ]";
+						$this->log_act($log);
 
-						$this->setFlashMsg('error', 'Error activating your account. Please try again');
+						$this->setFlashMsg('error', 'Error verifying account ');
 						redirect('emailverify/' . $key);
 					} else if ($validate->active == "1") {
-						$this->Logmodel->log_act($type = "acct_verify");
+						$log = "Account verified [ Username: " . $check_res->uname  . " ]";
+						$this->log_act($log);
 
-						$this->setFlashMsg('success', 'Your account is active. Login with your credentials');
+						$this->setFlashMsg('success', 'Account verified');
 						redirect('login');
 					}
 				}
@@ -274,14 +296,19 @@ class User extends User_Controller
 				$mail_res = $this->emailconfig->send_email_code($email, $uname, $act_key, $link);
 
 				if ($mail_res !== TRUE) {
-					$this->Logmodel->log_act($type = "new_user_verify_mail_err", $e = $mail_res);
-					$this->setFlashMsg('error', $mail_res);
+					$log = "Error sending mail - Verification [ Username: " . $uname . ", Email: " . $email . ", MailError: " . $mail_res . " ]";
+					$this->log_act($log);
+
+					$this->setFlashMsg('error', 'Error sending mail');
 					redirect($link);
 				} else {
+					$log = "Mail sent - Verification [ Username: " . $uname . ", Email: " . $email . " ]";
+					$this->log_act($log);
+
 					$this->Usermodel->code_verify_update($act_key, $key);
 
-					$this->setFlashMsg('success', 'Verification code sent to you mail.');
-					redirect($_SERVER['HTTP_REFERER']);
+					$this->setFlashMsg('success', 'Verification mail sent');
+					redirect($link);
 				}
 			}
 		}
@@ -356,11 +383,15 @@ class User extends User_Controller
 
 		$res = $this->Usermodel->createwebsite($web_name_new, $web_link_new);
 		if (gettype($res) === "string") {
-			$this->Logmodel->log_act($type = "websitenewerr");
+			$log = "Error creating Platform [ Username: " . $this->session->userdata('mr_uname') . ", Platform: " . htmlentities($_POST['web_name']) . ", Link: " . htmlentities($_POST['web_link']) . ", Error: " . $res . " ]";
+			$this->log_act($log);
+
 			$data['status'] = false;
 			$data['msg'] = $res;
 		} else if (gettype($res) === "integer") {
-			$this->Logmodel->log_act($type = "websitenew");
+			$log = "New Platform created [ Username: " . $this->session->userdata('mr_uname') . ", Platform: " . htmlentities($_POST['web_name']) . ", Link: " . htmlentities($_POST['web_link']) . " ]";
+			$this->log_act($log);
+
 			$data['status'] = true;
 			$data['msg'] = "Platform created";
 			$data['webID'] = $res;
@@ -388,13 +419,15 @@ class User extends User_Controller
 		$res = $this->Usermodel->removewebsite($_POST['web_name'], $_POST['web_link'], $_POST['web_id']);
 
 		if ($res !== true) {
-			$this->Logmodel->log_act($type = "webdelerr");
+			$log = "Error deleting Platform [ Username: " . $this->session->userdata('mr_uname') . ", Platform: " . htmlentities($_POST['web_name']) . ", Link: " . htmlentities($_POST['web_link']) . " ]";
+			$this->log_act($log);
 
 			$data['status'] = "error";
 			$data['redirect'] = "";
 			$data['msg'] = 'Error removing this Platform';
 		} else {
-			$this->Logmodel->log_act($type = "webdel");
+			$log = "Deleted Platform [ Username: " . $this->session->userdata('mr_uname') . ", Platform: " . htmlentities($_POST['web_name']) . ", Link: " . htmlentities($_POST['web_link']) . " ]";
+			$this->log_act($log);
 
 			$data['status'] = true;
 			$data['redirect'] = "";
@@ -458,10 +491,16 @@ class User extends User_Controller
 					$data['key_id'] = $key_id;
 					$data['key_secret'] = $key_secret;
 				} catch (Exception $e) {
+					$log = "Razorpay Error : " . $e->getMessage() . " [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+					$this->log_act($log);
+
 					$data['error'] = true;
 					$data['error_msg'] = "Razorpay Error : " . $e->getMessage();
 				}
 			} else {
+				$log = "Missing Razorpay API Keys [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+
 				$data['error'] = true;
 				$data['error_msg'] = "Missing Razorpay API Keys";
 			}
@@ -490,10 +529,14 @@ class User extends User_Controller
 		} else {
 			$res = $this->Usermodel->personal_edit();
 			if ($res !== TRUE) {
-				$this->Logmodel->log_act($type = "prfileerr");
+				$log = "Error updating profile [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+
 				$this->setFlashMsg('error', lang('update_failed'));
 			} else {
-				$this->Logmodel->log_act($type = "prfile");
+				$log = "Profile Updated [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+
 				$this->setFlashMsg('success', lang('profile_updated'));
 
 				$this->session->set_userdata('mr_email', htmlentities($this->input->post('email')));
@@ -536,11 +579,15 @@ class User extends User_Controller
 
 				$res = $this->Usermodel->createwebsite($web_name_new, $web_link_new, $subject, $description);
 				if (gettype($res) === "string") {
-					$this->Logmodel->log_act($type = "webnewerr");
+					$log = "Error creating Platform [ Username: " . $this->session->userdata('mr_uname') . ", Platform: " . htmlentities($_POST['web_name_new']) . ", Link: " . htmlentities($_POST['web_link_new']) . ", Error: " . $res . "  ]";
+					$this->log_act($log);
+
 					$data['status'] = false;
 					$data['msg'] = $res;
 				} else if (gettype($res) === "integer") {
-					$this->Logmodel->log_act($type = "webnew");
+					$log = "New Platform created [ Username: " . $this->session->userdata('mr_uname') . ", Platform: " . htmlentities($_POST['web_name_new']) . ", Link: " . htmlentities($_POST['web_link_new']) . " ]";
+					$this->log_act($log);
+
 					$data['status'] = true;
 					$data['msg'] = "Platform created";
 					$data['insert_id'] = $res;
@@ -561,10 +608,14 @@ class User extends User_Controller
 	{
 		$act_res = $this->Usermodel->delete_website($_POST['id']);
 		if ($act_res == false) {
-			$this->Logmodel->log_act($type = "webdel");
+			$log = "Error deleting Platform [ Username: " . $this->session->userdata('mr_uname') . ", PlatformID: " . htmlentities($_POST['id']) . "]";
+			$this->log_act($log);
+
 			$this->setFlashMsg('error', 'Error deleting this data! Please try again');
 		} else {
-			$this->Logmodel->log_act($type = "webdelerr");
+			$log = "Deleted Platform [ Username: " . $this->session->userdata('mr_uname') . ", PlatformID: " . htmlentities($_POST['id']) . " ]";
+			$this->log_act($log);;
+
 			$this->setFlashMsg('success', 'Data deleted successfully!');
 		}
 	}
@@ -581,8 +632,8 @@ class User extends User_Controller
 			//check postdata
 			if ($_POST['id']) {
 				$act_res = $this->Usermodel->edit_website($_POST['id']);
+
 				if ($act_res == false) {
-					$this->Logmodel->log_act($type = "webstatuserr");
 					$data['status'] = false;
 					$data['msg'] = "Error retrieving data";
 				} else {
@@ -614,13 +665,17 @@ class User extends User_Controller
 				// $act_res = false;
 
 				if ($act_res == false) {
-					$this->Logmodel->log_act($type = "webstatuserr");
+					$log = "Error updating Platform [ Username: " . $this->session->userdata('mr_uname') . ", PlatformID: " . $_POST['id'] . "]";
+					$this->log_act($log);
+
 					$data['status'] = false;
-					$data['msg'] = ($wb == 0) ? "Error de-activating this platform" : "Error activating this platform";
+					$data['msg'] =  "Error updating platform";
 				} else {
-					$this->Logmodel->log_act($type = "webstatus");
+					$log = "Platform Updated [ Username: " . $this->session->userdata('mr_uname') . ", PlatformID: " . $_POST['id'] . "]";
+					$this->log_act($log);
+
 					$data['status'] = true;
-					$data['msg'] = ($wb == 0) ? "Platform de-activated!" : "Platform is active!";
+					$data['msg'] = "Platform updated";
 				}
 			} else {
 				$data['status'] = false;
@@ -683,10 +738,20 @@ class User extends User_Controller
 				'cmpyEmail' => htmlentities($this->input->post('cmpyEmail')),
 				'cmpyLogo' => $cmpyLogo
 			);
-			$this->Usermodel->company_edit($data);
-			$this->setFlashMsg('success', lang('cmpy_updated'));
+			$res = $this->Usermodel->company_edit($data);
+			if ($res !== TRUE) {
+				$log = "Error updating company [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
 
-			$this->session->set_userdata('mr_cmpy', htmlentities($this->input->post('cmpyName')));
+				$this->setFlashMsg('error', lang('update_failed'));
+			} else {
+				$log = "Company Updated [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+
+				$this->setFlashMsg('success', lang('cmpy_updated'));
+
+				$this->session->set_userdata('mr_cmpy', htmlentities($this->input->post('cmpyName')));
+			}
 		}
 
 		redirect('account');
@@ -705,10 +770,14 @@ class User extends User_Controller
 		} else {
 			$pwd_res = $this->Usermodel->check_pwd();
 			if ($pwd_res == false) {
-				$this->Logmodel->log_act($type = "userpwderr");
+				$log = "Error updating password [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
+
 				$this->setFlashMsg('error', lang('incorrect_pwd_provided'));
 			} else {
-				$this->Logmodel->log_act($type = "userpwd");
+				$log = "Password updated [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
+
 				$this->setFlashMsg('success', lang('pwd_updated'));
 			}
 		}
@@ -726,21 +795,26 @@ class User extends User_Controller
 		$this->load->library('emailconfig');
 		$eres = $this->emailconfig->resetpassword_vcode($email, $act_key, $userid);
 
-		// $eres = true;
-
 		if ($eres !== true) {
-			$this->Logmodel->log_act($type = "mail_err");
+			$log = "Error sending mail - Verification [ Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('useremail')) . ", MailError: " . $eres . " ]";
+			$this->log_act($log);
+
 			$data['status'] = false;
-			$data['msg'] = "Error sending email";
+			$data['msg'] = "Error sending mail";
 		} else {
+			$log = "Mail sent - Verification [ Username: " . $this->session->userdata('mr_uname') . ", Email: " . htmlentities($this->input->post('useremail')) . " ]";
+			$this->log_act($log);
+
 			$res = $this->Usermodel->updateact_key($userid, $act_key, $email);
 			if ($res === false) {
-				$this->Logmodel->log_act($type = "db_err");
+				$log = "Error saving to Database - Password Reset [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
-				$data['msg'] = "Error saving your Key. Please try again";
+				$data['msg'] = "Error saving to Database";
 			} else {
 				$data['status'] = true;
-				$data['msg'] = "Check your email for your Verification Code";
+				$data['msg'] = "Mail sent";
 			}
 		}
 
@@ -757,13 +831,17 @@ class User extends User_Controller
 		$res = $this->Usermodel->verifyvcode($userid, $vecode);
 
 		if ($res === false) {
-			$this->Logmodel->log_act($type = "vcodeerr");
+			$log = "Invalid verfication code provided - Password Reset [ Username: " . $this->session->userdata('mr_uname') . " ]";
+			$this->log_act($log);
+
 			$data['status'] = false;
-			$data['msg'] = "Invalid Code!!";
+			$data['msg'] = "Invalid verfication code provided";
 		} else {
-			$this->Logmodel->log_act($type = "vcodesucc");
+			$log = "Code verified - Password Reset [ Username: " . $this->session->userdata('mr_uname') . " ]";
+			$this->log_act($log);
+
 			$data['status'] = true;
-			$data['msg'] = "Verification done!";
+			$data['msg'] = "Code Verified";
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
@@ -784,18 +862,24 @@ class User extends User_Controller
 			$res = $this->Usermodel->changepassword($userid, $newpwd);
 
 			if ($res === false) {
-				$this->Logmodel->log_act($type = "userpwderr");
+				$log = "Error updating password [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
+
 				$data['status'] = false;
-				$data['msg'] = "Failed to update password.";
+				$data['msg'] = "Error updating password";
 			} else {
-				$this->Logmodel->log_act($type = "userpwd");
+				$log = "Password updated [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
 				$data['msg'] = "Password updated!";
 			}
 		} else {
-			$this->Logmodel->log_act($type = "mail_err");
+			$log = "Error sending mail - New Password [ Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('useremail')) . ", MailError: " . $eres . " ]";
+			$this->log_act($log);
+
 			$data['status'] = false;
-			$data['msg'] = "Error sending email";
+			$data['msg'] = "Error sending mail";
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();
@@ -808,10 +892,24 @@ class User extends User_Controller
 		$this->checklogin();
 
 		$act_res = $this->Usermodel->deact_account();
-		if ($act_res == false) {
-			$this->Logmodel->log_act($type = "userdact");
-			$this->setFlashMsg('error', 'Error performing this operation');
+
+		if ($act_res === true) {
+			$log = "Account deactivated [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+			$this->log_act($log);
+
+			$data['status'] = true;
+			$data['msg'] = "Account deactivated";
+			$data['redirect'] = base_url('logout');
+		} else {
+			$log = "Error deactivating account [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+			$this->log_act($log);
+
+			$data['status'] = false;
+			$data['msg'] = "Error deactivating account";
 		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
 	}
 
 	//rating logs
@@ -886,7 +984,6 @@ class User extends User_Controller
 			$res = $this->Usermodel->edit_website($id);
 
 			if ($res == false) {
-				// $this->Logmodel->log_act($type = "webstatuserr");
 
 				$data['status'] = false;
 				$data['msg'] = "Error retrieving data";
@@ -1066,12 +1163,18 @@ class User extends User_Controller
 					$this->setFlashMsg('error', 'Pending Payment');
 					redirect('account#plan');
 				}
+
+				$log = "Pending Payment [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 			} else if ($this->session->userdata('mr_sub') !== '1') { //check subscription
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin';
 				} else {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
+
+				$log = "Inactive subscription [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 
 				$this->setFlashMsg('error', $sessmsg);
 			} else if ($cq_res !== false) { //invalid quota (quota expired)
@@ -1081,9 +1184,12 @@ class User extends User_Controller
 					$this->emailconfig->quota_send_mail_expire($usermail_expire);
 				}
 
-				$this->Logmodel->log_act($type = "quota_expire");
-				$this->setFlashMsg('error', 'Quota has expired');
+				$log = "Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
+
+				$this->setFlashMsg('error', 'Quota expired');
 			} else if ($cq_res === false) { //valid quota
+
 				//check given email is valid
 				if (!filter_var($this->input->post('email'), FILTER_VALIDATE_EMAIL)) {
 					$this->setFlashMsg('error', '(' . $this->input->post('email') . ') is an invalid email');
@@ -1097,11 +1203,13 @@ class User extends User_Controller
 					// $mail_res = true;
 
 					if ($mail_res !== true) {
-						$this->Logmodel->log_act($type = "mail_err",$e=$mail_res);
+						$log = "Error sharing - Email share [ Username: " . $this->session->userdata('mr_uname') . ", Email: " . htmlentities($this->input->post('email')) . ", MailError: " . $mail_res . " ]";
+						$this->log_act($log);
 
 						$this->setFlashMsg('error', lang('mail_error'));
 					} else {
-						$this->Logmodel->log_act($type = "smail_sent");
+						$log = "Shared - Email share [ Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('email')) . " ]";
+						$this->log_act($log);
 
 						//save to DB and deduct from quota
 						$this->Usermodel->email_saveinfo();
@@ -1145,12 +1253,18 @@ class User extends User_Controller
 					$this->setFlashMsg('error', 'Pending Payment');
 					redirect('account#plan');
 				}
+
+				$log = "Pending Payment [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 			} else if ($this->session->userdata('mr_sub') !== '1') { //check subscription
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
+
+				$log = "Inactive subscription [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 
 				$this->setFlashMsg('error', $sessmsg);
 			} else if ($cq_res !== false) { //invalid quota (expired)
@@ -1160,8 +1274,10 @@ class User extends User_Controller
 					$this->emailconfig->quota_send_mail_expire($usermail_expire);
 				}
 
-				$this->Logmodel->log_act($type = "quota_expire");
-				$this->setFlashMsg('error', 'Quota has expired');
+				$log = "Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
+
+				$this->setFlashMsg('error', 'Quota expired');
 			} else if ($cq_res === false) { //valid quota
 				$mobile = $this->input->post('mobile');
 				$bdy = $this->input->post('smsbdy');
@@ -1177,11 +1293,20 @@ class User extends User_Controller
 				$Jresult = json_decode($result, true);
 
 				if ($httpCode !== 200) {
+					$log = "Error sharing - SMS share [ Username: " . $this->session->userdata('mr_uname') . ", Mobile: " . htmlentities($this->input->post('mobile')) . ", SMSError: " . $httpCode . " ]";
+					$this->log_act($log);
+
 					$this->setFlashMsg('error', $httpCode . " - SERVER ERROR");
 				} else {
 					if ($Jresult['STATUS'] == "ERROR") {
+						$log = "Error sharing - SMS share [ Username: " . $this->session->userdata('mr_uname') . ", Mobile: " . htmlentities($this->input->post('mobile')) . ", SMSError: " . $Jresult['RESPONSE']['CODE'] . ' - ' . $Jresult['RESPONSE']['INFO'] . " ]";
+						$this->log_act($log);
+
 						$this->setFlashMsg('error', $Jresult['RESPONSE']['CODE'] . ' - ' . $Jresult['RESPONSE']['INFO']);
 					} else {
+						$log = "Shared - SMS share [ Username: " . $this->session->userdata('mr_uname') . ", Mobile: " . htmlentities($this->input->post('mobile')) . " ]";
+						$this->log_act($log);
+
 						$this->Usermodel->sms_saveinfo();
 						$this->setFlashMsg('success', 'SMS sent successfully');
 					}
@@ -1214,12 +1339,18 @@ class User extends User_Controller
 					$data['status'] = "error";
 					$data['redirect'] = base_url("account#plan");
 				}
+
+				$log = "Pending Payment [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 			} else if ($this->session->userdata('mr_sub') !== '1') {
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
+
+				$log = "Inactive subscription [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 
 				$data['status'] = false;
 				$data['msg'] = $sessmsg;
@@ -1229,10 +1360,12 @@ class User extends User_Controller
 					$this->load->library('emailconfig');
 					$this->emailconfig->quota_send_mail_expire($usermail_expire);
 				}
-				$this->Logmodel->log_act($type = "quota_expire");
+
+				$log = "Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 
 				$data['status'] = false;
-				$data['msg'] = 'Quota has expired';
+				$data['msg'] = 'Quota expired';
 			} else if ($cq_res === false) {
 
 				$mobile = $_POST['mobile'];
@@ -1242,6 +1375,9 @@ class User extends User_Controller
 
 				$data['status'] = true;
 				$data['msg'] = 'Shared';
+
+				$log = "Shared - Whatsapp share [ Username: " . $this->session->userdata('mr_uname') . ", Mobile: " . htmlentities($_POST['mobile']) . "]";
+				$this->log_act($log);
 
 				$this->setFlashMsg('success', $data['msg']);
 			}
@@ -1271,12 +1407,18 @@ class User extends User_Controller
 					$data['status'] = "error";
 					$data['redirect'] = base_url("account#plan");
 				}
+
+				$log = "Pending Payment [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 			} else if ($this->session->userdata('mr_sub') !== '1') {
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
+
+				$log = "Inactive subscription [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 
 				$data['status'] = false;
 				$data['msg'] = $sessmsg;
@@ -1286,10 +1428,12 @@ class User extends User_Controller
 					$this->load->library('emailconfig');
 					$this->emailconfig->quota_send_mail_expire($usermail_expire);
 				}
-				$this->Logmodel->log_act($type = "quota_expire");
+
+				$log = "Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 
 				$data['status'] = false;
-				$data['msg'] = 'Quota has expired';
+				$data['msg'] = 'Quota expired';
 			} else if ($cq_res === false) {
 
 				$emaildata = $_POST['emaildata'];
@@ -1300,10 +1444,11 @@ class User extends User_Controller
 				$qbl_res = $this->Usermodel->get_userquota();
 
 				if ($qbl_res->email_quota < $num) {
-					$this->Logmodel->log_act($type = "quota_limit");
+					$log = "Email quota not enough [ Username: " . $this->session->userdata('mr_uname') . " ]";
+					$this->log_act($log);
 
 					$data['status'] = false;
-					$data['msg'] = 'Number of emails to be sent (' . $num . ') exceeds your quota point of (' . $qbl_res->email_quota . ').';
+					$data['msg'] = 'Number of emails to be sent (' . $num . ') exceeds your quota (' . $qbl_res->email_quota . ').';
 				} else {
 					$notvalidarr = array();
 					$emailnotsentarr = array();
@@ -1327,7 +1472,13 @@ class User extends User_Controller
 
 							if ($mailRes === true) {
 								$this->Usermodel->multiplemail_saveinfo($mail, $subj, $bdy);
+
+								$log = "Shared - Email share [ Username: " . $this->session->userdata('mr_uname') . ", Email: " . $mail . " ]";
+								$this->log_act($log);
 							} else {
+								$log = "Error sharing - Email share [ Username: " . $this->session->userdata('mr_uname') . ", Email: " . $mail . ", MailError: " . $mailRes . " ]";
+								$this->log_act($log);
+
 								array_push($emailnotsentarr, $mail);
 							}
 						}
@@ -1372,12 +1523,18 @@ class User extends User_Controller
 					$data['status'] = "error";
 					$data['redirect'] = base_url("account#plan");
 				}
+
+				$log = "Pending Payment [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 			} else if ($this->session->userdata('mr_sub') !== '1') {
 				if ($this->session->userdata('mr_iscmpy') == '1' && $this->session->userdata('mr_sadmin') == '0') {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact your company Admin!';
 				} else {
 					$sessmsg = 'Your subscriptiontion isn\'t active. Contact us if you have a valid quota';
 				}
+
+				$log = "Inactive subscription [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 
 				$data['status'] = false;
 				$data['msg'] = $sessmsg;
@@ -1387,10 +1544,12 @@ class User extends User_Controller
 					$this->load->library('emailconfig');
 					$this->emailconfig->quota_send_mail_expire($usermail_expire);
 				}
-				$this->Logmodel->log_act($type = "quota_expire");
+
+				$log = "Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$this->log_act($log);
 
 				$data['status'] = false;
-				$data['msg'] = 'Quota has expired';
+				$data['msg'] = 'Quota expired';
 			} else if ($cq_res === false) {
 
 				$mobiledata = $_POST['mobiledata'];
@@ -1400,10 +1559,11 @@ class User extends User_Controller
 				$qbl_res = $this->Usermodel->get_userquota();
 
 				if ($qbl_res->sms_quota < $num) {
-					$this->Logmodel->log_act($type = "quota_limit");
+					$log = "SMS quota not enough [ Username: " . $this->session->userdata('mr_uname') . " ]";
+					$this->log_act($log);
 
 					$data['status'] = false;
-					$data['msg'] = 'Number of emails to be sent (' . $num . ') exceeds your quota point of (' . $qbl_res->sms_quota . ').';
+					$data['msg'] = 'Number of SMS to be sent (' . $num . ') exceeds your quota (' . $qbl_res->sms_quota . ').';
 				} else {
 					$notvalidarr = array();
 					$mobilenotsentarr = array();
@@ -1437,11 +1597,20 @@ class User extends User_Controller
 								$data['msg'] = $httpCode . " - SERVER ERROR";
 
 								array_push($mobilenotsentarr, array('mobile' => $mobile, 'errorCode' => $httpCode, 'errorInfo' => 'SERVER ERROR'));
+
+								$log = "Error sharing - SMS share [ Username: " . $this->session->userdata('mr_uname') . ", Mobile: " . $mobile . ", SMSError: " . $httpCode . " ]";
+								$this->log_act($log);
 							} else {
 								if ($Jresult['STATUS'] == "ERROR") {
 									array_push($mobilenotsentarr, array('mobile' => $mobile, 'errorCode' => $Jresult['RESPONSE']['CODE'], 'errorInfo' => $Jresult['RESPONSE']['INFO']));
+
+									$log = "Error sharing - SMS share [ Username: " . $this->session->userdata('mr_uname') . ", Mobile: " . $mobile . ", SMSError: " . $Jresult['RESPONSE']['CODE'] . ' - ' . $Jresult['RESPONSE']['INFO'] . " ]";
+									$this->log_act($log);
 								} else {
 									$this->Usermodel->multiplsms_saveinfo($mobile, $smsbdy);
+
+									$log = "Shared - SMS share [ Username: " . $this->session->userdata('mr_uname') . ", Mobile: " . $mobile . "]";
+									$this->log_act($log);
 								}
 							}
 

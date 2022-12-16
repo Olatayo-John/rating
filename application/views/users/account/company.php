@@ -32,7 +32,7 @@
 
     <hr>
     <div class="form-group text-right">
-        <button class="btn text-light save_cmpy_btn" type="submit" style="background-color:#294a63">Update</button>
+        <button class="btn text-light save_cmpy_btn" type="submit" style="background-color:#294a63">Save</button>
     </div>
     <hr>
 </form>
@@ -47,6 +47,14 @@
             if (cmpyName == "" || cmpyName == null) {
                 return false;
             }
+
+            $.ajax({
+				beforeSend: function() {
+					$('button.save_cmpy_btn').addClass('bg-danger').html('Saving...').attr('disabled', 'disabled').css({
+						'cursor': 'not-allowed',
+					});
+				}
+			});
         });
 
 

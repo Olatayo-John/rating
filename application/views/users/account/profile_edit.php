@@ -65,7 +65,7 @@
     <hr>
     <div class="form-group text-right">
         <button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#294a63">
-            Update</button>
+        Save</button>
     </div>
     <hr>
 </form>
@@ -84,35 +84,30 @@
     $(document).ready(function() {
         $('form#profileForm').submit(function(e) {
             // e.preventDefault();
+
             var uname = $('.uname').val();
             var email = $('.email').val();
             var mobile = $('.mobile').val();
-            var formErr = null;
-
-            if (uname == "" || uname == null) {
-                formErr = true;
-            } else {
-                formErr = "";
-            }
 
             if (email == "" || email == null) {
-                formErr = true;
-            } else {
-                formErr = "";
+                return false;
             }
 
             if (mobile == "" || mobile == null || mobile.length < 10 || mobile.length > 10) {
-                formErr = true;
+                return false;
                 $('.mobileerr').show();
             } else {
-                formErr = "";
                 $('.mobileerr').hide();
             }
 
+            $.ajax({
+				beforeSend: function() {
+					$('button.save_pinfo_btn').addClass('bg-danger').html('Saving...').attr('disabled', 'disabled').css({
+						'cursor': 'not-allowed',
+					})
+				}
+			});
 
-            if (formErr === true) {
-                return false;
-            }
         });
 
 

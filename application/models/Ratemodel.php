@@ -22,7 +22,6 @@ class Ratemodel extends CI_Model
 
 	public function is_valid_platform($k, $w)
 	{
-
 		$q = $this->db->get_where('websites', array('form_key' => $k, 'id' => $w))->row();
 
 		if (!$q) {

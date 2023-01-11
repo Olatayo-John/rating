@@ -57,8 +57,6 @@
 			<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/").$this->st->site_logo ?>" class="navbar-label">
 		</div>
 
-		<!-- <?php print_r($_SESSION) ?> -->
-
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>
 			<?php if ($this->session->userdata('mr_sub') == "0") : ?>
 				<div class="text-danger mr-3">

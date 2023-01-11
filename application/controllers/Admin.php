@@ -145,7 +145,11 @@ class Admin extends Admin_Controller
 		$this->form_validation->set_rules('email_quota', 'Quota', 'required|trim|html_escape');
 		$this->form_validation->set_rules('whatsapp_quota', 'Quota', 'trim|html_escape');
 		$this->form_validation->set_rules('web_quota', 'Quota', 'trim|html_escape');
-		$this->form_validation->set_rules('cmpy', 'Company Name', 'trim|html_escape|is_unique[users.cmpy]', array('is_unique' => 'This Company already exist'));
+		if (isset($_POST['cmpychkb'])) {
+			$this->form_validation->set_rules('cmpy', 'Company Name', 'trim|html_escape|required|is_unique[users.cmpy]', array('is_unique' => 'This Company already exist'));
+		} else {
+			$this->form_validation->set_rules('cmpy', 'Company Name', 'trim|html_escape|is_unique[users.cmpy]', array('is_unique' => 'This Company already exist'));
+		}
 
 		if (!$this->form_validation->run()) {
 			$this->setFlashMsg('error', validation_errors());

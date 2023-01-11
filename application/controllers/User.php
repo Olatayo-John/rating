@@ -159,7 +159,11 @@ class User extends User_Controller
 		$this->form_validation->set_rules('email_quota', 'Quota', 'required|trim|html_escape');
 		$this->form_validation->set_rules('whatsapp_quota', 'Quota', 'trim|html_escape');
 		$this->form_validation->set_rules('web_quota', 'Quota', 'trim|html_escape');
-		$this->form_validation->set_rules('cmpy', 'Company Name', 'trim|html_escape|is_unique[users.cmpy]', array('is_unique' => 'This Company already exist'));
+		if (isset($_POST['cmpychkb'])) {
+			$this->form_validation->set_rules('cmpy', 'Company Name', 'trim|html_escape|required|is_unique[users.cmpy]', array('is_unique' => 'This Company already exist'));
+		} else {
+			$this->form_validation->set_rules('cmpy', 'Company Name', 'trim|html_escape|is_unique[users.cmpy]', array('is_unique' => 'This Company already exist'));
+		}
 
 		if ($this->form_validation->run() === false) {
 			$this->load->view('templates/header', $data);
@@ -178,7 +182,7 @@ class User extends User_Controller
 			//try sending email before inserting to DB
 			$this->load->library('emailconfig');
 			$mail_res = $this->emailconfig->send_email_code($email, $uname, $act_key, $link);
-			// $mail_res = false;
+			// $mail_res = true;
 
 			if ($mail_res !== TRUE) {
 				$log = "Error sending mail - User Registration [ Username: " . htmlentities($this->input->post('uname')) . ", Email: " . htmlentities($this->input->post('email')) . ", MailError: " . $mail_res . " ]";
@@ -912,15 +916,15 @@ class User extends User_Controller
 		echo json_encode($data);
 	}
 
-	//rating logs
-	//shared links logs
-	public function logs()
+	//rating report
+	//shared links report
+	public function report()
 	{
 		$this->checklogin();
 
-		$this->setTabUrl($mod = 'logs');
+		$this->setTabUrl($mod = 'report');
 
-		$data['title'] = "logs";
+		$data['title'] = "report";
 
 		$data['rr'] = $this->Usermodel->allrrbyuser();
 		$data['ls'] = $this->Usermodel->allsentlinksbyuser();

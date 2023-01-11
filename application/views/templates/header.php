@@ -120,10 +120,10 @@
 						</a>
 					</li>
 
-					<!-- logs -->
+					<!-- report -->
 					<li class="nav-item">
-						<a href="<?php echo base_url('logs') ?>" class="nav-link" style="<?php echo ($url == 'logs') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-chart-area"></i><b>Logs</b>
+						<a href="<?php echo base_url('report') ?>" class="nav-link" style="<?php echo ($url == 'report') ? 'background:white;color:#294a63' : '' ?>">
+							<i class="fas fa-chart-area"></i><b>Report</b>
 						</a>
 					</li>
 				<?php endif; ?>

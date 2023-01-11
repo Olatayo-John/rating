@@ -107,9 +107,14 @@ $(document).ready(function () {
 
 		var chl = $('#cmpychkb').is(":checked");
 		if (chl == true) {
-			if (cmpy == "" || cmpy == null) {
+			$('.cmpyerr').hide();
+
+			if (cmpy == "" || cmpy == " " || cmpy == null || cmpy == undefined) {
+				$('.cmpy').css('border-bottom', '2px solid #dc3545');
 				document.getElementById("cmpy").scrollIntoView(false);
 				return false;
+			} else {
+				$('.cmpy').css('border', '1px solid #ced4da');
 			}
 		}
 

@@ -129,28 +129,30 @@
 			var csrfName = $(".csrf_token").attr("name");
 			var csrfHash = $(".csrf_token").val();
 
-			$.ajax({
-				url: "<?php echo base_url("duplicatecmpy") ?>",
-				method: "post",
-				dataType: "json",
-				data: {
-					[csrfName]: csrfHash,
-					cmpy_val: cmpy_val
-				},
-				success: function(data) {
-					$(".csrf_token").val(data.token);
-					if (data.user_data > 0) {
-						$('.cmpyerr').show();
-						$(".registerbtn").attr("type", "button");
-					} else {
-						$('.cmpyerr').hide();
-						$(".registerbtn").attr("type", "submit");
+			if (cmpy_val && cmpy !== '' && cmpy !== ' ' && cmpy !== null && cmpy !== undefined) {
+				$.ajax({
+					url: "<?php echo base_url("duplicatecmpy") ?>",
+					method: "post",
+					dataType: "json",
+					data: {
+						[csrfName]: csrfHash,
+						cmpy_val: cmpy_val
+					},
+					success: function(data) {
+						$(".csrf_token").val(data.token);
+						if (data.user_data > 0) {
+							$('.cmpyerr').show();
+							$(".registerbtn").attr("type", "button");
+						} else {
+							$('.cmpyerr').hide();
+							$(".registerbtn").attr("type", "submit");
+						}
+					},
+					error: function(data) {
+						alert('error filtering. Please refresh and try again');
 					}
-				},
-				error: function(data) {
-					alert('error filtering. Please refresh and try again');
-				}
-			});
+				});
+			}
 		});
 	});
 </script>

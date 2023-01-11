@@ -80,11 +80,11 @@ class Adminmodel extends CI_Model
 			'mobile' => htmlentities($this->input->post('mobile')),
 			'active' => "0",
 			'website_form' => "0",
-			'sub' => '0',
+			'sub' => (htmlentities($this->input->post('plan_id')) === '1') ? '1' :'0',
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
-		);
+		);print_r($data);die;
 		$this->db->insert('users', $data);
 		$lastid = $this->db->insert_id();
 

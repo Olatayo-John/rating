@@ -131,8 +131,8 @@ $route['passwordreset'] = 'user/changepassword';
 $route['deactivate-account'] = 'user/deact_account';
 
 
-//rating and links-shared logs
-$route['logs'] = 'user/logs';
+//rating and links-shared report
+$route['report'] = 'user/report';
 
 
 //share

@@ -157,7 +157,7 @@ h3._total {
 .modalcloseDiv {
 	display: flex;
 	justify-content: space-between;
-	padding-bottom: 27px;
+	padding-bottom: 7px;
 }
 .modalcloseDiv h6 {
 	text-transform: uppercase;

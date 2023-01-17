@@ -232,6 +232,19 @@ h3._total {
 	max-height: 50px;
 }
 
+/*  */
+.linkcopyalert{
+	font-weight: 500;
+}
+#qrcode{
+	text-align: center;
+}
+#qrcode img{
+	/* max-height: 50px; */
+	/* max-width: 50px; */
+}
+/*  */
+
 
 @media only screen and (max-width: 375px) {
 	div.navbar-brand {

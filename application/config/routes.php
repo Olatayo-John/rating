@@ -129,6 +129,7 @@ $route['resetpassword_vcode'] = 'user/resetpassword_vcode';
 $route['verify'] = 'user/verifyvcode';
 $route['passwordreset'] = 'user/changepassword';
 $route['deactivate-account'] = 'user/deact_account';
+$route['generate-qr-code'] = 'user/generateQrCode';
 
 
 //rating and links-shared report

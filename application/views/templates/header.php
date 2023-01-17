@@ -11,6 +11,8 @@
 	<meta name="description" content="<?php echo $this->st->site_desc ?>">
 	<meta name="keywords" content="<?php echo $this->st->site_keywords ?>">
 
+	<meta name="google-site-verification" content="4Zl2nRJpgHrj0_NZozlpZEiv3i-WKHdQ861N1QJZ-x4" />
+
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/header.css'); ?>">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<script src="https://kit.fontawesome.com/ca92620e44.js" crossorigin="anonymous"></script>

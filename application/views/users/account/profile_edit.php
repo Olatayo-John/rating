@@ -1,5 +1,27 @@
 <!-- <h4 class="text-dark">Personal Information</h4> -->
 <!-- <hr class="p_i"> -->
+<!-- modals -->
+<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
+
+<div class="">
+    <div class="qrcodeModal modal fade" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modalcloseDiv">
+                        <h6></h6>
+                        <i class="fas fa-times closeqrcodeModalBtn text-danger"></i>
+                    </div>
+
+                    <div id="qrcode"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <form action="<?php echo base_url('profile-edit'); ?>" method="post" id="profileForm">
     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
@@ -47,7 +69,6 @@
         </div>
     </div>
 
-
     <?php if ($this->session->userdata('mr_iscmpy') === "1") : ?>
         <div class="form-group">
             <label>Company</label>
@@ -56,16 +77,21 @@
     <?php endif; ?>
 
     <div class="form-group">
-        <div class="d-flex" style="justify-content:space-between">
-            <label>Your Link<i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></label>
-            <div class="linkcopyalert font-weight-bolder" style="display:none;color:#294a63">Copied to your clipboard</div>
+        <label>Your Link</label>
+        <div class="input-group">
+            <input type="text" name="linkshare" class="form-control linkshare" id='linkshare' value="<?php echo base_url("wtr/") . $user_info->form_key ?>" required disabled style="cursor: not-allowed;">
+
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></span>
+                <span class="input-group-text"><i class="fa-solid fa-qrcode genQrcode" style="cursor:pointer"></i></span>
+            </div>
         </div>
-        <input type="text" name="linkshare" class="form-control linkshare" id='linkshare' value="<?php echo base_url("wtr/") . $user_info->form_key ?>" required disabled style="cursor: not-allowed;">
+        <div class="linkcopyalert" style="display:none;color:#294a63">Copied to your clipboard</div>
     </div>
     <hr>
     <div class="form-group text-right">
         <button class="btn text-light save_pinfo_btn" type="submit" style="background-color:#294a63">
-        Save</button>
+            Save</button>
     </div>
     <hr>
 </form>
@@ -82,6 +108,58 @@
     }
 
     $(document).ready(function() {
+
+        //close modal
+        $('.closeqrcodeModalBtn').click(function(e) {
+            $('.qrcodeModal').modal('hide');
+
+            $('#qrcode').children().remove();
+        });
+
+        //generate qr code
+        $(document).on('click', '.genQrcode', function(e) {
+            e.preventDefault();
+
+            var csrfName = $('.csrf_token').attr('name');
+            var csrfHash = $('.csrf_token').val();
+            var id = "<?php echo $this->session->userdata('mr_id'); ?>";
+            var form_key = "<?php echo $this->session->userdata('mr_form_key'); ?>";
+            var link = "<?php echo base_url("wtr/") . $user_info->form_key ?>";
+
+            $.ajax({
+                url: "<?php echo base_url('generate-qr-code') ?>",
+                method: "post",
+                dataType: 'json',
+                data: {
+                    [csrfName]: csrfHash,
+                    id: id,
+                    form_key: form_key,
+                    link: link
+                },
+                beforeSend: function() {
+                    clearAlert();
+                },
+                success: function(data) {
+                    if (data.status === false) {
+                        $(".ajax_res_err").append(data.msg);
+                        $(".ajax_err_div").fadeIn();
+                    } else if (data.status === 'error') {
+                        window.location.assign(data.redirect);
+                    } else if (data.status === true) {
+                        $('#qrcode').append('<img src="'+data.qr+'">');
+                        $('.qrcodeModal').modal('show');
+                    }
+
+                    $('.csrf_token').val(data.token);
+
+                },
+                error: function() {
+                    alert("Error sending messages. Please try again");
+                    // window.location.reload();
+                }
+            })
+        })
+
         $('form#profileForm').submit(function(e) {
             // e.preventDefault();
 
@@ -101,15 +179,13 @@
             }
 
             $.ajax({
-				beforeSend: function() {
-					$('button.save_pinfo_btn').addClass('bg-danger').html('Saving...').attr('disabled', 'disabled').css({
-						'cursor': 'not-allowed',
-					})
-				}
-			});
+                beforeSend: function() {
+                    $('button.save_pinfo_btn').addClass('bg-danger').html('Saving...').attr('disabled', 'disabled').css({
+                        'cursor': 'not-allowed',
+                    })
+                }
+            });
 
         });
-
-
     });
 </script>

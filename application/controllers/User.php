@@ -2,6 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once(APPPATH . "libraries/razorpay/Razorpay.php");
+require_once(APPPATH . 'libraries/phpqrcode/qrlib.php');
 
 use Razorpay\Api\Api;
 
@@ -513,6 +514,51 @@ class User extends User_Controller
 		$this->load->view('templates/header', $data);
 		$this->load->view('users/account_edit', $data);
 		$this->load->view('templates/footer');
+	}
+
+	public function generateQrCode()
+	{
+		//check login
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
+		} else {
+			//check postdata
+			if ($_POST['id'] && $_POST['form_key'] && $_POST['link']) {
+				$id = $_POST['id'];
+				$fk = $_POST['form_key'];
+				$link = $_POST['link'];
+
+				$folderPath = getcwd() . '\\qr\\';
+				$fileName = $folderPath . $fk . '_qr.png';
+				$fileNamePath = base_url('qr/') . $fk . '_qr.png';
+				
+				if (!file_exists($folderPath)) {
+					mkdir($folderPath);
+				}
+
+				if (file_exists($fileName)) {
+					$data['status'] = true;
+					$data['msg'] = '';
+					$data['qr'] = $fileNamePath;
+				} else {
+					$contents = $link;
+					// $fileName = '005_file_' . md5($contents) . '.png';
+
+					QRcode::png($contents, $fileName);
+
+					$data['status'] = true;
+					$data['msg'] = '';
+					$data['qr'] = $fileNamePath;
+				}
+			} else {
+				$data['status'] = false;
+				$data['msg'] = "Missing parameters";
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
 	}
 
 	public function personal_edit()

@@ -529,10 +529,10 @@ class User extends User_Controller
 				$fk = $_POST['form_key'];
 				$link = $_POST['link'];
 
-				$folderPath = getcwd() . '\\qr\\';
-				$fileName = $folderPath . $fk . '_qr.png';
+				$folderPath = getcwd() . '/qr';
+				$fileName = $folderPath . '/' . $fk . '_qr.png';
 				$fileNamePath = base_url('qr/') . $fk . '_qr.png';
-				
+
 				if (!file_exists($folderPath)) {
 					mkdir($folderPath);
 				}

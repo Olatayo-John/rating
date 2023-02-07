@@ -58,6 +58,7 @@ class Admin extends Admin_Controller
 
 	//create a new user by a companyAdmin
 	public function adduser_admin()
+	
 	{
 		$this->is_admin();
 
@@ -834,20 +835,66 @@ class Admin extends Admin_Controller
 		$this->load->view('templates/footer');
 	}
 
-	//payments made
-	public function payments()
+	//activity logs
+	public function logs()
 	{
 		$this->is_sadmin();
 
-		$this->setTabUrl($mod = 'payments');
+		$this->setTabUrl($mod = 'logs');
 
-		$data['title'] = "payments";
+		$data['title'] = "logs";
 
+		$data['logs'] = $this->Adminmodel->get_all_logs();
+		$data['feedbacks'] = $this->Adminmodel->get_feedbacks();
 		$data['transactions'] = $this->Adminmodel->get_all_transactions();
 
 		$this->load->view('templates/header', $data);
-		$this->load->view('admin/transactions');
+		$this->load->view('admin/logs');
 		$this->load->view('templates/footer');
+	}
+
+	public function clearlogs()
+	{
+		if ($this->ajax_is_sadmin() === true) {
+
+			$res = $this->Adminmodel->clear_logs();
+
+			if ($res !== true) {
+				$this->setFlashMsg('error', 'Error clearing data');
+
+				$log = "Error clearing data - Activity Logs [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+			} else {
+				$this->setFlashMsg('success', 'Data cleared ');
+
+				$log = "Data cleared - Activity Logs [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+			}
+		}
+
+		redirect('logs');
+	}
+
+	public function clearfeedbacks()
+	{
+		if ($this->ajax_is_sadmin() === true) {
+
+			$res = $this->Adminmodel->clear_feedbacks();
+
+			if ($res !== true) {
+				$log = "Error clearing data - Support [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+
+				$this->setFlashMsg('error', 'Error clearing data');
+			} else {
+				$log = "Data cleared - Support [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+
+				$this->setFlashMsg('success', 'Data cleared!');
+			}
+		}
+
+		redirect('logs');
 	}
 
 	//get a payment info
@@ -876,82 +923,6 @@ class Admin extends Admin_Controller
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
-	}
-
-	//activity logs
-	public function logs()
-	{
-		$this->is_sadmin();
-
-		$this->setTabUrl($mod = 'activity');
-
-		$data['title'] = "activity logs";
-
-		$data['logs'] = $this->Adminmodel->get_all_logs();
-
-		$this->load->view('templates/header', $data);
-		$this->load->view('admin/logs');
-		$this->load->view('templates/footer');
-	}
-
-	public function clearlogs()
-	{
-		if ($this->ajax_is_sadmin() === true) {
-
-			$res = $this->Adminmodel->clear_logs();
-
-			if ($res !== true) {
-				$this->setFlashMsg('error', 'Error clearing data');
-
-				$log = "Error clearing data - Activity Logs [ Username: " . $this->session->userdata('mr_uname') .  " ]";
-				$this->log_act($log);
-			} else {
-				$this->setFlashMsg('success', 'Data cleared ');
-
-				$log = "Data cleared - Activity Logs [ Username: " . $this->session->userdata('mr_uname') .  " ]";
-				$this->log_act($log);
-			}
-		}
-
-		redirect('activity');
-	}
-
-	//feedbacks from contact us form
-	public function feedbacks()
-	{
-		$data['title'] = "feedbacks";
-
-		$this->setTabUrl($mod = 'feedbacks');
-
-		$this->is_sadmin();
-
-		$data['feedbacks'] = $this->Adminmodel->get_feedbacks();
-
-		$this->load->view('templates/header', $data);
-		$this->load->view('admin/feedbacks', $data);
-		$this->load->view('templates/footer');
-	}
-
-	public function clearfeedbacks()
-	{
-		if ($this->ajax_is_sadmin() === true) {
-
-			$res = $this->Adminmodel->clear_feedbacks();
-
-			if ($res !== true) {
-				$log = "Error clearing data - Support [ Username: " . $this->session->userdata('mr_uname') .  " ]";
-				$this->log_act($log);
-
-				$this->setFlashMsg('error', 'Error clearing data');
-			} else {
-				$log = "Data cleared - Support [ Username: " . $this->session->userdata('mr_uname') .  " ]";
-				$this->log_act($log);
-
-				$this->setFlashMsg('success', 'Data cleared!');
-			}
-		}
-
-		redirect('feedbacks');
 	}
 
 	public function support()

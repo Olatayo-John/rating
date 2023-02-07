@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/rate.css'); ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/rating.css'); ?>">
 
 <div class="set_wrapper">
 	<div class="bg-light-custom p-3">

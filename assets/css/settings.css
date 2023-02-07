@@ -3,7 +3,8 @@
 }
 h5,h6{
 	color:#294a63;
-	/* color:#000; */
+	padding:0 !important;
+	margin:0 !important;
 	font-weight: 500;
 	/* text-transform: uppercase; */
 }

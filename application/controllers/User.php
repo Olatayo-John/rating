@@ -14,11 +14,46 @@ class User extends User_Controller
 			if ($this->session->userdata('mr_website_form') === "0") {
 				redirect('platform');
 			} else {
-				redirect('share');
+				redirect('dashboard');
 			}
 		} else {
 			redirect('login');
 		}
+	}
+
+	// dashboard
+	public function dashboard()
+	{
+		$this->checklogin();
+
+		$this->setTabUrl($mod = 'dashboard');
+
+		$data['title'] = "dashboard";
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('users/dashboard');
+		$this->load->view('templates/footer');
+	}
+
+	public function fillChart()
+	{
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
+		} else {
+			$res= array();
+
+			$res['cp'] = $this->Usermodel->chartPlatforms()->result_array();
+			$res['cr'] = $this->Usermodel->chartRatings();
+			$res['cm'] = $this->Usermodel->chartMonthly($_POST['datetime_Year']);
+
+			$data['status'] = true;
+			$data['msg'] = '';
+			$data['chartData'] = $res;
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
 	}
 
 	//login function
@@ -991,7 +1026,7 @@ class User extends User_Controller
 		}
 
 		$this->load->view('templates/header', $data);
-		$this->load->view('users/logs', $data);
+		$this->load->view('users/report', $data);
 		$this->load->view('templates/footer');
 	}
 

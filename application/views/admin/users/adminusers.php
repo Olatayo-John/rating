@@ -12,7 +12,7 @@
 					<div class="tab_div col-md-2 p-0">
 						<a href="" class="tab_link prof_a" tabDivN="prof_div">Profile</a>
 						<a href="" class="tab_link web_a" tabDivN="web_div">Platforms</a>
-						<a href="" class="tab_link rr_a" tabDivN="rr_div">Ratings</a>
+						<a href="" class="tab_link rr_a" tabDivN="rr_div">Reviews</a>
 						<a href="" class="tab_link ls_a" tabDivN="ls_div">Links</a>
 						<a href="" class="tab_link ac_a text-danger font-weight-bolder" tabDivN="ac_div">Account</a>
 					</div>

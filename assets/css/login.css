@@ -1,28 +1,21 @@
 body{
-	background-image: url('../../assets/images/nktechi.jpg');
-	background-attachment: fixed;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-input.form-control{
-	border-radius: 0;
-}
-input.form-control:focus{
-	border-color: #294a63;
-	box-shadow: none;
+	background-image: url('../../assets/images/login.jpg') !important;
+	background-attachment: fixed !important;
+	background-repeat: no-repeat !important;
+	background-size: cover !important;
 }
 .loginbox{
-	padding-top: 50px;
+	padding-top: 60px;
 }
 .loginbtn{
 	background: #294a63;
-	text-transform: uppercase;
+	/* text-transform: uppercase; */
 }
 .signup{
 	text-align: right;
 }
 a.signupbtn{
-	color: #294a63;
+	/* color: #294a63; */
 	text-decoration: none;
 	font-weight: bold;
 }

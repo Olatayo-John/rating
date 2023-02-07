@@ -3,7 +3,7 @@
         <div class="panel_s">
             <div class="panel-body">
                 <h3 class="_total rrt"></h3>
-                <span>Total Ratings</span>
+                <span>Reviews</span>
             </div>
         </div>
     </div>

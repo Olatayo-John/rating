@@ -68,6 +68,7 @@
 
 			<div class="navbar-brand text-uppercase font-weight-bolder" style="display: nonee;">
 				<a href="<?php echo base_url('account') ?>" style="color:#fff">
+				<!-- <i class="fas fa-user"></i> -->
 					<?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : 'My Account') ?>
 				</a>
 			</div>
@@ -90,6 +91,15 @@
 						<a href="<?php echo base_url('register') ?>" class="nav-link" style="<?php echo ($url == 'register') ? 'background:white;color:#294a63' : '' ?>">
 							<i class="fas fa-user-plus"></i>
 							<b>Register</b>
+						</a>
+					</li>
+				<?php endif; ?>
+
+				<!-- home -->
+				<?php if ($this->session->userdata('mr_logged_in')) : ?>
+					<li class="nav-item">
+						<a href="<?php echo base_url('dashboard') ?>" class="nav-link" style="<?php echo ($url == 'dashboard') ? 'background:white;color:#294a63' : '' ?>">
+							<i class="fas fa-house"></i><b>Dashboard</b>
 						</a>
 					</li>
 				<?php endif; ?>
@@ -128,16 +138,9 @@
 					</li>
 				<?php endif; ?>
 
-				<!-- payments disabled-->
+				<!-- payments-->
 				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
-					<li class="nav-item">
-						<a href="<?php echo base_url('payments') ?>" class="nav-link" style="<?php echo ($url == 'payments') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-wallet"></i><b>Payments</b>
-						</a>
-					</li>
-				<?php endif; ?>
 
-				<?php if ($this->session->userdata('mr_logged_in') && $this->session->userdata('mr_sadmin') == "1") : ?>
 					<!-- plans -->
 					<li class="nav-item">
 						<a href="<?php echo base_url('plans') ?>" class="nav-link" style="<?php echo ($url == 'plans') ? 'background:white;color:#294a63' : '' ?>">
@@ -145,17 +148,10 @@
 						</a>
 					</li>
 
-					<!-- actvity logs -->
+					<!-- logs -->
 					<li class="nav-item">
-						<a href="<?php echo base_url('activity') ?>" class="nav-link" style="<?php echo ($url == 'activity') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-clipboard-check"></i><b>Activity Log</b>
-						</a>
-					</li>
-
-					<!-- feedbacksFromContactUs -->
-					<li class="nav-item">
-						<a href="<?php echo base_url('feedbacks') ?>" class="nav-link" style="<?php echo ($url == 'feedbacks') ? 'background:white;color:#294a63' : '' ?>">
-							<i class="fas fa-comment"></i><b>Feedbacks</b>
+						<a href="<?php echo base_url('logs') ?>" class="nav-link" style="<?php echo ($url == 'logs') ? 'background:white;color:#294a63' : '' ?>">
+							<i class="fas fa-clipboard-check"></i><b>Logs</b>
 						</a>
 					</li>
 				<?php endif; ?>

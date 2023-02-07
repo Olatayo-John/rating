@@ -3,6 +3,74 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Usermodel extends CI_Model
 {
+	public function chartPlatforms()
+	{
+		$this->db->order_by('id', 'desc');
+		$query = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
+	}
+
+	public function chartRatings()
+	{
+		$this->db->order_by('id', 'desc');
+		$q = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
+		if (!$q) {
+			return false;
+			exit();
+		} else {
+			$resArr = array();
+			$starArr = array();
+			foreach ($q->result_array() as $p) {
+				for ($i = 1; $i <= 5; $i++) {
+					$qq = $this->db->get_where('all_ratings', array('web_name' => $p['web_name'], 'web_link' =>  $p['web_link'], 'form_key' =>  $p['form_key'], 'star' =>  $i))->num_rows();
+
+					array_push($starArr, $qq);
+				}
+
+				array_push($resArr, array('web_name' => $p['web_name'], 'starArr' => $starArr));
+				$starArr = array();
+			}
+
+			// foreach ($resArr as $w) {
+			// 	print_r($w);
+			// 	echo '<br><br>';
+			// }
+			// exit;
+
+			return $resArr;
+		}
+	}
+
+	public function chartMonthly($year)
+	{
+		$monthArr = array('Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'August', 'Sep', 'Oct', 'Nov', 'Dec');
+		$monthIndexArr = array('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12');
+		$resArr = array();
+
+		foreach ($monthArr as $key => $p) {
+			// $date = $year . '-' . ($monthIndexArr[$key]) . '-'; //monthly regarding current year
+			$date = '-' . ($monthIndexArr[$key]) . '-'; //monthly regardless of year
+
+			$this->db->like('rated_at', $date);
+			$this->db->where('form_key', $this->session->userdata('mr_form_key'));
+			$qq = $this->db->get('all_ratings')->num_rows();
+
+			array_push($resArr, array('month' => $p, 'monthInd' => ($monthIndexArr[$key]) , 'rating' => $qq));
+		}
+
+		// foreach ($resArr as $w) {
+		// 	print_r($w);
+		// 	echo '<br><br>';
+		// }
+		// exit;
+		return $resArr;
+	}
+
 	public function login()
 	{
 		$uname = htmlentities($this->input->post('uname'));
@@ -120,7 +188,7 @@ class Usermodel extends CI_Model
 			'mobile' => htmlentities($this->input->post('mobile')),
 			'active' => "0",
 			'website_form' => "0",
-			'sub' => (htmlentities($this->input->post('plan_id')) === '1') ? '1' :'0',
+			'sub' => (htmlentities($this->input->post('plan_id')) === '1') ? '1' : '0',
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
@@ -540,7 +608,7 @@ class Usermodel extends CI_Model
 		$this->db->set('active', '2');
 		$this->db->where('id', $this->session->userdata('mr_id'));
 		$this->db->update('users');
-		
+
 		$this->session->set_userdata('mr_active', '2');
 		return true;
 	}

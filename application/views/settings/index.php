@@ -1,13 +1,13 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/settings.css'); ?>">
 
 <div class="set_wrapper">
-	<div class="bg-light-custom p-3">
+	<div class="bg-light-custom_">
 
 		<form action="<?php echo base_url('save-settings') ?>" method="post" id="settingsForm" enctype="multipart/form-data">
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>" class="csrf_token">
 
-			<h5>General Settings</h5>
 			<div class="site bg-light-custom p-3 mb-4">
+				<h5>General Settings</h5><hr>
 
 				<div class="row">
 					<div class="form-group col-md-6">
@@ -48,8 +48,8 @@
 
 			</div>
 
-			<h5>Payment</h5>
 			<div class="payment bg-light-custom p-3 mb-4">
+				<h5>Payment</h5><hr>
 
 				<div class="row">
 					<div class="form-group col-md-6">
@@ -75,8 +75,8 @@
 
 			</div>
 
-			<h5>Google Captcha</h5>
 			<div class="gCaptcha bg-light-custom p-3 mb-4">
+				<h5>Google Captcha</h5><hr>
 
 				<div class="row">
 					<div class="form-group col-md-6">
@@ -91,8 +91,8 @@
 
 			</div>
 
-			<h5>SMTP</h5>
 			<div class="email_smtp bg-light-custom p-3 mb-4">
+				<h5>SMTP</h5><hr>
 
 				<div class="form-group">
 					<label>Protocol</label>

@@ -54,6 +54,50 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="modal fade add_web_modal" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-dialog-top">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="modalcloseDiv">
+							<h6></h6>
+							<i class="fas fa-times closewebmodal_btn text-danger"></i>
+						</div>
+
+						<form method="post" action="<?php echo base_url("user/user_new_website") ?>" class="add_web_modal_form">
+							<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
+							<div class="form-group">
+								<label class="mb-0">Platform Name</label>
+								<input type="text" name="web_name_new" class="web_name_new form-control" placeholder="Platform Name" required>
+								<div class="text-danger mt-0 web_name_err"></div>
+							</div>
+
+							<div class="form-group">
+								<label class="mb-0">Platform Link</label>
+								<input type="url" name="web_link_new" class="web_link_new form-control" placeholder="e.g https://domainname.com" required>
+								<div class="text-danger mt-0 web_link_err"></div>
+							</div>
+
+							<div class="form-group">
+								<label>Subject</label>
+								<input type="url" name="web_subject_new" class="web_subject_new form-control" placeholder="Subject">
+							</div>
+
+							<div class="form-group">
+								<label>Description</label>
+								<textarea name="web_desc_new" class="web_desc_new form-control" cols="30" rows="5"></textarea>
+							</div>
+
+							<div class="text-right">
+								<button type="submit" class="btn add_web_modal_btn text-light" style="background-color:#294a63;">
+									Save</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<!-- tabLinks -->
@@ -90,18 +134,25 @@
 
 			<div class="form-group">
 				<label class="labelplatform">Platform</label>
-				<select name="foremailplatform" id="platforms" platformTab="email" class="form-control" required>
-					<?php if ($platforms->num_rows() > 0) : ?>
-						<option value="">Select</option>
-						<?php foreach ($platforms->result_array() as $p) : ?>
-							<?php if ($p['active'] === '1') : ?>
-								<option value="<?php echo $p['id'] ?>"><?php echo $p['web_name'] ?></option>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					<?php else : ?>
-						<option value="">No platform created</option>
-					<?php endif; ?>
-				</select>
+				<div class="input-group">
+					<select name="foremailplatform" id="platforms" platformTab="email" class="form-control" required>
+						<?php if ($platforms->num_rows() > 0) : ?>
+							<option value="">Select</option>
+							<?php foreach ($platforms->result_array() as $p) : ?>
+								<?php if ($p['active'] === '1') : ?>
+									<option value="<?php echo $p['id'] ?>"><?php echo $p['web_name'] ?></option>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						<?php else : ?>
+							<option value="">No platform created</option>
+						<?php endif; ?>
+					</select>
+
+					<div class="input-group-prepend addwebmodal_btn" style="cursor:pointer">
+						<span class="input-group-text"><i class="fa-solid fa-plus"></i></span>
+					</div>
+				</div>
+
 			</div>
 
 			<div class="form-group">
@@ -143,18 +194,23 @@
 
 			<div class="form-group">
 				<label class="labelplatform">Platform</label>
-				<select name="forsmsplatform" id="platforms" platformTab="sms" class="form-control" required>
-					<?php if ($platforms->num_rows() > 0) : ?>
-						<option value="">Select</option>
-						<?php foreach ($platforms->result_array() as $p) : ?>
-							<?php if ($p['active'] === '1') : ?>
-								<option value="<?php echo $p['id'] ?>"><?php echo $p['web_name'] ?></option>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					<?php else : ?>
-						<option value="">No platform created</option>
-					<?php endif; ?>
-				</select>
+				<div class="input-group">
+					<select name="forsmsplatform" id="platforms" platformTab="sms" class="form-control" required>
+						<?php if ($platforms->num_rows() > 0) : ?>
+							<option value="">Select</option>
+							<?php foreach ($platforms->result_array() as $p) : ?>
+								<?php if ($p['active'] === '1') : ?>
+									<option value="<?php echo $p['id'] ?>"><?php echo $p['web_name'] ?></option>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						<?php else : ?>
+							<option value="">No platform created</option>
+						<?php endif; ?>
+					</select>
+					<div class="input-group-prepend addwebmodal_btn" style="cursor:pointer">
+						<span class="input-group-text"><i class="fa-solid fa-plus"></i></span>
+					</div>
+				</div>
 			</div>
 
 			<div class="form-group">
@@ -190,18 +246,23 @@
 
 			<div class="form-group">
 				<label class="labelplatform">Platform</label>
-				<select name="forwhpplatform" id="platforms" platformTab="whp" class="form-control" required>
-					<?php if ($platforms->num_rows() > 0) : ?>
-						<option value="">Select</option>
-						<?php foreach ($platforms->result_array() as $p) : ?>
-							<?php if ($p['active'] === '1') : ?>
-								<option value="<?php echo $p['id'] ?>"><?php echo $p['web_name'] ?></option>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					<?php else : ?>
-						<option value="">No platform created</option>
-					<?php endif; ?>
-				</select>
+				<div class="input-group">
+					<select name="forwhpplatform" id="platforms" platformTab="whp" class="form-control" required>
+						<?php if ($platforms->num_rows() > 0) : ?>
+							<option value="">Select</option>
+							<?php foreach ($platforms->result_array() as $p) : ?>
+								<?php if ($p['active'] === '1') : ?>
+									<option value="<?php echo $p['id'] ?>"><?php echo $p['web_name'] ?></option>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						<?php else : ?>
+							<option value="">No platform created</option>
+						<?php endif; ?>
+					</select>
+					<div class="input-group-prepend addwebmodal_btn" style="cursor:pointer">
+						<span class="input-group-text"><i class="fa-solid fa-plus"></i></span>
+					</div>
+				</div>
 			</div>
 
 			<div class="form-group">
@@ -824,6 +885,177 @@
 				}
 			})
 		});
+
+
+		// add new website modal
+		$(document).on('click', '.addwebmodal_btn', function(e) {
+			e.preventDefault();
+
+			$('.add_web_modal').modal("show");
+		});
+
+		$(document).on('click', '.closewebmodal_btn', function(e) {
+            e.preventDefault();
+
+            $('.add_web_modal').modal("hide");
+
+            $(".add_web_modal_btn").removeAttr("disabled readonly").attr("type", "submit").css("cursor", "pointer");
+
+            $(".web_link_err,.web_name_err").fadeOut();
+            $('.web_link_new,.web_name_new').css('border', '1px solid #ced4da').removeAttr("readonly").val("");
+        });
+
+		// check for duplicate web-name
+        $(".web_name_new").keyup(function() {
+            var webname = $(".web_name_new").val();
+            var csrfName = $(".csrf_token").attr("name");
+            var csrfHash = $(".csrf_token").val();
+
+            $.ajax({
+                url: "<?php echo base_url("duplicate-webname") ?>",
+                method: "post",
+                dataType: "json",
+                data: {
+                    [csrfName]: csrfHash,
+                    webname: webname
+                },
+                success: function(data) {
+                    $(".csrf_token").val(data.token);
+
+                    if (data.webdata > 0) {
+                        $('.web_name_err').html("You already have a platform with this name").show();
+                        $(".web_name_new").css('border-bottom', '2px solid #dc3545');
+                        $(".add_web_modal_btn").attr({
+                            type: "button",
+                            disabled: "disabled",
+                            readonly: "readonly"
+                        }).css("cursor", "not-allowed");
+                    } else {
+                        $('.web_name_err').hide();
+                        $(".web_name_new").css('border', '1px solid #ced4da');
+                        $(".add_web_modal_btn").removeAttr("disabled readonly").attr("type", "submit").css("cursor", "pointer");
+                    }
+                },
+                error: function(data) {
+                    window.location.reload();
+                }
+            });
+        });
+
+        // check for duplicate web-link
+        $(".web_link_new").keyup(function() {
+            var weblink = $(".web_link_new").val();
+            var csrfName = $(".csrf_token").attr("name");
+            var csrfHash = $(".csrf_token").val();
+
+            $.ajax({
+                url: "<?php echo base_url("duplicate-weblink") ?>",
+                method: "post",
+                dataType: "json",
+                data: {
+                    [csrfName]: csrfHash,
+                    weblink: weblink
+                },
+                success: function(data) {
+                    $(".csrf_token").val(data.token);
+
+                    if (data.webdata > 0) {
+                        $('.web_link_err').html("You already have a platform with this Link").show();
+                        $(".web_link_new").css('border-bottom', '2px solid #dc3545');
+                        $(".add_web_modal_btn").attr({
+                            type: "button",
+                            disabled: "disabled",
+                            readonly: "readonly"
+                        }).css("cursor", "not-allowed");
+                    } else {
+                        $('.web_link_err').hide();
+                        $(".web_link_new").css('border', '1px solid #ced4da');
+                        $(".add_web_modal_btn").removeAttr("disabled readonly").attr("type", "submit").css("cursor", "pointer");
+                    }
+                },
+                error: function(data) {
+                    window.location.reload();
+                }
+            });
+        });
+
+        // add website to database
+        $(document).on('click', 'button.add_web_modal_btn', function(e) {
+            e.preventDefault();
+
+            var csrfName = $('.csrf_token').attr('name');
+            var csrfHash = $('.csrf_token').val();
+            var web_name_new = $('.web_name_new').val();
+            var web_link_new = $('.web_link_new').val();
+            var web_subject_new = $('.web_subject_new').val();
+            var web_desc_new = $('.web_desc_new').val();
+
+            if (web_name_new == "" || web_name_new == null || web_name_new == undefined) {
+                $('.web_name_new').css('border-bottom', '2px solid #dc3545');
+                return false;
+            } else {
+                $('.web_name_new').css('border', '1px solid #ced4da');
+            }
+            if (web_link_new == "" || web_link_new == null || web_link_new == undefined) {
+                $(".web_link_new").css('border-bottom', '2px solid #dc3545');
+                return false;
+            }
+
+            var patt = new RegExp('^(https?:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + //port
+                '(\\?[;&amp;a-z\\d%_.~+=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$', 'i');
+            var res = patt.test(web_link_new);
+            if (res == true) {
+                $(".web_link_err").fadeOut();
+                $('.web_link_new').css('border', '1px solid #ced4da');
+            } else if (res == false) {
+                $(".web_link_new").css('border-bottom', '2px solid #dc3545');
+                $(".web_link_err").html("Invalid WEB URL").fadeIn();
+                return false;
+            }
+
+            $.ajax({
+                url: "<?php echo base_url("create-website") ?>",
+                method: "post",
+                dataType: "json",
+                data: {
+                    [csrfName]: csrfHash,
+                    web_name_new: web_name_new,
+                    web_link_new: web_link_new,
+                    web_subject_new: web_subject_new,
+                    web_desc_new: web_desc_new
+                },
+                beforeSend: function() {
+                    clearAlert();
+
+                    $('.add_web_modal_btn').addClass('bg-danger').html('Saving...').attr('disabled', 'disabled').css({
+                        'cursor': 'not-allowed',
+                    });
+                },
+                success: function(data) {
+                    $(".csrf_token").val(data.token);
+
+                    if (data.status === false) {
+                        $(".ajax_res_err").text(data.msg);
+                        $(".ajax_err_div").fadeIn();
+                    } else if (data.status === true) {
+                        $(".ajax_res_succ").text(data.msg);
+                        $(".ajax_succ_div").fadeIn();
+
+						$('select#platforms').append('<option value='+data.insert_id +'>'+web_name_new+'</option>');
+
+                        $('.add_web_modal').modal("hide");
+                    } else if (data.status === "error") {
+                        window.location.assign(data.redirect);
+                    }
+
+                    $(".add_web_modal_btn").removeClass('bg-danger').html('Save').removeAttr("disabled").css("cursor", "pointer");
+                }
+            })
+        });
 
 	});
 </script>

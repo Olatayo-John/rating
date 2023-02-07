@@ -1,0 +1,30 @@
+.set_wrapper {
+	padding: 14px;
+}
+h4.comp{
+	font-weight: bold;
+	color:#294a63;
+}
+div.stars{
+	text-align: center;
+	margin: 28px 0;
+}
+div.stars i{
+	font-size: 38px;
+	cursor: pointer;
+}
+div.i_div i.far, div.i_div i.fas{
+	font-size: 50px;
+}
+div.stars i.fas{
+	/* color: #E65100; */
+	color: #294a63;
+}
+div.i_div{
+	text-align: center;
+	display: none;
+}
+
+.details{
+	display: none;
+}

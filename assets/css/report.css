@@ -1,0 +1,90 @@
+.log_wrapper {
+	/* padding: 0 21px 21px 21px; */
+	padding: 14px;
+}
+
+.tab_div {
+	display: flex;
+	/* justify-content: space-between; */
+	padding: 0;
+	margin-bottom: 14px;
+}
+
+.tab_div a#myLogs {
+	color: #294a63;
+	font-weight: 500;
+	border-bottom: 2px solid #294a63;
+}
+
+.tab_link {
+	color: #294a63;
+	padding: 5px 20px;
+}
+
+.tab_link:hover {
+	color: #294a63 !important;
+	text-decoration: none;
+}
+.info_div{
+	margin-bottom: 21px;
+}
+
+.rr_wrapper,
+.ls_wrapper,
+.web_wrapper,
+.users_rr_wrapper,
+.users_ls_wrapper,
+.users_web_wrapper {
+	border: 1px solid #c5d6de;
+	border-radius: 3px;
+	padding: 7px;
+    margin: 10px 0;
+}
+
+.rr_header,
+.ls_header,
+.web_header,
+.users_rr_header,
+.users_ls_header,
+.users_web_header{
+	display: flex;
+	justify-content: space-between;
+	cursor: pointer;
+}
+
+.rr_header h4,
+.ls_header h4,
+.web_header h4 ,
+.users_rr_header h4,
+.users_ls_header h4,
+.users_web_header h4 {
+	color: #294a63;
+}
+
+.rr_header i,
+.ls_header i,
+.web_header i,
+.users_rr_header i,
+.users_ls_header i,
+.users_web_header i{
+	color: #294a63;
+	font-size: 20px;
+}
+
+.rr_innerwrapper,
+.ls_innerwrapper,
+.web_innerwrapper,
+.users_rr_innerwrapper,
+.users_ls_innerwrapper,
+.users_web_innerwrapper{
+	display: none;
+}
+
+.dataBox {
+	margin: 20px 0 !important;
+	padding: 0 !important;
+}
+
+.bootstrap-table {
+	padding: 15px !important;
+}

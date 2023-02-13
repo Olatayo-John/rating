@@ -19,6 +19,15 @@
 		}, 100);
 	}
 
+	function copylink_fun(element) {
+        var link = $("<input>");
+        $("body").append(link);
+        link.val($(element).val()).select();
+        document.execCommand("copy");
+        link.remove();
+        $('.linkcopyalert').fadeIn("slow").delay("5000").fadeOut("slow");
+    }
+
 
 	function clearAlert() {
 		$(".alertWrapper").hide();

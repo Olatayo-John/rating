@@ -34,6 +34,10 @@
 
 	<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/print/bootstrap-table-print.min.js"></script>
 
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
 	<link rel="icon" href="<?php echo base_url('assets/images/').$this->st->site_fav_icon ?>">
 	<script type="text/javascript">
 		document.onreadystatechange = function() {
@@ -54,9 +58,10 @@
 	<nav class="navbar navbar-expand-lg navbar-light fixed-top p-0">
 
 		<!-- <button class="btn menubtn" onclick="opennav()">&#9776;</button> -->
+		<!-- <?php print_r($_SESSION) ?> -->
 
 		<div class="logoimg mr-auto m-1">
-			<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/").$this->st->site_logo ?>" class="navbar-label">
+			<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/company/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/").$this->st->site_logo ?>" class="navbar-label">
 		</div>
 
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>

@@ -53,6 +53,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $route['default_controller'] = 'user';
 $route['/'] = 'user/index';
 $route['dashboard'] = 'user/dashboard';
+$route['generate-frame'] = 'user/generateFrame';
+$route['create-frame'] = 'user/createFrame';
 
 $route['login'] = 'user/login';
 $route['register'] = 'user/register';
@@ -160,6 +162,7 @@ $route['share-sms-multiple'] = 'user/sendmultiplesms';
 $route['wtr/(:any)'] = 'rate/index/$1';
 $route['wtr/(:any)/(:num)'] = 'rate/index/$1/$2';
 $route['save-rating'] = 'rate/saveRating';
+$route['pf/(:any)'] = 'rate/wtr/$1';
 
 
 //chart

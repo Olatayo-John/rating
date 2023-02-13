@@ -21,41 +21,6 @@ class User extends User_Controller
 		}
 	}
 
-	// dashboard
-	public function dashboard()
-	{
-		$this->checklogin();
-
-		$this->setTabUrl($mod = 'dashboard');
-
-		$data['title'] = "dashboard";
-
-		$this->load->view('templates/header', $data);
-		$this->load->view('users/dashboard');
-		$this->load->view('templates/footer');
-	}
-
-	public function fillChart()
-	{
-		if ($this->ajax_checklogin() === false) {
-			$data['status'] = "error";
-			$data['redirect'] = base_url("logout");
-		} else {
-			$res= array();
-
-			$res['cp'] = $this->Usermodel->chartPlatforms()->result_array();
-			$res['cr'] = $this->Usermodel->chartRatings();
-			$res['cm'] = $this->Usermodel->chartMonthly($_POST['datetime_Year']);
-
-			$data['status'] = true;
-			$data['msg'] = '';
-			$data['chartData'] = $res;
-		}
-
-		$data['token'] = $this->security->get_csrf_hash();
-		echo json_encode($data);
-	}
-
 	//login function
 	public function login()
 	{
@@ -123,6 +88,7 @@ class User extends User_Controller
 				$mobile = $validate->mobile;
 				$website_form = $validate->website_form;
 				$form_key = $validate->form_key;
+				$frame_id = $validate->frame_id;
 
 				//sessionData
 				$user_sess = array(
@@ -139,6 +105,7 @@ class User extends User_Controller
 					'mr_mobile' => $mobile,
 					'mr_website_form' => $website_form,
 					'mr_form_key' => $form_key,
+					'mr_frame_id' => $frame_id,
 					'mr_logged_in' => TRUE,
 				);
 				$this->session->set_userdata($user_sess);
@@ -478,7 +445,121 @@ class User extends User_Controller
 		echo json_encode($data);
 	}
 
+	// dashboard
+	public function dashboard()
+	{
+		$this->checklogin();
+
+		$this->setTabUrl($mod = 'dashboard');
+
+		$data['title'] = "dashboard";
+
+		$data['platforms'] = $this->Usermodel->get_user_websites();
+		$this->load->view('templates/header', $data);
+		$this->load->view('users/dashboard');
+		$this->load->view('templates/footer');
+	}
+
+	public function fillChart()
+	{
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
+		} else {
+			$res = array();
+
+			$res['cp'] = $this->Usermodel->chartPlatforms()->result_array();
+			$res['cm'] = $this->Usermodel->chartMonthly($_POST['datetime_Year']);
+			$res['cr'] = $this->Usermodel->chartRatings();
+
+			$data['status'] = true;
+			$data['msg'] = '';
+			$data['chartData'] = $res;
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	public function generateFrame()
+	{
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
+		} else {
+
+			if (count($_POST) === 3) {
+				$id = htmlentities($_POST['id']);
+				$form_key = htmlentities($_POST['form_key']);
+				$platforms = ($_POST['platforms']);
+
+				$frame_id = md5(mt_rand(0, 1000000));
+
+				//clear prev. selected frames
+				$this->Usermodel->clearPrevFrame($id, $form_key);
+				$this->Usermodel->updateFrameid($id, $form_key, $frame_id);
+
+				foreach ($_POST['platforms'] as $key => $pid) {
+					$this->Usermodel->generateFrame($id, $form_key, $pid, $frame_id);
+				}
+
+				$this->session->set_userdata('mr_frame_id', $frame_id);
+
+				$data['status'] = true;
+				$data['msg'] = 'Generated';
+				$data['frame_id'] = $frame_id;
+				$data['frameLink'] = base_url('pf/') . $frame_id;
+			} else {
+				$data['status'] = false;
+				$data['msg'] = 'Missing Parameters';
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
+
+	//disabled
+	public function createFrame()
+	{
+		if ($this->ajax_checklogin() === false) {
+			$data['status'] = "error";
+			$data['redirect'] = base_url("logout");
+		} else {
+			// print_r($_POST);
+			// exit;
+
+			if (count($_POST) > 0) {
+				$id = htmlentities($_POST['frame_platformUserid']);
+				$form_key = htmlentities($_POST['frame_platformFormkey']);
+
+				//clear prev. selected frames
+				$this->Usermodel->clearPrevFrame($id, $form_key);
+
+				// $frame_id = password_hash(mt_rand(0, 1000000), PASSWORD_DEFAULT);
+				$frame_id = md5(mt_rand(0, 1000000));
+				foreach ($_POST['frame_platformId'] as $key => $pid) {
+					$sdata = array(
+						'frame_id' => $frame_id,
+						'icon' => htmlentities($_POST['frame_icon'][$key])
+					);
+					$this->Usermodel->createFrame($id, $form_key, $pid, $sdata);
+				}
+
+				$data['status'] = true;
+				$data['msg'] = 'Created';
+				$data['frameLink'] = base_url('pf/') . $frame_id;
+			} else {
+				$data['status'] = false;
+				$data['msg'] = 'Missing Parameters';
+			}
+		}
+
+		$data['token'] = $this->security->get_csrf_hash();
+		echo json_encode($data);
+	}
 	//
+
 	public function account()
 	{
 		$this->checklogin();
@@ -661,8 +742,41 @@ class User extends User_Controller
 				$web_link_new = $_POST['web_link_new'];
 				$subject = $_POST['web_subject_new'];
 				$description = $_POST['web_desc_new'];
+				$icon = $_POST['web_icon_new'];
 
-				$res = $this->Usermodel->createwebsite($web_name_new, $web_link_new, $subject, $description);
+				$platLogo = '';
+				if ($_FILES['web_file_new']['name']) {
+
+					$file_name = strtolower($web_name_new . '_logo_' . $this->session->userdata('mr_id'));
+
+					$config['upload_path'] = './uploads/platform';
+					$config['allowed_types'] = 'jpg|jpeg|png';
+					$config['max_size'] = '2048';
+					$config['max_height'] = '3000';
+					$config['max_width'] = '3000';
+					$config['file_name'] = $file_name;
+					$config['overwrite'] = true;
+					$config['remove_spaces'] = false;
+
+					$this->load->library('upload', $config);
+					if (!$this->upload->do_upload('web_file_new')) {
+						$upload_error = array('error' => $this->upload->display_errors());
+
+						$data['status'] = false;
+						$data['msg'] = $this->upload->display_errors();
+						$data['token'] = $this->security->get_csrf_hash();
+						echo json_encode($data);
+						exit;
+					} else {
+						$logo_uploaded = $_FILES['web_file_new']['name'];
+						$logo_ext = htmlentities(strtolower(pathinfo($logo_uploaded, PATHINFO_EXTENSION)));
+						$upload_data = array('upload_data' => $this->upload->data());
+						$platLogo = $file_name . "." . $logo_ext;
+					}
+				}
+
+				$res = $this->Usermodel->createwebsite($web_name_new, $web_link_new, $subject, $description, $icon, $platLogo);
+
 				if (gettype($res) === "string") {
 					$log = "Error creating Platform [ Username: " . $this->session->userdata('mr_uname') . ", Platform: " . htmlentities($_POST['web_name_new']) . ", Link: " . htmlentities($_POST['web_link_new']) . ", Error: " . $res . "  ]";
 					$this->log_act($log);
@@ -743,10 +857,41 @@ class User extends User_Controller
 			$data['redirect'] = base_url("logout");
 		} else {
 			$webstatusArr = array('0', '1');
-			if ($_POST['id'] && in_array($_POST['webstatus'], $webstatusArr)) {
-				$wb = $_POST['webstatus'];
+			if ($_POST['id'] && in_array($_POST['web_act'], $webstatusArr)) {
+				$wb = $_POST['web_act'];
 
-				$act_res = $this->Usermodel->website_update($_POST['id'], $_POST['webstatus'], $_POST['subject'], $_POST['description']);
+				$platLogo = '';
+				if ($_FILES['web_file_edit']['name']) {
+
+					$file_name = strtolower($_POST['web_name_edit'] . '_logo_' . $this->session->userdata('mr_id'));
+
+					$config['upload_path'] = './uploads/platform';
+					$config['allowed_types'] = 'jpg|jpeg|png';
+					$config['max_size'] = '2048';
+					$config['max_height'] = '3000';
+					$config['max_width'] = '3000';
+					$config['file_name'] = $file_name;
+					$config['overwrite'] = true;
+					$config['remove_spaces'] = false;
+
+					$this->load->library('upload', $config);
+					if (!$this->upload->do_upload('web_file_edit')) {
+						$upload_error = array('error' => $this->upload->display_errors());
+
+						$data['status'] = false;
+						$data['msg'] = $this->upload->display_errors();
+						$data['token'] = $this->security->get_csrf_hash();
+						echo json_encode($data);
+						exit;
+					} else {
+						$logo_uploaded = $_FILES['web_file_edit']['name'];
+						$logo_ext = htmlentities(strtolower(pathinfo($logo_uploaded, PATHINFO_EXTENSION)));
+						$upload_data = array('upload_data' => $this->upload->data());
+						$platLogo = $file_name . "." . $logo_ext;
+					}
+				}
+
+				$act_res = $this->Usermodel->website_update($_POST['id'], $_POST['web_act'], $_POST['web_subject_edit'], $_POST['web_desc_edit'], $_POST['web_icon_edit'], $platLogo);
 				// $act_res = false;
 
 				if ($act_res == false) {
@@ -794,7 +939,7 @@ class User extends User_Controller
 
 				$file_name = strtolower($this->session->userdata('mr_cmpy') . '_logo');
 
-				$config['upload_path'] = './uploads';
+				$config['upload_path'] = './uploads/company';
 				$config['allowed_types'] = 'jpg|jpeg|png';
 				$config['max_size'] = '2048';
 				$config['max_height'] = '3000';
@@ -1031,7 +1176,7 @@ class User extends User_Controller
 	}
 
 	//message body to be shared
-	public function getlink()
+	public function getlink()                       
 	{
 		if ($this->ajax_checklogin() === false) {
 			$data['status'] = "error";

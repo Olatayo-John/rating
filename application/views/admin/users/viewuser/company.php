@@ -92,7 +92,7 @@
                 },
                 success: function(res) {
                     if (res.status === false) {
-                        $(".ajax_res_err").text(res.msg);
+                        $(".ajax_res_err").html(res.msg);
                         $(".ajax_err_div").fadeIn();
 
                     } else if (res.status === true) {

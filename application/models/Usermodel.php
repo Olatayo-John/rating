@@ -3,74 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Usermodel extends CI_Model
 {
-	public function chartPlatforms()
-	{
-		$this->db->order_by('id', 'desc');
-		$query = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
-		if (!$query) {
-			return false;
-			exit();
-		} else {
-			return $query;
-		}
-	}
-
-	public function chartRatings()
-	{
-		$this->db->order_by('id', 'desc');
-		$q = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
-		if (!$q) {
-			return false;
-			exit();
-		} else {
-			$resArr = array();
-			$starArr = array();
-			foreach ($q->result_array() as $p) {
-				for ($i = 1; $i <= 5; $i++) {
-					$qq = $this->db->get_where('all_ratings', array('web_name' => $p['web_name'], 'web_link' =>  $p['web_link'], 'form_key' =>  $p['form_key'], 'star' =>  $i))->num_rows();
-
-					array_push($starArr, $qq);
-				}
-
-				array_push($resArr, array('web_name' => $p['web_name'], 'starArr' => $starArr));
-				$starArr = array();
-			}
-
-			// foreach ($resArr as $w) {
-			// 	print_r($w);
-			// 	echo '<br><br>';
-			// }
-			// exit;
-
-			return $resArr;
-		}
-	}
-
-	public function chartMonthly($year)
-	{
-		$monthArr = array('Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'August', 'Sep', 'Oct', 'Nov', 'Dec');
-		$monthIndexArr = array('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12');
-		$resArr = array();
-
-		foreach ($monthArr as $key => $p) {
-			// $date = $year . '-' . ($monthIndexArr[$key]) . '-'; //monthly regarding current year
-			$date = '-' . ($monthIndexArr[$key]) . '-'; //monthly regardless of year
-
-			$this->db->like('rated_at', $date);
-			$this->db->where('form_key', $this->session->userdata('mr_form_key'));
-			$qq = $this->db->get('all_ratings')->num_rows();
-
-			array_push($resArr, array('month' => $p, 'monthInd' => ($monthIndexArr[$key]) , 'rating' => $qq));
-		}
-
-		// foreach ($resArr as $w) {
-		// 	print_r($w);
-		// 	echo '<br><br>';
-		// }
-		// exit;
-		return $resArr;
-	}
-
 	public function login()
 	{
 		$uname = htmlentities($this->input->post('uname'));
@@ -95,7 +27,7 @@ class Usermodel extends CI_Model
 
 			//companyAdmin and companyUsers
 			if ($user->iscmpy == '1') {
-				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,cd.cmpyLogo')->from('users u');
+				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,u.frame_id,cd.cmpyLogo')->from('users u');
 
 				if ($user->admin == '1') {
 					$this->db->join('company_details cd', 'cd.userid = u.id');
@@ -106,7 +38,7 @@ class Usermodel extends CI_Model
 				$this->db->where('u.uname', $uname);
 				$userinfo = $this->db->get()->row();
 			} else {
-				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key')->from('users u');
+				$this->db->select('u.id,u.sadmin,u.admin,u.iscmpy,u.cmpyid,u.cmpy,u.uname,u.email,u.mobile,u.active,u.sub,u.website_form,u.form_key,u.frame_id')->from('users u');
 				$this->db->where('u.uname', $uname);
 				$userinfo = $this->db->get()->row();
 			}
@@ -384,6 +316,111 @@ class Usermodel extends CI_Model
 		}
 	}
 
+	public function chartPlatforms()
+	{
+		$this->db->order_by('id', 'desc');
+		$query = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
+		if (!$query) {
+			return false;
+			exit();
+		} else {
+			return $query;
+		}
+	}
+
+	public function chartRatings()
+	{
+		$this->db->order_by('id', 'desc');
+		$q = $this->db->get_where('websites', array('user_id' => $this->session->userdata('mr_id'), 'form_key' => $this->session->userdata('mr_form_key')));
+		if (!$q) {
+			return false;
+			exit();
+		} else {
+			$resArr = array();
+			$starArr = array();
+			foreach ($q->result_array() as $p) {
+				for ($i = 1; $i <= 5; $i++) {
+					$qq = $this->db->get_where('all_ratings', array('web_name' => $p['web_name'], 'web_link' =>  $p['web_link'], 'form_key' =>  $p['form_key'], 'star' =>  $i))->num_rows();
+
+					array_push($starArr, $qq);
+				}
+
+				array_push($resArr, array('web_name' => $p['web_name'], 'starArr' => $starArr));
+				$starArr = array();
+			}
+
+			// foreach ($resArr as $w) {
+			// 	print_r($w);
+			// 	echo '<br><br>';
+			// }
+			// exit;
+
+			return $resArr;
+		}
+	}
+
+	public function chartMonthly($year)
+	{
+		$monthArr = array('Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'August', 'Sep', 'Oct', 'Nov', 'Dec');
+		$monthIndexArr = array('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12');
+		$resArr = array();
+
+		foreach ($monthArr as $key => $p) {
+			// $date = $year . '-' . ($monthIndexArr[$key]) . '-'; //monthly regarding current year
+			$date = '-' . ($monthIndexArr[$key]) . '-'; //monthly regardless of year
+
+			$this->db->like('rated_at', $date);
+			$this->db->where('form_key', $this->session->userdata('mr_form_key'));
+			$qq = $this->db->get('all_ratings')->num_rows();
+
+			array_push($resArr, array('month' => $p, 'monthInd' => ($monthIndexArr[$key]), 'rating' => $qq));
+		}
+
+		// foreach ($resArr as $w) {
+		// 	print_r($w);
+		// 	echo '<br><br>';
+		// }
+		// exit;
+		return $resArr;
+	}
+
+	public function clearPrevFrame($id, $form_key)
+	{
+		$this->db->set("frame_id", '', TRUE);
+		// $this->db->set("icon", '', TRUE);
+
+		$this->db->where(array('user_id' => $id, 'form_key' => $form_key));
+		$this->db->update("websites");
+		return true;
+	}
+
+	public function updateFrameid($id, $form_key, $frame_id)
+	{
+		$this->db->set("frame_id", $frame_id, TRUE);
+
+		$this->db->where(array('id' => $id, 'form_key' => $form_key));
+		$this->db->update("users");
+		return true;
+	}
+
+	public function generateFrame($id, $form_key, $pid, $frame_id)
+	{
+		$this->db->set("frame_id", $frame_id, TRUE);
+		$this->db->where(array('id' => $pid, 'user_id' => $id, 'form_key' => $form_key));
+		$this->db->update('websites');
+
+		return true;
+	}
+
+	//disabled
+	public function createFrame($id, $form_key, $pid, $sdata)
+	{
+		$this->db->where(array('id' => $pid, 'user_id' => $id, 'form_key' => $form_key));
+		$this->db->update('websites', $sdata);
+		return true;
+	}
+	//
+
 	public function get_info()
 	{
 		$query = $this->db->get_where('users', array('id' => $this->session->userdata('mr_id')))->row();
@@ -434,7 +471,7 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function createwebsite($web_name_new, $web_link_new, $subject = null, $description = null)
+	public function createwebsite($web_name_new, $web_link_new, $subject = null, $description = null, $icon = null, $platLogo = null)
 	{
 		$web_count = 1;
 		if ($this->get_webspacequota($web_count) === false) {
@@ -460,6 +497,8 @@ class Usermodel extends CI_Model
 						'web_link' => htmlentities($web_link_new),
 						'subject' => htmlentities($subject),
 						'description' => htmlentities($description),
+						'icon' => htmlentities($icon),
+						'logo' => htmlentities($platLogo),
 						'active' => '1',
 						'total_ratings' => "0",
 						'star_rating' => "0"
@@ -497,12 +536,14 @@ class Usermodel extends CI_Model
 		}
 	}
 
-	public function website_update($id, $webstatus, $subject, $description)
+	public function website_update($id, $webstatus, $subject, $description, $icon, $platLogo)
 	{
 		$data = array(
 			'active' => $webstatus,
 			'subject' => htmlentities($subject),
 			'description' => htmlentities($description),
+			'icon' => htmlentities($icon),
+			'logo' => htmlentities($platLogo),
 		);
 
 		$id = $id;

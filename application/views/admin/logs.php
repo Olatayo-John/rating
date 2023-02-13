@@ -5,9 +5,9 @@
 
     <!-- tabLinks -->
     <div class="tab_div bg-light-custom">
-        <a href="#activity" class="tab_link" id="actLogs" tabFormName="actLogs">Activity Logs</a>
-        <a href="#feedback" class="tab_link" id="feedbkLogs" tabFormName="feedbkLogs">Feedback Logs</a>
-        <a href="#payments" class="tab_link" id="paymentLogs" tabFormName="paymentLogs">Payment Logs</a>
+        <a href="#activity" class="tab_link" id="actLogs" tabFormName="actLogs">Activity</a>
+        <a href="#feedback" class="tab_link" id="feedbkLogs" tabFormName="feedbkLogs">Feedback</a>
+        <a href="#payments" class="tab_link" id="paymentLogs" tabFormName="paymentLogs">Payment</a>
     </div>
     <!--  -->
 

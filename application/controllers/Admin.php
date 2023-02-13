@@ -512,7 +512,7 @@ class Admin extends Admin_Controller
 
 				$file_name = strtolower(htmlentities($_POST['cmpyName']) . '_logo');
 
-				$config['upload_path'] = './uploads';
+				$config['upload_path'] = './uploads/company';
 				$config['allowed_types'] = 'jpg|jpeg|png';
 				$config['max_size'] = '2048';
 				$config['max_height'] = '3000';
@@ -563,7 +563,7 @@ class Admin extends Admin_Controller
 
 				$data['status'] = true;
 				$data['msg'] = "Company updated";
-				$data['logopath'] = base_url('uploads/') . $cmpyLogo;
+				$data['logopath'] = base_url('uploads/company/') . $cmpyLogo;
 			}
 		}
 

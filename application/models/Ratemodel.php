@@ -87,4 +87,11 @@ class Ratemodel extends CI_Model
 
 		return true;
 	}
+
+	public function get_wtr_id($id)
+	{
+		$this->db->where(array('frame_id' => $id));
+		$q = $this->db->get('websites');
+		return $q;
+	}
 }

@@ -159,6 +159,29 @@ class Rate extends Rate_Controller
 		echo json_encode($data);
 	}
 
+	public function wtr($key)
+	{
+		if ($key) {
+			$id = htmlentities($key);
+			$res = $this->Ratemodel->get_wtr_id($id);
+
+			if ($res->num_rows() > 0) {
+
+				$data['status'] = true;
+				$data['msg'] = '';
+				$data['info'] = $res;
+			} else {
+				$data['status'] = false;
+				$data['msg'] = 'No Frame created';
+			}
+		} else {
+			$data['status'] = false;
+			$data['msg'] = 'Missing Key';
+		}
+
+		$this->load->view('rate/wtr', $data);
+	}
+
 	//
 	//still in limbo.....
 	public function notifyuser_email($form_key)

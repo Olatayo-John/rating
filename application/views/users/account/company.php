@@ -26,7 +26,7 @@
             <input type="file" name="cmpyLogo" class="form-control cmpyLogo">
         </div>
         <div class="form-group col-md-6 cmpyLogoDiv">
-            <img src="<?php echo base_url('uploads/') . $this->session->userdata('mr_cmpy_logo'); ?>" alt="" class="cmpyLogoImg">
+            <img src="<?php echo base_url('uploads/company/') . $this->session->userdata('mr_cmpy_logo'); ?>" alt="" class="cmpyLogoImg">
         </div>
     </div>
 

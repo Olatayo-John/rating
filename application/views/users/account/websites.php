@@ -54,41 +54,53 @@
                     <i class="fas fa-times close_editweb_modal text-danger"></i>
                 </div>
 
-                <form method='post' id="edit_web_modal_form">
+                <form method='post' id="edit_web_modal_form" enctype="multipart/form-data">
                     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
-                    <input type="hidden" class="web_id form-control" name="web_id" value="">
+                    <input type="hidden" class="web_id form-control" name="id" value="">
 
                     <div class="form-group">
-                        <label>Platform Name</label>
-                        <input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Platform Name" required disabled readonly>
+                        <label>Platform Name</label> <span>*</span>
+                        <input type="text" name="web_name_edit" class="web_name_edit form-control" placeholder="Platform Name" required readonly>
                     </div>
 
                     <div class="form-group">
-                        <label>Platform Link</label>
-                        <input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Platform Link" required disabled readonly>
+                        <label>Platform Link</label> <span>*</span>
+                        <input type="url" name="web_link_edit" class="web_link_edit form-control" placeholder="Platform Link" required readonly>
                     </div>
 
                     <div class="form-group">
                         <label>Subject</label>
-                        <input type="url" name="web_subject_edit" class="web_subject_edit form-control" placeholder="Subject">
+                        <input type="text" name="web_subject_edit" class="web_subject_edit form-control" placeholder="Subject">
                     </div>
 
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea name="web_desc_edit" class="web_desc_edit form-control" cols="30" rows="5"></textarea>
+                        <textarea name="web_desc_edit" class="web_desc_edit form-control" cols="30" rows="3"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>Status</label>
+                        <label>Status</label> <span>*</span>
                         <select name="web_act" id="web_act" class="form-control" required>
                             <option value="1">Active</option>
                             <option value="0">Not Active</option>
                         </select>
                     </div>
 
+                    <div class="form-group row">
+                        <div class="form-group col-md-6">
+                            <label>Icon</label>
+                            <input type="text" name="web_icon_edit" class='form-control web_icon_edit'>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Logo</label>
+                            <span>Max size: 2MB</span>
+                            <input type="file" name="web_file_edit" class="form-control web_file_edit">
+                        </div>
+                    </div>
+
                     <hr>
                     <div class="text-right">
-                        <button type="button" class="btn text-light submit_editweb_modal" style="background-color:#294a63">Save</button>
+                        <button type="submit" class="btn text-light submit_editweb_modal" style="background-color:#294a63">Save</button>
                     </div>
                 </form>
             </div>
@@ -107,18 +119,18 @@
                     <i class="fas fa-times closewebmodal_btn text-danger"></i>
                 </div>
 
-                <form method="post" action="<?php echo base_url("user/user_new_website") ?>" class="add_web_modal_form">
+                <form method="post" action="<?php echo base_url("user/user_new_website") ?>" enctype="multipart/form-data" id="add_web_modal_form">
                     <input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
 
                     <div class="form-group">
-                        <label class="mb-0">Platform Name</label>
+                        <label class="mb-0">Platform Name</label> <span>*</span>
                         <input type="text" name="web_name_new" class="web_name_new form-control" placeholder="Platform Name" required>
                         <div class="text-danger mt-0 web_name_err"></div>
                     </div>
 
                     <div class="form-group">
-                        <label class="mb-0">Platform Link</label>
-                        <input type="url" name="web_link_new" class="web_link_new form-control" placeholder="e.g https://domainname.com" required>
+                        <label class="mb-0">Platform Link</label> <span>*</span>
+                        <input type="url" name="web_link_new" class="web_link_new form-control" placeholder="https://domainname.com" required>
                         <div class="text-danger mt-0 web_link_err"></div>
                     </div>
 
@@ -129,7 +141,19 @@
 
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea name="web_desc_new" class="web_desc_new form-control" cols="30" rows="5"></textarea>
+                        <textarea name="web_desc_new" class="web_desc_new form-control" cols="30" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="form-group col-md-6">
+                            <label>Icon</label>
+                            <input type="text" name="web_icon_new" class='form-control web_icon_new'>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Logo</label>
+                            <span>Max size: 2MB</span>
+                            <input type="file" name="web_file_new" class="form-control web_file_new">
+                        </div>
                     </div>
 
                     <div class="text-right">
@@ -282,7 +306,9 @@
         });
 
         // add website to database
-        $(document).on('click', 'button.add_web_modal_btn', function(e) {
+        // $(document).on('click', 'button.add_web_modal_btn', function(e) {
+        $('#add_web_modal_form').on('submit', function(e) {
+
             e.preventDefault();
 
             var csrfName = $('.csrf_token').attr('name');
@@ -291,6 +317,8 @@
             var web_link_new = $('.web_link_new').val();
             var web_subject_new = $('.web_subject_new').val();
             var web_desc_new = $('.web_desc_new').val();
+            var web_icon_new = $('.web_icon_new').val();
+            var web_file_new = $('.web_file_new').val();
 
             if (web_name_new == "" || web_name_new == null || web_name_new == undefined) {
                 $('.web_name_new').css('border-bottom', '2px solid #dc3545');
@@ -303,33 +331,15 @@
                 return false;
             }
 
-            var patt = new RegExp('^(https?:\\/\\/)?' + // protocol
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
-                '((\\d{1,3}\\.){3}\\d{1,3}))' + // ip (v4) address
-                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + //port
-                '(\\?[;&amp;a-z\\d%_.~+=-]*)?' + // query string
-                '(\\#[-a-z\\d_]*)?$', 'i');
-            var res = patt.test(web_link_new);
-            if (res == true) {
-                $(".web_link_err").fadeOut();
-                $('.web_link_new').css('border', '1px solid #ced4da');
-            } else if (res == false) {
-                $(".web_link_new").css('border-bottom', '2px solid #dc3545');
-                $(".web_link_err").html("Invalid WEB URL").fadeIn();
-                return false;
-            }
-
             $.ajax({
                 url: "<?php echo base_url("create-website") ?>",
                 method: "post",
                 dataType: "json",
-                data: {
-                    [csrfName]: csrfHash,
-                    web_name_new: web_name_new,
-                    web_link_new: web_link_new,
-                    web_subject_new: web_subject_new,
-                    web_desc_new: web_desc_new
-                },
+                data: new FormData(this),
+                [csrfName]: csrfHash,
+                contentType: false,
+				cache: false,
+				processData: false,
                 beforeSend: function() {
                     clearAlert();
 
@@ -341,7 +351,7 @@
                     $(".csrf_token").val(data.token);
 
                     if (data.status === false) {
-                        $(".ajax_res_err").text(data.msg);
+                        $(".ajax_res_err").html(data.msg);
                         $(".ajax_err_div").fadeIn();
                     } else if (data.status === true) {
                         $(".ajax_res_succ").text(data.msg);
@@ -362,6 +372,7 @@
                     }
 
                     $(".add_web_modal_btn").removeClass('bg-danger').html('Save').removeAttr("disabled").css("cursor", "pointer");
+                    $('.csrf_token').val(res.token);
                 }
             })
         });
@@ -394,6 +405,8 @@
                         $('.web_subject_edit').val(data.act_res.subject);
                         $('.web_desc_edit').val(data.act_res.description);
                         $('select#web_act option[value=' + data.act_res.active + ']').attr('selected', 'selected');
+                        $('.web_icon_edit').val(data.act_res.icon);
+
                         $('.edit_web_modal').modal('show');
                         $('.web_id').val(id);
                     } else if (data.status == "error") {
@@ -413,8 +426,10 @@
         });
 
         // change website details
-        $(document).on('click', '.submit_editweb_modal', function(e) {
+        // $(document).on('click', '.submit_editweb_modal', function(e) {
+        $('#edit_web_modal_form').on('submit', function(e) {
             e.preventDefault();
+
             var csrfName = $('.csrf_token').attr('name');
             var csrfHash = $('.csrf_token').val();
             var id = $(".web_id").val();
@@ -425,14 +440,12 @@
             $.ajax({
                 url: "<?php echo base_url('update-website'); ?>",
                 method: "post",
-                data: {
-                    [csrfName]: csrfHash,
-                    id: id,
-                    webstatus: webstatus,
-                    subject: subject,
-                    description: description
-                },
-                dataType: 'json',
+                dataType:'json',
+                data: new FormData(this),
+                [csrfName]: csrfHash,
+                contentType: false,
+				cache: false,
+				processData: false,
                 beforeSend: function() {
                     clearAlert();
 
@@ -465,7 +478,6 @@
                     }
 
                     $(".submit_editweb_modal").removeClass('bg-danger').html('Save').removeAttr("disabled").css("cursor", "pointer");
-
                     $('.csrf_token').val(data.token);
                 }
             });

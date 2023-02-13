@@ -96,6 +96,7 @@ class MY_Controller extends CI_Controller
         $this->session->unset_userdata('mr_mobile');
         $this->session->unset_userdata('mr_website_form');
         $this->session->unset_userdata('mr_form_key');
+        $this->session->unset_userdata('mr_frame_id');
         $this->session->unset_userdata('mr_logged_in');
         $this->session->unset_userdata('mr_cmpy_logo');
         // $this->session->sess_destroy();

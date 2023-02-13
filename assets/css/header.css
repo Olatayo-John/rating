@@ -208,7 +208,8 @@ div.spinner-border {
 	cursor: pointer;
 }
 
-.alerterror strong p {
+.alertWrapper strong p
+ {
 	margin: 0;
 }
 

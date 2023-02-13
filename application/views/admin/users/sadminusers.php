@@ -217,7 +217,7 @@
 								$(".cmpyName").val(res.uinfos.cmpyName);
 								$(".cmpyEmail").val(res.uinfos.cmpyEmail);
 								$(".cmpyMobile").val(res.uinfos.cmpyMobile);
-								var logoPath = '<?php echo base_url('uploads/') ?>' + res.uinfos.cmpyLogo;
+								var logoPath = '<?php echo base_url('uploads/company/') ?>' + res.uinfos.cmpyLogo;
 								$(".cmpyLogoImg").attr('src', logoPath);
 
 								$(".h_cmpyLogoName").val(res.uinfos.cmpyLogo);

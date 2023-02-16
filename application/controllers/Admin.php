@@ -58,7 +58,6 @@ class Admin extends Admin_Controller
 
 	//create a new user by a companyAdmin
 	public function adduser_admin()
-	
 	{
 		$this->is_admin();
 
@@ -501,7 +500,7 @@ class Admin extends Admin_Controller
 
 	//update company details
 	public function updatecompany()
-	{
+	{ 
 		if ($this->ajax_is_sadmin() === false) {
 			$data['status'] = false;
 			$data['msg'] = lang('acc_denied');

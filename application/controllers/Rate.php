@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Rate extends Rate_Controller
 {
-	public function _index()
+	public function __index()
 	{
 		$w = $_GET['w'];
 		$k = $_GET['k'];
@@ -183,7 +183,7 @@ class Rate extends Rate_Controller
 	}
 
 	//
-	//still in limbo.....
+	//in limbo.....
 	public function notifyuser_email($form_key)
 	{
 		$data = $this->Usermodel->get_user_email($form_key);

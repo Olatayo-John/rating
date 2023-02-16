@@ -22,14 +22,15 @@
             </div>
         </div>
 
-        <div class="bg-light-custom p-3">
+        <div class="bg-light-custom p-3 mb-3">
+            <label for="">Misc</label>
             <form method="post" id="genFrameForm">
                 <input type="hidden" class="csrf" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                 <input type="hidden" name="form_key" id="form_key" value='<?php echo $this->session->userdata('mr_form_key') ?>'>
                 <input type="hidden" name="id" id="id" value='<?php echo $this->session->userdata('mr_id') ?>'>
 
                 <div class="form-group_">
-                    <select name="platforms[]" id="" class="selectpicker form-control" multiple data-live-search="true" title="Select Platform" data-width="100%">
+                    <select name="platforms[]" id="" class="selectpicker form-control" multiple data-live-search="true" title="Select Platform" data-width="100%" required>
                         <?php if ($platforms->num_rows() > 0) : ?>
                             <?php foreach ($platforms->result_array() as $p) : ?>
                                 <?php if ($p['active'] === '1') : ?>
@@ -37,27 +38,26 @@
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         <?php else : ?>
-                            <option value="">No platform created</option>
+                            <option value="" disabled>No platform created</option>
                         <?php endif; ?>
                     </select>
                 </div>
 
                 <div class="form-group text-right mt-2">
-                    <button type="submit" class="btn btn-block text-light genFrameBtn" style="background-color:#294a63">Generate</button>
+                    <button type="submit" class="btn btn-block text-light genFrameBtn" style="background-color:#294a63">Create</button>
                 </div>
             </form>
-            <hr>
 
             <div id="frameCode" <?php echo ($this->session->userdata('mr_frame_id')) ? '' : 'style="display:none"' ?>>
+                <hr>
                 <label>Paste code anywhere</label>
                 <div class="input-group">
-                    <input type="text" name="linkshare" class="form-control linkshare" id='linkshare' value='<iframe width="100%" height="100" src="<?php echo base_url('pf/') . $this->session->userdata('mr_frame_id') ?>" frameborder="0" allowfullscreen></iframe>'' readonly style="cursor: not-allowed;">
+                    <input type="text" name="frameshare" class="form-control frameshare" id='frameshare' value='<iframe width="100%" height="100" src="<?php echo base_url('pf/') . $this->session->userdata('mr_frame_id') ?>" frameborder="0" allowfullscreen></iframe>'' readonly style="cursor: not-allowed;">
 
                     <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun(' #linkshare')"></i></span>
+                        <span class="input-group-text"><i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun(' #frameshare')"></i></span>
                 </div>
             </div>
-            <div class="linkcopyalert" style="display:none;color:#294a63">Copied to your clipboard</div>
         </div>
 
         <div class="modal fade FrameModal" data-backdrop="static" data-keyboard="false">
@@ -84,15 +84,29 @@
                 </div>
             </div>
         </div>
+    </div>
+    <hr>
 
+    <div class="bg-light-custom p-3 mb-3">
+        <label>Your Link</label>
+        <div class="input-group">
+            <input type="text" name="linkshare" class="form-control linkshare" id='linkshare' value="<?php echo base_url("wtr/") . $this->session->userdata('mr_form_key') ?>" required disabled style="cursor: not-allowed;">
+
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-copy ml-2 copy_i" style="cursor:pointer" onclick="copylink_fun('#linkshare')"></i></span>
+                <span class="input-group-text"><i class="fa-solid fa-qrcode genQrcode" style="cursor:pointer"></i></span>
+            </div>
+        </div>
     </div>
 
+</div>
 
 </div>
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         fillChart();

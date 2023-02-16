@@ -112,7 +112,8 @@ span.err,
 .btn-md {
 	background: #294a63 !important;
 }
-span.input-group-text{
+
+span.input-group-text {
 	color: #294a63 !important;
 }
 
@@ -151,19 +152,23 @@ h3._total {
 
 /*  */
 
-.borderDiv,.bg-light-custom  {
+.borderDiv,
+.bg-light-custom {
 	border: 1px solid #c5d6de;
 }
+
 .modalcloseDiv {
 	display: flex;
 	justify-content: space-between;
 	padding-bottom: 7px;
 }
+
 .modalcloseDiv h6 {
 	text-transform: uppercase;
 	color: #294a63;
 	font-weight: bolder;
 }
+
 .modalcloseDiv i {
 	cursor: pointer;
 	position: 0;
@@ -208,8 +213,7 @@ div.spinner-border {
 	cursor: pointer;
 }
 
-.alertWrapper strong p
- {
+.alertWrapper strong p {
 	margin: 0;
 }
 
@@ -387,6 +391,40 @@ button.menubtn {
 	cursor: pointer;
 	outline: none;
 	border: none;
+}
+
+/*  */
+
+/*  */
+#qrcode {
+	text-align: center;
+}
+
+#qrcode img {
+	/* max-height: 50px; */
+	/* max-width: 50px; */
+}
+
+.downloadqrcode {
+	text-align: right;
+}
+
+.downloadqrcode a {
+	color: #294a63;
+	cursor: pointer;
+	padding: 0 3px;
+}
+
+.downloadqrcode i {
+	border: 1px solid #294a63;
+	padding: 7px;
+	border-radius: 50%;
+	transition: .6s;
+}
+
+.downloadqrcode i:hover {
+	color: #fff;
+	background: #294a63;
 }
 
 /*  */

@@ -584,7 +584,7 @@ class User extends User_Controller
 
 		$this->setTabUrl($mod = 'account');
 
-		$data['title'] = "edit account";
+		$data['title'] = "account";
 
 		$data['user_info'] = $this->Usermodel->get_info();
 		$data['websites'] = $this->Usermodel->get_user_websites();
@@ -653,20 +653,17 @@ class User extends User_Controller
 					mkdir($folderPath);
 				}
 
-				if (file_exists($fileName)) {
-					$data['status'] = true;
-					$data['msg'] = '';
-					$data['qr'] = $fileNamePath;
-				} else {
+				if (!file_exists($fileName)) {
 					$contents = $link;
 					// $fileName = '005_file_' . md5($contents) . '.png';
 
 					QRcode::png($contents, $fileName);
-
-					$data['status'] = true;
-					$data['msg'] = '';
-					$data['qr'] = $fileNamePath;
 				}
+
+				$data['status'] = true;
+				$data['msg'] = '';
+				$data['qr'] = $fileNamePath;
+				$data['qrfileName'] = $fk . '_qr.png';
 			} else {
 				$data['status'] = false;
 				$data['msg'] = "Missing parameters";
@@ -675,6 +672,16 @@ class User extends User_Controller
 
 		$data['token'] = $this->security->get_csrf_hash();
 		echo json_encode($data);
+	}
+
+	public function downloadQrCode($fp = null, $fn = null)
+	{
+		$fp = htmlentities($_GET['fp']);
+		$fn = htmlentities($_GET['fn']);
+
+		header("Content-Type: image/jpeg");
+		header("Content-Disposition: attachment; filename=" . $fn . "");
+		echo file_get_contents($fp);
 	}
 
 	public function personal_edit()
@@ -1176,7 +1183,7 @@ class User extends User_Controller
 	}
 
 	//message body to be shared
-	public function getlink()                       
+	public function getlink()
 	{
 		if ($this->ajax_checklogin() === false) {
 			$data['status'] = "error";

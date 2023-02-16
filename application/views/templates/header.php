@@ -3,7 +3,7 @@
 
 <head>
 	<title>
-		<?php echo (isset($title) && !empty($title)) ? ucwords($title).' - '.$this->st->site_name : $this->st->site_name; ?>
+		<?php echo (isset($title) && !empty($title)) ? ucwords($title) . ' - ' . $this->st->site_name : $this->st->site_name; ?>
 	</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,7 +38,7 @@
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
-	<link rel="icon" href="<?php echo base_url('assets/images/').$this->st->site_fav_icon ?>">
+	<link rel="icon" href="<?php echo base_url('assets/images/') . $this->st->site_fav_icon ?>">
 	<script type="text/javascript">
 		document.onreadystatechange = function() {
 			if (document.readyState !== "complete") {
@@ -58,10 +58,9 @@
 	<nav class="navbar navbar-expand-lg navbar-light fixed-top p-0">
 
 		<!-- <button class="btn menubtn" onclick="opennav()">&#9776;</button> -->
-		<!-- <?php print_r($_SESSION) ?> -->
 
 		<div class="logoimg mr-auto m-1">
-			<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/company/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/").$this->st->site_logo ?>" class="navbar-label">
+			<img src="<?php echo ($this->session->userdata('mr_cmpy_logo')) ? base_url("uploads/company/") . $this->session->userdata('mr_cmpy_logo') : base_url("assets/images/") . $this->st->site_logo ?>" class="navbar-label">
 		</div>
 
 		<?php if ($this->session->userdata('mr_logged_in')) : ?>
@@ -73,7 +72,7 @@
 
 			<div class="navbar-brand text-uppercase font-weight-bolder" style="display: nonee;">
 				<a href="<?php echo base_url('account') ?>" style="color:#fff">
-				<!-- <i class="fas fa-user"></i> -->
+					<!-- <i class="fas fa-user"></i> -->
 					<?php echo ($this->session->userdata('mr_uname') ? $this->session->userdata('mr_uname') : 'My Account') ?>
 				</a>
 			</div>
@@ -221,3 +220,83 @@
 	</div>
 
 	<div id="content">
+
+		<div class="modalDiv">
+			<input type="hidden" class="csrf_token" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
+			<div class="qrcodeModal modal fade" data-backdrop="static" data-keyboard="false">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<div class="modalcloseDiv">
+								<h6></h6>
+								<i class="fas fa-times closeqrcodeModalBtn text-danger"></i>
+							</div>
+
+							<div id="qrcode"></div>
+
+							<div class="downloadqrcode"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			$(document).ready(function() {
+
+				//close modal
+				$('.closeqrcodeModalBtn').click(function(e) {
+					$('.qrcodeModal').modal('hide');
+
+					$('#qrcode').children().remove();
+				});
+
+				//generate qr code
+				$(document).on('click', '.genQrcode', function(e) {
+					e.preventDefault();
+
+					var csrfName = $('.csrf_token').attr('name');
+					var csrfHash = $('.csrf_token').val();
+					var id = "<?php echo $this->session->userdata('mr_id'); ?>";
+					var form_key = "<?php echo $this->session->userdata('mr_form_key'); ?>";
+					var link = "<?php echo base_url("wtr/") . $this->session->userdata('mr_form_key') ?>";
+
+					$.ajax({
+						url: "<?php echo base_url('generate-qr-code') ?>",
+						method: "post",
+						dataType: 'json',
+						data: {
+							[csrfName]: csrfHash,
+							id: id,
+							form_key: form_key,
+							link: link
+						},
+						beforeSend: function() {
+							clearAlert();
+						},
+						success: function(data) {
+							if (data.status === false) {
+								$(".ajax_res_err").append(data.msg);
+								$(".ajax_err_div").fadeIn();
+							} else if (data.status === 'error') {
+								window.location.assign(data.redirect);
+							} else if (data.status === true) {
+								$('#qrcode').append('<img src="' + data.qr + '">');
+								$('.qrcodeModal').modal('show');
+
+								$('.downloadqrcode').append('<a href="download-qr-code?fp=' + data.qr + '&fn='+data.qrfileName+'"><i class="fa-solid fa-download"></i></a>');
+							}
+
+							$('.csrf_token').val(data.token);
+
+						},
+						error: function() {
+							alert("Error sending messages. Please try again");
+							window.location.reload();
+						}
+					})
+				})
+
+			})
+		</script>

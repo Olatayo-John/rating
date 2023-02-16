@@ -20,24 +20,29 @@
 	}
 
 	function copylink_fun(element) {
-        var link = $("<input>");
-        $("body").append(link);
-        link.val($(element).val()).select();
-        document.execCommand("copy");
-        link.remove();
-        $('.linkcopyalert').fadeIn("slow").delay("5000").fadeOut("slow");
-    }
+		clearAlert();
 
+		var link = $("<input>");
+		$("body").append(link);
+		link.val($(element).val()).select();
+		document.execCommand("copy");
+		link.remove();
+		// $('.linkcopyalert').fadeIn("slow").delay("5000").fadeOut("slow");
 
+		$(".ajax_res_succ").append('Copied to your clipboard');
+		$(".ajax_succ_div").fadeIn();
+	}
+
+	//clear alert on click
 	function clearAlert() {
 		$(".alertWrapper").hide();
 		$(".alertWrapper strong").empty();
 	}
-
 	$(document).on("click", ".alertWrapper", function() {
 		clearAlert();
 	});
 
+	//generate pwd btn
 	function returnPassword() {
 		var length = 10;
 		var charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -49,10 +54,10 @@
 		return val;
 	}
 
-	
-
+	//tooltip
 	$('[data-toggle="tooltip"]').tooltip();
 
+	//toggle open/close nav btn
 	$(".menubtn").click(function() {
 		var func = $(this).attr("onclick");
 		if (func == "opennav()") {
@@ -67,8 +72,6 @@
 		setTimeout(() => document.querySelector('.alerterror').remove(), 6000);
 		setTimeout(() => document.querySelector('.alertsuccess').remove(), 6000);
 	})
-
-
 </script>
 </body>
 

@@ -132,6 +132,7 @@ $route['verify'] = 'user/verifyvcode';
 $route['passwordreset'] = 'user/changepassword';
 $route['deactivate-account'] = 'user/deact_account';
 $route['generate-qr-code'] = 'user/generateQrCode';
+$route['download-qr-code'] = 'user/downloadQrCode';
 
 
 //rating and links-shared report

@@ -505,6 +505,9 @@ class User extends User_Controller
 
 				$this->session->set_userdata('mr_frame_id', $frame_id);
 
+				$log = "Frame created [ Username: " . $this->session->userdata('mr_uname') .  ", FrameID: " . $frame_id .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
 				$data['msg'] = 'Generated';
 				$data['frame_id'] = $frame_id;
@@ -660,6 +663,9 @@ class User extends User_Controller
 					QRcode::png($contents, $fileName);
 				}
 
+				$log = "QR Code created [ Username: " . $this->session->userdata('mr_uname') .  " ]";
+				$this->log_act($log);
+
 				$data['status'] = true;
 				$data['msg'] = '';
 				$data['qr'] = $fileNamePath;
@@ -681,6 +687,7 @@ class User extends User_Controller
 
 		header("Content-Type: image/jpeg");
 		header("Content-Disposition: attachment; filename=" . $fn . "");
+
 		echo file_get_contents($fp);
 	}
 

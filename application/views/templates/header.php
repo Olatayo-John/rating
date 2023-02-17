@@ -189,6 +189,7 @@
 
 	</nav>
 
+	<!-- errors -->
 	<div class="container">
 		<!-- testing div -->
 		<!-- <div class="alerterror alertWrapper">
@@ -218,6 +219,7 @@
 			</div>
 		<?php endif; ?>
 	</div>
+	<!--  -->
 
 	<div id="content">
 

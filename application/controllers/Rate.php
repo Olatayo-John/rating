@@ -55,7 +55,7 @@ class Rate extends Rate_Controller
 
 					$data['title'] = "select platform";
 
-					$this->load->view('templates/header', $data);
+					$this->load->view('rate/header', $data);
 					$this->load->view('rate/pick_platform');
 					$this->load->view('templates/footer');
 				} else {
@@ -71,7 +71,7 @@ class Rate extends Rate_Controller
 
 							$data['title'] = "submit review";
 
-							$this->load->view('templates/header', $data);
+							$this->load->view('rate/header', $data);
 							$this->load->view('rate/index');
 							$this->load->view('templates/footer');
 						} else {
@@ -98,7 +98,7 @@ class Rate extends Rate_Controller
 			$k = $_POST['form_key'];
 			$web_id = $_POST['web_id'];
 			$q_res = $this->Ratemodel->is_userquotaexpired($k); //check all credentials
-			// $q_res = false;
+			// $q_res = 'not_found';
 
 			if ($q_res === 'not_found') { //invalid data (not found in DB)
 
@@ -159,6 +159,7 @@ class Rate extends Rate_Controller
 		echo json_encode($data);
 	}
 
+	//frame
 	public function wtr($key)
 	{
 		if ($key) {

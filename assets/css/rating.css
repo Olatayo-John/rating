@@ -1,7 +1,17 @@
 .set_wrapper {
 	padding: 14px;
 }
-h4.comp{
+.frameImg {
+	/* width: 60px;
+	height: 60px;
+	border-radius: 50%; */
+	max-width: 60px;
+	max-height: 60px;
+}
+.frameIcon{
+	font-size: 20px;
+}
+.comp{
 	font-weight: bold;
 	color:#294a63;
 }
@@ -10,7 +20,7 @@ div.stars{
 	margin: 28px 0;
 }
 div.stars i{
-	font-size: 38px;
+	font-size: 30px;
 	cursor: pointer;
 }
 div.i_div i.far, div.i_div i.fas{

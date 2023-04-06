@@ -1428,10 +1428,10 @@ class User extends User_Controller
 					$this->emailconfig->quota_send_mail_expire($usermail_expire);
 				}
 
-				$log = "Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$log = "Email Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
 				$this->log_act($log);
 
-				$this->setFlashMsg('error', 'Quota expired');
+				$this->setFlashMsg('error', 'Email Quota expired');
 			} else if ($cq_res === false) { //valid quota
 
 				//check given email is valid
@@ -1518,10 +1518,10 @@ class User extends User_Controller
 					$this->emailconfig->quota_send_mail_expire($usermail_expire);
 				}
 
-				$log = "Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$log = "SMS Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
 				$this->log_act($log);
 
-				$this->setFlashMsg('error', 'Quota expired');
+				$this->setFlashMsg('error', 'SMS Quota expired');
 			} else if ($cq_res === false) { //valid quota
 				$mobile = $this->input->post('mobile');
 				$bdy = $this->input->post('smsbdy');
@@ -1673,11 +1673,11 @@ class User extends User_Controller
 					$this->emailconfig->quota_send_mail_expire($usermail_expire);
 				}
 
-				$log = "Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$log = "Email Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
 				$this->log_act($log);
 
 				$data['status'] = false;
-				$data['msg'] = 'Quota expired';
+				$data['msg'] = 'Email Quota expired';
 			} else if ($cq_res === false) {
 
 				$emaildata = $_POST['emaildata'];
@@ -1789,11 +1789,11 @@ class User extends User_Controller
 					$this->emailconfig->quota_send_mail_expire($usermail_expire);
 				}
 
-				$log = "Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
+				$log = "SMS Quota Expired [ Username: " . $this->session->userdata('mr_uname') . " ]";
 				$this->log_act($log);
 
 				$data['status'] = false;
-				$data['msg'] = 'Quota expired';
+				$data['msg'] = 'SMS Quota expired';
 			} else if ($cq_res === false) {
 
 				$mobiledata = $_POST['mobiledata'];

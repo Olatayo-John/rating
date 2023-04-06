@@ -8,7 +8,19 @@
 		<input type="hidden" class="web_link" name="web_link" value="<?php echo $platform->web_link ?>">
 		<input type="hidden" class="form_key" name="form_key" value="<?php echo $platform->form_key ?>">
 
-		<h4 class="comp text-uppercase" style=""><?php echo $platform->web_name ?></h4>
+		<!-- <h4 class="comp text-uppercase" style=""><?php echo $platform->web_name ?></h4> -->
+
+		<h4 class='comp'>
+			<?php if ($platform->logo) : ?>
+				<img src="<?php echo base_url("uploads/platform/") . $platform->logo ?>" class="frameImg">
+			<?php elseif ($platform->icon) : ?>
+				<i class="<?php echo $platform->icon ?> frameIcon"></i>
+			<?php else : ?>
+				<i class="fa-solid fa-globe frameIcon"></i>
+			<?php endif; ?>
+			
+			<?php echo $platform->web_name ?>
+		</h4>
 
 		<div class="stars">
 			<i class="far fa-star starI" star_value="1"></i>

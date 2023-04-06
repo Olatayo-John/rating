@@ -136,7 +136,7 @@
 
                     <div class="form-group">
                         <label>Subject</label>
-                        <input type="url" name="web_subject_new" class="web_subject_new form-control" placeholder="Subject">
+                        <input type="text" name="web_subject_new" class="web_subject_new form-control" placeholder="Subject">
                     </div>
 
                     <div class="form-group">

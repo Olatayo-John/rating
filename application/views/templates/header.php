@@ -3,7 +3,7 @@
 
 <head>
 	<title>
-		<?php echo (isset($title) && !empty($title)) ? ucwords($title) . ' - ' . $this->st->site_name : $this->st->site_name; ?>
+		<?php echo (isset($title) && !empty($title)) ? ucwords($title) . ($this->st->site_name ? ' - ' . $this->st->site_name : '') : '' ?>
 	</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -287,7 +287,7 @@
 								$('#qrcode').append('<img src="' + data.qr + '">');
 								$('.qrcodeModal').modal('show');
 
-								$('.downloadqrcode').append('<a href="download-qr-code?fp=' + data.qr + '&fn='+data.qrfileName+'"><i class="fa-solid fa-download"></i></a>');
+								$('.downloadqrcode').append('<a href="download-qr-code?fp=' + data.qr + '&fn=' + data.qrfileName + '"><i class="fa-solid fa-download"></i></a>');
 							}
 
 							$('.csrf_token').val(data.token);

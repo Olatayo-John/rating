@@ -84,7 +84,7 @@ class Adminmodel extends CI_Model
 			'form_key' => $form_key,
 			'act_key' => password_hash($act_key, PASSWORD_DEFAULT),
 			'password' => password_hash($this->input->post('pwd'), PASSWORD_DEFAULT),
-		);print_r($data);die;
+		);
 		$this->db->insert('users', $data);
 		$lastid = $this->db->insert_id();
 

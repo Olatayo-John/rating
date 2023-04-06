@@ -12,7 +12,7 @@
 				<div class="row">
 					<div class="form-group col-md-6">
 						<label>Site Name</label>
-						<input type="text" name="site_name" class="form-control site_name" required value="<?php echo $settings->site_name ?>">
+						<input type="text" name="site_name" class="form-control site_name" value="<?php echo $settings->site_name ?>">
 					</div>
 					<div class="form-group col-md-6">
 						<label>Site Title</label>
@@ -80,12 +80,12 @@
 
 				<div class="row">
 					<div class="form-group col-md-6">
-						<label>reCAPTCHA Site Key</label>
-						<input type="password" name="captcha_site_key" class="form-control captcha_site_key" value="<?php echo $settings->captcha_site_key ?>">
+						<label>reCAPTCHA Site Key</label> <span>*</span>
+						<input type="password" name="captcha_site_key" class="form-control captcha_site_key" required value="<?php echo $settings->captcha_site_key ?>">
 					</div>
 					<div class="form-group col-md-6">
-						<label>reCAPTCHA Secret Key</label>
-						<input type="password" name="captcha_secret_key" class="form-control captcha_secret_key" value="<?php echo $settings->captcha_secret_key ?>">
+						<label>reCAPTCHA Secret Key</label> <span>*</span>
+						<input type="password" name="captcha_secret_key" class="form-control captcha_secret_key" required value="<?php echo $settings->captcha_secret_key ?>">
 					</div>
 				</div>
 

@@ -27,7 +27,7 @@ class Settings extends Admin_Controller
 
 		$data['title'] = "settings";
 
-		$this->form_validation->set_rules('site_name', 'Site Name', 'trim|required|html_escape');
+		$this->form_validation->set_rules('site_name', 'Site Name', 'trim|html_escape');
 		$this->form_validation->set_rules('site_title', 'Site Title', 'trim|html_escape');
 		$this->form_validation->set_rules('site_desc', 'Site Description', 'trim|html_escape');
 		$this->form_validation->set_rules('site_keywords', 'Site Keywords', 'trim|html_escape');

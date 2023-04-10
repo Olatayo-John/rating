@@ -93,7 +93,7 @@ class Rate extends Rate_Controller
 
 	public function saveRating()
 	{
-		if (count($_POST) > 0 && $_POST['form_key']) {
+		if (count($_POST) > 0 && $_POST['form_key'] && $_POST['name'] && $_POST['mobile']) {
 
 			$k = $_POST['form_key'];
 			$web_id = $_POST['web_id'];
@@ -152,7 +152,7 @@ class Rate extends Rate_Controller
 			}
 		} else {
 			$data['status'] = false;
-			$data['msg'] = 'No data';
+			$data['msg'] = 'Missing required fields';
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();

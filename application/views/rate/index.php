@@ -18,9 +18,10 @@
 			<?php else : ?>
 				<i class="fa-solid fa-globe frameIcon"></i>
 			<?php endif; ?>
-			
+
 			<?php echo $platform->web_name ?>
 		</h4>
+		<h6 style="margin:5px 0">Kindly review us</h6>
 
 		<div class="stars">
 			<i class="far fa-star starI" star_value="1"></i>
@@ -62,17 +63,17 @@
 
 			<div class="row">
 				<div class="form-group col-md-6">
-					<label>Name</label>
-					<input type="text" class="name form-control" name="review" placeholder="Your Name" value="<?php echo set_value('name') ?>">
+					<label>Name</label> <span>*</span>
+					<input type="text" class="name form-control" name="review" placeholder="Your Name" required value="<?php echo set_value('name') ?>">
 				</div>
 				<div class="form-group col-md-6">
-					<label>Mobile</label>
+					<label>Mobile</label> <span>*</span>
 					<div class="input-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text">+91</span>
 						</div>
 
-						<input type="number" class="mobile form-control" name="mobile" placeholder="Your Mobile" value="<?php echo set_value('mobile') ?>">
+						<input type="number" class="mobile form-control" name="mobile" placeholder="Your Mobile" required value="<?php echo set_value('mobile') ?>">
 					</div>
 					<span class="err e_mobile text-danger font-weight-bolder">Invalid mobile length</span>
 				</div>
@@ -111,16 +112,22 @@
 			var web_name = $('.web_name').val();
 			var web_link = $('.web_link').val();
 
-			if (mobile) {
-				if (mobile.length < 10 || mobile.length > 10) {
-					$('.mobile').css('border-bottom', '2px solid #dc3545');
-					$('.e_mobile').show();
-					return false;
-				} else {
-					$('.e_mobile').hide();
-					$('.mobile').css('border-bottom', '1px solid #ced4da');
-				}
+			if (name == "" || name == null || name == undefined) {
+				$('.name').css('border-bottom', '2px solid #dc3545');
+				return false;
+			} else {
+				$('.name').css('border-bottom', '1px solid #ced4da');
 			}
+
+			if (mobile.length < 10 || mobile.length > 10) {
+				$('.mobile').css('border-bottom', '2px solid #dc3545');
+				$('.e_mobile').show();
+				return false;
+			} else {
+				$('.e_mobile').hide();
+				$('.mobile').css('border-bottom', '1px solid #ced4da');
+			}
+
 
 			$.ajax({
 				url: "<?php echo base_url('save-rating'); ?>",

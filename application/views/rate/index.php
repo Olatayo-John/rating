@@ -33,27 +33,27 @@
 
 		<div>
 			<div class="i_div" star_value="1">
-				<i class="fas fa-frown text-danger"></i></i><br>
+				<i class="fas fa-frown text-danger "></i></i><br>
 				<strong>Very Bad!</strong>
 				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
 			<div class="i_div" star_value="2">
-				<i class="fas fa-frown text-danger"></i><br>
+				<i class="fas fa-frown text-danger "></i><br>
 				<strong>Bad!</strong>
 				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
 			<div class="i_div" star_value="3">
-				<i class="fas fa-meh text-warning"></i><br>
+				<i class="fas fa-meh text-warning "></i><br>
 				<strong>Good!</strong>
 				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
 			<div class="i_div" star_value="4">
-				<i class="fas fa-smile text-success"></i><br>
+				<i class="fas fa-smile text-success "></i><br>
 				<strong>Very Good!</strong>
 				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
 			<div class="i_div" star_value="5">
-				<i class="fas fa-smile-wink text-success"></i><br>
+				<i class="fas fa-smile-wink text-success "></i><br>
 				<strong>Excellent!</strong>
 				<p>You rated us <span class="font-weight-bolder"></span></p>
 			</div>
@@ -85,7 +85,7 @@
 			</div>
 
 			<div class="form-group text-right">
-				<button class="btn text-light submitbtn" type="button" style="background: #294a63">Save</button>
+				<button class="btn text-light submitbtn" type="button" style="background: #294a63">Submit</button>
 			</div>
 		</div>
 
@@ -151,7 +151,6 @@
 				},
 				success: function(data) {
 					$('.csrf_token').val(data.token);
-					$('.submitbtn').html('Saving').removeAttr('disabled').css('cursor', 'pointer');
 
 					if (data.status === "error") {
 						window.location.assign(res.redirect);
@@ -164,12 +163,15 @@
 						$('.ajax_succ_div').fadeIn();
 
 						if (parseInt(starv) > 3) {
-							// window.open(data.redirectLink, '_blank');
-							window.location.assign(data.redirectLink);
+							// window.location.assign(data.redirectLink);
+							setTimeout(() =>  window.location.assign(data.redirectLink), 4000);
 						} else {
-							window.location.reload();
+							// window.location.reload();
+							setTimeout(() =>  window.location.reload(), 4000);
 						}
 					}
+
+					$('.submitbtn').html('Submit').removeAttr('disabled').css('cursor', 'pointer');
 				},
 				error: function() {
 					alert('Error saving your feedbacks. Please refresh the page');

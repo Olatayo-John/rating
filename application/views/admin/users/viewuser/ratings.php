@@ -14,9 +14,10 @@
         <tr>
             <th data-field="web_name" data-sortable="true">Platform Name</th>
             <th data-field="star" data-sortable="true">Star</th>
-            <th data-field="name" data-sortable="true">Rated By</th>
+            <th data-field="name" data-sortable="true">Name</th>
+            <th data-field="mobile" data-sortable="true">Mobile</th>
             <th data-field="review" data-sortable="true">Review</th>
-            <th data-field="user_ip" data-sortable="true" data-visible="false">IP</th>
+            <th data-field="user_ip" data-sortable="true">IP</th>
             <th data-field="rated_at" data-sortable="true" class="text-danger">Date</th>
         </tr>
     </thead>

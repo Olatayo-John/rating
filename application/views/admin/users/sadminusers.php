@@ -203,7 +203,10 @@
 							$(".email").val(res.uinfos.email);
 							$(".mobile").val(res.uinfos.mobile);
 							$(".uname").val(res.uinfos.uname);
-							$('#userprofile_Form').find('select[name=gender] option[value=' + res.uinfos.gender + ']').attr('selected', 'selected').end();
+
+							if (res.uinfos.gender) {
+								$('#userprofile_Form').find('select[name=gender] option[value=' + res.uinfos.gender + ']').attr('selected', 'selected').end();
+							}
 							$(".dob").val(res.uinfos.dob);
 							var seg = $(".linkshare").attr("data-host");
 							$(".linkshare").val(seg + res.uinfos.form_key);
@@ -296,7 +299,7 @@
 								//account status
 								if (res.uwebs[index].active === '1') {
 									res.uwebs[index].active = '<i class="fas fa-circle text-success" title="Platform is active" aria-hidden="true"></i>';
-								}else{
+								} else {
 									res.uwebs[index].active = '<i class="fas fa-circle text-danger" title="Platform is not active" aria-hidden="true"></i>';
 								}
 							}

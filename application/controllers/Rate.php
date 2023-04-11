@@ -125,7 +125,7 @@ class Rate extends Rate_Controller
 					'form_key' => htmlentities($_POST['form_key'])
 				);
 				$res = $this->Ratemodel->saveRating($rData, $k, $web_id);
-				// $res =false;
+				// $res =true;
 
 				if ($res === true) {
 					$log = "Feedback recorded [ Platform: " . htmlentities($_POST['web_name']) . ", Form Key: " . htmlentities($_POST['form_key']) . " ]";
@@ -140,13 +140,13 @@ class Rate extends Rate_Controller
 
 					$data['redirectLink'] = $redirectLink;
 					$data['status'] = $res;
-					$data['msg'] = "Thanks for your feedback!";
+					$data['msg'] = "Thanks for your feedback! <i class='fa-solid fa-thumbs-up fa-bounce'></i>";
 				} else {
 					$log = "Failed to store feedback [ Platform: " . htmlentities($_POST['web_name']) . ", Form Key: " . htmlentities($_POST['form_key']) . " ]";
 					$this->log_act($log);
 
 					$data['status'] = false;
-					$data['msg'] = "Failed to store feedback";
+					$data['msg'] = "Failed to store feedback  <i class='fa-solid fa-thumbs-down fa-bounce text-danger'></i>";
 					$data['msg_notify'] = "User quota expired. <a href='" . base_url("user/notifyuser_email/" . $_POST['form_key'] . "") . "' class='text-info'>Notify User?</a>";
 				}
 			}
